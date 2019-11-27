@@ -1,0 +1,23 @@
+{
+    "extends": "./node_modules/@polkadot/dev/config/tsconfig",
+    "exclude": [
+      "build/**/*",
+      "**/build/**/*"
+    ],
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths":
+      {
+        "@acala-network/api": ["packages/api/src"],
+        "@acala-network/api/*": ["packages/api/src/*"],
+        "@acala-network/types": ["packages/types/src"],
+        "@acala-network/types/*": ["packages/types/src/*"],
+      },
+      "skipLibCheck": true,
+      "typeRoots": [
+        "./node_modules/@polkadot/ts",
+        "./node_modules/@types"
+      ]
+    }
+  }
+  
