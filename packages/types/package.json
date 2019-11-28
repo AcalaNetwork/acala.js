@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/types",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Acala JS types",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
@@ -17,7 +17,5 @@
   "dependencies": {
     "@babel/runtime": "^7.7.4",
     "@polkadot/types": "^0.97.0-beta.33"
-  },
-  "devDependencies": {
   }
 }
