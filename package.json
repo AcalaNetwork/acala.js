@@ -15,7 +15,8 @@
     "build": "polkadot-dev-build-ts",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx . && tsc --noEmit --pretty",
     "clean": "polkadot-dev-clean-build",
-    "postinstall": "polkadot-dev-yarn-only"
+    "postinstall": "polkadot-dev-yarn-only",
+    "test": "echo no test yet"
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",
