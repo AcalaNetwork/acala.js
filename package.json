@@ -12,7 +12,8 @@
     "typescript": "^3.7.2"
   },
   "scripts": {
-    "build": "polkadot-dev-build-ts",
+    "build": "yarn build:interfaces && polkadot-dev-build-ts",
+    "build:interfaces": "node -r ts-node/register packages/types/scripts/generate.ts",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx . && tsc --noEmit --pretty",
     "clean": "polkadot-dev-clean-build",
     "postinstall": "polkadot-dev-yarn-only",
@@ -23,6 +24,7 @@
     "@babel/register": "^7.7.4",
     "@babel/runtime": "^7.7.4",
     "@polkadot/dev": "^0.32.0-beta.15",
-    "@polkadot/ts": "^0.1.86"
+    "@polkadot/ts": "^0.1.86",
+    "ts-node": "^8.5.2"
   }
 }
