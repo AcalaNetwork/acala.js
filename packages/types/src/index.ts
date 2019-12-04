@@ -2,7 +2,7 @@ import { assertSingletonPackage } from '@polkadot/util';
 import { RegistryTypes } from '@polkadot/types/types';
 import * as ormlDefinations from '@orml/types/interfaces/definitions';
 
-import * as acalaDefinations from '../src/interfaces/definitions';
+import * as acalaDefinations from './interfaces/definitions';
 
 export { InterfaceRegistry } from './interfaceRegistry';
 
