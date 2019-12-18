@@ -257,6 +257,9 @@ export interface Seal extends ITuple<[ConsensusEngineId, Bytes]> {}
 /** ITuple<[u64, Signature]> */
 export interface SealV0 extends ITuple<[u64, Signature]> {}
 
+/** u128 */
+export interface Share extends u128 {}
+
 /** H512 */
 export interface Signature extends H512 {}
 

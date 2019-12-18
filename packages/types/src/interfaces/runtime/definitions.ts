@@ -27,6 +27,7 @@ export default {
       amount: 'Balance',
       target: 'Balance',
       startTime: 'BlockNumber'
-    }
+    },
+    Share: 'u128'
   }
 };
