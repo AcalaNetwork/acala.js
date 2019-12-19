@@ -1,8 +1,8 @@
 // Auto-generated via `yarn build:interfaces`, do not edit
 /* eslint-disable @typescript-eslint/no-empty-interface */
 
-import { Compact, Option, Vec } from '@polkadot/types/codec';
-import { Bytes, Data, Fixed64, H160, H256, H512, Null, StorageData, StorageHasher, StorageKey, Text, Type, U256, bool, i128, i16, i256, i32, i64, i8, u128, u16, u256, u32, u64, u8, usize } from '@polkadot/types/primitive';
+import { Compact, Option, Raw, Vec } from '@polkadot/types/codec';
+import { Bytes, Fixed64, H160, H256, H512, Null, StorageData, StorageHasher, StorageKey, Text, Type, U256, bool, i128, i16, i256, i32, i64, i8, u128, u16, u256, u32, u64, u8, usize } from '@polkadot/types/primitive';
 import { InclusionHeight, Uncle, UncleEntryItem } from '@polkadot/types/interfaces/authorship';
 import { RawAuraPreDigest } from '@polkadot/types/interfaces/aura';
 import { BabeAuthorityWeight, BabeBlockWeight, BabeWeight, MaybeVrf, RawBabePreDigest, RawBabePreDigest0to159, RawBabePreDigestCompat, RawBabePreDigestPrimary, RawBabePreDigestPrimary0to159, RawBabePreDigestSecondary, RawBabePreDigestSecondary0to159, SlotNumber, VrfData, VrfProof } from '@polkadot/types/interfaces/babe';
@@ -14,6 +14,7 @@ import { Conviction, PropIndex, Proposal, ReferendumIndex, ReferendumInfo } from
 import { ApprovalFlag, SetIndex, Vote, VoteIndex, VoteThreshold, VoterInfo } from '@polkadot/types/interfaces/elections';
 import { AssetOptions, Owner, PermissionLatest, PermissionVersions, PermissionsV1 } from '@polkadot/types/interfaces/genericAsset';
 import { AuthorityIndex, AuthorityList, AuthorityWeight, NextAuthority, PendingPause, PendingResume, SetId, StoredPendingChange, StoredState } from '@polkadot/types/interfaces/grandpa';
+import { Data, IdentityFields, IdentityInfo, IdentityInfoAdditional, Judgement, RegistrarIndex, RegistrarInfo, Registration, RegistrationJudgement } from '@polkadot/types/interfaces/identity';
 import { AuthIndex, AuthoritySignature, Heartbeat, OpaqueMultiaddr, OpaqueNetworkState, OpaquePeerId } from '@polkadot/types/interfaces/imOnline';
 import { Kind, OffenceDetails, Offender, OpaqueTimeSlot, ReportIdOf, Reporter } from '@polkadot/types/interfaces/offences';
 import { FullIdentification, IdentificationTuple, Keys, SessionIndex, SessionKeys1, SessionKeys2, SessionKeys3, SessionKeys4, SessionKeys5, SessionKeys6 } from '@polkadot/types/interfaces/session';
@@ -40,9 +41,6 @@ export interface InterfaceRegistry {
   Bytes: Bytes;
   'Option<Bytes>': Option<Bytes>;
   'Vec<Bytes>': Vec<Bytes>;
-  Data: Data;
-  'Option<Data>': Option<Data>;
-  'Vec<Data>': Vec<Data>;
   H160: H160;
   'Option<H160>': Option<H160>;
   'Vec<H160>': Vec<H160>;
@@ -123,6 +121,9 @@ export interface InterfaceRegistry {
   'Compact<usize>': Compact<usize>;
   'Option<usize>': Option<usize>;
   'Vec<usize>': Vec<usize>;
+  Raw: Raw;
+  'Option<Raw>': Option<Raw>;
+  'Vec<Raw>': Vec<Raw>;
   InclusionHeight: InclusionHeight;
   'Option<InclusionHeight>': Option<InclusionHeight>;
   'Vec<InclusionHeight>': Vec<InclusionHeight>;
@@ -330,6 +331,34 @@ export interface InterfaceRegistry {
   StoredState: StoredState;
   'Option<StoredState>': Option<StoredState>;
   'Vec<StoredState>': Vec<StoredState>;
+  Data: Data;
+  'Option<Data>': Option<Data>;
+  'Vec<Data>': Vec<Data>;
+  IdentityFields: IdentityFields;
+  'Option<IdentityFields>': Option<IdentityFields>;
+  'Vec<IdentityFields>': Vec<IdentityFields>;
+  IdentityInfoAdditional: IdentityInfoAdditional;
+  'Option<IdentityInfoAdditional>': Option<IdentityInfoAdditional>;
+  'Vec<IdentityInfoAdditional>': Vec<IdentityInfoAdditional>;
+  IdentityInfo: IdentityInfo;
+  'Option<IdentityInfo>': Option<IdentityInfo>;
+  'Vec<IdentityInfo>': Vec<IdentityInfo>;
+  Judgement: Judgement;
+  'Option<Judgement>': Option<Judgement>;
+  'Vec<Judgement>': Vec<Judgement>;
+  RegistrationJudgement: RegistrationJudgement;
+  'Option<RegistrationJudgement>': Option<RegistrationJudgement>;
+  'Vec<RegistrationJudgement>': Vec<RegistrationJudgement>;
+  Registration: Registration;
+  'Option<Registration>': Option<Registration>;
+  'Vec<Registration>': Vec<Registration>;
+  RegistrarIndex: RegistrarIndex;
+  'Compact<RegistrarIndex>': Compact<RegistrarIndex>;
+  'Option<RegistrarIndex>': Option<RegistrarIndex>;
+  'Vec<RegistrarIndex>': Vec<RegistrarIndex>;
+  RegistrarInfo: RegistrarInfo;
+  'Option<RegistrarInfo>': Option<RegistrarInfo>;
+  'Vec<RegistrarInfo>': Vec<RegistrarInfo>;
   AuthIndex: AuthIndex;
   'Compact<AuthIndex>': Compact<AuthIndex>;
   'Option<AuthIndex>': Option<AuthIndex>;
