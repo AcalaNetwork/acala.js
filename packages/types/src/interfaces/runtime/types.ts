@@ -71,6 +71,20 @@ export interface BlockNumber extends u32 {}
 /** GenericCall */
 export interface Call extends GenericCall {}
 
+/** Struct */
+export interface CollateralAuctionItem extends Struct {
+  /** AccountId */
+  readonly owner: AccountId;
+  /** CurrencyId */
+  readonly currencyId: CurrencyId;
+  /** Balance */
+  readonly amount: Balance;
+  /** Balance */
+  readonly target: Balance;
+  /** BlockNumber */
+  readonly startTime: BlockNumber;
+}
+
 /** ITuple<[ConsensusEngineId, Bytes]> */
 export interface Consensus extends ITuple<[ConsensusEngineId, Bytes]> {}
 
@@ -88,6 +102,19 @@ export interface DebitAmount extends Amount {}
 
 /** DebitAmount */
 export interface DebitAmountOf extends DebitAmount {}
+
+/** Struct */
+export interface DebitAuctionItem extends Struct {
+  /** Balance */
+  readonly amount: Balance;
+  /** Balance */
+  readonly fix: Balance;
+  /** BlockNumber */
+  readonly startTime: BlockNumber;
+}
+
+/** Balance */
+export interface DebitBalance extends Balance {}
 
 /** Balance */
 export interface DebitBalanceOf extends Balance {}
@@ -276,6 +303,14 @@ export interface SignerPayload extends GenericSignerPayload {}
 
 /** Signature */
 export interface Sr25519Signature extends Signature {}
+
+/** Struct */
+export interface SurplusAuctionItem extends Struct {
+  /** Balance */
+  readonly amount: Balance;
+  /** BlockNumber */
+  readonly startTime: BlockNumber;
+}
 
 /** AccountId */
 export interface ValidatorId extends AccountId {}

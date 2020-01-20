@@ -32,7 +32,7 @@ import { TimestampedValue, TimestampedValueOf } from '@orml/types/interfaces/ora
 import { Price } from '@orml/types/interfaces/prices';
 import { AuctionInfo } from '@orml/types/interfaces/traits';
 import { FixedU128 } from '@orml/types/interfaces/utilities';
-import { AccountId, AccountIdOf, AccountIndex, Address, Amount, AmountOf, AssetId, AuctionId, AuctionIdLinkedItem, AuctionIdOf, AuctionItem, Balance, BalanceOf, Block, BlockNumber, Call, Consensus, ConsensusEngineId, CurrencyId, CurrencyIdOf, DebitAmount, DebitAmountOf, DebitBalanceOf, Digest, DigestItem, DispatchClass, DispatchInfo, EcdsaSignature, Ed25519Signature, ExchangeRate, Extrinsic, ExtrinsicEra, ExtrinsicPayload, ExtrinsicPayloadUnknown, ExtrinsicPayloadV1, ExtrinsicPayloadV2, ExtrinsicPayloadV3, ExtrinsicPayloadV4, ExtrinsicUnknown, ExtrinsicV1, ExtrinsicV2, ExtrinsicV3, ExtrinsicV4, Hash, Header, ImmortalEra, Index, Justification, KeyTypeId, KeyValue, LockIdentifier, Moment, MortalEra, MultiSignature, OracleKey, OracleValue, Origin, Perbill, Permill, Phantom, PhantomData, PreRuntime, Rate, Ratio, Seal, SealV0, Share, Signature, SignedBlock, SignerPayload, Sr25519Signature, ValidatorId, Weight, WeightMultiplier } from '@acala-network/types/interfaces/runtime';
+import { AccountId, AccountIdOf, AccountIndex, Address, Amount, AmountOf, AssetId, AuctionId, AuctionIdLinkedItem, AuctionIdOf, AuctionItem, Balance, BalanceOf, Block, BlockNumber, Call, CollateralAuctionItem, Consensus, ConsensusEngineId, CurrencyId, CurrencyIdOf, DebitAmount, DebitAmountOf, DebitAuctionItem, DebitBalance, DebitBalanceOf, Digest, DigestItem, DispatchClass, DispatchInfo, EcdsaSignature, Ed25519Signature, ExchangeRate, Extrinsic, ExtrinsicEra, ExtrinsicPayload, ExtrinsicPayloadUnknown, ExtrinsicPayloadV1, ExtrinsicPayloadV2, ExtrinsicPayloadV3, ExtrinsicPayloadV4, ExtrinsicUnknown, ExtrinsicV1, ExtrinsicV2, ExtrinsicV3, ExtrinsicV4, Hash, Header, ImmortalEra, Index, Justification, KeyTypeId, KeyValue, LockIdentifier, Moment, MortalEra, MultiSignature, OracleKey, OracleValue, Origin, Perbill, Permill, Phantom, PhantomData, PreRuntime, Rate, Ratio, Seal, SealV0, Share, Signature, SignedBlock, SignerPayload, Sr25519Signature, SurplusAuctionItem, ValidatorId, Weight, WeightMultiplier } from '@acala-network/types/interfaces/runtime';
 
 export interface InterfaceRegistry {
   bool: bool;
@@ -1346,6 +1346,9 @@ export interface InterfaceRegistry {
   DebitAmountOf: DebitAmountOf;
   'Option<DebitAmountOf>': Option<DebitAmountOf>;
   'Vec<DebitAmountOf>': Vec<DebitAmountOf>;
+  DebitBalance: DebitBalance;
+  'Option<DebitBalance>': Option<DebitBalance>;
+  'Vec<DebitBalance>': Vec<DebitBalance>;
   DebitBalanceOf: DebitBalanceOf;
   'Option<DebitBalanceOf>': Option<DebitBalanceOf>;
   'Vec<DebitBalanceOf>': Vec<DebitBalanceOf>;
@@ -1367,11 +1370,20 @@ export interface InterfaceRegistry {
   Ratio: Ratio;
   'Option<Ratio>': Option<Ratio>;
   'Vec<Ratio>': Vec<Ratio>;
-  AuctionItem: AuctionItem;
-  'Option<AuctionItem>': Option<AuctionItem>;
-  'Vec<AuctionItem>': Vec<AuctionItem>;
   Share: Share;
   'Compact<Share>': Compact<Share>;
   'Option<Share>': Option<Share>;
   'Vec<Share>': Vec<Share>;
+  AuctionItem: AuctionItem;
+  'Option<AuctionItem>': Option<AuctionItem>;
+  'Vec<AuctionItem>': Vec<AuctionItem>;
+  CollateralAuctionItem: CollateralAuctionItem;
+  'Option<CollateralAuctionItem>': Option<CollateralAuctionItem>;
+  'Vec<CollateralAuctionItem>': Vec<CollateralAuctionItem>;
+  DebitAuctionItem: DebitAuctionItem;
+  'Option<DebitAuctionItem>': Option<DebitAuctionItem>;
+  'Vec<DebitAuctionItem>': Vec<DebitAuctionItem>;
+  SurplusAuctionItem: SurplusAuctionItem;
+  'Option<SurplusAuctionItem>': Option<SurplusAuctionItem>;
+  'Vec<SurplusAuctionItem>': Vec<SurplusAuctionItem>;
 }
