@@ -71,6 +71,28 @@ export interface BlockNumber extends u32 {}
 /** GenericCall */
 export interface Call extends GenericCall {}
 
+/** Struct */
+export interface ChangesTrieConfiguration extends Struct {
+  /** u32 */
+  readonly digestInterval: u32;
+  /** u32 */
+  readonly digestLevels: u32;
+}
+
+/** Struct */
+export interface CollateralAuctionItem extends Struct {
+  /** AccountId */
+  readonly owner: AccountId;
+  /** CurrencyId */
+  readonly currencyId: CurrencyId;
+  /** Balance */
+  readonly amount: Balance;
+  /** Balance */
+  readonly target: Balance;
+  /** BlockNumber */
+  readonly startTime: BlockNumber;
+}
+
 /** ITuple<[ConsensusEngineId, Bytes]> */
 export interface Consensus extends ITuple<[ConsensusEngineId, Bytes]> {}
 
@@ -88,6 +110,19 @@ export interface DebitAmount extends Amount {}
 
 /** DebitAmount */
 export interface DebitAmountOf extends DebitAmount {}
+
+/** Struct */
+export interface DebitAuctionItem extends Struct {
+  /** Balance */
+  readonly amount: Balance;
+  /** Balance */
+  readonly fix: Balance;
+  /** BlockNumber */
+  readonly startTime: BlockNumber;
+}
+
+/** Balance */
+export interface DebitBalance extends Balance {}
 
 /** Balance */
 export interface DebitBalanceOf extends Balance {}
@@ -114,6 +149,14 @@ export interface DispatchInfo extends Struct {
   readonly class: DispatchClass;
   /** bool */
   readonly paysFee: bool;
+}
+
+/** Struct */
+export interface DispatchInfoTo190 extends Struct {
+  /** Weight */
+  readonly weight: Weight;
+  /** DispatchClass */
+  readonly class: DispatchClass;
 }
 
 /** Uint8Array, Codec */
@@ -233,8 +276,14 @@ export interface Origin extends GenericOrigin {}
 /** u32 */
 export interface Perbill extends u32 {}
 
+/** u8 */
+export interface Percent extends u8 {}
+
 /** u32 */
 export interface Permill extends u32 {}
+
+/** u64 */
+export interface Perquintill extends u64 {}
 
 /** Null */
 export interface Phantom extends Null {}
@@ -276,6 +325,14 @@ export interface SignerPayload extends GenericSignerPayload {}
 
 /** Signature */
 export interface Sr25519Signature extends Signature {}
+
+/** Struct */
+export interface SurplusAuctionItem extends Struct {
+  /** Balance */
+  readonly amount: Balance;
+  /** BlockNumber */
+  readonly startTime: BlockNumber;
+}
 
 /** AccountId */
 export interface ValidatorId extends AccountId {}

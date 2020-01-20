@@ -11,6 +11,7 @@ export default {
     AmountOf: 'Amount',
     DebitAmount: 'Amount',
     DebitAmountOf: 'DebitAmount',
+    DebitBalance: 'Balance',
     DebitBalanceOf: 'Balance',
     AuctionIdLinkedItem: {
       prev: 'Option<AuctionId>',
@@ -21,6 +22,7 @@ export default {
     OracleValue: 'Price',
     Rate: 'FixedU128',
     Ratio: 'FixedU128',
+    Share: 'u128',
     AuctionItem: {
       owner: 'AccountId',
       currencyId: 'CurrencyId',
@@ -28,6 +30,21 @@ export default {
       target: 'Balance',
       startTime: 'BlockNumber'
     },
-    Share: 'u128'
+    CollateralAuctionItem: {
+      owner: 'AccountId',
+      currencyId: 'CurrencyId',
+      amount: 'Balance',
+      target: 'Balance',
+      startTime: 'BlockNumber'
+    },
+    DebitAuctionItem: {
+      amount: 'Balance',
+      fix: 'Balance',
+      startTime: 'BlockNumber'
+    },
+    SurplusAuctionItem: {
+      amount: 'Balance',
+      startTime: 'BlockNumber'
+    }
   }
 };
