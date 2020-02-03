@@ -16,9 +16,8 @@
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
     "@babel/runtime": "^7.8.0",
-    "@orml/types": "^0.2.0-beta.6",
-    "@polkadot/metadata": "^1.0.0-beta.8",
-    "@polkadot/types": "^1.0.0-beta.8",
-    "@polkadot/util": "^2.0.0-beta.4"
+    "@orml/types": "beta",
+    "@polkadot/metadata": "beta",
+    "@polkadot/types": "beta"
   }
 }
