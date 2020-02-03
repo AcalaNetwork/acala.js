@@ -1,5 +1,5 @@
-import { generateInterfaceRegistry } from '@polkadot/types/scripts/generateTypes/interfaceRegistry';
-import { generateTsDef } from '@polkadot/types/scripts/generateTypes/tsDef';
+import { generateInterfaceRegistry } from '@polkadot/types/scripts/generate/interfaceRegistry';
+import { generateTsDef } from '@polkadot/types/scripts/generate/tsDef';
 import * as defaultDefinations from '@polkadot/types/interfaces/definitions';
 
 import * as ormlDefinations from '@orml/types/interfaces/definitions';
