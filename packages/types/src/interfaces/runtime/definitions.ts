@@ -5,7 +5,9 @@ export default {
     ...definitions.types,
     AuctionId: 'u32',
     AuctionIdOf: 'AuctionId',
-    CurrencyId: 'u8',
+    CurrencyId: {
+      _enum: ['ACA', 'AUSD', 'DOT', 'XBTC']
+    },
     CurrencyIdOf: 'CurrencyId',
     Amount: 'i128',
     AmountOf: 'Amount',
