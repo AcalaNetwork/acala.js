@@ -86,7 +86,12 @@ export interface Consensus extends ITuple<[ConsensusEngineId, Bytes]> {}
 export interface ConsensusEngineId extends GenericConsensusEngineId {}
 
 /** @name CurrencyId */
-export interface CurrencyId extends u8 {}
+export interface CurrencyId extends Enum {
+  readonly isAca: boolean;
+  readonly isAusd: boolean;
+  readonly isDot: boolean;
+  readonly isXbtc: boolean;
+}
 
 /** @name CurrencyIdOf */
 export interface CurrencyIdOf extends CurrencyId {}

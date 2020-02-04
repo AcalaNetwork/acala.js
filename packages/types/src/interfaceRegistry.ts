@@ -1512,7 +1512,6 @@ export interface InterfaceRegistry {
   'Option<AuctionIdOf>': Option<AuctionIdOf>;
   'Vec<AuctionIdOf>': Vec<AuctionIdOf>;
   CurrencyId: CurrencyId;
-  'Compact<CurrencyId>': Compact<CurrencyId>;
   'Option<CurrencyId>': Option<CurrencyId>;
   'Vec<CurrencyId>': Vec<CurrencyId>;
   CurrencyIdOf: CurrencyIdOf;
