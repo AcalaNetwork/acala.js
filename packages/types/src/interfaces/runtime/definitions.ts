@@ -15,6 +15,7 @@ export default {
     DebitAmountOf: 'DebitAmount',
     DebitBalance: 'Balance',
     DebitBalanceOf: 'Balance',
+    DepositBalanceOf: 'Amount',
     AuctionIdLinkedItem: {
       prev: 'Option<AuctionId>',
       next: 'Option<AuctionId>'

@@ -115,6 +115,9 @@ export interface DebitBalance extends Balance {}
 /** @name DebitBalanceOf */
 export interface DebitBalanceOf extends Balance {}
 
+/** @name DepositBalanceOf */
+export interface DepositBalanceOf extends Amount {}
+
 /** @name Digest */
 export interface Digest extends GenericDigest {}
 
