@@ -6,7 +6,7 @@ export default {
     AuctionId: 'u32',
     AuctionIdOf: 'AuctionId',
     CurrencyId: {
-      _enum: ["ACA", "AUSD", "DOT", "XBTC"]
+      _enum: ['ACA', 'AUSD', 'DOT', 'XBTC']
     },
     CurrencyIdOf: 'CurrencyId',
     Amount: 'i128',
