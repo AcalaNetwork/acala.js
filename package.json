@@ -12,17 +12,19 @@
     "typescript": "^3.7.2"
   },
   "scripts": {
-    "build": "yarn build:interfaces && polkadot-dev-build-ts",
+    "build": "yarn check-deps yarn build:interfaces && polkadot-dev-build-ts",
     "build:interfaces": "node -r ts-node/register packages/types/scripts/generate.ts",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx . && tsc --noEmit --pretty",
     "clean": "polkadot-dev-clean-build",
     "postinstall": "polkadot-dev-yarn-only",
-    "test": "echo no test yet"
+    "test": "echo no test yet",
+    "check-deps": "./node_modules/@orml/util/scripts/check-deps.js yarn.lock @polkadot/ @orml/"
   },
   "devDependencies": {
     "@babel/core": "^7.8.0",
     "@babel/register": "^7.8.0",
     "@babel/runtime": "^7.8.0",
+    "@orml/util": "beta",
     "@polkadot/dev": "^0.32.17",
     "@polkadot/ts": "^0.2.1",
     "ts-node": "^8.6.1"
