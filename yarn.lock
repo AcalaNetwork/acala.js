@@ -1984,6 +1984,14 @@
     "@polkadot/types" beta
     "@polkadot/util" beta
 
+"@orml/util@beta":
+  version "0.2.0-beta.16"
+  resolved "https://registry.yarnpkg.com/@orml/util/-/util-0.2.0-beta.16.tgz#0c4afefeb06167758c084ffa8947123c1c9962d4"
+  integrity sha512-52I74ntL31bfZoUiqpigWOwRsm5Pg7Y6Jwm1Xsj+LlsQivmADPyfvotbpwAmERmEYUa1WyxuPEaSnN0WV0SURA==
+  dependencies:
+    "@babel/runtime" "^7.8.4"
+    "@yarnpkg/lockfile" "^1.1.0"
+
 "@polkadot/dev@^0.32.17":
   version "0.32.17"
   resolved "https://registry.yarnpkg.com/@polkadot/dev/-/dev-0.32.17.tgz#55b3f43a9e4f819c967aff965a3834114bda975e"
@@ -2745,6 +2753,11 @@
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
+
+"@yarnpkg/lockfile@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
+  integrity sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==
 
 "@zkochan/cmd-shim@^3.1.0":
   version "3.1.0"
