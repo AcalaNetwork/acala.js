@@ -1,1 +1,1 @@
-# acala.js
+# @acala-network
