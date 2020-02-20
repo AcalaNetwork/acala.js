@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 
 import { Compact, Option, Raw, Vec } from '@polkadot/types/codec';
-import { BitVec, Bytes, Data, Fixed64, H160, H256, H512, IdentityFields, Null, StorageData, StorageKey, Text, Type, U256, bool, i128, i16, i256, i32, i64, i8, u128, u16, u256, u32, u64, u8, usize } from '@polkadot/types/primitive';
+import { BitVec, Bytes, Data, Fixed64, IdentityFields, Null, StorageData, StorageKey, Text, Type, U256, Unconstructable, bool, i128, i16, i256, i32, i64, i8, u128, u16, u256, u32, u64, u8, usize } from '@polkadot/types/primitive';
 import { InclusionHeight, Uncle, UncleEntryItem } from '@polkadot/types/interfaces/authorship';
 import { RawAuraPreDigest } from '@polkadot/types/interfaces/aura';
 import { BabeAuthorityWeight, BabeBlockWeight, BabeWeight, MaybeVrf, RawBabePreDigest, RawBabePreDigestCompat, RawBabePreDigestPrimary, RawBabePreDigestPrimaryTo159, RawBabePreDigestSecondary, RawBabePreDigestSecondaryTo159, RawBabePreDigestTo159, SlotNumber, VrfData, VrfProof } from '@polkadot/types/interfaces/babe';
@@ -12,6 +12,7 @@ import { AuthorityId } from '@polkadot/types/interfaces/consensus';
 import { AliveContractInfo, CodeHash, ContractCallRequest, ContractExecResult, ContractExecResultSuccess, ContractInfo, ContractStorageKey, Gas, PrefabWasmModule, PrefabWasmModuleReserved, Schedule, ScheduleTo212, SeedOf, TombstoneContractInfo, TrieId } from '@polkadot/types/interfaces/contracts';
 import { Conviction, PropIndex, Proposal, ReferendumIndex, ReferendumInfo } from '@polkadot/types/interfaces/democracy';
 import { ApprovalFlag, SetIndex, Vote, VoteIndex, VoteThreshold, VoterInfo } from '@polkadot/types/interfaces/elections';
+import { CreatedBlock, ImportedAux } from '@polkadot/types/interfaces/engine';
 import { Account, Log } from '@polkadot/types/interfaces/evm';
 import { AssetOptions, Owner, PermissionLatest, PermissionVersions, PermissionsV1 } from '@polkadot/types/interfaces/genericAsset';
 import { AuthorityIndex, AuthorityList, AuthorityWeight, NextAuthority, PendingPause, PendingResume, SetId, StoredPendingChange, StoredState } from '@polkadot/types/interfaces/grandpa';
@@ -29,14 +30,14 @@ import { Multisig, Timepoint } from '@polkadot/types/interfaces/utility';
 import { VestingInfo } from '@polkadot/types/interfaces/vesting';
 import { BlockAttestations, IncludedBlocks, MoreAttestations } from '@polkadot/types/interfaces/attestations';
 import { EthereumAddress } from '@polkadot/types/interfaces/claims';
-import { AttestedCandidate, AuctionIndex, BalanceUpload, Bidder, CandidateReceipt, CollatorId, CollatorSignature, EgressQueueRoot, HeadData, IncomingParachain, IncomingParachainDeploy, IncomingParachainFixed, LeasePeriod, LeasePeriodOf, NewBidder, ParaId, ParaIdOf, ParaInfo, ParaScheduling, ParachainDispatchOrigin, Retriable, SlotRange, SubId, UpwardMessage, ValidatorIndex, ValidityAttestation, ValidityVote, WinningData, WinningDataEntry } from '@polkadot/types/interfaces/parachains';
+import { AttestedCandidate, AuctionIndex, Bidder, CandidateReceipt, CollatorId, CollatorSignature, EgressQueueRoot, HeadData, IncomingParachain, IncomingParachainDeploy, IncomingParachainFixed, LeasePeriod, LeasePeriodOf, NewBidder, ParaId, ParaIdOf, ParaInfo, ParaScheduling, ParachainDispatchOrigin, Retriable, SlotRange, SubId, UpwardMessage, ValidityAttestation, WinningData, WinningDataEntry } from '@polkadot/types/interfaces/parachains';
 import { CallMetadataV0, DoubleMapTypeLatest, DoubleMapTypeV10, DoubleMapTypeV11, DoubleMapTypeV3, DoubleMapTypeV4, DoubleMapTypeV5, DoubleMapTypeV6, DoubleMapTypeV7, DoubleMapTypeV8, DoubleMapTypeV9, ErrorMetadataV10, ErrorMetadataV11, ErrorMetadataV8, ErrorMetadataV9, EventMetadataLatest, EventMetadataV0, EventMetadataV1, EventMetadataV10, EventMetadataV11, EventMetadataV2, EventMetadataV3, EventMetadataV4, EventMetadataV5, EventMetadataV6, EventMetadataV7, EventMetadataV8, EventMetadataV9, ExtrinsicMetadataLatest, ExtrinsicMetadataV11, FunctionArgumentMetadataLatest, FunctionArgumentMetadataV0, FunctionArgumentMetadataV1, FunctionArgumentMetadataV10, FunctionArgumentMetadataV11, FunctionArgumentMetadataV2, FunctionArgumentMetadataV3, FunctionArgumentMetadataV4, FunctionArgumentMetadataV5, FunctionArgumentMetadataV6, FunctionArgumentMetadataV7, FunctionArgumentMetadataV8, FunctionArgumentMetadataV9, FunctionMetadataLatest, FunctionMetadataV0, FunctionMetadataV1, FunctionMetadataV10, FunctionMetadataV11, FunctionMetadataV2, FunctionMetadataV3, FunctionMetadataV4, FunctionMetadataV5, FunctionMetadataV6, FunctionMetadataV7, FunctionMetadataV8, FunctionMetadataV9, MapTypeLatest, MapTypeV0, MapTypeV10, MapTypeV11, MapTypeV2, MapTypeV3, MapTypeV4, MapTypeV5, MapTypeV6, MapTypeV7, MapTypeV8, MapTypeV9, MetadataAll, MetadataLatest, MetadataV0, MetadataV1, MetadataV10, MetadataV11, MetadataV2, MetadataV3, MetadataV4, MetadataV5, MetadataV6, MetadataV7, MetadataV8, MetadataV9, ModuleConstantMetadataLatest, ModuleConstantMetadataV10, ModuleConstantMetadataV11, ModuleConstantMetadataV6, ModuleConstantMetadataV7, ModuleConstantMetadataV8, ModuleConstantMetadataV9, ModuleMetadataLatest, ModuleMetadataV0, ModuleMetadataV1, ModuleMetadataV10, ModuleMetadataV11, ModuleMetadataV2, ModuleMetadataV3, ModuleMetadataV4, ModuleMetadataV5, ModuleMetadataV6, ModuleMetadataV7, ModuleMetadataV8, ModuleMetadataV9, OuterDispatchCallV0, OuterDispatchMetadataV0, OuterEventEventMetadataEventsV0, OuterEventEventMetadataV0, OuterEventMetadataV0, PlainTypeLatest, PlainTypeV0, PlainTypeV10, PlainTypeV11, PlainTypeV2, PlainTypeV3, PlainTypeV4, PlainTypeV5, PlainTypeV6, PlainTypeV7, PlainTypeV8, PlainTypeV9, RuntimeModuleMetadataV0, StorageEntryMetadataLatest, StorageEntryMetadataV10, StorageEntryMetadataV11, StorageEntryMetadataV6, StorageEntryMetadataV7, StorageEntryMetadataV8, StorageEntryMetadataV9, StorageEntryModifierLatest, StorageEntryModifierV10, StorageEntryModifierV11, StorageEntryModifierV6, StorageEntryModifierV7, StorageEntryModifierV8, StorageEntryModifierV9, StorageEntryTypeLatest, StorageEntryTypeV10, StorageEntryTypeV11, StorageEntryTypeV6, StorageEntryTypeV7, StorageEntryTypeV8, StorageEntryTypeV9, StorageFunctionMetadataV0, StorageFunctionMetadataV1, StorageFunctionMetadataV2, StorageFunctionMetadataV3, StorageFunctionMetadataV4, StorageFunctionMetadataV5, StorageFunctionModifierV0, StorageFunctionModifierV1, StorageFunctionModifierV2, StorageFunctionModifierV3, StorageFunctionModifierV4, StorageFunctionModifierV5, StorageFunctionTypeV0, StorageFunctionTypeV1, StorageFunctionTypeV2, StorageFunctionTypeV3, StorageFunctionTypeV4, StorageFunctionTypeV5, StorageHasher, StorageHasherV10, StorageHasherV11, StorageHasherV4, StorageHasherV5, StorageHasherV6, StorageHasherV7, StorageHasherV8, StorageHasherV9, StorageMetadataLatest, StorageMetadataV0, StorageMetadataV10, StorageMetadataV11, StorageMetadataV7, StorageMetadataV8, StorageMetadataV9 } from '@polkadot/types/interfaces/metadata';
 import { ApiId, BlockHash, ChainProperties, ExtrinsicOrHash, ExtrinsicStatus, Health, KeyValueOption, NetworkState, PeerInfo, RpcMethods, RuntimeDispatchInfo, RuntimeVersion, RuntimeVersionApi, StorageChangeSet } from '@polkadot/types/interfaces/rpc';
 import { TimestampedValue, TimestampedValueOf } from '@orml/types/interfaces/oracle';
 import { Price } from '@orml/types/interfaces/prices';
 import { AuctionInfo } from '@orml/types/interfaces/traits';
 import { FixedU128 } from '@orml/types/interfaces/utilities';
-import { AccountId, AccountIdOf, AccountIndex, Address, Amount, AmountOf, AssetId, AuctionId, AuctionIdLinkedItem, AuctionIdOf, AuctionItem, Balance, BalanceOf, Block, BlockNumber, Call, ChangesTrieConfiguration, CollateralAuctionItem, Consensus, ConsensusEngineId, CurrencyId, CurrencyIdOf, DebitAmount, DebitAmountOf, DebitAuctionItem, DebitBalance, DebitBalanceOf, DepositBalanceOf, Digest, DigestItem, DispatchClass, DispatchInfo, DispatchInfoTo190, EcdsaSignature, Ed25519Signature, ExchangeRate, Extrinsic, ExtrinsicEra, ExtrinsicPayload, ExtrinsicPayloadUnknown, ExtrinsicPayloadV1, ExtrinsicPayloadV2, ExtrinsicPayloadV3, ExtrinsicPayloadV4, ExtrinsicSignatureV1, ExtrinsicSignatureV2, ExtrinsicSignatureV3, ExtrinsicSignatureV4, ExtrinsicUnknown, ExtrinsicV1, ExtrinsicV2, ExtrinsicV3, ExtrinsicV4, Hash, Header, ImmortalEra, Index, Justification, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, Moment, MortalEra, MultiSignature, OracleKey, OracleValue, Origin, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, Rate, Ratio, Seal, SealV0, Share, Signature, SignedBlock, SignerPayload, Sr25519Signature, SurplusAuctionItem, ValidatorId, Weight, WeightMultiplier } from '@acala-network/types/interfaces/runtime';
+import { AccountId, AccountIdOf, AccountIndex, Address, Amount, AmountOf, AssetId, AuctionId, AuctionIdLinkedItem, AuctionIdOf, AuctionItem, Balance, BalanceOf, Block, BlockNumber, Call, ChangesTrieConfiguration, CollateralAuctionItem, Consensus, ConsensusEngineId, CurrencyId, CurrencyIdOf, DebitAmount, DebitAmountOf, DebitAuctionItem, DebitBalance, DebitBalanceOf, DepositBalanceOf, Digest, DigestItem, DispatchClass, DispatchInfo, DispatchInfoTo190, EcdsaSignature, Ed25519Signature, ExchangeRate, Extrinsic, ExtrinsicEra, ExtrinsicPayload, ExtrinsicPayloadUnknown, ExtrinsicPayloadV1, ExtrinsicPayloadV2, ExtrinsicPayloadV3, ExtrinsicPayloadV4, ExtrinsicSignatureV1, ExtrinsicSignatureV2, ExtrinsicSignatureV3, ExtrinsicSignatureV4, ExtrinsicUnknown, ExtrinsicV1, ExtrinsicV2, ExtrinsicV3, ExtrinsicV4, H160, H256, H512, Hash, Header, ImmortalEra, Index, Justification, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, Moment, MortalEra, MultiSignature, OracleKey, OracleValue, Origin, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, Rate, Ratio, Seal, SealV0, Share, Signature, SignedBlock, SignerPayload, Sr25519Signature, SurplusAuctionItem, ValidatorId, Weight, WeightMultiplier } from '@acala-network/types/interfaces/runtime';
 
 export interface InterfaceRegistry {
   bool: bool;
@@ -51,15 +52,6 @@ export interface InterfaceRegistry {
   Data: Data;
   'Option<Data>': Option<Data>;
   'Vec<Data>': Vec<Data>;
-  H160: H160;
-  'Option<H160>': Option<H160>;
-  'Vec<H160>': Vec<H160>;
-  H256: H256;
-  'Option<H256>': Option<H256>;
-  'Vec<H256>': Vec<H256>;
-  H512: H512;
-  'Option<H512>': Option<H512>;
-  'Vec<H512>': Vec<H512>;
   IdentityFields: IdentityFields;
   'Option<IdentityFields>': Option<IdentityFields>;
   'Vec<IdentityFields>': Vec<IdentityFields>;
@@ -127,6 +119,9 @@ export interface InterfaceRegistry {
   'Compact<U256>': Compact<U256>;
   'Option<U256>': Option<U256>;
   'Vec<U256>': Vec<U256>;
+  Unconstructable: Unconstructable;
+  'Option<Unconstructable>': Option<Unconstructable>;
+  'Vec<Unconstructable>': Vec<Unconstructable>;
   usize: usize;
   'Compact<usize>': Compact<usize>;
   'Option<usize>': Option<usize>;
@@ -308,6 +303,12 @@ export interface InterfaceRegistry {
   VoteThreshold: VoteThreshold;
   'Option<VoteThreshold>': Option<VoteThreshold>;
   'Vec<VoteThreshold>': Vec<VoteThreshold>;
+  CreatedBlock: CreatedBlock;
+  'Option<CreatedBlock>': Option<CreatedBlock>;
+  'Vec<CreatedBlock>': Vec<CreatedBlock>;
+  ImportedAux: ImportedAux;
+  'Option<ImportedAux>': Option<ImportedAux>;
+  'Vec<ImportedAux>': Vec<ImportedAux>;
   Account: Account;
   'Option<Account>': Option<Account>;
   'Vec<Account>': Vec<Account>;
@@ -632,9 +633,6 @@ export interface InterfaceRegistry {
   'Compact<AuctionIndex>': Compact<AuctionIndex>;
   'Option<AuctionIndex>': Option<AuctionIndex>;
   'Vec<AuctionIndex>': Vec<AuctionIndex>;
-  BalanceUpload: BalanceUpload;
-  'Option<BalanceUpload>': Option<BalanceUpload>;
-  'Vec<BalanceUpload>': Vec<BalanceUpload>;
   Bidder: Bidder;
   'Option<Bidder>': Option<Bidder>;
   'Vec<Bidder>': Vec<Bidder>;
@@ -703,13 +701,6 @@ export interface InterfaceRegistry {
   ValidityAttestation: ValidityAttestation;
   'Option<ValidityAttestation>': Option<ValidityAttestation>;
   'Vec<ValidityAttestation>': Vec<ValidityAttestation>;
-  ValidatorIndex: ValidatorIndex;
-  'Compact<ValidatorIndex>': Compact<ValidatorIndex>;
-  'Option<ValidatorIndex>': Option<ValidatorIndex>;
-  'Vec<ValidatorIndex>': Vec<ValidatorIndex>;
-  ValidityVote: ValidityVote;
-  'Option<ValidityVote>': Option<ValidityVote>;
-  'Vec<ValidityVote>': Vec<ValidityVote>;
   WinningDataEntry: WinningDataEntry;
   'Option<WinningDataEntry>': Option<WinningDataEntry>;
   'Vec<WinningDataEntry>': Vec<WinningDataEntry>;
@@ -1406,6 +1397,15 @@ export interface InterfaceRegistry {
   DispatchInfoTo190: DispatchInfoTo190;
   'Option<DispatchInfoTo190>': Option<DispatchInfoTo190>;
   'Vec<DispatchInfoTo190>': Vec<DispatchInfoTo190>;
+  H160: H160;
+  'Option<H160>': Option<H160>;
+  'Vec<H160>': Vec<H160>;
+  H256: H256;
+  'Option<H256>': Option<H256>;
+  'Vec<H256>': Vec<H256>;
+  H512: H512;
+  'Option<H512>': Option<H512>;
+  'Vec<H512>': Vec<H512>;
   Hash: Hash;
   'Option<Hash>': Option<Hash>;
   'Vec<Hash>': Vec<Hash>;
