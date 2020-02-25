@@ -3,7 +3,8 @@ import * as ormlDefinations from '@orml/types/interfaces/definitions';
 
 import * as acalaDefinations from './interfaces/definitions';
 
-export { InterfaceRegistry } from './interfaceRegistry';
+import * as InterfaceRegistry from './interfaceRegistry';
+export { InterfaceRegistry };
 
 // FIXME: currently we cannot override this in runtime definations because the code generation script cannot handle overrides
 // This will make it behave correctly in runtime, but wrong types in TS defination.
