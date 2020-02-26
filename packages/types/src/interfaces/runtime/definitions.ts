@@ -8,6 +8,9 @@ export default {
     CurrencyId: {
       _enum: ['ACA', 'AUSD', 'DOT', 'XBTC']
     },
+    AirDropCurrencyId: {
+      _enum: ['KAR', 'ACA']
+    },
     CurrencyIdOf: 'CurrencyId',
     Amount: 'i128',
     AmountOf: 'Amount',

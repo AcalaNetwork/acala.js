@@ -28,7 +28,7 @@ import { AttestedCandidate, AuctionIndex, Bidder, CandidateReceipt, CollatorId, 
 import { Price } from '@orml/types/interfaces/prices';
 import { ActiveRecovery, RecoveryConfig } from '@polkadot/types/interfaces/recovery';
 import { ApiId, BlockHash, ChainProperties, ExtrinsicOrHash, ExtrinsicStatus, Health, KeyValueOption, NetworkState, PeerInfo, RpcMethods, RuntimeDispatchInfo, RuntimeVersion, RuntimeVersionApi, StorageChangeSet } from '@polkadot/types/interfaces/rpc';
-import { AccountId, AccountIdOf, AccountIndex, Address, Amount, AmountOf, AssetId, AuctionId, AuctionIdLinkedItem, AuctionIdOf, AuctionItem, Balance, BalanceOf, Block, BlockNumber, Call, ChangesTrieConfiguration, CollateralAuctionItem, Consensus, ConsensusEngineId, CurrencyId, CurrencyIdOf, DebitAmount, DebitAmountOf, DebitAuctionItem, DebitBalance, DebitBalanceOf, DepositBalanceOf, Digest, DigestItem, DispatchClass, DispatchInfo, DispatchInfoTo190, ExchangeRate, Fixed64, H160, H256, H512, Hash, Header, Index, Justification, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, Moment, OracleKey, OracleValue, Origin, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, Rate, Ratio, Seal, SealV0, Share, SignedBlock, StorageData, SurplusAuctionItem, ValidatorId, Weight, WeightMultiplier } from '@acala-network/types/interfaces/runtime';
+import { AccountId, AccountIdOf, AccountIndex, Address, AirDropCurrencyId, Amount, AmountOf, AssetId, AuctionId, AuctionIdLinkedItem, AuctionIdOf, AuctionItem, Balance, BalanceOf, Block, BlockNumber, Call, ChangesTrieConfiguration, CollateralAuctionItem, Consensus, ConsensusEngineId, CurrencyId, CurrencyIdOf, DebitAmount, DebitAmountOf, DebitAuctionItem, DebitBalance, DebitBalanceOf, DepositBalanceOf, Digest, DigestItem, DispatchClass, DispatchInfo, DispatchInfoTo190, ExchangeRate, Fixed64, H160, H256, H512, Hash, Header, Index, Justification, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, Moment, OracleKey, OracleValue, Origin, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, Rate, Ratio, Seal, SealV0, Share, SignedBlock, StorageData, SurplusAuctionItem, ValidatorId, Weight, WeightMultiplier } from '@acala-network/types/interfaces/runtime';
 import { FullIdentification, IdentificationTuple, Keys, SessionIndex, SessionKeys1, SessionKeys2, SessionKeys3, SessionKeys4, SessionKeys5, SessionKeys6 } from '@polkadot/types/interfaces/session';
 import { Bid, BidKind, BidKindVouch, SocietyJudgement, SocietyVote, StrikeCount, VouchingStatus } from '@polkadot/types/interfaces/society';
 import { CompactAssignments, CompactScore, ElectionCompute, ElectionResult, ElectionStatus, EraIndex, EraPoints, EraRewardPoints, EraRewards, Exposure, Forcing, IndividualExposure, KeyType, MomentOf, Nominations, PhragmenScore, Points, RewardDestination, RewardPoint, SlashJournalEntry, SlashingSpans, SlashingSpansTo204, SpanIndex, SpanRecord, StakingLedger, StakingLedgerNew, StakingLedgerTo223, UnappliedSlash, UnappliedSlashOther, UnlockChunk, ValidatorIndex, ValidatorPrefs, ValidatorPrefsTo145, ValidatorPrefsTo196 } from '@polkadot/types/interfaces/staking';
@@ -1571,6 +1571,9 @@ declare module '@polkadot/types/types/registry' {
     CurrencyId: CurrencyId;
     'Option<CurrencyId>': Option<CurrencyId>;
     'Vec<CurrencyId>': Vec<CurrencyId>;
+    AirDropCurrencyId: AirDropCurrencyId;
+    'Option<AirDropCurrencyId>': Option<AirDropCurrencyId>;
+    'Vec<AirDropCurrencyId>': Vec<AirDropCurrencyId>;
     CurrencyIdOf: CurrencyIdOf;
     'Option<CurrencyIdOf>': Option<CurrencyIdOf>;
     'Vec<CurrencyIdOf>': Vec<CurrencyIdOf>;
