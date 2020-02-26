@@ -22,6 +22,12 @@ export interface AccountIndex extends GenericAccountIndex {}
 /** @name Address */
 export interface Address extends GenericAddress {}
 
+/** @name AirDropCurrencyId */
+export interface AirDropCurrencyId extends Enum {
+  readonly isKar: boolean;
+  readonly isAca: boolean;
+}
+
 /** @name Amount */
 export interface Amount extends i128 {}
 
