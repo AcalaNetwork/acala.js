@@ -1,0 +1,19 @@
+{
+  "name": "@acala-network/utils",
+  "version": "0.0.1",
+  "description": "utils",
+  "author": "Acala Developers <hello@acala.one>",
+  "main": "build/index.js",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "repository": "https://github.com/AcalaNetwork/acala.js.git",
+  "dependencies": {
+    "bignumber.js": "^9.0.0"
+  },
+  "devDependencies": {
+    "@polkadot/api": "beta"
+  }
+}
