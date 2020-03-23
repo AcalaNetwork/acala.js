@@ -4,16 +4,16 @@ import BigNumber from 'bignumber.js';
  * @constant
  * @type {(0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8)}
  * @description
- * | Value | Property | Description |  
- * | 0     | ROUND_UP | Rounds away from zero |  
- * | 1     | ROUND_DOWN | Rounds towards zero |  
- * | 2     | ROUND_CEIL | Rounds towards Infinity |  
- * | 3     | ROUND_FLOOR | Rounds towards -Infinity |  
- * | 4     | ROUND_HALF_UP | Rounds towards nearest neighbour, If equidistant, rounds away form zero |  
- * | 5     | ROUND_HALF_DOWN | Rounds towards nearest neighbour, If equidistant, rounds towards zero |  
- * | 6     | ROUND_HALF_EVEN | Rounds towards nearest neighbour, If equidistant, rounds towards even zero |  
- * | 7     | ROUND_HALF_CEIL | Rounds towards nearest neighbour, If equidistant, rounds towards Infinity |  
- * | 8     | ROUND_HALF_FLOOR | Rounds towards nearest neighbour, If equidistant, rounds towards -Infinity |  
+ * | Value | Property | Description |
+ * | 0     | ROUND_UP | Rounds away from zero |
+ * | 1     | ROUND_DOWN | Rounds towards zero |
+ * | 2     | ROUND_CEIL | Rounds towards Infinity |
+ * | 3     | ROUND_FLOOR | Rounds towards -Infinity |
+ * | 4     | ROUND_HALF_UP | Rounds towards nearest neighbour, If equidistant, rounds away form zero |
+ * | 5     | ROUND_HALF_DOWN | Rounds towards nearest neighbour, If equidistant, rounds towards zero |
+ * | 6     | ROUND_HALF_EVEN | Rounds towards nearest neighbour, If equidistant, rounds towards even zero |
+ * | 7     | ROUND_HALF_CEIL | Rounds towards nearest neighbour, If equidistant, rounds towards Infinity |
+ * | 8     | ROUND_HALF_FLOOR | Rounds towards nearest neighbour, If equidistant, rounds towards -Infinity |
  */
 export type ROUND_MODE = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
@@ -65,7 +65,7 @@ export class FixedU128 {
    * @param {number} [dp=5] - decimal places deafult is 5
    * @param {number} [rm=3] - round modle, default is ROUND_FLOOR
    */
-  public toString (dp: number = 5, rm: ROUND_MODE = 3): string {
+  public toString (dp = 5, rm: ROUND_MODE = 3): string {
     let result = this.inner.div(FixedU128.PRECISION);
     result = result.decimalPlaces(dp, rm);
     return result.toString();
@@ -88,7 +88,7 @@ export class FixedU128 {
    * @param {number} [dp=5] - decimal places deafult is 5
    * @param {number} [rm=3] - round modle, default is ROUND_FLOOR
    */
-  public toNumber (dp: number = 5, rm: ROUND_MODE = 3): number {
+  public toNumber (dp = 5, rm: ROUND_MODE = 3): number {
     let result = this.inner.div(FixedU128.PRECISION);
     result = result.decimalPlaces(dp, rm);
     return result.toNumber();
@@ -165,7 +165,7 @@ export class FixedU128 {
    * @param {number} [dp=5] - decimal places deafult is 5
    * @param {number} [rm=3] - round modle, default is ROUND_FLOOR
    */
-  public decimalPlaces (dp: number = 5, rm: ROUND_MODE = 3): FixedU128 {
+  public decimalPlaces (dp = 5, rm: ROUND_MODE = 3): FixedU128 {
     return new FixedU128(this.inner.decimalPlaces(dp, rm));
   }
 
@@ -181,7 +181,7 @@ export class FixedU128 {
   /**
    * @name isGreaterThan
    * @description return true if the value is greater than the target value
-   * @param {FixedU128} target - target number 
+   * @param {FixedU128} target - target number
    */
   public isGreaterThan (target: FixedU128): boolean {
     return this.inner.isGreaterThan(target.inner);
@@ -242,7 +242,7 @@ export class FixedU128 {
    * @name isFinity
    * @description return true if the value of inner is finity, only return false when the value is NaN, -Infinity or Infinity.
    */
-  public isFinity(): boolean {
+  public isFinity (): boolean {
     return this.inner ? this.inner.isFinite() : false;
   }
 }

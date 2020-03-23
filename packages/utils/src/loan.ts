@@ -51,3 +51,25 @@ export function calcRequiredCollateral (
   }
   return debitAmount.mul(requiredCollateralRatio).div(collateralPrice);
 }
+
+interface LoanParams {
+  debits: FixedU128;
+  collaterals: FixedU128;
+}
+export class Loan {
+  private _debits: FixedU128;
+  private _collaterals: FixedU128;
+
+  constructor (params: LoanParams) {
+    this._debits = params.debits;
+    this._collaterals = params.collaterals;
+  }
+
+  get debits (): FixedU128 {
+    return this._debits;
+  }
+
+  get collaterels (): FixedU128 {
+    return this._collaterals;
+  }
+}
