@@ -1,11 +1,15 @@
 {
-  "name": "@acala-network/api-deriver",
+  "name": "@acala-network/api-derive",
   "version": "0.0.1",
   "description": "api deriver",
   "author": "Acala Developers <hello@acala.one>",
   "license": "ISC",
   "main": "build/index.js",
   "dependencies": {
-    "@acala-network/types": "beta"
+    "@acala-network/types": "beta",
+    "memoizee": "^0.4.14"
+  },
+  "devDependencies": {
+    "@types/memoizee": "^0.4.3"
   }
 }
