@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/api",
-  "version": "0.2.0-beta.20",
+  "version": "0.2.0-beta.21",
   "description": "Acala JS API",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
