@@ -10,7 +10,17 @@ This library provides additional typing information for user to access Acala Net
 - Install dependencies
 
 ```bash
-yarn add @acala-network/api
+yarn add @polkadot/api@1.4.0-beta.50 @acala-network/api@beta
+```
+
+Note: Currently only `@acala-network/api@beta` and `@polkadot/api@1.4.0-beta.50` are supported.
+
+- Ensure the version of `@polkadot/api` by adding `resolution` field into your `package.json` file
+
+```json
+  "resolutions": {
+    "@polkadot/api": "1.4.0-beta.50"
+  },
 ```
 
 - Create API instance
@@ -20,13 +30,17 @@ import { ApiPromise } from '@polkadot/api';
 import { WsProvider } from '@polkadot/rpc-provider';
 import { options } from '@acala-network/api';
 
-const provider = new WsProvider('ws://localhost:994');
-const api = await ApiPromise(options({ provider }));
+async function main() {
+    const provider = new WsProvider('wss://testnet-node-1.acala.laminar.one/ws');
+    const api = new ApiPromise(options({ provider }));
+    await api.isReady;
+}
 ```
 
 - Use api to interact with node
 
 ```ts
-// query account nonce
-const { nonce } = await api.query.system.account(address);
+// query and display account data
+const data = await api.query.system.account('5F98oWfz2r5rcRVnP9VCndg33DAAsky3iuoBSpaPUbgN9AJn');
+console.log(data.toHuman())
 ```
