@@ -23,3 +23,10 @@ import { options } from '@acala-network/api';
 const provider = new WsProvider('ws://localhost:994');
 const api = await ApiPromise(options({ provider }));
 ```
+
+- Use api to interact with node
+
+```ts
+// query account nonce
+const { nonce } = await api.query.system.account(address);
+```
