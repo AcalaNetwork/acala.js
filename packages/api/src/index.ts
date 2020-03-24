@@ -1,6 +1,6 @@
-import acalaJsonRpc from "@acala-network/types/interfaces/jsonrpc";
-import { types as acalaTypes } from "@acala-network/types";
-import { ApiOptions } from "@polkadot/api/types";
+import acalaJsonRpc from '@acala-network/types/interfaces/jsonrpc';
+import { types as acalaTypes } from '@acala-network/types';
+import { ApiOptions } from '@polkadot/api/types';
 
 const acalaRpc = acalaJsonRpc;
 
