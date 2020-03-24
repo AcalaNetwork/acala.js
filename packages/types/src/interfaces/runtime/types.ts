@@ -1,14 +1,14 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
-/* eslint-disable @typescript-eslint/no-empty-interface */
+/* eslint-disable */
 
 import { ITuple } from '@polkadot/types/types';
 import { Compact, Enum, Int, Option, Struct, U8aFixed, Vec } from '@polkadot/types/codec';
 import { GenericAccountId, GenericAccountIndex, GenericAddress, GenericBlock, GenericCall, GenericConsensusEngineId, GenericDigest, GenericOrigin } from '@polkadot/types/generic';
 import { Bytes, Null, StorageKey, bool, i128, u128, u32, u64, u8 } from '@polkadot/types/primitive';
-import { AuthorityId } from '@polkadot/types/interfaces/consensus';
-import { Signature } from '@polkadot/types/interfaces/extrinsics';
 import { Price } from '@orml/types/interfaces/prices';
 import { FixedU128 } from '@orml/types/interfaces/utilities';
+import { AuthorityId } from '@polkadot/types/interfaces/consensus';
+import { Signature } from '@polkadot/types/interfaces/extrinsics';
 
 /** @name AccountId */
 export interface AccountId extends GenericAccountId {}
@@ -286,3 +286,5 @@ export interface Weight extends u32 {}
 
 /** @name WeightMultiplier */
 export interface WeightMultiplier extends Fixed64 {}
+
+export type PHANTOM_RUNTIME = 'runtime';
