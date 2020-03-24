@@ -1,10 +1,8 @@
-import ormlRPC from '@orml/jsonrpc';
+import acalaJsonRpc from '@acala-network/types/interfaces/jsonrpc';
 import { types as acalaTypes } from '@acala-network/types';
 import { ApiOptions } from '@polkadot/api/types';
 
-// FIXME: use a concrete type once polkadotjs fixes inconsistency.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const acalaRpc: any = { oracle: Object.values(ormlRPC.oracle.methods) };
+const acalaRpc = acalaJsonRpc;
 
 export const defaultOptions: ApiOptions = {
   types: acalaTypes,
