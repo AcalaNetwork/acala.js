@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/types",
-  "version": "0.2.0-beta.23",
+  "version": "0.2.0-beta.24",
   "description": "Acala JS types",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
