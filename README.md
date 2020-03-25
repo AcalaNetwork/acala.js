@@ -10,18 +10,10 @@ This library provides additional typing information for user to access Acala Net
 - Install dependencies
 
 ```bash
-yarn add @polkadot/api@1.4.0-beta.50 @acala-network/api@beta
+yarn add @polkadot/api@1.8.1 @acala-network/api@beta
 ```
 
-Note: Currently only `@acala-network/api@beta` and `@polkadot/api@1.4.0-beta.50` are supported.
-
-- Ensure the version of `@polkadot/api` by adding `resolution` field into your `package.json` file
-
-```json
-  "resolutions": {
-    "@polkadot/api": "1.4.0-beta.50"
-  },
-```
+Note: Currently only `@acala-network/api@beta` and `@polkadot/api@1.8.1` are supported.
 
 - Create API instance
 
@@ -34,7 +26,11 @@ async function main() {
     const provider = new WsProvider('wss://testnet-node-1.acala.laminar.one/ws');
     const api = new ApiPromise(options({ provider }));
     await api.isReady;
+
+    // use api
 }
+
+main()
 ```
 
 - Use api to interact with node
