@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
 export function pool (api: ApiInterfaceRx): (token: CurrencyId | string) => Observable<DerivedDexPool> {
   return memo((token: CurrencyId | string) => {
     return api.query.dex.liquidityPool<[Balance, Balance]>(token).pipe(
-      map(result => {
+      map((result) => {
         const [other, base] = result;
         return { target: other, base: base };
       })

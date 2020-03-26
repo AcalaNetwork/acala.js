@@ -20,10 +20,10 @@ export type ROUND_MODE = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 type NumLike = number | string;
 
 /**
- * @class FixedU128
+ * @class Fixed18
  * @description 18 decimals mathematical operation support
  */
-export class FixedU128 {
+export class Fixed18 {
   private inner: BigNumber;
 
   /**
@@ -36,10 +36,10 @@ export class FixedU128 {
    * @constant
    * @description zero
    */
-  static ZERO = FixedU128.fromNatural(0);
+  static ZERO = Fixed18.fromNatural(0);
 
   /**
-   * @description constructor of FixedU128
+   * @description constructor of Fixed18
    * @param {(number | string | BigNumber)} origin - the origin number
    */
   constructor (origin: NumLike | BigNumber) {
@@ -66,7 +66,7 @@ export class FixedU128 {
    * @param {number} [rm=3] - round modle, default is ROUND_FLOOR
    */
   public toString (dp = 5, rm: ROUND_MODE = 3): string {
-    let result = this.inner.div(FixedU128.PRECISION);
+    let result = this.inner.div(Fixed18.PRECISION);
     result = result.decimalPlaces(dp, rm);
     return result.toString();
   }
@@ -74,12 +74,39 @@ export class FixedU128 {
   /**
    * @name innerToString
    * @description format inner BigNumber value to string
+   * @param {number} [dp=0] - decimal places deafult is 0
+   * @param {number} [rm=3] - round modle, default is ROUND_FLOOR
    */
-  public innerToString (): string {
-    if (this.isNaN()) {
-      return FixedU128.ZERO.innerToString();
+  public innerToString (dp = 0, rm: ROUND_MODE = 3): string {
+    // return 0 if the value is Infinity, -Infinity and NaN
+    if (!this.isFinity()) {
+      return '0';
     }
-    return this.inner.toFixed(0);
+    return this.inner.decimalPlaces(dp, rm).toFixed();
+  }
+
+  /**
+   * @name innerToNumber
+   * @description format inner BigNumber value to string
+   * @param {number} [dp=0] - decimal places deafult is 0
+   * @param {number} [rm=3] - round modle, default is ROUND_FLOOR
+   */
+  public innerToNumber (dp = 0, rm: ROUND_MODE = 3): number {
+    // return 0 if the value is Infinity, -Infinity and NaN
+    if (!this.isFinity()) {
+      return 0;
+    }
+    return this.inner.decimalPlaces(dp, rm).toNumber();
+  }
+
+  /**
+   * @name deciminalPlaces
+   * @description returns a BigNumber whose value is the value of this BigNumber rounded by rounding mode roundingMode to a maximum of decimalPlaces decimal places.
+   * @param {number} [dp=18] - decimal places
+   * @param {number} [rm=3] - round modle, default is ROUND_FLOOR
+   */
+  public decimalPlaces (dp = 18, rm: ROUND_MODE = 3): Fixed18 {
+    return Fixed18.fromNatural(this.toNumber(dp, rm));
   }
 
   /**
@@ -89,27 +116,27 @@ export class FixedU128 {
    * @param {number} [rm=3] - round modle, default is ROUND_FLOOR
    */
   public toNumber (dp = 5, rm: ROUND_MODE = 3): number {
-    let result = this.inner.div(FixedU128.PRECISION);
+    let result = this.inner.div(Fixed18.PRECISION);
     result = result.decimalPlaces(dp, rm);
     return result.toNumber();
   }
 
   /**
    * @name fromNatural
-   * @description get FixedU128 from real number, will multiply by precision
+   * @description get Fixed18 from real number, will multiply by precision
    * @param {(string | number)} target - target number
    */
-  static fromNatural (target: NumLike): FixedU128 {
-    return new FixedU128(new BigNumber(target).times(FixedU128.PRECISION));
+  static fromNatural (target: NumLike): Fixed18 {
+    return new Fixed18(new BigNumber(target).times(Fixed18.PRECISION));
   }
 
   /**
    * @name fromParts
-   * @description get FixedU128 from real number, will not multiply by precision
+   * @description get Fixed18 from real number, will not multiply by precision
    * @param {(string | number)} parts - parts number
    */
-  static fromParts (parts: NumLike): FixedU128 {
-    return new FixedU128(parts);
+  static fromParts (parts: NumLike): Fixed18 {
+    return new Fixed18(parts);
   }
 
   /**
@@ -117,109 +144,101 @@ export class FixedU128 {
    * @param {(string | number)} n - numerator
    * @param {(string | number)} d - denominator
    */
-  static fromRational (n: NumLike, d: NumLike): FixedU128 {
+  static fromRational (n: NumLike, d: NumLike): Fixed18 {
     const _n = new BigNumber(n);
     const _d = new BigNumber(d);
-    return new FixedU128(_n.times(FixedU128.PRECISION).div(_d));
+    return new Fixed18(_n.times(Fixed18.PRECISION).div(_d).decimalPlaces(0, 3));
   }
 
   /**
    * @name add
    * @description fixed-point addition operator
-   * @param {FixedU128} target - target number
+   * @param {Fixed18} target - target number
    */
-  public add (target: FixedU128): FixedU128 {
-    return new FixedU128(this.inner.plus(target.inner));
+  public add (target: Fixed18): Fixed18 {
+    return new Fixed18(this.inner.plus(target.inner).decimalPlaces(0, 3));
   }
 
   /**
    * @name sub
    * @description fixed-point subtraction operator
-   * @param {FixedU128} target - target number
+   * @param {Fixed18} target - target number
    */
-  public sub (target: FixedU128): FixedU128 {
-    return new FixedU128(this.inner.minus(target.inner));
+  public sub (target: Fixed18): Fixed18 {
+    return new Fixed18(this.inner.minus(target.inner).decimalPlaces(0, 3));
   }
 
   /**
    * @name mul
    * @description fixed-point multiplication operator
-   * @param {FixedU128} target - target number
+   * @param {Fixed18} target - target number
    */
-  public mul (target: FixedU128): FixedU128 {
-    return new FixedU128(this.inner.times(target.inner).div(FixedU128.PRECISION));
+  public mul (target: Fixed18): Fixed18 {
+    const inner = this.inner.times(target.inner).div(Fixed18.PRECISION).decimalPlaces(0, 3);
+    return new Fixed18(inner);
   }
 
   /**
    * @name div
    * @description fixed-point divided operator
-   * @param {FixedU128} target - target number
+   * @param {Fixed18} target - target number
    */
-  public div (target: FixedU128): FixedU128 {
-    return new FixedU128(this.inner.div(target.inner).times(FixedU128.PRECISION));
-  }
-
-  /**
-   * @name decimalPlaces
-   * @description get rounded value by Decimal Places and round modle
-   * @param {number} [dp=5] - decimal places deafult is 5
-   * @param {number} [rm=3] - round modle, default is ROUND_FLOOR
-   */
-  public decimalPlaces (dp = 5, rm: ROUND_MODE = 3): FixedU128 {
-    return new FixedU128(this.inner.decimalPlaces(dp, rm));
+  public div (target: Fixed18): Fixed18 {
+    const inner = this.inner.div(target.inner).times(Fixed18.PRECISION).decimalPlaces(0, 3);
+    return new Fixed18(inner);
   }
 
   /**
    * @name isLessThan
    * @description return true if the value is less than the target value
-   * @param {FixedU128} target  - target number
+   * @param {Fixed18} target  - target number
    */
-  public isLessThan (target: FixedU128): boolean {
+  public isLessThan (target: Fixed18): boolean {
     return this.inner.isLessThan(target.inner);
   }
 
   /**
    * @name isGreaterThan
    * @description return true if the value is greater than the target value
-   * @param {FixedU128} target - target number
+   * @param {Fixed18} target - target number
    */
-  public isGreaterThan (target: FixedU128): boolean {
+  public isGreaterThan (target: Fixed18): boolean {
     return this.inner.isGreaterThan(target.inner);
   }
 
   /**
    * @name isEqualTo
    * @description return true if the values are equal
-   * @param {FixedU128} target - target number
+   * @param {Fixed18} target - target number
    */
-  public isEqualTo (target: FixedU128): boolean {
+  public isEqualTo (target: Fixed18): boolean {
     return this.inner.isEqualTo(target.inner);
   }
 
   /**
    * @name max
    * @description return the max value
-   * @param {...FixedU128} target - target numbers
+   * @param {...Fixed18} target - target numbers
    */
-  public max (...targets: FixedU128[]): FixedU128 {
-    return new FixedU128(BigNumber.max.apply(null, [this.inner, ...targets.map(i => i.inner)]));
+  public max (...targets: Fixed18[]): Fixed18 {
+    return new Fixed18(BigNumber.max.apply(null, [this.inner, ...targets.map((i) => i.inner)]));
   }
 
   /**
    * @name min
    * @description return the min value
-   * @param {...FixedU128} target - target numbers
+   * @param {...Fixed18} target - target numbers
    */
-  public min (...targets: FixedU128[]): FixedU128 {
-    return new FixedU128(BigNumber.min.apply(null, [this.inner, ...targets.map(i => i.inner)]));
+  public min (...targets: Fixed18[]): Fixed18 {
+    return new Fixed18(BigNumber.min.apply(null, [this.inner, ...targets.map((i) => i.inner)]));
   }
 
   /**
    * @name nagated
    * @description return the nageted value
    */
-  public negated (): FixedU128 {
-    return new FixedU128(this.inner.negated());
+  public negated (): Fixed18 {
+    return new Fixed18(this.inner.negated());
   }
 
   /**
@@ -227,7 +246,7 @@ export class FixedU128 {
    * @description return true if the value of inner is 0
    */
   public isZero (): boolean {
-    return this.inner ? this.inner.isZero() : false;
+    return this.inner.isZero();
   }
 
   /**
@@ -235,7 +254,7 @@ export class FixedU128 {
    * @description return true if the value of inner is NaN
    */
   public isNaN (): boolean {
-    return this.inner ? this.inner.isNaN() : true;
+    return this.inner.isNaN();
   }
 
   /**
@@ -243,6 +262,6 @@ export class FixedU128 {
    * @description return true if the value of inner is finity, only return false when the value is NaN, -Infinity or Infinity.
    */
   public isFinity (): boolean {
-    return this.inner ? this.inner.isFinite() : false;
+    return this.inner.isFinite();
   }
 }

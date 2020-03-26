@@ -23,7 +23,7 @@ export function price (api: ApiInterfaceRx): (token: CurrencyId | string) => Obs
       return stableFixedPrice;
     }
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    return (api.rpc as any).oracle.getValue(token).pipe(map(result => result));
+    return (api.rpc as any).oracle.getValue(token).pipe(map((result) => result));
   });
 }
 
@@ -35,8 +35,8 @@ export function allPrices (api: ApiInterfaceRx): () => Observable<DerivedPrice[]
   return memo(() => {
     const currencyIds = getCurrencyIds(api);
     const priceQuery = price(api);
-    return combineLatest(currencyIds.map(token => priceQuery(token))).pipe(
-      map(result => {
+    return combineLatest(currencyIds.map((token) => priceQuery(token))).pipe(
+      map((result) => {
         return currencyIds.map((token, index) => ({ token, price: result[index] }));
       })
     );

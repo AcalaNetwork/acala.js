@@ -4,10 +4,10 @@ const config = require('@polkadot/dev/config/jest');
 
 module.exports = Object.assign({}, config, {
   moduleNameMapper: {
-    '@polkadot/types(.*)$': '<rootDir>/packages/types/src/$1',
-    '@polkadot/api(.*)$': '<rootDir>/packages/api/src/$1',
-    '@polkadot/api-derive(.*)$': '<rootDir>/packages/api-derive/src/$1',
-    '@polkadot/utils(.*)$': '<rootDir>/packages/utils/src/$1'
+    '@acala-network/types(.*)$': '<rootDir>/packages/types/src/$1',
+    '@acala-network/api(.*)$': '<rootDir>/packages/api/src/$1',
+    '@acala-network/api-derive(.*)$': '<rootDir>/packages/api-derive/src/$1',
+    '@acala-network/utils(.*)$': '<rootDir>/packages/utils/src/$1'
   },
   modulePathIgnorePatterns: [
     '<rootDir>/packages/api/build',

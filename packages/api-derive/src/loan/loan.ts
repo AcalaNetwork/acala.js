@@ -19,7 +19,7 @@ export function userLoan (
       api.query.loans.debits<Balance>(token, account),
       api.query.loans.collaterals<Balance>(account, token)
     ]).pipe(
-      map(result => {
+      map((result) => {
         const [debits, collaterals] = result;
         return { account, token, debits, collaterals };
       })

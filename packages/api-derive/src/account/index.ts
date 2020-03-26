@@ -16,7 +16,7 @@ export function balance (api: ApiInterfaceRx): (token: string, account: AccountI
     const currencyId = api.registry.createType('CurrencyId' as any, token);
     const nativeCurrencyId = getNativeCurrencyId(api);
     if (currencyId.eq(nativeCurrencyId)) {
-      return api.query.system.account<AccountInfo>(account).pipe(map(result => result.data.free));
+      return api.query.system.account<AccountInfo>(account).pipe(map((result) => result.data.free));
     }
     return api.query.tokens.balance<Balance>(token, account);
   });
@@ -30,8 +30,8 @@ export function balances (api: ApiInterfaceRx): (account: AccountId | string) =>
   return memo((account: AccountId | string) => {
     const queryBalance = balance(api);
     const currencyList = getCurrencyIds(api);
-    return combineLatest(currencyList.map(token => queryBalance(token, account))).pipe(
-      map(result =>
+    return combineLatest(currencyList.map((token) => queryBalance(token, account))).pipe(
+      map((result) =>
         currencyList.map((token, index) => ({
           token,
           balance: result[index]
