@@ -18,5 +18,10 @@ export const options = ({ types = {}, rpc = {}, ...otherOptions }: ApiOptions): 
     ...acalaRpc,
     ...rpc
   },
+  typesAlias: {
+    homaCouncli: {
+      UnlockChunk: 'HumaUnlockChunk'
+    }
+  },
   ...otherOptions
 });
