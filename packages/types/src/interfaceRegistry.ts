@@ -4,12 +4,12 @@
 import { Compact, Option, Raw, Vec } from '@polkadot/types/codec';
 import { BitVec, Bytes, Data, Null, StorageKey, Text, Type, U256, Unconstructable, bool, i128, i16, i256, i32, i64, i8, u128, u16, u256, u32, u64, u8, usize } from '@polkadot/types/primitive';
 import { DepositBalanceOf, PalletBalanceOf } from '@acala-network/types/interfaces/accounts';
-import { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@acala-network/types/interfaces/auction_manager';
+import { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@acala-network/types/interfaces/auctionManager';
 import { RedeemStrategy } from '@acala-network/types/interfaces/huma';
-import { BondingLedger, HumaUnlockChunk } from '@acala-network/types/interfaces/huma_councli';
+import { BondingLedger, HumaUnlockChunk } from '@acala-network/types/interfaces/humaCouncli';
 import { AirDropCurrencyId, CurrencyId } from '@acala-network/types/interfaces/primitives';
 import { AccountId, AccountIdOf, AccountIndex, Address, Amount, AmountOf, AssetId, AuctionId, AuctionIdLinkedItem, AuctionIdOf, AuctionItem, Balance, BalanceOf, Block, BlockNumber, Call, ChangesTrieConfiguration, Consensus, ConsensusEngineId, CurrencyIdOf, DebitAmount, DebitAmountOf, DebitBalance, DebitBalanceOf, Digest, DigestItem, DispatchClass, DispatchInfo, DispatchInfoTo190, ExchangeRate, Fixed64, H160, H256, H512, Hash, Header, Index, Justification, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, Moment, OracleKey, OracleValue, Origin, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, Rate, Ratio, Seal, SealV0, Share, SignedBlock, StorageData, ValidatorId, Weight, WeightMultiplier } from '@acala-network/types/interfaces/runtime';
-import { LiquidBalanceOf, PolkadotAccountId, PolkadotAccountIdOf, StakingBalanceOf } from '@acala-network/types/interfaces/staking_pool';
+import { LiquidBalanceOf, PolkadotAccountId, PolkadotAccountIdOf, StakingBalanceOf } from '@acala-network/types/interfaces/stakingPool';
 import { TimestampedValue, TimestampedValueOf } from '@orml/types/interfaces/oracle';
 import { Price } from '@orml/types/interfaces/prices';
 import { AuctionInfo } from '@orml/types/interfaces/traits';

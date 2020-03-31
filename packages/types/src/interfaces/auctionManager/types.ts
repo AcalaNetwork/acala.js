@@ -27,4 +27,4 @@ export interface SurplusAuctionItem extends Struct {
   readonly startTime: BlockNumber;
 }
 
-export type PHANTOM_AUCTION_MANAGER = 'auction_manager';
+export type PHANTOM_AUCTIONMANAGER = 'auctionManager';

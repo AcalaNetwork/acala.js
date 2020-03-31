@@ -1,6 +1,6 @@
 export default {
-    types: {
-        PalletBalanceOf: 'Balance',
-        DepositBalanceOf: 'Balance',
-    }
-}
+  types: {
+    PalletBalanceOf: 'Balance',
+    DepositBalanceOf: 'Balance'
+  }
+};

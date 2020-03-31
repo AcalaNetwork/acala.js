@@ -18,4 +18,4 @@ export interface HumaUnlockChunk extends Struct {
   readonly era: Compact<EraIndex>;
 }
 
-export type PHANTOM_HUMA_COUNCLI = 'huma_councli';
+export type PHANTOM_HUMACOUNCLI = 'humaCouncli';

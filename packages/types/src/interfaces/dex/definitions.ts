@@ -1,41 +1,41 @@
 export default {
-    rpc: {
-        getSupplyAmount: {
-            description: 'Get supply amount',
-            params: [
-                {
-                    name: 'supplyCurrencyId',
-                    type: 'CurrencyId'
-                },
-                {
-                    name: 'targetCurrencyId',
-                    type: 'CurrencyId'
-                },
-                {
-                    name: 'targetCurrencyAmount',
-                    type: 'Balance'
-                },
-            ],
-            type: 'Balance'
+  rpc: {
+    getSupplyAmount: {
+      description: 'Get supply amount',
+      params: [
+        {
+          name: 'supplyCurrencyId',
+          type: 'CurrencyId'
         },
-        getTargetAmount: {
-            description: 'Get target amount',
-            params: [
-                {
-                    name: 'supplyCurrencyId',
-                    type: 'CurrencyId'
-                },
-                {
-                    name: 'targetCurrencyId',
-                    type: 'CurrencyId'
-                },
-                {
-                    name: 'supplyCurrencyAmount',
-                    type: 'Balance'
-                },
-            ],
-            type: 'Balance'
+        {
+          name: 'targetCurrencyId',
+          type: 'CurrencyId'
         },
+        {
+          name: 'targetCurrencyAmount',
+          type: 'Balance'
+        }
+      ],
+      type: 'Balance'
     },
-    types: {}
+    getTargetAmount: {
+      description: 'Get target amount',
+      params: [
+        {
+          name: 'supplyCurrencyId',
+          type: 'CurrencyId'
+        },
+        {
+          name: 'targetCurrencyId',
+          type: 'CurrencyId'
+        },
+        {
+          name: 'supplyCurrencyAmount',
+          type: 'Balance'
+        }
+      ],
+      type: 'Balance'
+    }
+  },
+  types: {}
 };

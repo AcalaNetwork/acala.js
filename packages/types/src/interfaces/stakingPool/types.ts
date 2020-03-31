@@ -15,4 +15,4 @@ export interface PolkadotAccountIdOf extends PolkadotAccountId {}
 /** @name StakingBalanceOf */
 export interface StakingBalanceOf extends Balance {}
 
-export type PHANTOM_STAKING_POOL = 'staking_pool';
+export type PHANTOM_STAKINGPOOL = 'stakingPool';
