@@ -7,7 +7,6 @@ import { GenericAccountId, GenericAccountIndex, GenericAddress, GenericBlock, Ge
 import { Bytes, Null, StorageKey, bool, i128, u128, u32, u64, u8 } from '@polkadot/types/primitive';
 import { CurrencyId } from '@acala-network/types/interfaces/primitives';
 import { Price } from '@orml/types/interfaces/prices';
-import { FixedU128 } from '@orml/types/interfaces/utilities';
 import { AuthorityId } from '@polkadot/types/interfaces/consensus';
 import { Signature } from '@polkadot/types/interfaces/extrinsics';
 
@@ -135,9 +134,6 @@ export interface DispatchInfoTo190 extends Struct {
   readonly class: DispatchClass;
 }
 
-/** @name ExchangeRate */
-export interface ExchangeRate extends FixedU128 {}
-
 /** @name Fixed64 */
 export interface Fixed64 extends Int {}
 
@@ -215,12 +211,6 @@ export interface PhantomData extends Null {}
 
 /** @name PreRuntime */
 export interface PreRuntime extends ITuple<[ConsensusEngineId, Bytes]> {}
-
-/** @name Rate */
-export interface Rate extends FixedU128 {}
-
-/** @name Ratio */
-export interface Ratio extends FixedU128 {}
 
 /** @name Seal */
 export interface Seal extends ITuple<[ConsensusEngineId, Bytes]> {}

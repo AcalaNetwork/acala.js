@@ -1,6 +1,6 @@
 export default {
   types: {
-    HumaUnlockChunk: {
+    HomaUnlockChunk: {
       value: 'Compact<Balance>',
       era: 'Compact<EraIndex>'
     },

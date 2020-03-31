@@ -20,7 +20,7 @@ export const options = ({ types = {}, rpc = {}, ...otherOptions }: ApiOptions): 
   },
   typesAlias: {
     homaCouncli: {
-      UnlockChunk: 'HumaUnlockChunk'
+      UnlockChunk: 'HomaUnlockChunk'
     }
   },
   ...otherOptions

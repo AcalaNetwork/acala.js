@@ -16,11 +16,8 @@ export default {
       prev: 'Option<AuctionId>',
       next: 'Option<AuctionId>'
     },
-    ExchangeRate: 'FixedU128',
     OracleKey: 'CurrencyId',
     OracleValue: 'Price',
-    Rate: 'FixedU128',
-    Ratio: 'FixedU128',
     Share: 'u128',
     AuctionItem: {
       owner: 'AccountId',

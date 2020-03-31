@@ -12,10 +12,10 @@ export interface BondingLedger extends Struct {
   readonly unlocking: Vec<UnlockChunk>;
 }
 
-/** @name HumaUnlockChunk */
-export interface HumaUnlockChunk extends Struct {
+/** @name HomaUnlockChunk */
+export interface HomaUnlockChunk extends Struct {
   readonly value: Compact<Balance>;
   readonly era: Compact<EraIndex>;
 }
 
-export type PHANTOM_HUMACOUNCLI = 'humaCouncli';
+export type PHANTOM_HOMACOUNCLI = 'homaCouncli';

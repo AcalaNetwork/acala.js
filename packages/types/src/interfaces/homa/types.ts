@@ -10,4 +10,4 @@ export interface RedeemStrategy extends Enum {
   readonly isWaitForUnbonding: boolean;
 }
 
-export type PHANTOM_HUMA = 'huma';
+export type PHANTOM_HOMA = 'homa';
