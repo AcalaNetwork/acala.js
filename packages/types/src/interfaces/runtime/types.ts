@@ -5,8 +5,8 @@ import { ITuple } from '@polkadot/types/types';
 import { Compact, Enum, Int, Option, Struct, U8aFixed, Vec } from '@polkadot/types/codec';
 import { GenericAccountId, GenericAccountIndex, GenericAddress, GenericBlock, GenericCall, GenericConsensusEngineId, GenericDigest, GenericOrigin } from '@polkadot/types/generic';
 import { Bytes, Null, StorageKey, bool, i128, u128, u32, u64, u8 } from '@polkadot/types/primitive';
+import { CurrencyId } from '@acala-network/types/interfaces/primitives';
 import { Price } from '@orml/types/interfaces/prices';
-import { FixedU128 } from '@orml/types/interfaces/utilities';
 import { AuthorityId } from '@polkadot/types/interfaces/consensus';
 import { Signature } from '@polkadot/types/interfaces/extrinsics';
 
@@ -21,12 +21,6 @@ export interface AccountIndex extends GenericAccountIndex {}
 
 /** @name Address */
 export interface Address extends GenericAddress {}
-
-/** @name AirDropCurrencyId */
-export interface AirDropCurrencyId extends Enum {
-  readonly isKar: boolean;
-  readonly isAca: boolean;
-}
 
 /** @name Amount */
 export interface Amount extends i128 {}
@@ -79,28 +73,11 @@ export interface ChangesTrieConfiguration extends Struct {
   readonly digestLevels: u32;
 }
 
-/** @name CollateralAuctionItem */
-export interface CollateralAuctionItem extends Struct {
-  readonly owner: AccountId;
-  readonly currencyId: CurrencyId;
-  readonly amount: Balance;
-  readonly target: Balance;
-  readonly startTime: BlockNumber;
-}
-
 /** @name Consensus */
 export interface Consensus extends ITuple<[ConsensusEngineId, Bytes]> {}
 
 /** @name ConsensusEngineId */
 export interface ConsensusEngineId extends GenericConsensusEngineId {}
-
-/** @name CurrencyId */
-export interface CurrencyId extends Enum {
-  readonly isAca: boolean;
-  readonly isAusd: boolean;
-  readonly isDot: boolean;
-  readonly isXbtc: boolean;
-}
 
 /** @name CurrencyIdOf */
 export interface CurrencyIdOf extends CurrencyId {}
@@ -111,21 +88,11 @@ export interface DebitAmount extends Amount {}
 /** @name DebitAmountOf */
 export interface DebitAmountOf extends DebitAmount {}
 
-/** @name DebitAuctionItem */
-export interface DebitAuctionItem extends Struct {
-  readonly amount: Balance;
-  readonly fix: Balance;
-  readonly startTime: BlockNumber;
-}
-
 /** @name DebitBalance */
 export interface DebitBalance extends Balance {}
 
 /** @name DebitBalanceOf */
 export interface DebitBalanceOf extends Balance {}
-
-/** @name DepositBalanceOf */
-export interface DepositBalanceOf extends Amount {}
 
 /** @name Digest */
 export interface Digest extends GenericDigest {}
@@ -166,9 +133,6 @@ export interface DispatchInfoTo190 extends Struct {
   readonly weight: Weight;
   readonly class: DispatchClass;
 }
-
-/** @name ExchangeRate */
-export interface ExchangeRate extends FixedU128 {}
 
 /** @name Fixed64 */
 export interface Fixed64 extends Int {}
@@ -248,12 +212,6 @@ export interface PhantomData extends Null {}
 /** @name PreRuntime */
 export interface PreRuntime extends ITuple<[ConsensusEngineId, Bytes]> {}
 
-/** @name Rate */
-export interface Rate extends FixedU128 {}
-
-/** @name Ratio */
-export interface Ratio extends FixedU128 {}
-
 /** @name Seal */
 export interface Seal extends ITuple<[ConsensusEngineId, Bytes]> {}
 
@@ -271,12 +229,6 @@ export interface SignedBlock extends Struct {
 
 /** @name StorageData */
 export interface StorageData extends Bytes {}
-
-/** @name SurplusAuctionItem */
-export interface SurplusAuctionItem extends Struct {
-  readonly amount: Balance;
-  readonly startTime: BlockNumber;
-}
 
 /** @name ValidatorId */
 export interface ValidatorId extends AccountId {}
