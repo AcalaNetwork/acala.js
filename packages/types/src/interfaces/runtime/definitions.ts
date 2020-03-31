@@ -5,12 +5,6 @@ export default {
     ...definitions.types,
     AuctionId: 'u32',
     AuctionIdOf: 'AuctionId',
-    CurrencyId: {
-      _enum: ['ACA', 'AUSD', 'DOT', 'XBTC']
-    },
-    AirDropCurrencyId: {
-      _enum: ['KAR', 'ACA']
-    },
     CurrencyIdOf: 'CurrencyId',
     Amount: 'i128',
     AmountOf: 'Amount',
@@ -18,7 +12,6 @@ export default {
     DebitAmountOf: 'DebitAmount',
     DebitBalance: 'Balance',
     DebitBalanceOf: 'Balance',
-    DepositBalanceOf: 'Amount',
     AuctionIdLinkedItem: {
       prev: 'Option<AuctionId>',
       next: 'Option<AuctionId>'
@@ -34,22 +27,6 @@ export default {
       currencyId: 'CurrencyId',
       amount: 'Balance',
       target: 'Balance',
-      startTime: 'BlockNumber'
-    },
-    CollateralAuctionItem: {
-      owner: 'AccountId',
-      currencyId: 'CurrencyId',
-      amount: 'Balance',
-      target: 'Balance',
-      startTime: 'BlockNumber'
-    },
-    DebitAuctionItem: {
-      amount: 'Balance',
-      fix: 'Balance',
-      startTime: 'BlockNumber'
-    },
-    SurplusAuctionItem: {
-      amount: 'Balance',
       startTime: 'BlockNumber'
     }
   }
