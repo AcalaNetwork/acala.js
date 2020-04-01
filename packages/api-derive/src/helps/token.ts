@@ -3,7 +3,7 @@ import { Vec } from '@polkadot/types';
 import { CurrencyId } from '@acala-network/types/interfaces';
 
 /**
- * @name currencyIds
+ * @name getCurrencyIds
  * @description get currency id list.
  */
 export function getCurrencyIds (api: ApiInterfaceRx): string[] {
@@ -12,7 +12,7 @@ export function getCurrencyIds (api: ApiInterfaceRx): string[] {
 }
 
 /**
- * @name collateralCurrencyIds
+ * @name getCollateralCurrencyIds
  * @description get collateral currency id list.
  */
 export function getCollateralCurrencyIds (api: ApiInterfaceRx): Vec<CurrencyId> {
@@ -20,7 +20,7 @@ export function getCollateralCurrencyIds (api: ApiInterfaceRx): Vec<CurrencyId> 
 }
 
 /**
- * @name stableCoinId
+ * @name getStableCoinId
  * @description get stable coin id.
  */
 export function getStableCoinId (api: ApiInterfaceRx): CurrencyId {
@@ -28,7 +28,7 @@ export function getStableCoinId (api: ApiInterfaceRx): CurrencyId {
 }
 
 /**
- * @name nativeCurreencyId
+ * @name getNativeCurreencyId
  * @description get native currency id.
  */
 export function getNativeCurrencyId (api: ApiInterfaceRx): CurrencyId {

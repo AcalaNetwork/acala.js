@@ -20,12 +20,14 @@ export function price (api: ApiInterfaceRx): (token: CurrencyId | string) => Obs
     const currencyId = new CurrencyId(api.registry, token);
     const stableCurrencyId = getStableCoinId(api);
     const stableFixedPrice = api.consts.prices.stableCurrencyFixedPrice as Price;
+
     // if currency is stable currency, return stableFixedPrice
     if (currencyId.eq(stableCurrencyId)) {
       /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
       const TimestampedValue = api.registry.get('TimestampedValue')!;
       return of(new TimestampedValue(api.registry, { value: stableFixedPrice }) as TimestampedValue);
     }
+
     // fetch price every minute
     return interval(60 * 1000).pipe(
       startWith(0),
