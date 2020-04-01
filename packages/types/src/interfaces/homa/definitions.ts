@@ -2,9 +2,9 @@ export default {
   types: {
     RedeemStrategy: {
       _enum: {
-        Immedately: 'u8',
+        Immedately: 'Null',
         Target: 'EraIndex',
-        WaitForUnbonding: 'u8'
+        WaitForUnbonding: 'Null'
       }
     }
   }
