@@ -1,4 +1,6 @@
 import acalaJsonRpc from '@acala-network/types/interfaces/jsonrpc';
+import { derive as ormlDerives } from '@orml/api-derive';
+import { derive as acalaDerives } from '@acala-network/api-derive';
 import { types as acalaTypes } from '@acala-network/types';
 import { ApiOptions } from '@polkadot/api/types';
 
@@ -22,6 +24,10 @@ export const options = ({ types = {}, rpc = {}, ...otherOptions }: ApiOptions): 
     homaCouncli: {
       UnlockChunk: 'HomaUnlockChunk'
     }
+  },
+  derives: {
+    ...ormlDerives,
+    ...acalaDerives
   },
   ...otherOptions
 });
