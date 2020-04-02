@@ -10,10 +10,10 @@ This library provides additional typing information for user to access Acala Net
 - Install dependencies
 
 ```bash
-yarn add @polkadot/api@1.8.1 @acala-network/api@beta
+yarn add @polkadot/api@1.9.0 @acala-network/api@beta
 ```
 
-Note: Currently only `@acala-network/api@beta` and `@polkadot/api@1.8.1` are supported.
+Note: Currently only `@acala-network/api@beta` and `@polkadot/api@1.9.0` are supported.
 
 - Create API instance
 

@@ -17,7 +17,7 @@
     "lint": "eslint --ext .js,.jsx,.ts,.tsx . && tsc --noEmit --pretty",
     "clean": "polkadot-dev-clean-build",
     "postinstall": "polkadot-dev-yarn-only",
-    "test": "echo no test yet",
+    "test": "jest --testPathIgnorePatterns e2e",
     "check-deps": "./node_modules/@orml/util/scripts/check-deps.js yarn.lock @polkadot/ @orml/"
   },
   "devDependencies": {
