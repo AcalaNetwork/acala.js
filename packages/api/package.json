@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/api",
-  "version": "0.2.0-beta.28",
+  "version": "0.2.0-beta.29",
   "description": "Acala JS API",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
@@ -15,8 +15,8 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
-    "@acala-network/api-derive": "^0.2.0-beta.28",
-    "@acala-network/types": "^0.2.0-beta.28",
+    "@acala-network/api-derive": "^0.2.0-beta.29",
+    "@acala-network/types": "^0.2.0-beta.29",
     "@babel/runtime": "^7.8.0",
     "@orml/api-derive": "^0.2.0-beta.65",
     "@polkadot/api": "^1.9.0-beta.22"
