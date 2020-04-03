@@ -15,7 +15,7 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
-    "@acala-network/types": "beta",
+    "@acala-network/types": "^0.2.0-beta.28",
     "memoizee": "^0.4.14"
   },
   "devDependencies": {
