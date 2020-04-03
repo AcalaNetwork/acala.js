@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/api-derive",
-  "version": "0.2.0-beta.27",
+  "version": "0.2.0-beta.28",
   "description": "api deriver",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
