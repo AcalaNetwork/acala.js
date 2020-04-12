@@ -154,6 +154,7 @@ interface LoanParams {
   collaterals: Fixed18;
   requiredCollateralRatio: Fixed18;
   stableFee: Fixed18;
+  globalStableFee: Fixed18;
   expectedBlockTime: number;
   liquidationRatio: Fixed18;
   collateralPrice: Fixed18;
@@ -170,6 +171,7 @@ export class Loan {
   public collaterals: Fixed18;
   public requiredCollateralRatio: Fixed18;
   public stableFee: Fixed18;
+  public globalStableFee: Fixed18;
   public expectedBlockTime: number;
   public liquidationRatio: Fixed18;
   public collateralPrice: Fixed18;
@@ -181,6 +183,7 @@ export class Loan {
     this.collaterals = params.collaterals;
     this.requiredCollateralRatio = params.requiredCollateralRatio;
     this.stableFee = params.stableFee;
+    this.globalStableFee = params.globalStableFee;
     this.expectedBlockTime = params.expectedBlockTime;
     this.liquidationRatio = params.liquidationRatio;
     this.collateralPrice = params.collateralPrice;
@@ -221,7 +224,7 @@ export class Loan {
    * @property {Fixed18} stableFeAPR
    */
   get stableFeeAPR (): Fixed18 {
-    return calcStableFeeAPR(this.stableFee, this.expectedBlockTime);
+    return calcStableFeeAPR(this.stableFee.add(this.globalStableFee), this.expectedBlockTime);
   }
 
   /**

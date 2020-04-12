@@ -13,10 +13,10 @@ export default {
         },
         {
           name: 'targetCurrencyAmount',
-          type: 'Balance'
+          type: 'BalanceRequest'
         }
       ],
-      type: 'Balance'
+      type: 'BalanceWrapper'
     },
     getTargetAmount: {
       description: 'Get target amount',
@@ -31,11 +31,18 @@ export default {
         },
         {
           name: 'supplyCurrencyAmount',
-          type: 'Balance'
+          type: 'BalanceRequest'
         }
       ],
-      type: 'Balance'
+      type: 'BalanceWrapper'
     }
   },
-  types: {}
+  types: {
+    BalanceWrapper: {
+      amount: 'Balance'
+    },
+    BalanceRequest: {
+      amount: 'Balance'
+    }
+  }
 };
