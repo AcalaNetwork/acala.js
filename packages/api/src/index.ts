@@ -23,6 +23,10 @@ export const options = ({ types = {}, rpc = {}, ...otherOptions }: ApiOptions): 
   typesAlias: {
     homaCouncli: {
       UnlockChunk: 'HomaUnlockChunk'
+    },
+    tokens: {
+      AccountData: 'OrmlAccountData',
+      BalanceLock: 'OrmlBalanceLock'
     }
   },
   derives: {
