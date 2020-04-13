@@ -6,7 +6,7 @@ import { EraIndex } from '@polkadot/types/interfaces/staking';
 
 /** @name RedeemStrategy */
 export interface RedeemStrategy extends Enum {
-  readonly isImmedately: boolean;
+  readonly isImmediately: boolean;
   readonly isTarget: boolean;
   readonly asTarget: EraIndex;
   readonly isWaitForUnbonding: boolean;
