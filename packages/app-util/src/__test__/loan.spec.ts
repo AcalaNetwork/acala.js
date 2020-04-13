@@ -51,6 +51,7 @@ describe('calculate loan properties', () => {
 
   // stableFee APR approximate 5%
   const stableFee = Fixed18.fromRational(618850393, 100000000000000000);
+  const globalStableFee = Fixed18.fromParts(0);
   const expectedBlockTime = 4000;
   test('calcStableFeeAPR should work', () => {
     expect(loan.calcStableFeeAPR(stableFee, expectedBlockTime).toNumber(2, 3)).toEqual(0.05);
@@ -138,13 +139,14 @@ describe('calculate loan properties', () => {
   });
 
   test('Loan class should work', () => {
-    const userLoan = new loan.Loan({
+    const userLoan = new loan.LoanHelper({
       debits,
       collaterals,
       requiredCollateralRatio,
       liquidationRatio,
       debitExchangeRate,
       stableFee,
+      globalStableFee,
       expectedBlockTime,
       collateralPrice,
       stableCoinPrice
