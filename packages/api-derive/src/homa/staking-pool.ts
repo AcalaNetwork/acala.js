@@ -1,9 +1,7 @@
 import { ApiInterfaceRx } from '@polkadot/api/types';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-// FIXEM: type wraning 'CurrencyId' is defined but never used
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { StakingBalance, Ratio, ExchangeRate, Rate, CurrencyId, Balance } from '@acala-network/types/interfaces';
+import { StakingBalance, Ratio, ExchangeRate, Rate, Balance } from '@acala-network/types/interfaces';
 import { EraIndex } from '@polkadot/types/interfaces';
 
 import { DerivedStakingPool } from '../types/staking-pool';
@@ -15,9 +13,9 @@ function getConstants (api: ApiInterfaceRx): DerivedConsts {
   const CurrencyId = api.registry.get('CurrencyId');
   // FIXME: will use api.consts after chain is ready
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  const LDOT = new (CurrencyId as any)(api.registry, 'ldot') as CurrencyId;
+  const LDOT = new (CurrencyId as any)(api.registry, 'ldot');
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  const DOT = new (CurrencyId as any)(api.registry, 'dot') as CurrencyId;
+  const DOT = new (CurrencyId as any)(api.registry, 'dot');
   return {
     maxBondRatio: api.consts.stakingPool.maxBondRatio as Ratio,
     minBondRatio: api.consts.stakingPool.minBondRatio as Ratio,
