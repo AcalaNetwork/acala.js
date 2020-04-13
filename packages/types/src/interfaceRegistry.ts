@@ -14,6 +14,7 @@ import { BalanceInfo, LiquidBalance, LiquidBalanceOf, PolkadotAccountId, Polkado
 import { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
 import { TimestampedValue, TimestampedValueOf } from '@orml/types/interfaces/oracle';
 import { Price } from '@orml/types/interfaces/prices';
+import { OrmlAccountData, OrmlBalanceLock } from '@orml/types/interfaces/tokens';
 import { AuctionInfo } from '@orml/types/interfaces/traits';
 import { FixedU128 } from '@orml/types/interfaces/utilities';
 import { BlockAttestations, IncludedBlocks, MoreAttestations } from '@polkadot/types/interfaces/attestations';
@@ -1500,6 +1501,12 @@ declare module '@polkadot/types/types/registry' {
     Price: Price;
     'Option<Price>': Option<Price>;
     'Vec<Price>': Vec<Price>;
+    OrmlAccountData: OrmlAccountData;
+    'Option<OrmlAccountData>': Option<OrmlAccountData>;
+    'Vec<OrmlAccountData>': Vec<OrmlAccountData>;
+    OrmlBalanceLock: OrmlBalanceLock;
+    'Option<OrmlBalanceLock>': Option<OrmlBalanceLock>;
+    'Vec<OrmlBalanceLock>': Vec<OrmlBalanceLock>;
     AuctionInfo: AuctionInfo;
     'Option<AuctionInfo>': Option<AuctionInfo>;
     'Vec<AuctionInfo>': Vec<AuctionInfo>;

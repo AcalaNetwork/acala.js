@@ -139,7 +139,7 @@ describe('calculate loan properties', () => {
   });
 
   test('Loan class should work', () => {
-    const userLoan = new loan.Loan({
+    const userLoan = new loan.LoanHelper({
       debits,
       collaterals,
       requiredCollateralRatio,

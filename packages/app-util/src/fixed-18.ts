@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { Codec } from '@polkadot/types/types';
 
 /**
  * @constant
@@ -264,4 +265,19 @@ export class Fixed18 {
   public isFinity (): boolean {
     return this.inner.isFinite();
   }
+}
+
+// force to Fixed18
+export function convertToFixed18 (data: Codec | number | Fixed18): Fixed18 {
+  if (data instanceof Fixed18) {
+    return data;
+  } else if (typeof data === 'number') {
+    return Fixed18.fromNatural(data);
+  }
+
+  if ('toString' in data) {
+    return Fixed18.fromParts(data.toString()); // for Codec
+  }
+
+  return Fixed18.ZERO;
 }

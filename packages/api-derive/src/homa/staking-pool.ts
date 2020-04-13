@@ -1,15 +1,13 @@
 import { ApiInterfaceRx } from '@polkadot/api/types';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { StakingBalance, Ratio, ExchangeRate, Rate, Balance } from '@acala-network/types/interfaces';
+import { StakingBalance, Ratio, ExchangeRate, Rate, Balance, BlockNumber } from '@acala-network/types/interfaces';
 import { EraIndex } from '@polkadot/types/interfaces';
 
-import { DerivedStakingPool } from '../types/staking-pool';
+import { DerivedStakingPool, DerivedStakingPoolConstants } from '../types/staking-pool';
 import { memo } from '../utils/memo';
 
-type DerivedConsts = Pick<DerivedStakingPool, 'maxBondRatio' | 'minBondRatio' | 'maxClaimFee' | 'defaultExchangeRate' | 'stakingCurrency' | 'liquidCurrency'>;
-
-function getConstants (api: ApiInterfaceRx): DerivedConsts {
+function getConstants (api: ApiInterfaceRx): DerivedStakingPoolConstants {
   const CurrencyId = api.registry.get('CurrencyId');
   // FIXME: will use api.consts after chain is ready
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
@@ -21,6 +19,8 @@ function getConstants (api: ApiInterfaceRx): DerivedConsts {
     minBondRatio: api.consts.stakingPool.minBondRatio as Ratio,
     maxClaimFee: api.consts.stakingPool.maxClaimFee as Rate,
     defaultExchangeRate: api.consts.stakingPool.defaultExchangeRate as ExchangeRate,
+    bondingDuration: api.consts.polkadotBridge.bondingDuration as EraIndex,
+    eraLength: api.consts.polkadotBridge.eraLength as BlockNumber,
     stakingCurrency: DOT,
     liquidCurrency: LDOT
   };

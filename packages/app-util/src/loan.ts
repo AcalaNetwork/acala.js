@@ -1,4 +1,5 @@
-import { Fixed18 } from './fixed-18';
+import { Fixed18, convertToFixed18 } from './fixed-18';
+import { Codec } from '@polkadot/types/types';
 
 /**
  * @name debitToStableCoin
@@ -150,23 +151,23 @@ export function calcCanGenerate (collateralAmount: Fixed18, currentDebitAmount: 
 }
 
 interface LoanParams {
-  debits: Fixed18;
-  collaterals: Fixed18;
-  requiredCollateralRatio: Fixed18;
-  stableFee: Fixed18;
-  globalStableFee: Fixed18;
+  debits: Fixed18 | Codec;
+  collaterals: Fixed18 | Codec;
+  requiredCollateralRatio: Fixed18 | Codec;
+  stableFee: Fixed18 | Codec;
+  globalStableFee: Fixed18 | Codec;
   expectedBlockTime: number;
-  liquidationRatio: Fixed18;
-  collateralPrice: Fixed18;
-  stableCoinPrice: Fixed18;
-  debitExchangeRate: Fixed18;
+  liquidationRatio: Fixed18 | Codec;
+  collateralPrice: Fixed18 | Codec;
+  stableCoinPrice: Fixed18 | Codec;
+  debitExchangeRate: Fixed18 | Codec;
 }
 
 /**
- * @class Loan
+ * @class LoanHelper
  * @classdesc support more structured api, include loan properties and derived properties
  */
-export class Loan {
+export class LoanHelper {
   public debits: Fixed18;
   public collaterals: Fixed18;
   public requiredCollateralRatio: Fixed18;
@@ -179,17 +180,17 @@ export class Loan {
   public debitExchangeRate: Fixed18;
 
   constructor (params: LoanParams) {
-    this.debits = params.debits;
-    this.collaterals = params.collaterals;
-    this.requiredCollateralRatio = params.requiredCollateralRatio;
-    this.stableFee = params.stableFee;
-    this.globalStableFee = params.globalStableFee;
+    this.debits = convertToFixed18(params.debits);
+    this.collaterals = convertToFixed18(params.collaterals);
+    this.requiredCollateralRatio = convertToFixed18(params.requiredCollateralRatio);
+    this.stableFee = convertToFixed18(params.stableFee);
+    this.globalStableFee = convertToFixed18(params.globalStableFee);
     this.expectedBlockTime = params.expectedBlockTime;
-    this.liquidationRatio = params.liquidationRatio;
-    this.collateralPrice = params.collateralPrice;
-    this.debitExchangeRate = params.debitExchangeRate;
-    this.collateralPrice = params.collateralPrice;
-    this.stableCoinPrice = params.stableCoinPrice;
+    this.liquidationRatio = convertToFixed18(params.liquidationRatio);
+    this.collateralPrice = convertToFixed18(params.collateralPrice);
+    this.debitExchangeRate = convertToFixed18(params.debitExchangeRate);
+    this.collateralPrice = convertToFixed18(params.collateralPrice);
+    this.stableCoinPrice = convertToFixed18(params.stableCoinPrice);
   }
 
   /**
