@@ -1,5 +1,5 @@
 import { DefinitionRpcExt, DefinitionRpcSub } from '@polkadot/types/types';
-import ormlJSONRpc from '@orml/types/interfaces/jsonrpc';
+import ormlJSONRpc from '@open-web3/orml-types/interfaces/jsonrpc';
 import * as definitions from './definitions';
 
 const jsonrpc: Record<string, Record<string, DefinitionRpcExt>> = { ...ormlJSONRpc };

@@ -1,4 +1,4 @@
-import { TimestampedValue } from '@orml/types/interfaces/oracle';
+import { TimestampedValue } from '@open-web3/orml-types/interfaces/oracle';
 
 export interface DerivedRawPrice {
   asset: string;
