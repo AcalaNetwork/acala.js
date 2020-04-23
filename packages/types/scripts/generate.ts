@@ -2,7 +2,7 @@ import { generateInterfaceTypes } from '@polkadot/typegen/generate/interfaceRegi
 import { generateTsDef } from '@polkadot/typegen/generate/tsDef';
 import * as defaultDefinations from '@polkadot/types/interfaces/definitions';
 
-import * as ormlDefinations from '@orml/types/interfaces/definitions';
+import * as ormlDefinations from '@open-web3/orml-types/interfaces/definitions';
 
 import * as acalaDefinations from '../src/interfaces/definitions';
 
@@ -14,7 +14,7 @@ const { runtime: _runtime, ...ormlModulesDefinations } = ormlDefinations;
 
 const definations = {
   '@polkadot/types/interfaces': substrateDefinations,
-  '@orml/types/interfaces': ormlModulesDefinations,
+  '@open-web3/orml-types/interfaces': ormlModulesDefinations,
   '@acala-network/types/interfaces': acalaDefinations
 };
 

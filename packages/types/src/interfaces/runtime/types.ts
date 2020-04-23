@@ -6,7 +6,7 @@ import { Compact, Enum, Int, Option, Struct, U8aFixed, Vec } from '@polkadot/typ
 import { GenericAccountId, GenericAccountIndex, GenericAddress, GenericBlock, GenericCall, GenericConsensusEngineId, GenericDigest, GenericOrigin } from '@polkadot/types/generic';
 import { Bytes, Null, StorageKey, bool, i128, u128, u32, u64, u8 } from '@polkadot/types/primitive';
 import { CurrencyId } from '@acala-network/types/interfaces/primitives';
-import { Price } from '@orml/types/interfaces/prices';
+import { Price } from '@open-web3/orml-types/interfaces/prices';
 import { AuthorityId } from '@polkadot/types/interfaces/consensus';
 import { Signature } from '@polkadot/types/interfaces/extrinsics';
 

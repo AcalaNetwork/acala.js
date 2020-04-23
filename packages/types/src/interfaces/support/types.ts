@@ -1,7 +1,7 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import { FixedU128 } from '@orml/types/interfaces/utilities';
+import { FixedU128 } from '@open-web3/orml-types/interfaces/utilities';
 
 /** @name ExchangeRate */
 export interface ExchangeRate extends FixedU128 {}

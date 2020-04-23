@@ -18,13 +18,13 @@
     "clean": "polkadot-dev-clean-build",
     "postinstall": "polkadot-dev-yarn-only",
     "test": "jest --testPathIgnorePatterns e2e",
-    "check-deps": "./node_modules/@orml/util/scripts/check-deps.js yarn.lock @polkadot/ @orml/"
+    "check-deps": "./node_modules/@open-web3/util/scripts/check-deps.js yarn.lock @polkadot/ @open-web3/"
   },
   "devDependencies": {
     "@babel/core": "^7.8.0",
     "@babel/register": "^7.8.0",
     "@babel/runtime": "^7.8.0",
-    "@orml/util": "^0.2.0-beta.74",
+    "@open-web3/util": "^0.3.0-beta.3",
     "@polkadot/dev": "^0.32.17",
     "@polkadot/ts": "^0.2.1",
     "ts-node": "^8.6.1"

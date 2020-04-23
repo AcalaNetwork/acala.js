@@ -1,5 +1,5 @@
 import { RegistryTypes } from '@polkadot/types/types';
-import * as ormlDefinations from '@orml/types/interfaces/definitions';
+import * as ormlDefinations from '@open-web3/orml-types/interfaces/definitions';
 
 import * as acalaDefinations from './interfaces/definitions';
 
