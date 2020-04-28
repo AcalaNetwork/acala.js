@@ -14,7 +14,6 @@ import { Codec } from '@polkadot/types/types';
 function loanConstants (api: ApiInterfaceRx): DerivedLoanConstants {
   return {
     minimumDebitValue: api.consts.cdpEngine.minimumDebitValue as Balance,
-    globalStabilityFee: api.consts.cdpEngine.globalStabilityFee as Rate,
     defaultDebitExchangeRate: api.consts.cdpEngine.defaultDebitExchangeRate as Rate,
     defaultLiquidationRatio: api.consts.cdpEngine.defaultLiquidationRatio as Rate,
     expectedBlockTime: api.consts.babe.expectedBlockTime
@@ -29,6 +28,7 @@ function loanConstants (api: ApiInterfaceRx): DerivedLoanConstants {
 export function loanType (api: ApiInterfaceRx): (token: CurrencyId | string) => Observable<DerivedLoanType> {
   return memo((token: CurrencyId | string) => {
     return combineLatest([
+      api.query.cdpEngine.globalStabilityFee<Rate>(),
       api.query.cdpEngine.debitExchangeRate<Rate>(token),
       api.query.cdpEngine.liquidationPenalty<Rate>(token),
       api.query.cdpEngine.liquidationRatio<Rate>(token),
@@ -39,6 +39,7 @@ export function loanType (api: ApiInterfaceRx): (token: CurrencyId | string) => 
       map((result) => {
         const constants = loanConstants(api);
         const [
+          globalStabilityFee,
           debitExchangeRate,
           liquidationPenalty,
           liquidationRatio,
@@ -53,7 +54,7 @@ export function loanType (api: ApiInterfaceRx): (token: CurrencyId | string) => 
           liquidationRatio: (liquidationRatio as Codec).isEmpty ? constants.defaultLiquidationRatio : liquidationRatio,
           requiredCollateralRatio: requiredCollateralRatio,
           stabilityFee: stabilityFee,
-          globalStabilityFee: constants.globalStabilityFee,
+          globalStabilityFee: globalStabilityFee,
           maximumTotalDebitValue: maximumTotalDebitValue,
           minimumDebitValue: constants.minimumDebitValue,
           expectedBlockTime: constants.expectedBlockTime

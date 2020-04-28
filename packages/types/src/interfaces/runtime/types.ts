@@ -3,8 +3,8 @@
 
 import { ITuple } from '@polkadot/types/types';
 import { Compact, Enum, Int, Option, Struct, U8aFixed, Vec } from '@polkadot/types/codec';
-import { GenericAccountId, GenericAccountIndex, GenericAddress, GenericBlock, GenericCall, GenericConsensusEngineId, GenericDigest, GenericOrigin } from '@polkadot/types/generic';
-import { Bytes, Null, StorageKey, bool, i128, u128, u32, u64, u8 } from '@polkadot/types/primitive';
+import { GenericAccountId, GenericAccountIndex, GenericAddress, GenericBlock, GenericCall, GenericConsensusEngineId } from '@polkadot/types/generic';
+import { Bytes, DoNotConstruct, Null, StorageKey, bool, i128, u128, u32, u64, u8 } from '@polkadot/types/primitive';
 import { CurrencyId } from '@acala-network/types/interfaces/primitives';
 import { Price } from '@open-web3/orml-types/interfaces/prices';
 import { AuthorityId } from '@polkadot/types/interfaces/consensus';
@@ -95,7 +95,9 @@ export interface DebitBalance extends Balance {}
 export interface DebitBalanceOf extends Balance {}
 
 /** @name Digest */
-export interface Digest extends GenericDigest {}
+export interface Digest extends Struct {
+  readonly logs: Vec<DigestItem>;
+}
 
 /** @name DigestItem */
 export interface DigestItem extends Enum {
@@ -119,6 +121,7 @@ export interface DigestItem extends Enum {
 export interface DispatchClass extends Enum {
   readonly isNormal: boolean;
   readonly isOperational: boolean;
+  readonly isMandatory: boolean;
 }
 
 /** @name DispatchInfo */
@@ -133,6 +136,9 @@ export interface DispatchInfoTo190 extends Struct {
   readonly weight: Weight;
   readonly class: DispatchClass;
 }
+
+/** @name Fixed128 */
+export interface Fixed128 extends Int {}
 
 /** @name Fixed64 */
 export interface Fixed64 extends Int {}
@@ -189,7 +195,7 @@ export interface OracleKey extends CurrencyId {}
 export interface OracleValue extends Price {}
 
 /** @name Origin */
-export interface Origin extends GenericOrigin {}
+export interface Origin extends DoNotConstruct {}
 
 /** @name Perbill */
 export interface Perbill extends u32 {}
@@ -234,7 +240,7 @@ export interface StorageData extends Bytes {}
 export interface ValidatorId extends AccountId {}
 
 /** @name Weight */
-export interface Weight extends u32 {}
+export interface Weight extends u64 {}
 
 /** @name WeightMultiplier */
 export interface WeightMultiplier extends Fixed64 {}

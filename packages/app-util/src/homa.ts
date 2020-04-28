@@ -135,7 +135,7 @@ export class StakingPoolHelper {
   }
 
   public convertToLiquid (amount: Fixed18): Fixed18 {
-    return Fixed18.fromNatural(1).div(this.liquidExchangeRate).mul(this.communalTotal.add(amount));
+    return Fixed18.fromNatural(1).div(this.liquidExchangeRate).mul(amount);
   }
 
   public claimFeeRatio (era: number): Fixed18 {
