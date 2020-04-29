@@ -240,7 +240,7 @@ export interface StorageData extends Bytes {}
 export interface ValidatorId extends AccountId {}
 
 /** @name Weight */
-export interface Weight extends u64 {}
+export interface Weight extends u32 {}
 
 /** @name WeightMultiplier */
 export interface WeightMultiplier extends Fixed64 {}
