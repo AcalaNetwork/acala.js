@@ -9,6 +9,11 @@ export default {
         }
       ],
       type: 'BalanceInfo'
+    },
+    getLiquidStakingExchangeRate: {
+      description: 'get liquid staking exchange rate',
+      params: [],
+      type: 'ExchangeRate'
     }
   },
   types: {

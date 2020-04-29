@@ -2,7 +2,6 @@ import { CurrencyId, Rate, Balance, Moment, AccountId, DebitBalance } from '@aca
 
 export interface DerivedLoanConstants {
   minimumDebitValue: Balance;
-  globalStabilityFee: Rate;
   defaultDebitExchangeRate: Rate;
   defaultLiquidationRatio: Rate;
   expectedBlockTime: Moment;
