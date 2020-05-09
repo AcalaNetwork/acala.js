@@ -185,6 +185,9 @@ export interface LookupSource extends Address {}
 /** @name LookupTarget */
 export interface LookupTarget extends AccountId {}
 
+/** @name ModuleId */
+export interface ModuleId extends LockIdentifier {}
+
 /** @name Moment */
 export interface Moment extends u64 {}
 
@@ -217,6 +220,12 @@ export interface PhantomData extends Null {}
 
 /** @name PreRuntime */
 export interface PreRuntime extends ITuple<[ConsensusEngineId, Bytes]> {}
+
+/** @name RuntimeDbWeight */
+export interface RuntimeDbWeight extends Struct {
+  readonly read: Weight;
+  readonly write: Weight;
+}
 
 /** @name Seal */
 export interface Seal extends ITuple<[ConsensusEngineId, Bytes]> {}
