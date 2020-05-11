@@ -7,6 +7,8 @@ This library provides additional typing information for user to access Acala Net
 
 # Getting Started
 
+More documentation and examples on [wiki](https://github.com/AcalaNetwork/acala.js/wiki).
+
 - Install dependencies
 
 ```bash
