@@ -10,10 +10,8 @@ This library provides additional typing information for user to access Acala Net
 - Install dependencies
 
 ```bash
-yarn add @polkadot/api@1.9.0 @acala-network/api@beta
+yarn add @polkadot/api @acala-network/api@beta
 ```
-
-Note: Currently only `@acala-network/api@beta` and `@polkadot/api@1.9.0` are supported.
 
 - Create API instance
 
@@ -40,3 +38,14 @@ main()
 const data = await api.query.system.account('5F98oWfz2r5rcRVnP9VCndg33DAAsky3iuoBSpaPUbgN9AJn');
 console.log(data.toHuman())
 ```
+
+# Packages
+
+- [api](./packages/api)
+  - Contains necessary options to create a polkadot.js API instance
+- [api-derive](./packages/api-derive)
+  - Additional polkadot.js derives for Acala Network
+- [app-util](./packages/app-util)
+  - Utilities to work with Acala Network
+- [types](./packages/types)
+  - Polkadot.js type definations for Acala Network

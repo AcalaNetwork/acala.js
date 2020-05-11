@@ -1,1 +1,3 @@
-@acala-network/app-util
+# @acala-network/app-util
+
+Utilities to work with Acala Network

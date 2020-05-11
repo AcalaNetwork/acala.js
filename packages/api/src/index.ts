@@ -11,7 +11,7 @@ export const defaultOptions: ApiOptions = {
   rpc: acalaRpc
 };
 
-export const options = ({ types = {}, rpc = {}, ...otherOptions }: ApiOptions): ApiOptions => ({
+export const options = ({ types = {}, rpc = {}, ...otherOptions }: ApiOptions = {}): ApiOptions => ({
   types: {
     ...acalaTypes,
     ...types
