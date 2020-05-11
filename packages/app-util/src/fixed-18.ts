@@ -63,10 +63,10 @@ export class Fixed18 {
   /**
    * @name toString
    * @description format real number(division by precision) to string
-   * @param {number} [dp=5] - decimal places deafult is 5
+   * @param {number} [dp=6] - decimal places deafult is 6
    * @param {number} [rm=3] - round modle, default is ROUND_FLOOR
    */
-  public toString (dp = 5, rm: ROUND_MODE = 3): string {
+  public toString (dp = 6, rm: ROUND_MODE = 3): string {
     let result = this.inner.div(Fixed18.PRECISION);
     result = result.decimalPlaces(dp, rm);
     return result.toString();
@@ -103,10 +103,10 @@ export class Fixed18 {
   /**
    * @name toNumber
    * @description format real number(division by precision) to number
-   * @param {number} [dp=5] - decimal places deafult is 5
+   * @param {number} [dp=6] - decimal places deafult is 6
    * @param {number} [rm=3] - round modle, default is ROUND_FLOOR
    */
-  public toNumber (dp = 5, rm: ROUND_MODE = 3): number {
+  public toNumber (dp = 6, rm: ROUND_MODE = 3): number {
     let result = this.inner.div(Fixed18.PRECISION);
     result = result.decimalPlaces(dp, rm);
     return result.toNumber();

@@ -57,7 +57,7 @@ export const calcLiquidExchangeRate = (
  * @param {number} bondingDuration - bonding duration era
  */
 export const calcClaimFeeRatio = (targetEra: number, currentEra: number, maxClaimFee: Fixed18, bondingDuration: number): Fixed18 => {
-  const claimPeriodPercent = Fixed18.fromRational(Math.max(targetEra - currentEra, 0), bondingDuration);
+  const claimPeriodPercent = Fixed18.fromRational(Math.max(targetEra - currentEra, 0), bondingDuration + 1);
   return Fixed18.fromNatural(1).sub(claimPeriodPercent).mul(maxClaimFee);
 };
 
