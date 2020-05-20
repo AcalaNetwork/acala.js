@@ -1,5 +1,6 @@
 export { default as accounts } from './accounts/definitions';
 export { default as auctionManager } from './auctionManager/definitions';
+export { default as cdpEngine } from './cdpEngine/definitions';
 export { default as dex } from './dex/definitions';
 export { default as homa } from './homa/definitions';
 export { default as homaCouncli } from './homaCouncli/definitions';

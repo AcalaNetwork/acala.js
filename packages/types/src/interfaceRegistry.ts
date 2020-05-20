@@ -5,6 +5,7 @@ import { Compact, Option, Raw, Vec } from '@polkadot/types/codec';
 import { BitVec, Bytes, Data, DoNotConstruct, Null, StorageKey, Text, Type, U256, bool, i128, i16, i256, i32, i64, i8, u128, u16, u256, u32, u64, u8, usize } from '@polkadot/types/primitive';
 import { DepositBalanceOf, PalletBalanceOf } from '@acala-network/types/interfaces/accounts';
 import { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@acala-network/types/interfaces/auctionManager';
+import { LiquidationStrategy } from '@acala-network/types/interfaces/cdpEngine';
 import { BalanceRequest, BalanceWrapper } from '@acala-network/types/interfaces/dex';
 import { RedeemStrategy } from '@acala-network/types/interfaces/homa';
 import { BondingLedger, HomaUnlockChunk } from '@acala-network/types/interfaces/homaCouncli';
@@ -1633,6 +1634,9 @@ declare module '@polkadot/types/types/registry' {
     SurplusAuctionItem: SurplusAuctionItem;
     'Option<SurplusAuctionItem>': Option<SurplusAuctionItem>;
     'Vec<SurplusAuctionItem>': Vec<SurplusAuctionItem>;
+    LiquidationStrategy: LiquidationStrategy;
+    'Option<LiquidationStrategy>': Option<LiquidationStrategy>;
+    'Vec<LiquidationStrategy>': Vec<LiquidationStrategy>;
     BalanceWrapper: BalanceWrapper;
     'Option<BalanceWrapper>': Option<BalanceWrapper>;
     'Vec<BalanceWrapper>': Vec<BalanceWrapper>;
