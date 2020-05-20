@@ -3,6 +3,7 @@
 
 export * from './accounts/types';
 export * from './auctionManager/types';
+export * from './cdpEngine/types';
 export * from './dex/types';
 export * from './homa/types';
 export * from './homaCouncli/types';
