@@ -2194,7 +2194,7 @@
   dependencies:
     "@types/chrome" "^0.0.95"
 
-"@polkadot/typegen@1.13.1", "@polkadot/typegen@^1.13.1":
+"@polkadot/typegen@^1.13.1":
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/@polkadot/typegen/-/typegen-1.13.1.tgz#7d313bcc61827dabc150821f1c1f217438e5b89f"
   integrity sha512-RjnJHAu/6RlXHyd7m3cyL/UWtLZlgrR15Q29/qGK50XYQFT7a5p++C4eEB0WN+g2FqS9Vkn+WX8IV6OaRUjTbg==
