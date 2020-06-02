@@ -2028,25 +2028,25 @@
   dependencies:
     "@types/node" ">= 8"
 
-"@open-web3/orml-api-derive@^0.3.0-beta.12":
-  version "0.3.0-beta.12"
-  resolved "https://registry.yarnpkg.com/@open-web3/orml-api-derive/-/orml-api-derive-0.3.0-beta.12.tgz#78831ffdf2863926663eba51d8d77060689451ed"
-  integrity sha512-yQuoD9V8gEYqWNeqiqyn7OQGSU5TdQb7P5AivWhBrNpNX2Xd1TanIohJV0dhaBJfeHEBaIK65VL32B9vwfapVQ==
+"@open-web3/orml-api-derive@^0.3.0-beta.13":
+  version "0.3.0-beta.13"
+  resolved "https://registry.yarnpkg.com/@open-web3/orml-api-derive/-/orml-api-derive-0.3.0-beta.13.tgz#5707f9daf26143c7a7c64a5a59f6e6d83f81b022"
+  integrity sha512-SvnfZ/YA7Goxsx0Uxu73EY9FXF8n8fjex0Hi0YUj8oeg1vqNd5CHDGD3pVSiJVI+fJeqkNl90IiV5E6mJ+EtjA==
   dependencies:
     "@babel/runtime" "^7.8.4"
     memoizee "^0.4.14"
 
-"@open-web3/orml-types@^0.3.0-beta.12":
-  version "0.3.0-beta.12"
-  resolved "https://registry.yarnpkg.com/@open-web3/orml-types/-/orml-types-0.3.0-beta.12.tgz#b3fd7740b8e234cf8b08155c35f0530c8e4bc93d"
-  integrity sha512-bYArc0THQjSTypGn2Jbj5D0WvlPiQE/PKLzPyFmD8kMd0ITJl+NCV4jmalw2FQXIf1a7ag/A6gAzwfGLZm9C+A==
+"@open-web3/orml-types@^0.3.0-beta.13":
+  version "0.3.0-beta.13"
+  resolved "https://registry.yarnpkg.com/@open-web3/orml-types/-/orml-types-0.3.0-beta.13.tgz#bb244df05d27278e158e08fae233f43bb68a0910"
+  integrity sha512-IQi6S+Ptuo1TK4krQ2ItAwFJh9UlhBA2Lv2LvplbAmasp1eCuEBvSfuAu0BHHQz8OEKmShZRm4ez4exrQeGCvg==
   dependencies:
     "@babel/runtime" "^7.8.4"
 
-"@open-web3/util@^0.3.0-beta.12":
-  version "0.3.0-beta.12"
-  resolved "https://registry.yarnpkg.com/@open-web3/util/-/util-0.3.0-beta.12.tgz#7e2f1546e7cfaa40f0c1f4e9d3bbe48c75c0d9e0"
-  integrity sha512-j2AZ6lvbdsld5wKD1oIVCvuTKtlPjvHQx5pqoE80oYHqNHljEcxilkVlsCsgzOrGAZDSjlkQnIY7A/EAH3nEGg==
+"@open-web3/util@^0.3.0-beta.13":
+  version "0.3.0-beta.13"
+  resolved "https://registry.yarnpkg.com/@open-web3/util/-/util-0.3.0-beta.13.tgz#b03b7c97ad7bc7654992c05b4bcc22d817385364"
+  integrity sha512-+CIisy1E96CZGOq+mrdPBo8uZsKejz3zpwxmc/APp7CsM75x6PDVL8bsiSJKNcLQXy4ILwEOoheRkUUgX6cEUw==
   dependencies:
     "@babel/runtime" "^7.8.4"
     "@yarnpkg/lockfile" "^1.1.0"
@@ -2220,7 +2220,7 @@
     "@polkadot/util" "^2.9.1"
     bn.js "^5.1.1"
 
-"@polkadot/types@1.13.1":
+"@polkadot/types@1.13.1", "@polkadot/types@^1.13.1":
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/@polkadot/types/-/types-1.13.1.tgz#4583b7773644fe777d8fa0b837d8d562f8172ac0"
   integrity sha512-cyANcVkDQmb3Ih5XggvLMWj7Gu9/VL/HYoebua50mecuYWa9eOn3iYGVmvvYG2rFcObikLwAwrUu8Dn1AZ5RoA==
