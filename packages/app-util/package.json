@@ -11,6 +11,7 @@
   },
   "repository": "https://github.com/AcalaNetwork/acala.js.git",
   "dependencies": {
+    "@babel/runtime": "^7.8.0",
     "bignumber.js": "^9.0.0"
   }
 }

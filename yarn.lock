@@ -2028,29 +2028,27 @@
   dependencies:
     "@types/node" ">= 8"
 
-"@open-web3/orml-api-derive@^0.3.0-beta.5":
-  version "0.3.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@open-web3/orml-api-derive/-/orml-api-derive-0.3.0-beta.5.tgz#9ecd59f721c8af2d39261ec3be57373efa0d163f"
-  integrity sha512-kT4PGkMkFkAl4L8fGfCUh286XGu6LE9pa3HyzXZZJFJui7NmJXqWmYQCWGI1vec6yR7I0wHMDkzKdPooD3HSZA==
+"@open-web3/orml-api-derive@^0.3.0-beta.12":
+  version "0.3.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@open-web3/orml-api-derive/-/orml-api-derive-0.3.0-beta.12.tgz#78831ffdf2863926663eba51d8d77060689451ed"
+  integrity sha512-yQuoD9V8gEYqWNeqiqyn7OQGSU5TdQb7P5AivWhBrNpNX2Xd1TanIohJV0dhaBJfeHEBaIK65VL32B9vwfapVQ==
   dependencies:
-    "@polkadot/api" "^1.13.1"
+    "@babel/runtime" "^7.8.4"
     memoizee "^0.4.14"
 
-"@open-web3/orml-types@^0.3.0-beta.5":
-  version "0.3.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@open-web3/orml-types/-/orml-types-0.3.0-beta.5.tgz#d13e46defd533f2f2ff9fa9e438c7ac5cdbb1d20"
-  integrity sha512-6VXbBNsQePfwCX0Y+hJoKOLqMJy5ZyikaJZL8HNnKzUG3mjDApApshtbmzK47Ytkq8vjeTGVDaciOXSimWOO3Q==
+"@open-web3/orml-types@^0.3.0-beta.12":
+  version "0.3.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@open-web3/orml-types/-/orml-types-0.3.0-beta.12.tgz#b3fd7740b8e234cf8b08155c35f0530c8e4bc93d"
+  integrity sha512-bYArc0THQjSTypGn2Jbj5D0WvlPiQE/PKLzPyFmD8kMd0ITJl+NCV4jmalw2FQXIf1a7ag/A6gAzwfGLZm9C+A==
   dependencies:
     "@babel/runtime" "^7.8.4"
-    "@polkadot/typegen" "^1.13.1"
 
-"@open-web3/util@^0.3.0-beta.5":
-  version "0.3.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@open-web3/util/-/util-0.3.0-beta.5.tgz#f8c853f5ecae2965d27c39b3932311debab7b12d"
-  integrity sha512-wfnnTlHuMQdBC8D6myd8Y3a0VR1xW8ptJkVL3p+xCmJ0FBVwTisMIpFeGMNIpe/Vmznuyygq6LhLnvbISSrXrw==
+"@open-web3/util@^0.3.0-beta.12":
+  version "0.3.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@open-web3/util/-/util-0.3.0-beta.12.tgz#7e2f1546e7cfaa40f0c1f4e9d3bbe48c75c0d9e0"
+  integrity sha512-j2AZ6lvbdsld5wKD1oIVCvuTKtlPjvHQx5pqoE80oYHqNHljEcxilkVlsCsgzOrGAZDSjlkQnIY7A/EAH3nEGg==
   dependencies:
     "@babel/runtime" "^7.8.4"
-    "@types/big.js" "^4.0.5"
     "@yarnpkg/lockfile" "^1.1.0"
     big.js "^5.2.2"
 
@@ -2323,11 +2321,6 @@
   integrity sha512-ddHK5icION5U6q11+tV2f9Mo6CZVuT8GJKld2q9LqHSZbvLbH34Kcu2yFGckZut453+eQU6btIA3RihmnRgI+Q==
   dependencies:
     "@babel/types" "^7.3.0"
-
-"@types/big.js@^4.0.5":
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/@types/big.js/-/big.js-4.0.5.tgz#62c61697646269e39191f24e55e8272f05f21fc0"
-  integrity sha512-D9KFrAt05FDSqLo7PU9TDHfDgkarlwdkuwFsg7Zm4xl62tTNaz+zN+Tkcdx2wGLBbSMf8BnoMhOVeUGUaJfLKg==
 
 "@types/bn.js@^4.11.6":
   version "4.11.6"
