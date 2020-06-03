@@ -25,7 +25,6 @@ export default {
       amount: 'Balance',
       target: 'Balance',
       startTime: 'BlockNumber'
-    },
-    Weight: 'u32'
+    }
   }
 };
