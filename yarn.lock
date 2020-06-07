@@ -2028,26 +2028,26 @@
   dependencies:
     "@types/node" ">= 8"
 
-"@open-web3/orml-api-derive@^0.3.0-beta.15":
-  version "0.3.0-beta.15"
-  resolved "https://registry.yarnpkg.com/@open-web3/orml-api-derive/-/orml-api-derive-0.3.0-beta.15.tgz#9583af67ec26b9213355921750afaaedd1f1da73"
-  integrity sha512-c98YxSO+ohw1snbrCRQHpWMI/E+Dhj8oDGgcgjGFqNkngeiPA4H2N+HA3IpRsufFQ0/8YEk4NCZI3Wl6pT/z3Q==
+"@open-web3/orml-api-derive@^0.3.0-beta.18":
+  version "0.3.0-beta.18"
+  resolved "https://registry.yarnpkg.com/@open-web3/orml-api-derive/-/orml-api-derive-0.3.0-beta.18.tgz#425b8e332f7074efee90e369b39c75edd7e85ef2"
+  integrity sha512-uf92moUKoXCYi9SC0JwBjzdxKK+9LgWNom7lyOBNw6V9/n1P0swEtefGmFTuB33vYOO3nv5mLTlUd5lGUndiYg==
   dependencies:
     "@babel/runtime" "^7.8.4"
     memoizee "^0.4.14"
     rxjs "^6.5.5"
 
-"@open-web3/orml-types@^0.3.0-beta.15":
-  version "0.3.0-beta.15"
-  resolved "https://registry.yarnpkg.com/@open-web3/orml-types/-/orml-types-0.3.0-beta.15.tgz#bcfbaf625a6ad963edc2e77474799717788a6e05"
-  integrity sha512-BBOCXcvhwUZuTmTG6wQZPBXlNNW+2zoM6bCyDKPIYF+Hg/jaHX5iNGiB33coV0MEvqpIPyvTn/dPNAA3i1d8bQ==
+"@open-web3/orml-types@^0.3.0-beta.18":
+  version "0.3.0-beta.18"
+  resolved "https://registry.yarnpkg.com/@open-web3/orml-types/-/orml-types-0.3.0-beta.18.tgz#bd19305643b49370ebe282aefec7ff6d1ef2638f"
+  integrity sha512-hcxNF8ZsWFa1ky8KitEJ8W8l8DYvhV4p8NRXP51pksWw2gB7ZTTvRDfMHaE0biAqj9Mh5XbDBGVTudBrAKjilg==
   dependencies:
     "@babel/runtime" "^7.8.4"
 
-"@open-web3/util@^0.3.0-beta.15":
-  version "0.3.0-beta.15"
-  resolved "https://registry.yarnpkg.com/@open-web3/util/-/util-0.3.0-beta.15.tgz#3cc49886719008534d742cafde101821e1e64ab6"
-  integrity sha512-pnULY/3sGirvI1hYZJBuCi1gk6e9W3a3X9XjgPD+JmTuoStP9Ipok3w9CHUc+UZ8UgfvkrCE+jjzGVCndcZd3Q==
+"@open-web3/util@^0.3.0-beta.18":
+  version "0.3.0-beta.18"
+  resolved "https://registry.yarnpkg.com/@open-web3/util/-/util-0.3.0-beta.18.tgz#890cb56ed1a74880e39fd516c2018be204aede53"
+  integrity sha512-G7mIwHNcVzXg3zLC7TJsMOlGikjMEG/KCpBx8K+dkWoKNIzw46Ebk+J8vi1pAFg53J09oVg/WKYmZL94VhZQ0w==
   dependencies:
     "@babel/runtime" "^7.8.4"
     "@yarnpkg/lockfile" "^1.1.0"
