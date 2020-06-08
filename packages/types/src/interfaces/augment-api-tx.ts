@@ -12,7 +12,6 @@ import { PolkadotAccountId } from '@acala-network/types/interfaces/stakingPool';
 import { Rate } from '@acala-network/types/interfaces/support';
 import { CallOf } from '@open-web3/orml-types/interfaces/authority';
 import { DelayedDispatchTime, DispatchId } from '@open-web3/orml-types/interfaces/traits';
-import { VestingScheduleOf } from '@open-web3/orml-types/interfaces/vesting';
 import { AuthorityId } from '@polkadot/types/interfaces/consensus';
 import { Extrinsic, Signature } from '@polkadot/types/interfaces/extrinsics';
 import { ApiTypes, SubmittableExtrinsic } from '@polkadot/api/types';
@@ -563,45 +562,6 @@ declare module '@polkadot/api/types/submittable' {
        * Add schedule_update at block_number
        **/
       scheduleDispatch: AugmentedSubmittable<(call: CallOf | { callIndex?: any; args?: any } | string | Uint8Array, when: DelayedDispatchTime | { At: any } | { After: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
-    };
-    vesting: {
-      [index: string]: SubmittableExtrinsicFunction<ApiType>;
-      /**
-       * # <weight>
-       * - Preconditions:
-       * - T::Currency is orml_currencies
-       * - Complexity: `O(1)`
-       * - Db reads: `VestingSchedules`, 3 items of orml_currencies
-       * - Db writes: `VestingSchedules`, 3 items of orml_currencies
-       * -------------------
-       * Base Weight: 47.26 µs
-       * # </weight>
-       **/
-      addVestingSchedule: AugmentedSubmittable<(dest: LookupSource | Address | AccountId | AccountIndex | string | Uint8Array, schedule: VestingScheduleOf | { start?: any; period?: any; periodCount?: any; perPeriod?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
-      /**
-       * # <weight>
-       * - Preconditions:
-       * - T::Currency is orml_currencies
-       * - Complexity: `O(1)`
-       * - Db reads: `VestingSchedules`, 3 items of orml_currencies
-       * - Db writes: `VestingSchedules`, 3 items of orml_currencies
-       * -------------------
-       * Base Weight: 29.86 µs
-       * # </weight>
-       **/
-      claim: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>>;
-      /**
-       * # <weight>
-       * - Preconditions:
-       * - T::Currency is orml_currencies
-       * - Complexity: `O(1)`
-       * - Db reads: `VestingSchedules`, 3 items of orml_currencies
-       * - Db writes: `VestingSchedules`, 3 items of orml_currencies
-       * -------------------
-       * Base Weight: 27.96 µs
-       * # </weight>
-       **/
-      updateVestingSchedules: AugmentedSubmittable<(who: LookupSource | Address | AccountId | AccountIndex | string | Uint8Array, vestingSchedules: Vec<VestingScheduleOf> | (VestingScheduleOf | { start?: any; period?: any; periodCount?: any; perPeriod?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
     };
   }
 

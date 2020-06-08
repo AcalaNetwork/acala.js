@@ -61,8 +61,8 @@ const metadata = filterModules(
     'Prices',
     'ScheduleUpdate',
     'StakingPool',
-    'Tokens',
-    'Vesting'
+    'Tokens'
+    // 'Vesting' Conflicts with pallet-vesting https://github.com/polkadot-js/api/issues/2338
   ],
   definations
 );

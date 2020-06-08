@@ -15,7 +15,6 @@ import { CallOf } from '@open-web3/orml-types/interfaces/authority';
 import { OrderedSet, TimestampedValueOf } from '@open-web3/orml-types/interfaces/oracle';
 import { Price } from '@open-web3/orml-types/interfaces/prices';
 import { AuctionInfo, DispatchId } from '@open-web3/orml-types/interfaces/traits';
-import { VestingScheduleOf } from '@open-web3/orml-types/interfaces/vesting';
 import { AccountData, BalanceLock } from '@polkadot/types/interfaces/balances';
 import { AuthorityId } from '@polkadot/types/interfaces/consensus';
 import { EraIndex, MomentOf } from '@polkadot/types/interfaces/staking';
@@ -303,13 +302,6 @@ declare module '@polkadot/api/types/storage' {
        * The total issuance of a token type.
        **/
       totalIssuance: AugmentedQuery<ApiType, (arg: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT' | number | Uint8Array) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
-    };
-    vesting: {
-      [index: string]: QueryableStorageEntry<ApiType>;
-      /**
-       * Vesting schedules of an account.
-       **/
-      vestingSchedules: AugmentedQuery<ApiType, (arg: AccountId | string | Uint8Array) => Observable<Vec<VestingScheduleOf>>> & QueryableStorageEntry<ApiType>;
     };
   }
 
