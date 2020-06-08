@@ -1,7 +1,7 @@
-import './augment-api-consts';
-import './augment-api-query';
-import './augment-api';
-import './augment-types';
+import './interfaces/augment-api-consts';
+import './interfaces/augment-api-query';
+import './interfaces/augment-api';
+import './interfaces/augment-types';
 
 import { RegistryTypes } from '@polkadot/types/types';
 import * as ormlDefinations from '@open-web3/orml-types/interfaces/definitions';
@@ -25,4 +25,6 @@ export const allDefinitions = {
   additionalOverride
 };
 
-export const types: RegistryTypes = Object.values(allDefinitions).map(({ types }) => types).reduce((all, types) => Object.assign(all, types), {});
+export const types: RegistryTypes = Object.values(allDefinitions)
+  .map(({ types }) => types)
+  .reduce((all, types) => Object.assign(all, types), {});
