@@ -20,5 +20,9 @@
     "@polkadot/api": "^1.13.1",
     "@polkadot/typegen": "^1.13.1",
     "@polkadot/types": "^1.13.1"
+  },
+  "devDependencies": {
+    "@types/websocket": "^1.0.0",
+    "websocket": "^1.0.31"
   }
 }
