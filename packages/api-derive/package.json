@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/api-derive",
-  "version": "0.2.0-beta.50",
+  "version": "0.2.0-beta.51",
   "description": "Additional polkadot.js derives for Acala Network",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
@@ -15,7 +15,7 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
-    "@acala-network/types": "^0.2.0-beta.50",
+    "@acala-network/types": "^0.2.0-beta.51",
     "@babel/runtime": "^7.8.0",
     "@polkadot/rpc-core": "^1.13.1",
     "memoizee": "^0.4.14",
