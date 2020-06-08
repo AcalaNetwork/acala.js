@@ -5,11 +5,11 @@ import { Enum, Option, Struct } from '@polkadot/types/codec';
 import { Balance } from '@acala-network/types/interfaces/runtime';
 import { Rate, Ratio } from '@acala-network/types/interfaces/support';
 
-/** @name ChangeOptionBalance */
-export interface ChangeOptionBalance extends Enum {
+/** @name ChangeBalance */
+export interface ChangeBalance extends Enum {
   readonly isNoChange: boolean;
   readonly isNewValue: boolean;
-  readonly asNewValue: OptionBalance;
+  readonly asNewValue: Balance;
 }
 
 /** @name ChangeOptionRate */
@@ -31,9 +31,6 @@ export interface LiquidationStrategy extends Enum {
   readonly isAuction: boolean;
   readonly isExchange: boolean;
 }
-
-/** @name OptionBalance */
-export interface OptionBalance extends Option<Balance> {}
 
 /** @name OptionRate */
 export interface OptionRate extends Option<Rate> {}

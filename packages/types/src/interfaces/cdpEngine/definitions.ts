@@ -8,7 +8,6 @@ export default {
     },
     OptionRate: 'Option<Rate>',
     OptionRatio: 'Option<Ratio>',
-    OptionBalance: 'Option<Balance>',
     ChangeOptionRate: {
       _enum: {
         NoChange: 'Null',
@@ -21,10 +20,10 @@ export default {
         NewValue: 'OptionRatio'
       }
     },
-    ChangeOptionBalance: {
+    ChangeBalance: {
       _enum: {
         NoChange: 'Null',
-        NewValue: 'OptionBalance'
+        NewValue: 'Balance'
       }
     },
     RiskManagementParams: {
