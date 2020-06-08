@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Metadata } from '@polkadot/types';
 import { TypeRegistry } from '@polkadot/types/create';
 import { generateInterfaceTypes } from '@polkadot/typegen/generate/interfaceRegistry';

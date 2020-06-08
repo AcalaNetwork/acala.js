@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import fs from 'fs';
 import { w3cwebsocket as WebSocket } from 'websocket';
 
