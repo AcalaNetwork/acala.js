@@ -1,3 +1,8 @@
+import './augment-api-consts';
+import './augment-api-query';
+import './augment-api';
+import './augment-types';
+
 import { RegistryTypes } from '@polkadot/types/types';
 import * as ormlDefinations from '@open-web3/orml-types/interfaces/definitions';
 
