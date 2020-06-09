@@ -2030,7 +2030,7 @@
     memoizee "^0.4.14"
     rxjs "^6.5.5"
 
-"@polkadot/api@1.18.1", "@polkadot/api@^1.17.0":
+"@polkadot/api@1.18.1", "@polkadot/api@^1.18.1":
   version "1.18.1"
   resolved "https://registry.yarnpkg.com/@polkadot/api/-/api-1.18.1.tgz#3d8d3f3d2e692ab5e0fa5ca0e92f7980b6533cf4"
   integrity sha512-3UqY3MYthDvHBT+UWxGJeb5XRX1QOnheez2TJatXwENOh4V6PsE2GtdI+ckXkYh9p61978uNtWhZ5WxDupiW/A==
@@ -2120,7 +2120,7 @@
     "@polkadot/util-crypto" "^2.13.1"
     bn.js "^5.1.2"
 
-"@polkadot/rpc-core@1.18.1", "@polkadot/rpc-core@^1.17.0":
+"@polkadot/rpc-core@1.18.1", "@polkadot/rpc-core@^1.18.1":
   version "1.18.1"
   resolved "https://registry.yarnpkg.com/@polkadot/rpc-core/-/rpc-core-1.18.1.tgz#f96aa1071558fddc483771117aef0bb27a1fc974"
   integrity sha512-3rpb/xdXkz9o/avMd63yqVK0+p/AKGSBPklSUSjnPvf9AfjGA4WF8xRwisQKqF3KKWfbm3ytbaJhPWU5dD3QNQ==
@@ -2155,7 +2155,7 @@
   dependencies:
     "@types/chrome" "^0.0.95"
 
-"@polkadot/typegen@^1.17.0":
+"@polkadot/typegen@^1.18.1":
   version "1.18.1"
   resolved "https://registry.yarnpkg.com/@polkadot/typegen/-/typegen-1.18.1.tgz#596820a7c7acd049046f027363cc0a1654189904"
   integrity sha512-pV1LCQ0rZXbKBoNB7PL8dEyx7Xy4/1c0P5GXwT6Q7KH3qHp1cFgYQcj3I2ifx7+sM6Q/SbfMuIiM1AotH3BRYA==
@@ -2182,7 +2182,7 @@
     "@polkadot/util" "^2.13.1"
     bn.js "^5.1.2"
 
-"@polkadot/types@1.18.1", "@polkadot/types@^1.17.0":
+"@polkadot/types@1.18.1", "@polkadot/types@^1.18.1":
   version "1.18.1"
   resolved "https://registry.yarnpkg.com/@polkadot/types/-/types-1.18.1.tgz#d6018f72ba54685b3afc797693418959bfce981f"
   integrity sha512-j+KhEQpeGDOLIoTGs5hi47PA+4sZPoOdOV1aaqUqt95T5OXO4O8M1qr1GrTv41hkZ23QGDcRCGIMq6aYdKmRHg==
