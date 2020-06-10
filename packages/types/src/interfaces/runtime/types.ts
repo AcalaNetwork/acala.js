@@ -128,13 +128,26 @@ export interface DispatchClass extends Enum {
 export interface DispatchInfo extends Struct {
   readonly weight: Weight;
   readonly class: DispatchClass;
-  readonly paysFee: bool;
+  readonly paysFee: Pays;
 }
 
 /** @name DispatchInfoTo190 */
 export interface DispatchInfoTo190 extends Struct {
   readonly weight: Weight;
   readonly class: DispatchClass;
+}
+
+/** @name DispatchInfoTo244 */
+export interface DispatchInfoTo244 extends Struct {
+  readonly weight: Weight;
+  readonly class: DispatchClass;
+  readonly paysFee: bool;
+}
+
+/** @name ExtrinsicsWeight */
+export interface ExtrinsicsWeight extends Struct {
+  readonly normal: Weight;
+  readonly operational: Weight;
 }
 
 /** @name Fixed128 */
@@ -200,6 +213,12 @@ export interface OracleValue extends Price {}
 /** @name Origin */
 export interface Origin extends DoNotConstruct {}
 
+/** @name Pays */
+export interface Pays extends Enum {
+  readonly isYes: boolean;
+  readonly isNo: boolean;
+}
+
 /** @name Perbill */
 export interface Perbill extends u32 {}
 
@@ -220,6 +239,14 @@ export interface PhantomData extends Null {}
 
 /** @name PreRuntime */
 export interface PreRuntime extends ITuple<[ConsensusEngineId, Bytes]> {}
+
+/** @name ProxyType */
+export interface ProxyType extends Enum {
+  readonly isAny: boolean;
+  readonly isNonTransfer: boolean;
+  readonly isGovernance: boolean;
+  readonly isStaking: boolean;
+}
 
 /** @name RuntimeDbWeight */
 export interface RuntimeDbWeight extends Struct {
