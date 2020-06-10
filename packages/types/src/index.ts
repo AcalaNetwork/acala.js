@@ -26,3 +26,9 @@ export const allDefinitions = {
 export const types: RegistryTypes = Object.values(allDefinitions)
   .map(({ types }) => types)
   .reduce((all, types) => Object.assign(all, types), {});
+
+export const typeChain = {
+  'Acala Mandala TC3': {
+    Weight: 'u32'
+  }
+};
