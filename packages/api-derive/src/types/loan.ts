@@ -1,20 +1,26 @@
-import { CurrencyId, Rate, Balance, Moment, AccountId, DebitBalance } from '@acala-network/types/interfaces';
+import { CurrencyId, Rate, OptionRatio, OptionRate, Balance, Moment, AccountId, DebitBalance, ExchangeRate } from '@acala-network/types/interfaces';
 
 export interface DerivedLoanConstants {
   minimumDebitValue: Balance;
   defaultDebitExchangeRate: Rate;
   defaultLiquidationRatio: Rate;
+  defaultLiquidationPenalty: Rate;
   expectedBlockTime: Moment;
 }
 
-export interface DerivedLoanType {
+export interface CollateralParams {
+  maximumTotalDebitValue: Balance;
+  stabilityFee: OptionRate;
+  liquidationRatio: OptionRatio;
+  liquidationPenalty: OptionRate;
+  requiredCollateralRatio: OptionRatio;
+}
+
+export interface DerivedLoanType extends Omit<CollateralParams, 'liquidationRatio' | 'liquidationPenalty'> {
   token: CurrencyId | string;
   debitExchangeRate: Rate;
-  liquidationRatio: Rate;
-  liquidationPenalty: Rate;
-  requiredCollateralRatio: Rate;
-  maximumTotalDebitValue: Balance;
-  stabilityFee: Rate;
+  liquidationRatio: OptionRatio | ExchangeRate;
+  liquidationPenalty: OptionRatio | Rate;
   globalStabilityFee: Rate;
   expectedBlockTime: Rate;
 }

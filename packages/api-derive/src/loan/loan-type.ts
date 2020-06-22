@@ -1,11 +1,14 @@
 import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { CurrencyId, Rate, Balance } from '@acala-network/types/interfaces';
+
 import { ApiInterfaceRx } from '@polkadot/api/types';
-import { memo } from '../utils/memo';
-import { DerivedLoanConstants, DerivedLoanType, DerivedLoanOverView } from '../types/loan';
-import { getCollateralCurrencyIds } from '../helps/token';
 import { Codec } from '@polkadot/types/types';
+
+import { CurrencyId, Rate, ExchangeRate, Balance } from '@acala-network/types/interfaces';
+
+import { memo } from '../utils/memo';
+import { DerivedLoanConstants, DerivedLoanType, DerivedLoanOverView, CollateralParams } from '../types/loan';
+import { getCollateralCurrencyIds } from '../helps/token';
 
 /**
  * @name loanConstants
@@ -15,7 +18,8 @@ function loanConstants (api: ApiInterfaceRx): DerivedLoanConstants {
   return {
     minimumDebitValue: api.consts.cdpEngine.minimumDebitValue as Balance,
     defaultDebitExchangeRate: api.consts.cdpEngine.defaultDebitExchangeRate as Rate,
-    defaultLiquidationRatio: api.consts.cdpEngine.defaultLiquidationRatio as Rate,
+    defaultLiquidationRatio: api.consts.cdpEngine.defaultLiquidationRatio as ExchangeRate,
+    defaultLiquidationPenalty: api.consts.cdpEngine.defaultLiquidationPenalty as Rate,
     expectedBlockTime: api.consts.babe.expectedBlockTime
   };
 }
@@ -30,32 +34,20 @@ export function loanType (api: ApiInterfaceRx): (token: CurrencyId | string) => 
     return combineLatest([
       api.query.cdpEngine.globalStabilityFee<Rate>(),
       api.query.cdpEngine.debitExchangeRate<Rate>(token),
-      api.query.cdpEngine.liquidationPenalty<Rate>(token),
-      api.query.cdpEngine.liquidationRatio<Rate>(token),
-      api.query.cdpEngine.maximumTotalDebitValue<Balance>(token),
-      api.query.cdpEngine.requiredCollateralRatio<Rate>(token),
-      api.query.cdpEngine.stabilityFee<Rate>(token)
+      api.query.cdpEngine.collateralParams<CollateralParams>(token)
     ]).pipe(
       map((result) => {
         const constants = loanConstants(api);
-        const [
-          globalStabilityFee,
-          debitExchangeRate,
-          liquidationPenalty,
-          liquidationRatio,
-          maximumTotalDebitValue,
-          requiredCollateralRatio,
-          stabilityFee
-        ] = result;
+        const [globalStabilityFee, debitExchangeRate, collateralParams] = result;
         return {
           token,
           debitExchangeRate: (debitExchangeRate as Codec).isEmpty ? constants.defaultDebitExchangeRate : debitExchangeRate,
-          liquidationPenalty: liquidationPenalty,
-          liquidationRatio: (liquidationRatio as Codec).isEmpty ? constants.defaultLiquidationRatio : liquidationRatio,
-          requiredCollateralRatio: requiredCollateralRatio,
-          stabilityFee: stabilityFee,
+          liquidationPenalty: collateralParams.liquidationPenalty.isEmpty ? constants.defaultLiquidationPenalty : collateralParams.liquidationPenalty,
+          liquidationRatio: collateralParams.liquidationRatio.isEmpty ? constants.defaultLiquidationRatio : collateralParams.liquidationRatio,
+          requiredCollateralRatio: collateralParams.requiredCollateralRatio,
+          stabilityFee: collateralParams.stabilityFee,
           globalStabilityFee: globalStabilityFee,
-          maximumTotalDebitValue: maximumTotalDebitValue,
+          maximumTotalDebitValue: collateralParams.maximumTotalDebitValue,
           minimumDebitValue: constants.minimumDebitValue,
           expectedBlockTime: constants.expectedBlockTime
         };
