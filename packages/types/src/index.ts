@@ -5,9 +5,11 @@ import './interfaces/augment-api';
 import './interfaces/augment-types';
 
 import { RegistryTypes } from '@polkadot/types/types';
+import polkadotJSONRpc from '@polkadot/types/interfaces/jsonrpc';
 import * as ormlDefinations from '@open-web3/orml-types/interfaces/definitions';
 
 import * as acalaDefinations from './interfaces/definitions';
+import jsonrpc from './interfaces/jsonrpc';
 
 // FIXME: currently we cannot override this in runtime definations because the code generation script cannot handle overrides
 // This will make it behave correctly in runtime, but wrong types in TS defination.
@@ -21,6 +23,11 @@ export const allDefinitions = {
   ...ormlDefinations,
   ...acalaDefinations,
   additionalOverride
+};
+
+export const allJSONRpc = {
+  ...polkadotJSONRpc,
+  ...jsonrpc
 };
 
 export const types: RegistryTypes = Object.values(allDefinitions)
