@@ -24,7 +24,13 @@ declare module '@polkadot/api/types/storage' {
   export interface AugmentedQueries<ApiType> {
     accounts: {
       [index: string]: QueryableStorageEntry<ApiType>;
+      /**
+       * Mapping from account id to flag for free transfer.
+       **/
       freeTransferEnabledAccounts: AugmentedQuery<ApiType, (arg: AccountId | string | Uint8Array) => Observable<Option<bool>>> & QueryableStorageEntry<ApiType>;
+      /**
+       * Mapping from account id to free transfer records, record moment when a transfer tx occurs.
+       **/
       lastFreeTransfers: AugmentedQuery<ApiType, (arg: AccountId | string | Uint8Array) => Observable<Vec<MomentOf>>> & QueryableStorageEntry<ApiType>;
     };
     airDrop: {
@@ -33,7 +39,7 @@ declare module '@polkadot/api/types/storage' {
     };
     auction: {
       [index: string]: QueryableStorageEntry<ApiType>;
-      auctionEndTime: AugmentedQueryDoubleMap<ApiType, (key1: BlockNumber | AnyNumber | Uint8Array, key2: AuctionId | AnyNumber | Uint8Array) => Observable<Option<bool>>> & QueryableStorageEntry<ApiType>;
+      auctionEndTime: AugmentedQueryDoubleMap<ApiType, (key1: BlockNumber | AnyNumber | Uint8Array, key2: AuctionId | AnyNumber | Uint8Array) => Observable<Option<ITuple<[]>>>> & QueryableStorageEntry<ApiType>;
       auctions: AugmentedQuery<ApiType, (arg: AuctionId | AnyNumber | Uint8Array) => Observable<Option<AuctionInfo>>> & QueryableStorageEntry<ApiType>;
       auctionsIndex: AugmentedQuery<ApiType, () => Observable<AuctionId>> & QueryableStorageEntry<ApiType>;
     };
@@ -264,6 +270,9 @@ declare module '@polkadot/api/types/storage' {
     };
     prices: {
       [index: string]: QueryableStorageEntry<ApiType>;
+      /**
+       * Mapping from currency id to it's locked price
+       **/
       lockedPrice: AugmentedQuery<ApiType, (arg: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT' | number | Uint8Array) => Observable<Option<Price>>> & QueryableStorageEntry<ApiType>;
     };
     scheduleUpdate: {
