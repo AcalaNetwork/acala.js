@@ -4,9 +4,8 @@
 import { Codec } from '@polkadot/types/types';
 import { Vec } from '@polkadot/types/codec';
 import { u32, u8 } from '@polkadot/types/primitive';
-import { DepositBalanceOf } from '@acala-network/types/interfaces/accounts';
 import { CurrencyId } from '@acala-network/types/interfaces/primitives';
-import { Balance, BlockNumber, CurrencyIdOf, Weight } from '@acala-network/types/interfaces/runtime';
+import { Balance, BlockNumber, CurrencyIdOf, ModuleId, Weight } from '@acala-network/types/interfaces/runtime';
 import { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
 import { Price } from '@open-web3/orml-types/interfaces/prices';
 import { EraIndex, MomentOf } from '@polkadot/types/interfaces/staking';
@@ -16,9 +15,38 @@ declare module '@polkadot/metadata/Decorated/consts/types' {
     [index: string]: ModuleConstants;
     accounts: {
       [index: string]: AugmentedConst<object & Codec>;
+      /**
+       * All non-native currency ids in Acala.
+       **/
+      allNonNativeCurrencyIds: AugmentedConst<Vec<CurrencyId>>;
+      /**
+       * The number of fee transfer times per period.
+       **/
       freeTransferCount: AugmentedConst<u8>;
-      freeTransferDeposit: AugmentedConst<DepositBalanceOf>;
+      /**
+       * Deposit for free transfer service.
+       **/
+      freeTransferDeposit: AugmentedConst<Balance>;
+      /**
+       * The period to count free transfer.
+       **/
       freeTransferPeriod: AugmentedConst<MomentOf>;
+      /**
+       * The max slippage allowed when swap open account deposit or fee with DEX
+       **/
+      maxSlippageSwapWithDex: AugmentedConst<Ratio>;
+      /**
+       * Native currency id, the actual received currency type as fee for treasury
+       **/
+      nativeCurrencyId: AugmentedConst<CurrencyId>;
+      /**
+       * Deposit for opening account, reserve it utill close account.
+       **/
+      newAccountDeposit: AugmentedConst<Balance>;
+      /**
+       * The treasury module account id to recycle assets.
+       **/
+      treasuryModuleId: AugmentedConst<ModuleId>;
     };
     auctionManager: {
       [index: string]: AugmentedConst<object & Codec>;
@@ -92,6 +120,10 @@ declare module '@polkadot/metadata/Decorated/consts/types' {
        * Lots cap when create auction
        **/
       maxAuctionsCount: AugmentedConst<u32>;
+      /**
+       * The CDP treasury's module id, keep surplus and collateral assets from liquidation.
+       **/
+      moduleId: AugmentedConst<ModuleId>;
     };
     currencies: {
       [index: string]: AugmentedConst<object & Codec>;
@@ -111,6 +143,10 @@ declare module '@polkadot/metadata/Decorated/consts/types' {
        * Trading fee rate
        **/
       getExchangeFee: AugmentedConst<Rate>;
+      /**
+       * The dex's module id, keep all assets in DEX.
+       **/
+      moduleId: AugmentedConst<ModuleId>;
     };
     emergencyShutdown: {
       [index: string]: AugmentedConst<object & Codec>;
@@ -121,7 +157,15 @@ declare module '@polkadot/metadata/Decorated/consts/types' {
     };
     homaTreasury: {
       [index: string]: AugmentedConst<object & Codec>;
+      moduleId: AugmentedConst<ModuleId>;
       stakingCurrencyId: AugmentedConst<CurrencyId>;
+    };
+    loans: {
+      [index: string]: AugmentedConst<object & Codec>;
+      /**
+       * The loan's module id, keep all collaterals of CDPs.
+       **/
+      moduleId: AugmentedConst<ModuleId>;
     };
     nomineesElection: {
       [index: string]: AugmentedConst<object & Codec>;
@@ -136,7 +180,9 @@ declare module '@polkadot/metadata/Decorated/consts/types' {
     };
     prices: {
       [index: string]: AugmentedConst<object & Codec>;
+      getLiquidCurrencyId: AugmentedConst<CurrencyId>;
       getStableCurrencyId: AugmentedConst<CurrencyId>;
+      getStakingCurrencyId: AugmentedConst<CurrencyId>;
       stableCurrencyFixedPrice: AugmentedConst<Price>;
     };
     scheduleUpdate: {
@@ -151,6 +197,7 @@ declare module '@polkadot/metadata/Decorated/consts/types' {
       maxBondRatio: AugmentedConst<Ratio>;
       maxClaimFee: AugmentedConst<Rate>;
       minBondRatio: AugmentedConst<Ratio>;
+      moduleId: AugmentedConst<ModuleId>;
       stakingCurrencyId: AugmentedConst<CurrencyId>;
     };
   }

@@ -20,7 +20,26 @@ declare module '@polkadot/api/types/submittable' {
   export interface AugmentedSubmittables<ApiType> {
     accounts: {
       [index: string]: SubmittableExtrinsicFunction<ApiType>;
+      /**
+       * Kill self account from system.
+       * 
+       * The dispatch origin of this call must be Signed.
+       * 
+       * - `recipient`: the account as recipient to receive remaining currencies of the account will be killed,
+       * None means no recipient is specified.
+       **/
+      closeAccount: AugmentedSubmittable<(recipient: Option<AccountId> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      /**
+       * Unlock free transfer deposit.
+       * 
+       * The dispatch origin of this call must be Signed.
+       **/
       disableFreeTransfers: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>>;
+      /**
+       * Freeze some native currency to be able to free transfer.
+       * 
+       * The dispatch origin of this call must be Signed.
+       **/
       enableFreeTransfer: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>>;
     };
     airDrop: {
@@ -116,7 +135,7 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Update parameters related to risk management of CDP under specific collateral type
        * 
-       * The dispatch origin of this call must be `UpdateOrigin` or _Root_.
+       * The dispatch origin of this call must be `UpdateOrigin`.
        * 
        * - `currency_id`: collateral type.
        * - `stability_fee`: extra stability fee rate, `None` means do not update, `Some(None)` means update it to `None`.
@@ -137,7 +156,7 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Update global parameters related to risk management of CDP
        * 
-       * The dispatch origin of this call must be `UpdateOrigin` or _Root_.
+       * The dispatch origin of this call must be `UpdateOrigin`.
        * 
        * - `global_stability_fee`: global stability fee rate.
        * 
@@ -176,7 +195,7 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Update parameters related to collateral auction under specific collateral type
        * 
-       * The dispatch origin of this call must be `UpdateOrigin` or _Root_.
+       * The dispatch origin of this call must be `UpdateOrigin`.
        * 
        * - `currency_id`: collateral type
        * - `surplus_buffer_size`: collateral auction maximum size
@@ -193,7 +212,7 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Update parameters related to surplus and debit auction
        * 
-       * The dispatch origin of this call must be `UpdateOrigin` or _Root_.
+       * The dispatch origin of this call must be `UpdateOrigin`.
        * 
        * - `surplus_auction_fixed_size`: new fixed amount of stable coin for sale per surplus auction, `None` means do not update
        * - `surplus_buffer_size`: new buffer size of surplus pool, `None` means do not update
@@ -300,7 +319,7 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Update liquidity incentive rate of specific liquidity pool
        * 
-       * The dispatch origin of this call must be `UpdateOrigin` or _Root_.
+       * The dispatch origin of this call must be `UpdateOrigin`.
        * 
        * - `currency_id`: currency type to determine the type of liquidity pool.
        * - `liquidity_incentive_rate`: liquidity incentive rate.
@@ -385,7 +404,7 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Start emergency shutdown
        * 
-       * The dispatch origin of this call must be `ShutdownOrigin` or _Root_.
+       * The dispatch origin of this call must be `ShutdownOrigin`.
        * 
        * # <weight>
        * - Preconditions:
@@ -403,7 +422,7 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Open final redemption if settlement is completed.
        * 
-       * The dispatch origin of this call must be `ShutdownOrigin` or _Root_.
+       * The dispatch origin of this call must be `ShutdownOrigin`.
        * 
        * # <weight>
        * - Preconditions:
@@ -533,7 +552,7 @@ declare module '@polkadot/api/types/submittable' {
     };
     oracle: {
       [index: string]: SubmittableExtrinsicFunction<ApiType>;
-      feedValues: AugmentedSubmittable<(values: Vec<ITuple<[OracleKey, OracleValue]>> | ([OracleKey | 'ACA' | 'AUSD' | 'DOT' | 'XBTC' | 'LDOT' | number | Uint8Array, OracleValue | AnyNumber | Uint8Array])[], index: Compact<u32> | AnyNumber | Uint8Array, signature: Signature | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      feedValues: AugmentedSubmittable<(values: Vec<ITuple<[OracleKey, OracleValue]>> | ([OracleKey | 'ACA' | 'AUSD' | 'DOT' | 'XBTC' | 'LDOT' | number | Uint8Array, OracleValue | AnyNumber | Uint8Array])[], index: Compact<u32> | AnyNumber | Uint8Array, block: BlockNumber | AnyNumber | Uint8Array, signature: Signature | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       setSessionKey: AugmentedSubmittable<(key: AuthorityId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     polkadotBridge: {
@@ -549,7 +568,21 @@ declare module '@polkadot/api/types/submittable' {
     };
     prices: {
       [index: string]: SubmittableExtrinsicFunction<ApiType>;
+      /**
+       * Lock the price and feed it to system.
+       * 
+       * The dispatch origin of this call must be `LockOrigin`.
+       * 
+       * - `currency_id`: currency type.
+       **/
       lockPrice: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT' | number | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      /**
+       * Unlock the price and get the price from `PriceProvider` again
+       * 
+       * The dispatch origin of this call must be `LockOrigin`.
+       * 
+       * - `currency_id`: currency type.
+       **/
       unlockPrice: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT' | number | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     scheduleUpdate: {
