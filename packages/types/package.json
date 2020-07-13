@@ -16,7 +16,8 @@
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
     "@babel/runtime": "^7.10.2",
-    "@open-web3/orml-types": "^0.3.0-beta.19",
+    "@open-web3/api-mobx": "^0.3.0-beta.29",
+    "@open-web3/orml-types": "^0.3.0-beta.29",
     "@polkadot/api": "^1.18.1",
     "@polkadot/typegen": "^1.18.1",
     "@polkadot/types": "^1.18.1"

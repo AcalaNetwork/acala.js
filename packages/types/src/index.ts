@@ -1,5 +1,6 @@
 import './interfaces/augment-api-consts';
 import './interfaces/augment-api-query';
+import './interfaces/augment-api-mobx';
 import './interfaces/augment-api-tx';
 import './interfaces/augment-api';
 import './interfaces/augment-types';

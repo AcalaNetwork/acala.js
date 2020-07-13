@@ -4,7 +4,7 @@
 import { ITuple } from '@polkadot/types/types';
 import { Compact, Enum, Int, Option, Struct, U8aFixed, Vec } from '@polkadot/types/codec';
 import { GenericAccountId, GenericAccountIndex, GenericAddress, GenericBlock, GenericCall, GenericConsensusEngineId } from '@polkadot/types/generic';
-import { Bytes, DoNotConstruct, Null, StorageKey, bool, i128, u128, u32, u64, u8 } from '@polkadot/types/primitive';
+import { Bytes, DoNotConstruct, Null, StorageKey, i128, u128, u32, u64, u8 } from '@polkadot/types/primitive';
 import { CurrencyId } from '@acala-network/types/interfaces/primitives';
 import { Price } from '@open-web3/orml-types/interfaces/prices';
 import { AuthorityId } from '@polkadot/types/interfaces/consensus';
@@ -117,33 +117,6 @@ export interface DigestItem extends Enum {
   readonly asPreRuntime: PreRuntime;
 }
 
-/** @name DispatchClass */
-export interface DispatchClass extends Enum {
-  readonly isNormal: boolean;
-  readonly isOperational: boolean;
-  readonly isMandatory: boolean;
-}
-
-/** @name DispatchInfo */
-export interface DispatchInfo extends Struct {
-  readonly weight: Weight;
-  readonly class: DispatchClass;
-  readonly paysFee: Pays;
-}
-
-/** @name DispatchInfoTo190 */
-export interface DispatchInfoTo190 extends Struct {
-  readonly weight: Weight;
-  readonly class: DispatchClass;
-}
-
-/** @name DispatchInfoTo244 */
-export interface DispatchInfoTo244 extends Struct {
-  readonly weight: Weight;
-  readonly class: DispatchClass;
-  readonly paysFee: bool;
-}
-
 /** @name ExtrinsicsWeight */
 export interface ExtrinsicsWeight extends Struct {
   readonly normal: Weight;
@@ -204,6 +177,9 @@ export interface ModuleId extends LockIdentifier {}
 /** @name Moment */
 export interface Moment extends u64 {}
 
+/** @name OpaqueCall */
+export interface OpaqueCall extends Bytes {}
+
 /** @name OracleKey */
 export interface OracleKey extends CurrencyId {}
 
@@ -246,6 +222,20 @@ export interface ProxyType extends Enum {
   readonly isNonTransfer: boolean;
   readonly isGovernance: boolean;
   readonly isStaking: boolean;
+}
+
+/** @name Releases */
+export interface Releases extends Enum {
+  readonly isV1: boolean;
+  readonly isV2: boolean;
+  readonly isV3: boolean;
+  readonly isV4: boolean;
+  readonly isV5: boolean;
+  readonly isV6: boolean;
+  readonly isV7: boolean;
+  readonly isV8: boolean;
+  readonly isV9: boolean;
+  readonly isV10: boolean;
 }
 
 /** @name RuntimeDbWeight */

@@ -8,6 +8,7 @@ import generateConst from '@polkadot/typegen/generate/consts';
 import generateQuery from '@polkadot/typegen/generate/query';
 import generateTx from '@polkadot/typegen/generate/tx';
 import { registerDefinitions } from '@polkadot/typegen/util';
+import generateMobx from '@open-web3/api-mobx/scripts/mobx';
 import metaHex from '../src/metadata/static-latest';
 
 import * as defaultDefinations from '@polkadot/types/interfaces/definitions';
@@ -75,3 +76,5 @@ generateConst('packages/types/src/interfaces/augment-api-consts.ts', metadata, d
 
 generateTx('packages/types/src/interfaces/augment-api-tx.ts', metadata, definations);
 generateQuery('packages/types/src/interfaces/augment-api-query.ts', metadata, definations);
+
+generateMobx('packages/types/src/interfaces/augment-api-mobx.ts', metaHex, definations);
