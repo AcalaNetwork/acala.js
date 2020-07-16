@@ -16,6 +16,7 @@ export interface CurrencyId extends Enum {
   readonly isDot: boolean;
   readonly isXbtc: boolean;
   readonly isLdot: boolean;
+  readonly isRenBtc: boolean;
 }
 
 export type PHANTOM_PRIMITIVES = 'primitives';
