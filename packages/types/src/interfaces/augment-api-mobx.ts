@@ -78,7 +78,7 @@ export interface StorageType extends BaseStorageType {
      * Record of the total collateral amount of all ative collateral auctions under specific collateral type
      * CollateralType -> TotalAmount
      **/
-    totalCollateralInAuction: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, Balance>;
+    totalCollateralInAuction: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, Balance>;
     /**
      * Record of total fix amount of all ative debit auctions
      **/
@@ -185,11 +185,11 @@ export interface StorageType extends BaseStorageType {
   cdpEngine: {    /**
      * Mapping from collateral type to its risk management params
      **/
-    collateralParams: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, RiskManagementParams>;
+    collateralParams: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, RiskManagementParams>;
     /**
      * Mapping from collateral type to its exchange rate of debit units and debit value
      **/
-    debitExchangeRate: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, Option<ExchangeRate>>;
+    debitExchangeRate: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, Option<ExchangeRate>>;
     /**
      * Global stability fee rate for all types of collateral
      **/
@@ -202,7 +202,7 @@ export interface StorageType extends BaseStorageType {
   cdpTreasury: {    /**
      * The maximum amount of collateral amount for sale per collateral auction
      **/
-    collateralAuctionMaximumSize: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, Balance>;
+    collateralAuctionMaximumSize: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, Balance>;
     /**
      * The fixed amount of stable coin per surplus auction wants to get
      **/
@@ -236,7 +236,7 @@ export interface StorageType extends BaseStorageType {
     /**
      * Mapping from collateral type to collateral assets amount kept in CDP treasury
      **/
-    totalCollaterals: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, Balance>;
+    totalCollaterals: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, Balance>;
   };
   dex: {    /**
      * System shutdown flag
@@ -246,32 +246,32 @@ export interface StorageType extends BaseStorageType {
      * Incentive reward rate for different currency type
      * CurrencyType -> IncentiveRate
      **/
-    liquidityIncentiveRate: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, Rate>;
+    liquidityIncentiveRate: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, Rate>;
     /**
      * Liquidity pool, which is the trading pair for specific currency type to base currency type.
      * CurrencyType -> (OtherCurrencyAmount, BaseCurrencyAmount)
      **/
-    liquidityPool: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, ITuple<[Balance, Balance]>>;
+    liquidityPool: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, ITuple<[Balance, Balance]>>;
     /**
      * Shares records indexed by currency type and account id
      * CurrencyType -> Owner -> ShareAmount
      **/
-    shares: StorageDoubleMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, AccountId | string | Uint8Array, Share>;
+    shares: StorageDoubleMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, AccountId | string | Uint8Array, Share>;
     /**
      * Total interest(include total withdrawn) and total withdrawn interest for different currency type
      * CurrencyType -> (TotalInterest, TotalWithdrawnInterest)
      **/
-    totalInterest: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, ITuple<[Balance, Balance]>>;
+    totalInterest: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, ITuple<[Balance, Balance]>>;
     /**
      * Total shares amount of liquidity pool specificed by currency type
      * CurrencyType -> TotalSharesAmount
      **/
-    totalShares: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, Share>;
+    totalShares: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, Share>;
     /**
      * Withdrawn interest indexed by currency type and account id
      * CurrencyType -> Owner -> WithdrawnInterest
      **/
-    withdrawnInterest: StorageDoubleMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, AccountId | string | Uint8Array, Balance>;
+    withdrawnInterest: StorageDoubleMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, AccountId | string | Uint8Array, Balance>;
   };
   emergencyShutdown: {    /**
      * Open final redemption flag
@@ -394,7 +394,7 @@ export interface StorageType extends BaseStorageType {
      * The authorization relationship map from
      * Authorizer -> (CollateralType, Authorizee) -> Authorized
      **/
-    authorization: StorageDoubleMap<AccountId | string | Uint8Array, ITuple<[CurrencyId, AccountId]> | [CurrencyId | 'ACA' | 'AUSD' | 'DOT' | 'XBTC' | 'LDOT' | 'RenBTC' | number | Uint8Array, AccountId | string | Uint8Array], bool>;
+    authorization: StorageDoubleMap<AccountId | string | Uint8Array, ITuple<[CurrencyId, AccountId]> | [CurrencyId | 'ACA' | 'AUSD' | 'DOT' | 'XBTC' | 'LDOT' | 'RENBTC' | number | Uint8Array, AccountId | string | Uint8Array], bool>;
     /**
      * System shutdown flag
      **/
@@ -444,22 +444,22 @@ export interface StorageType extends BaseStorageType {
      * The collateral asset amount of CDPs, map from
      * Owner -> CollateralType -> CollateralAmount
      **/
-    collaterals: StorageDoubleMap<AccountId | string | Uint8Array, CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, Balance>;
+    collaterals: StorageDoubleMap<AccountId | string | Uint8Array, CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, Balance>;
     /**
      * The debit amount records of CDPs, map from
      * CollateralType -> Owner -> DebitAmount
      **/
-    debits: StorageDoubleMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, AccountId | string | Uint8Array, DebitBalance>;
+    debits: StorageDoubleMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, AccountId | string | Uint8Array, DebitBalance>;
     /**
      * The total collateral asset amount, map from
      * CollateralType -> TotalCollateralAmount
      **/
-    totalCollaterals: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, Balance>;
+    totalCollaterals: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, Balance>;
     /**
      * The total debit amount, map from
      * CollateralType -> TotalDebitAmount
      **/
-    totalDebits: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, DebitBalance>;
+    totalDebits: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, DebitBalance>;
   };
   multisig: {    calls: StorageMap<U8aFixed | string | Uint8Array, Option<ITuple<[Bytes, AccountId, BalanceOf]>>>;
     /**
@@ -489,7 +489,7 @@ export interface StorageType extends BaseStorageType {
     /**
      * True if Self::values(key) is up to date, otherwise the value is stale
      **/
-    isUpdated: StorageMap<OracleKey | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, bool>;
+    isUpdated: StorageMap<OracleKey | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, bool>;
     /**
      * The current members of the collective. This is stored sorted (just by value).
      **/
@@ -498,7 +498,7 @@ export interface StorageType extends BaseStorageType {
     /**
      * Raw values for each oracle operators
      **/
-    rawValues: StorageDoubleMap<AccountId | string | Uint8Array, OracleKey | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, Option<TimestampedValueOf>>;
+    rawValues: StorageDoubleMap<AccountId | string | Uint8Array, OracleKey | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, Option<TimestampedValueOf>>;
     /**
      * Session key for oracle operators
      **/
@@ -506,7 +506,7 @@ export interface StorageType extends BaseStorageType {
     /**
      * Combined value, may not be up to date
      **/
-    values: StorageMap<OracleKey | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, Option<TimestampedValueOf>>;
+    values: StorageMap<OracleKey | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, Option<TimestampedValueOf>>;
   };
   palletTreasury: {    /**
      * Proposal indices that have been approved but not yet awarded.
@@ -543,7 +543,7 @@ export interface StorageType extends BaseStorageType {
   prices: {    /**
      * Mapping from currency id to it's locked price
      **/
-    lockedPrice: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, Option<Price>>;
+    lockedPrice: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, Option<Price>>;
   };
   randomnessCollectiveFlip: {    /**
      * Series of block headers from the last 81 blocks that acts as random seed material. This
@@ -942,16 +942,16 @@ export interface StorageType extends BaseStorageType {
      * 
      * NOTE: This is only used in the case that this module is used to store balances.
      **/
-    accounts: StorageDoubleMap<AccountId | string | Uint8Array, CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, AccountData>;
+    accounts: StorageDoubleMap<AccountId | string | Uint8Array, CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, AccountData>;
     /**
      * Any liquidity locks of a token type under an account.
      * NOTE: Should only be accessed when setting, changing and freeing a lock.
      **/
-    locks: StorageDoubleMap<AccountId | string | Uint8Array, CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, Vec<BalanceLock>>;
+    locks: StorageDoubleMap<AccountId | string | Uint8Array, CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, Vec<BalanceLock>>;
     /**
      * The total issuance of a token type.
      **/
-    totalIssuance: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, Balance>;
+    totalIssuance: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, Balance>;
   };
   transactionPayment: {    nextFeeMultiplier: Multiplier;
     storageVersion: Releases;

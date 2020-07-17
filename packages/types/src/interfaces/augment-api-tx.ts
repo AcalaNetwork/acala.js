@@ -131,7 +131,7 @@ declare module '@polkadot/api/types/submittable' {
        * - liquidate by dex: 125.1 µs
        * # </weight>
        **/
-      liquidate: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, who: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      liquidate: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, who: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Update parameters related to risk management of CDP under specific collateral type
        * 
@@ -152,7 +152,7 @@ declare module '@polkadot/api/types/submittable' {
        * Base Weight: 32.81 µs
        * # </weight>
        **/
-      setCollateralParams: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, stabilityFee: ChangeOptionRate | { NoChange: any } | { NewValue: any } | string | Uint8Array, liquidationRatio: ChangeOptionRatio | { NoChange: any } | { NewValue: any } | string | Uint8Array, liquidationPenalty: ChangeOptionRate | { NoChange: any } | { NewValue: any } | string | Uint8Array, requiredCollateralRatio: ChangeOptionRatio | { NoChange: any } | { NewValue: any } | string | Uint8Array, maximumTotalDebitValue: ChangeBalance | { NoChange: any } | { NewValue: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      setCollateralParams: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, stabilityFee: ChangeOptionRate | { NoChange: any } | { NewValue: any } | string | Uint8Array, liquidationRatio: ChangeOptionRatio | { NoChange: any } | { NewValue: any } | string | Uint8Array, liquidationPenalty: ChangeOptionRate | { NoChange: any } | { NewValue: any } | string | Uint8Array, requiredCollateralRatio: ChangeOptionRatio | { NoChange: any } | { NewValue: any } | string | Uint8Array, maximumTotalDebitValue: ChangeBalance | { NoChange: any } | { NewValue: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Update global parameters related to risk management of CDP
        * 
@@ -188,7 +188,7 @@ declare module '@polkadot/api/types/submittable' {
        * Base Weight: 76.54 µs
        * # </weight>
        **/
-      settle: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, who: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      settle: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, who: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     cdpTreasury: {
       [index: string]: SubmittableExtrinsicFunction<ApiType>;
@@ -208,7 +208,7 @@ declare module '@polkadot/api/types/submittable' {
        * Base Weight: 15.59 µs
        * # </weight>
        **/
-      setCollateralAuctionMaximumSize: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, size: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      setCollateralAuctionMaximumSize: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, size: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Update parameters related to surplus and debit auction
        * 
@@ -249,7 +249,7 @@ declare module '@polkadot/api/types/submittable' {
        * - native currency in worst case: 29.9 µs
        * # </weight>
        **/
-      transfer: AugmentedSubmittable<(dest: LookupSource | Address | AccountId | AccountIndex | string | Uint8Array, currencyId: CurrencyIdOf | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, amount: Compact<BalanceOf> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      transfer: AugmentedSubmittable<(dest: LookupSource | Address | AccountId | AccountIndex | string | Uint8Array, currencyId: CurrencyIdOf | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, amount: Compact<BalanceOf> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Transfer some native currency to another account.
        * 
@@ -286,7 +286,7 @@ declare module '@polkadot/api/types/submittable' {
        * - native currency and create account: 27.39 µs
        * # </weight>
        **/
-      updateBalance: AugmentedSubmittable<(who: LookupSource | Address | AccountId | AccountIndex | string | Uint8Array, currencyId: CurrencyIdOf | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, amount: AmountOf | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      updateBalance: AugmentedSubmittable<(who: LookupSource | Address | AccountId | AccountIndex | string | Uint8Array, currencyId: CurrencyIdOf | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, amount: AmountOf | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     dex: {
       [index: string]: SubmittableExtrinsicFunction<ApiType>;
@@ -315,7 +315,7 @@ declare module '@polkadot/api/types/submittable' {
        * - worst case: 57.72 µs
        * # </weight>
        **/
-      addLiquidity: AugmentedSubmittable<(otherCurrencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, maxOtherCurrencyAmount: Compact<Balance> | AnyNumber | Uint8Array, maxBaseCurrencyAmount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      addLiquidity: AugmentedSubmittable<(otherCurrencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, maxOtherCurrencyAmount: Compact<Balance> | AnyNumber | Uint8Array, maxBaseCurrencyAmount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Update liquidity incentive rate of specific liquidity pool
        * 
@@ -332,7 +332,7 @@ declare module '@polkadot/api/types/submittable' {
        * Base Weight: 3.591 µs
        * # </weight>
        **/
-      setLiquidityIncentiveRate: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, liquidityIncentiveRate: Rate | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      setLiquidityIncentiveRate: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, liquidityIncentiveRate: Rate | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Trading with DEX, swap supply currency to target currency
        * 
@@ -360,7 +360,7 @@ declare module '@polkadot/api/types/submittable' {
        * - swap other to other: 54.77 µs
        * # </weight>
        **/
-      swapCurrency: AugmentedSubmittable<(supplyCurrencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, supplyAmount: Compact<Balance> | AnyNumber | Uint8Array, targetCurrencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, acceptableTargetAmount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      swapCurrency: AugmentedSubmittable<(supplyCurrencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, supplyAmount: Compact<Balance> | AnyNumber | Uint8Array, targetCurrencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, acceptableTargetAmount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Just withdraw liquidity incentive interest as the additional reward for liquidity contribution
        * 
@@ -377,7 +377,7 @@ declare module '@polkadot/api/types/submittable' {
        * Base Weight: 38.4 µs
        * # </weight>
        **/
-      withdrawIncentiveInterest: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      withdrawIncentiveInterest: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Withdraw liquidity from specific liquidity pool in the form of burning shares, and withdrawing currencies in trading pairs
        * from liquidity pool in proportion, and withdraw liquidity incentive interest.
@@ -397,7 +397,7 @@ declare module '@polkadot/api/types/submittable' {
        * - worst case: 71.18 µs
        * # </weight>
        **/
-      withdrawLiquidity: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, shareAmount: Compact<Share> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      withdrawLiquidity: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, shareAmount: Compact<Share> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     emergencyShutdown: {
       [index: string]: SubmittableExtrinsicFunction<ApiType>;
@@ -481,7 +481,7 @@ declare module '@polkadot/api/types/submittable' {
        * Base Weight: 99.77 µs
        * # </weight>
        **/
-      adjustLoan: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, collateralAdjustment: Amount | AnyNumber | Uint8Array, debitAdjustment: DebitAmount | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      adjustLoan: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, collateralAdjustment: Amount | AnyNumber | Uint8Array, debitAdjustment: DebitAmount | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Authorize `to` to manipulate the loan under `currency_id`
        * 
@@ -496,7 +496,7 @@ declare module '@polkadot/api/types/submittable' {
        * Base Weight: 20.04 µs
        * # </weight>
        **/
-      authorize: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, to: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      authorize: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, to: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Transfer the whole CDP of `from` under `currency_id` to caller's CDP under the same `currency_id`,
        * caller must have the authrization of `from` for the specific collateral type
@@ -512,7 +512,7 @@ declare module '@polkadot/api/types/submittable' {
        * Base Weight: 74.81 µs
        * # </weight>
        **/
-      transferLoanFrom: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, from: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      transferLoanFrom: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, from: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Cancel the authorization for `to` under `currency_id`
        * 
@@ -527,7 +527,7 @@ declare module '@polkadot/api/types/submittable' {
        * Base Weight: 19.77 µs
        * # </weight>
        **/
-      unauthorize: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array, to: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      unauthorize: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, to: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Cancel all authorization of caller
        * 
@@ -557,7 +557,7 @@ declare module '@polkadot/api/types/submittable' {
        * 
        * Require unsigned. However a valid signature signed by session key is required along with payload.
        **/
-      feedValues: AugmentedSubmittable<(values: Vec<ITuple<[OracleKey, OracleValue]>> | ([OracleKey | 'ACA' | 'AUSD' | 'DOT' | 'XBTC' | 'LDOT' | 'RenBTC' | number | Uint8Array, OracleValue | AnyNumber | Uint8Array])[], index: Compact<u32> | AnyNumber | Uint8Array, block: BlockNumber | AnyNumber | Uint8Array, signature: Signature | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      feedValues: AugmentedSubmittable<(values: Vec<ITuple<[OracleKey, OracleValue]>> | ([OracleKey | 'ACA' | 'AUSD' | 'DOT' | 'XBTC' | 'LDOT' | 'RENBTC' | number | Uint8Array, OracleValue | AnyNumber | Uint8Array])[], index: Compact<u32> | AnyNumber | Uint8Array, block: BlockNumber | AnyNumber | Uint8Array, signature: Signature | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Update the session key.
        **/
@@ -583,7 +583,7 @@ declare module '@polkadot/api/types/submittable' {
        * 
        * - `currency_id`: currency type.
        **/
-      lockPrice: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      lockPrice: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Unlock the price and get the price from `PriceProvider` again
        * 
@@ -591,7 +591,7 @@ declare module '@polkadot/api/types/submittable' {
        * 
        * - `currency_id`: currency type.
        **/
-      unlockPrice: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RenBTC' | number | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      unlockPrice: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     scheduleUpdate: {
       [index: string]: SubmittableExtrinsicFunction<ApiType>;
