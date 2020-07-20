@@ -7,7 +7,7 @@ import { u32, u8 } from '@polkadot/types/primitive';
 import { CurrencyId } from '@acala-network/types/interfaces/primitives';
 import { Balance, BlockNumber, CurrencyIdOf, ModuleId, Weight } from '@acala-network/types/interfaces/runtime';
 import { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
-import { Price } from '@open-web3/orml-types/interfaces/prices';
+import { Price } from '@open-web3/orml-types/interfaces/traits';
 import { EraIndex, MomentOf } from '@polkadot/types/interfaces/staking';
 
 declare module '@polkadot/metadata/Decorated/consts/types' {

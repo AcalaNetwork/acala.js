@@ -1,7 +1,7 @@
 import { Observable, combineLatest, of, interval } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { ApiInterfaceRx } from '@polkadot/api/types';
-import { Price } from '@open-web3/orml-types/interfaces/prices';
+import { Price } from '@open-web3/orml-types/interfaces/traits';
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { TimestampedValue } from '@open-web3/orml-types/interfaces';
 import { DerivedPrice } from '../types/price';

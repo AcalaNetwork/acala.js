@@ -1,11 +1,4 @@
-export default {
-  types: {
-    RedeemStrategy: {
-      _enum: {
-        Immediately: 'Null',
-        Target: 'EraIndex',
-        WaitForUnbonding: 'Null'
-      }
-    }
-  }
-};
+import { Definitions } from '@polkadot/types/types';
+import homa from '@acala-network/type-definitions/homa';
+
+export default homa as Definitions;

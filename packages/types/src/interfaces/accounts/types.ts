@@ -3,9 +3,6 @@
 
 import { Balance } from '@acala-network/types/interfaces/runtime';
 
-/** @name DepositBalanceOf */
-export interface DepositBalanceOf extends Balance {}
-
 /** @name PalletBalanceOf */
 export interface PalletBalanceOf extends Balance {}
 
