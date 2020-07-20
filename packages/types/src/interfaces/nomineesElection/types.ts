@@ -18,4 +18,4 @@ export interface HomaUnlockChunk extends Struct {
   readonly era: Compact<EraIndex>;
 }
 
-export type PHANTOM_HOMACOUNCLI = 'homaCouncli';
+export type PHANTOM_NOMINEESELECTION = 'nomineesElection';

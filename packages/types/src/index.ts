@@ -4,7 +4,7 @@ import './interfaces/augment-api-tx';
 import './interfaces/augment-api';
 import './interfaces/augment-types';
 
-import { RegistryTypes } from '@polkadot/types/types';
+import { RegistryTypes, OverrideModuleType } from '@polkadot/types/types';
 import polkadotJSONRpc from '@polkadot/types/interfaces/jsonrpc';
 import * as ormlDefinations from '@open-web3/orml-types/interfaces/definitions';
 
@@ -34,7 +34,10 @@ export const allJSONRpc = {
 
 export const types: RegistryTypes = Object.values(allDefinitions)
   .map(({ types }) => types)
-  .reduce((all, types) => Object.assign(all, types), {});
+  .reduce((all, types) => Object.assign(all, types), {} as RegistryTypes);
+
+export const typesAlias: Record<string, OverrideModuleType> = Object.values(allDefinitions)
+  .reduce((all, def) => Object.assign(all, (def as any).typesAlias), {});
 
 export const typeChain = {
   'Acala Mandala TC3': {

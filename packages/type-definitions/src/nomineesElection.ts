@@ -1,4 +1,5 @@
 export default {
+  rpc: {},
   types: {
     HomaUnlockChunk: {
       value: 'Compact<Balance>',
@@ -8,6 +9,11 @@ export default {
       total: 'Compact<Balance>',
       active: 'Compact<Balance>',
       unlocking: 'Vec<UnlockChunk>'
+    }
+  },
+  typesAlias: {
+    nomineesElection: {
+      UnlockChunk: 'HomaUnlockChunk'
     }
   }
 };

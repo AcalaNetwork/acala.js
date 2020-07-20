@@ -1,10 +1,4 @@
-export default {
-  types: {
-    CurrencyId: {
-      _enum: ['ACA', 'AUSD', 'DOT', 'XBTC', 'LDOT', 'RENBTC']
-    },
-    AirDropCurrencyId: {
-      _enum: ['KAR', 'ACA']
-    }
-  }
-};
+import { Definitions } from '@polkadot/types/types';
+import primitives from '@acala-network/type-definitions/primitives';
+
+export default primitives as Definitions;

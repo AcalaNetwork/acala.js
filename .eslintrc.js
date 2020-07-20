@@ -9,6 +9,7 @@ module.exports = {
     ]
   },
   rules: {
-    ...base.rules
+    ...base.rules,
+    '@typescript-eslint/no-explicit-any': 'off'
   }
 };

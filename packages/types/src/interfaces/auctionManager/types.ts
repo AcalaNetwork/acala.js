@@ -7,7 +7,7 @@ import { AccountId, Balance, BlockNumber } from '@acala-network/types/interfaces
 
 /** @name CollateralAuctionItem */
 export interface CollateralAuctionItem extends Struct {
-  readonly owner: AccountId;
+  readonly refundRecipient: AccountId;
   readonly currencyId: CurrencyId;
   readonly amount: Compact<Balance>;
   readonly target: Compact<Balance>;
