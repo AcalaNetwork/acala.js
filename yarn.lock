@@ -2081,10 +2081,10 @@
   dependencies:
     "@types/node" ">= 8"
 
-"@open-web3/api-mobx@^0.5.0-beta.2":
-  version "0.5.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@open-web3/api-mobx/-/api-mobx-0.5.0-beta.2.tgz#cebaa9b82166797af98033658a84f8b86c3d8cb8"
-  integrity sha512-7aVIJm1LI/YfwGq8AeMV4ppBDZWZCFtuPvFQSNPw+A1tQRWWGHazNhX2c1oapNsBCIBIuQxBOuCdzQRv/C0W5w==
+"@open-web3/api-mobx@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@open-web3/api-mobx/-/api-mobx-0.5.1.tgz#2de39778c3a639abb516f41dadd2d6f90e8265e1"
+  integrity sha512-5bdUAemk6viY1pAiOMsa6nUnDw+8hxj9ZU1RR2XKeXcWvFP/24ZaWN2hw6otfiYpCMQl7uQnHxZYlgRIGTSy8A==
   dependencies:
     "@polkadot/api" "^1.23.1"
     "@polkadot/types" "^1.23.1"
@@ -2092,28 +2092,30 @@
     mobx "^5.15.4"
     mobx-utils "^5.5.7"
 
-"@open-web3/orml-api-derive@^0.5.0-beta.2":
-  version "0.5.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@open-web3/orml-api-derive/-/orml-api-derive-0.5.0-beta.2.tgz#1926f463f2a526fee331c4cb31c78202de13c92d"
-  integrity sha512-/IcS0pYG21ojNgc5sCwqhqc6N3rEVo0WH726eC/xG3cPgpGRgeVEzkU02jVNgD3RUGeR+RiEliwt6PSse4PVbw==
+"@open-web3/orml-api-derive@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@open-web3/orml-api-derive/-/orml-api-derive-0.5.1.tgz#839be6e71700e91c78770cd2b26d9a723a4f7b95"
+  integrity sha512-t3x9oGpS4M6ThNNdkltAepJncAWJ/+RFpzulYDhhTigftiSz5QF85xSv5BQvkzYvU5z/NOqpY3Tw4vw+uI6E6A==
   dependencies:
     memoizee "^0.4.14"
     rxjs "^6.5.5"
 
-"@open-web3/orml-type-definitions@^0.5.0-beta.2":
-  version "0.5.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@open-web3/orml-type-definitions/-/orml-type-definitions-0.5.0-beta.2.tgz#0067f823f39883f845990d2da0cc9b86b82895b8"
-  integrity sha512-29+QjjCMdNF5diPTwVZVXJU09LWoP9AOypMghY1oGB0hAej57Y6Ww5N611x7WSZjaKJCfZu11Tpy8lKXVcNWTg==
+"@open-web3/orml-type-definitions@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@open-web3/orml-type-definitions/-/orml-type-definitions-0.5.1.tgz#4cc0746007bcebed2aac48dcb5579f5882655dfe"
+  integrity sha512-vSaQN5B7UuaA+DaYLF5pAFe4y2E8SDnsz1GDarCTSt7EpzISVUniJbysWUK+MP5ZLIB3oBxRt1oEN/b5yb8cxg==
 
-"@open-web3/orml-types@^0.5.0-beta.2":
-  version "0.5.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@open-web3/orml-types/-/orml-types-0.5.0-beta.2.tgz#c6a9f8455398c3361447d26c7d5e0bfc852bbf03"
-  integrity sha512-d2d5uAAGldbvMe63/5y0hhDSAmoYSzaar0XHHRR7ryD/Iy+wcL6juELqZyGCYBkEuSDkq8VsOsiSBFdHvIQMYA==
+"@open-web3/orml-types@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@open-web3/orml-types/-/orml-types-0.5.1.tgz#aecb82846f753d4f44308c15b8e356b716dcaa1a"
+  integrity sha512-DHNat3qzItpQrW7+Xb6wIOOTAI1y1iMSbkTFp/F4CeKAXJG6pDswB/pWGRgtU+rRioS/Rmw9Pca5a38+HSMt/g==
+  dependencies:
+    "@open-web3/orml-type-definitions" "^0.5.1"
 
-"@open-web3/util@^0.5.0-beta.2":
-  version "0.5.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@open-web3/util/-/util-0.5.0-beta.2.tgz#0240f904c00e8f98ec9dbec1498c6d6a008ced92"
-  integrity sha512-IwgTz3C9wwPcT/F/EtfcZLcrHJP0F9bhwuffUk5zpr+3McNSwvBoWjjFuW7qvwA5ekgYsWZZGVPrldmA/fgN3Q==
+"@open-web3/util@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@open-web3/util/-/util-0.5.1.tgz#3c027125f56326bd2ec17fbaaa4e75a59fe6362f"
+  integrity sha512-dVrXyLG4fEOgSc7yUChr/0L1xG5WYb4bngYT2z1IeFjdSCVR639tQNRVSPCxB+EXVdTEsPROYsmd3Yb0x+eJTg==
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
     big.js "^5.2.2"
