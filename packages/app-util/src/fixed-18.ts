@@ -73,6 +73,18 @@ export class Fixed18 {
   }
 
   /**
+   * @name toFixed
+   * @description format real number string(division by precision) to string
+   * @param {number} [dp=6] - decimal places deafult is 6
+   * @param {number} [rm=3] - round modle, default is ROUND_FLOOR
+   */
+  public toFixed (dp = 6, rm: ROUND_MODE = 3): string {
+    let result = this.inner.div(Fixed18.PRECISION);
+    result = result.decimalPlaces(dp, rm);
+    return result.toFixed();
+  }
+
+  /**
    * @name innerToString
    * @description format inner BigNumber value to string
    * @param {number} [dp=0] - decimal places deafult is 0
