@@ -114,9 +114,6 @@ export interface Fixed128 extends Int {}
 /** @name Fixed64 */
 export interface Fixed64 extends Int {}
 
-/** @name FixedU128 */
-export interface FixedU128 extends u128 {}
-
 /** @name H160 */
 export interface H160 extends U8aFixed {}
 

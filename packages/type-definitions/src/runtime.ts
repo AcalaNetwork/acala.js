@@ -11,7 +11,6 @@ export default {
     DebitBalanceOf: 'Balance',
     OracleKey: 'CurrencyId',
     OracleValue: 'Price',
-    Share: 'u128',
-    FixedU128: 'u128'
+    Share: 'u128'
   }
 };
