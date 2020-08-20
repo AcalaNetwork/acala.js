@@ -8,6 +8,7 @@ import { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@ac
 import { ChangeBalance, ChangeOptionRate, ChangeOptionRatio, LiquidationStrategy, OptionRate, OptionRatio, RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
 import { BalanceRequest, BalanceWrapper } from '@acala-network/types/interfaces/dex';
 import { RedeemStrategy } from '@acala-network/types/interfaces/homa';
+import { Position } from '@acala-network/types/interfaces/loans';
 import { BondingLedger, HomaUnlockChunk } from '@acala-network/types/interfaces/nomineesElection';
 import { AirDropCurrencyId, CurrencyId } from '@acala-network/types/interfaces/primitives';
 import { AccountId, AccountIdOf, AccountIndex, Address, Amount, AmountOf, AssetId, AuctionId, AuctionIdOf, Balance, BalanceOf, Block, BlockNumber, Call, ChangesTrieConfiguration, Consensus, ConsensusEngineId, CurrencyIdOf, DebitAmount, DebitAmountOf, DebitBalance, DebitBalanceOf, Digest, DigestItem, ExtrinsicsWeight, Fixed128, Fixed64, H160, H256, H512, Hash, Header, Index, Justification, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, ModuleId, Moment, OpaqueCall, OracleKey, OracleValue, Origin, Pays, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, ProxyType, Releases, RuntimeDbWeight, Seal, SealV0, Share, SignedBlock, StorageData, ValidatorId, Weight, WeightMultiplier } from '@acala-network/types/interfaces/runtime';
@@ -1786,6 +1787,9 @@ declare module '@polkadot/types/types/registry' {
     RedeemStrategy: RedeemStrategy;
     'Option<RedeemStrategy>': Option<RedeemStrategy>;
     'Vec<RedeemStrategy>': Vec<RedeemStrategy>;
+    Position: Position;
+    'Option<Position>': Option<Position>;
+    'Vec<Position>': Vec<Position>;
     HomaUnlockChunk: HomaUnlockChunk;
     'Option<HomaUnlockChunk>': Option<HomaUnlockChunk>;
     'Vec<HomaUnlockChunk>': Vec<HomaUnlockChunk>;

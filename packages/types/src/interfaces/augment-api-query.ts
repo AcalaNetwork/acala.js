@@ -6,6 +6,7 @@ import { Option, Vec } from '@polkadot/types/codec';
 import { bool, u32 } from '@polkadot/types/primitive';
 import { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@acala-network/types/interfaces/auctionManager';
 import { RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
+import { Position } from '@acala-network/types/interfaces/loans';
 import { BondingLedger } from '@acala-network/types/interfaces/nomineesElection';
 import { AirDropCurrencyId, CurrencyId } from '@acala-network/types/interfaces/primitives';
 import { AccountId, AuctionId, Balance, BlockNumber, OracleKey, Share } from '@acala-network/types/interfaces/runtime';

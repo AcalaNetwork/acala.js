@@ -4,6 +4,7 @@ export { default as auctionManager } from './auctionManager';
 export { default as cdpEngine } from './cdpEngine';
 export { default as dex } from './dex';
 export { default as homa } from './homa';
+export { default as loans } from './loans';
 export { default as nomineesElection } from './nomineesElection';
 export { default as primitives } from './primitives';
 export { default as stakingPool } from './stakingPool';
