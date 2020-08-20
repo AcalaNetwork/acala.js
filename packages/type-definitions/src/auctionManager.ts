@@ -4,11 +4,13 @@ export default {
     CollateralAuctionItem: {
       refundRecipient: 'AccountId',
       currencyId: 'CurrencyId',
+      initialAmount: 'Compact<Balance>',
       amount: 'Compact<Balance>',
       target: 'Compact<Balance>',
       startTime: 'BlockNumber'
     },
     DebitAuctionItem: {
+      initialAmount: 'Compact<Balance>',
       amount: 'Compact<Balance>',
       fix: 'Compact<Balance>',
       startTime: 'BlockNumber'

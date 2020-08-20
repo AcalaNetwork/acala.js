@@ -5,7 +5,7 @@ import { Codec } from '@polkadot/types/types';
 import { Vec } from '@polkadot/types/codec';
 import { u32, u8 } from '@polkadot/types/primitive';
 import { CurrencyId } from '@acala-network/types/interfaces/primitives';
-import { Balance, BlockNumber, CurrencyIdOf, ModuleId, Weight } from '@acala-network/types/interfaces/runtime';
+import { Balance, BlockNumber, CurrencyIdOf, ModuleId } from '@acala-network/types/interfaces/runtime';
 import { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
 import { Price } from '@open-web3/orml-types/interfaces/traits';
 import { EraIndex, MomentOf } from '@polkadot/types/interfaces/staking';
@@ -40,7 +40,7 @@ declare module '@polkadot/metadata/Decorated/consts/types' {
        **/
       nativeCurrencyId: AugmentedConst<CurrencyId>;
       /**
-       * Deposit for opening account, reserve it utill close account.
+       * Deposit for opening account, would be reserved until account closed.
        **/
       newAccountDeposit: AugmentedConst<Balance>;
       /**
@@ -59,10 +59,6 @@ declare module '@polkadot/metadata/Decorated/consts/types' {
        * The extended time for the auction to end after each successful bid
        **/
       auctionTimeToClose: AugmentedConst<BlockNumber>;
-      /**
-       * The decrement of amout in debit auction when restocking
-       **/
-      getAmountAdjustment: AugmentedConst<Rate>;
       /**
        * The native currency id
        **/
@@ -144,7 +140,7 @@ declare module '@polkadot/metadata/Decorated/consts/types' {
        **/
       getExchangeFee: AugmentedConst<Rate>;
       /**
-       * The dex's module id, keep all assets in DEX.
+       * The DEX's module id, keep all assets in DEX.
        **/
       moduleId: AugmentedConst<ModuleId>;
     };
@@ -154,11 +150,6 @@ declare module '@polkadot/metadata/Decorated/consts/types' {
        * The list of valid collateral currency types
        **/
       collateralCurrencyIds: AugmentedConst<Vec<CurrencyId>>;
-    };
-    homaTreasury: {
-      [index: string]: AugmentedConst<object & Codec>;
-      moduleId: AugmentedConst<ModuleId>;
-      stakingCurrencyId: AugmentedConst<CurrencyId>;
     };
     loans: {
       [index: string]: AugmentedConst<object & Codec>;
@@ -184,10 +175,6 @@ declare module '@polkadot/metadata/Decorated/consts/types' {
       getStableCurrencyId: AugmentedConst<CurrencyId>;
       getStakingCurrencyId: AugmentedConst<CurrencyId>;
       stableCurrencyFixedPrice: AugmentedConst<Price>;
-    };
-    scheduleUpdate: {
-      [index: string]: AugmentedConst<object & Codec>;
-      maxScheduleDispatchWeight: AugmentedConst<Weight>;
     };
     stakingPool: {
       [index: string]: AugmentedConst<object & Codec>;
