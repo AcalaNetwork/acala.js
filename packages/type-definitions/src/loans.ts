@@ -6,4 +6,4 @@ export default {
       debit: 'Balance'
     }
   }
-}
+};
