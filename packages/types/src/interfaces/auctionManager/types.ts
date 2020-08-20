@@ -9,6 +9,7 @@ import { AccountId, Balance, BlockNumber } from '@acala-network/types/interfaces
 export interface CollateralAuctionItem extends Struct {
   readonly refundRecipient: AccountId;
   readonly currencyId: CurrencyId;
+  readonly initial_amount: Compact<Balance>;
   readonly amount: Compact<Balance>;
   readonly target: Compact<Balance>;
   readonly startTime: BlockNumber;
@@ -16,6 +17,7 @@ export interface CollateralAuctionItem extends Struct {
 
 /** @name DebitAuctionItem */
 export interface DebitAuctionItem extends Struct {
+  readonly initial_amount: Compact<Balance>;
   readonly amount: Compact<Balance>;
   readonly fix: Compact<Balance>;
   readonly startTime: BlockNumber;
