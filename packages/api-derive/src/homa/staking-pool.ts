@@ -1,19 +1,17 @@
-import { ApiInterfaceRx } from '@polkadot/api/types';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { StakingBalance, Ratio, ExchangeRate, Rate, Balance, BlockNumber } from '@acala-network/types/interfaces';
+import { ApiInterfaceRx } from '@polkadot/api/types';
 import { EraIndex } from '@polkadot/types/interfaces';
+
+import { StakingBalance, Ratio, ExchangeRate, Rate, Balance, BlockNumber } from '@acala-network/types/interfaces';
 
 import { DerivedStakingPool, DerivedStakingPoolConstants } from '../types/staking-pool';
 import { memo } from '../utils/memo';
 
 function getConstants (api: ApiInterfaceRx): DerivedStakingPoolConstants {
-  const CurrencyId = api.registry.get('CurrencyId');
-  // FIXME: will use api.consts after chain is ready
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  const LDOT = new (CurrencyId as any)(api.registry, 'ldot');
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  const DOT = new (CurrencyId as any)(api.registry, 'dot');
+  const liquidCurrency = api.consts.stakingPool.liquidCurrencyId;
+  const stakingCurrency = api.consts.stakingPool.stakingCurrencyId;
+
   return {
     maxBondRatio: api.consts.stakingPool.maxBondRatio as Ratio,
     minBondRatio: api.consts.stakingPool.minBondRatio as Ratio,
@@ -21,8 +19,8 @@ function getConstants (api: ApiInterfaceRx): DerivedStakingPoolConstants {
     defaultExchangeRate: api.consts.stakingPool.defaultExchangeRate as ExchangeRate,
     bondingDuration: api.consts.polkadotBridge.bondingDuration as EraIndex,
     eraLength: api.consts.polkadotBridge.eraLength as BlockNumber,
-    stakingCurrency: DOT,
-    liquidCurrency: LDOT
+    stakingCurrency,
+    liquidCurrency
   };
 }
 
@@ -56,7 +54,7 @@ export function stakingPool (api: ApiInterfaceRx): () => Observable<DerivedStaki
 
         return {
           currentEra: currentEra as EraIndex,
-          nextEraUnbond: nextEraUnbond as unknown as [StakingBalance, StakingBalance],
+          nextEraUnbond: nextEraUnbond as [StakingBalance, StakingBalance],
           totalClaimedUnbonded: totalClaimedUnbonded as StakingBalance,
           totalBonded: totalBonded as StakingBalance,
           unbondingToFree: unbondingToFree as StakingBalance,
