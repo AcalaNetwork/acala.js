@@ -17,7 +17,7 @@ export interface CollateralParams {
 }
 
 export interface DerivedLoanType extends Omit<CollateralParams, 'liquidationRatio' | 'liquidationPenalty'> {
-  token: CurrencyId | string;
+  currency: CurrencyId | string;
   debitExchangeRate: Rate;
   liquidationRatio: OptionRatio | ExchangeRate;
   liquidationPenalty: OptionRatio | Rate;
@@ -26,14 +26,14 @@ export interface DerivedLoanType extends Omit<CollateralParams, 'liquidationRati
 }
 
 export interface DerivedUserLoan {
-  token: CurrencyId | string;
+  currency: CurrencyId | string;
   account: AccountId | string;
-  collaterals: Balance;
-  debits: DebitBalance;
+  collateral: Balance;
+  debit: DebitBalance;
 }
 
 export interface DerivedLoanOverView {
-  token: CurrencyId | string;
+  currency: CurrencyId | string;
   totalDebit: DebitBalance;
   totalCollateral: Balance;
 }

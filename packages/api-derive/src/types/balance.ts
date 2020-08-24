@@ -1,7 +1,7 @@
 import { Balance, CurrencyId } from '@acala-network/types/interfaces';
 
 export interface DerivedBalance {
-  token: CurrencyId | string;
+  currency: CurrencyId | string;
   balance: Balance;
 }
 

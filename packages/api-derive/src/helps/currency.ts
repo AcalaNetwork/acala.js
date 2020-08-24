@@ -20,10 +20,10 @@ export function getCollateralCurrencyIds (api: ApiInterfaceRx): Vec<CurrencyId> 
 }
 
 /**
- * @name getStableCoinId
+ * @name getStableCurrencyId
  * @description get stable coin id.
  */
-export function getStableCoinId (api: ApiInterfaceRx): CurrencyId {
+export function getStableCurrencyId (api: ApiInterfaceRx): CurrencyId {
   return api.consts.cdpTreasury.getStableCurrencyId as CurrencyId;
 }
 
