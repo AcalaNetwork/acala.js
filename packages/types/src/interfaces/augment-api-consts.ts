@@ -10,7 +10,7 @@ import { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/suppo
 import { Price } from '@open-web3/orml-types/interfaces/traits';
 import { EraIndex, MomentOf } from '@polkadot/types/interfaces/staking';
 
-declare module '@polkadot/metadata/Decorated/consts/types' {
+declare module '@polkadot/metadata/Decorated/types' {
   export interface Constants {
     [index: string]: ModuleConstants;
     accounts: {

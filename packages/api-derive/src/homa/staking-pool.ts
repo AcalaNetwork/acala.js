@@ -1,12 +1,13 @@
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
 import { ApiInterfaceRx } from '@polkadot/api/types';
 import { EraIndex } from '@polkadot/types/interfaces';
+import { memo } from '@polkadot/api-derive/util';
 
 import { StakingBalance, Ratio, ExchangeRate, Rate, Balance, BlockNumber } from '@acala-network/types/interfaces';
 
 import { DerivedStakingPool, DerivedStakingPoolConstants } from '../types/staking-pool';
-import { memo } from '../utils/memo';
 
 function getConstants (api: ApiInterfaceRx): DerivedStakingPoolConstants {
   const liquidCurrency = api.consts.stakingPool.liquidCurrencyId;
@@ -28,8 +29,8 @@ function getConstants (api: ApiInterfaceRx): DerivedStakingPoolConstants {
  * @name stakingPool
  * @description get staking pool information
  */
-export function stakingPool (api: ApiInterfaceRx): () => Observable<DerivedStakingPool> {
-  return memo(() => {
+export function stakingPool (instanceId: string, api: ApiInterfaceRx): () => Observable<DerivedStakingPool> {
+  return memo(instanceId, () => {
     const constants = getConstants(api);
 
     return combineLatest([
