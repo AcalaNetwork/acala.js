@@ -3,7 +3,7 @@
   "version": "0.4.0-beta.4",
   "description": "Utilities to work with Acala Network",
   "author": "Acala Developers <hello@acala.one>",
-  "main": "build/index.js",
+  "main": "index.js",
   "license": "Apache-2.0",
   "publishConfig": {
     "access": "public",

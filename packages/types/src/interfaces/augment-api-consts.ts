@@ -9,183 +9,187 @@ import { Balance, BlockNumber, CurrencyIdOf, ModuleId } from '@acala-network/typ
 import { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
 import { Price } from '@open-web3/orml-types/interfaces/traits';
 import { EraIndex, MomentOf } from '@polkadot/types/interfaces/staking';
+import { ApiTypes } from '@polkadot/api/types';
 
-declare module '@polkadot/metadata/Decorated/types' {
-  export interface Constants {
-    [index: string]: ModuleConstants;
+declare module '@polkadot/api/types/consts' {
+  export interface AugmentedConsts<ApiType> {
     accounts: {
-      [index: string]: AugmentedConst<object & Codec>;
+      [key: string]: Codec;
       /**
        * All non-native currency ids in Acala.
        **/
-      allNonNativeCurrencyIds: AugmentedConst<Vec<CurrencyId>>;
+      allNonNativeCurrencyIds: Vec<CurrencyId> & AugmentedConst<ApiType>;
       /**
        * The number of fee transfer times per period.
        **/
-      freeTransferCount: AugmentedConst<u8>;
+      freeTransferCount: u8 & AugmentedConst<ApiType>;
       /**
        * Deposit for free transfer service.
        **/
-      freeTransferDeposit: AugmentedConst<Balance>;
+      freeTransferDeposit: Balance & AugmentedConst<ApiType>;
       /**
        * The period to count free transfer.
        **/
-      freeTransferPeriod: AugmentedConst<MomentOf>;
+      freeTransferPeriod: MomentOf & AugmentedConst<ApiType>;
       /**
        * The max slippage allowed when swap open account deposit or fee with DEX
        **/
-      maxSlippageSwapWithDex: AugmentedConst<Ratio>;
+      maxSlippageSwapWithDex: Ratio & AugmentedConst<ApiType>;
       /**
        * Native currency id, the actual received currency type as fee for treasury
        **/
-      nativeCurrencyId: AugmentedConst<CurrencyId>;
+      nativeCurrencyId: CurrencyId & AugmentedConst<ApiType>;
       /**
        * Deposit for opening account, would be reserved until account closed.
        **/
-      newAccountDeposit: AugmentedConst<Balance>;
+      newAccountDeposit: Balance & AugmentedConst<ApiType>;
       /**
        * The treasury module account id to recycle assets.
        **/
-      treasuryModuleId: AugmentedConst<ModuleId>;
+      treasuryModuleId: ModuleId & AugmentedConst<ApiType>;
     };
     auctionManager: {
-      [index: string]: AugmentedConst<object & Codec>;
+      [key: string]: Codec;
       /**
        * When the total duration of the auction exceeds this soft cap,
        * double the effect of `MinimumIncrementSize`, halve the effect of `AuctionTimeToClose`
        **/
-      auctionDurationSoftCap: AugmentedConst<BlockNumber>;
+      auctionDurationSoftCap: BlockNumber & AugmentedConst<ApiType>;
       /**
        * The extended time for the auction to end after each successful bid
        **/
-      auctionTimeToClose: AugmentedConst<BlockNumber>;
+      auctionTimeToClose: BlockNumber & AugmentedConst<ApiType>;
       /**
        * The native currency id
        **/
-      getNativeCurrencyId: AugmentedConst<CurrencyId>;
+      getNativeCurrencyId: CurrencyId & AugmentedConst<ApiType>;
       /**
        * The stable currency id
        **/
-      getStableCurrencyId: AugmentedConst<CurrencyId>;
+      getStableCurrencyId: CurrencyId & AugmentedConst<ApiType>;
       /**
        * The minimum increment size of each bid compared to the previous one
        **/
-      minimumIncrementSize: AugmentedConst<Rate>;
+      minimumIncrementSize: Rate & AugmentedConst<ApiType>;
     };
     cdpEngine: {
-      [index: string]: AugmentedConst<object & Codec>;
+      [key: string]: Codec;
       /**
        * The list of valid collateral currency types
        **/
-      collateralCurrencyIds: AugmentedConst<Vec<CurrencyId>>;
+      collateralCurrencyIds: Vec<CurrencyId> & AugmentedConst<ApiType>;
       /**
        * The default debit exchange rate for all collateral types,
        * if the debit exchange rate for specific collateral is `None`, it works.
        **/
-      defaultDebitExchangeRate: AugmentedConst<ExchangeRate>;
+      defaultDebitExchangeRate: ExchangeRate & AugmentedConst<ApiType>;
       /**
        * The default liquidation penalty rate when liquidate unsafe CDP,
        * if the liquidation penalty rate for specific collateral is `None`, it works.
        **/
-      defaultLiquidationPenalty: AugmentedConst<Rate>;
+      defaultLiquidationPenalty: Rate & AugmentedConst<ApiType>;
       /**
        * The default liquidation ratio for all collateral types of CDP,
        * if the liquidation ratio for specific collateral is `None`, it works.
        **/
-      defaultLiquidationRatio: AugmentedConst<Ratio>;
+      defaultLiquidationRatio: Ratio & AugmentedConst<ApiType>;
       /**
        * The stable currency id
        **/
-      getStableCurrencyId: AugmentedConst<CurrencyId>;
+      getStableCurrencyId: CurrencyId & AugmentedConst<ApiType>;
       /**
        * The max slippage allowed when liquidate an unsafe CDP by swap with DEX
        **/
-      maxSlippageSwapWithDex: AugmentedConst<Ratio>;
+      maxSlippageSwapWithDex: Ratio & AugmentedConst<ApiType>;
       /**
        * The minimum debit value allowed exists in CDP which has debit amount to avoid dust
        **/
-      minimumDebitValue: AugmentedConst<Balance>;
+      minimumDebitValue: Balance & AugmentedConst<ApiType>;
     };
     cdpTreasury: {
-      [index: string]: AugmentedConst<object & Codec>;
+      [key: string]: Codec;
       /**
        * Stablecoin currency id
        **/
-      getStableCurrencyId: AugmentedConst<CurrencyId>;
+      getStableCurrencyId: CurrencyId & AugmentedConst<ApiType>;
       /**
        * Lots cap when create auction
        **/
-      maxAuctionsCount: AugmentedConst<u32>;
+      maxAuctionsCount: u32 & AugmentedConst<ApiType>;
       /**
        * The CDP treasury's module id, keep surplus and collateral assets from liquidation.
        **/
-      moduleId: AugmentedConst<ModuleId>;
+      moduleId: ModuleId & AugmentedConst<ApiType>;
     };
     currencies: {
-      [index: string]: AugmentedConst<object & Codec>;
-      nativeCurrencyId: AugmentedConst<CurrencyIdOf>;
+      [key: string]: Codec;
+      nativeCurrencyId: CurrencyIdOf & AugmentedConst<ApiType>;
     };
     dex: {
-      [index: string]: AugmentedConst<object & Codec>;
+      [key: string]: Codec;
       /**
        * Tradable currency type list
        **/
-      enabledCurrencyIds: AugmentedConst<Vec<CurrencyId>>;
+      enabledCurrencyIds: Vec<CurrencyId> & AugmentedConst<ApiType>;
       /**
        * Base currency type id
        **/
-      getBaseCurrencyId: AugmentedConst<CurrencyId>;
+      getBaseCurrencyId: CurrencyId & AugmentedConst<ApiType>;
       /**
        * Trading fee rate
        **/
-      getExchangeFee: AugmentedConst<Rate>;
+      getExchangeFee: Rate & AugmentedConst<ApiType>;
       /**
        * The DEX's module id, keep all assets in DEX.
        **/
-      moduleId: AugmentedConst<ModuleId>;
+      moduleId: ModuleId & AugmentedConst<ApiType>;
     };
     emergencyShutdown: {
-      [index: string]: AugmentedConst<object & Codec>;
+      [key: string]: Codec;
       /**
        * The list of valid collateral currency types
        **/
-      collateralCurrencyIds: AugmentedConst<Vec<CurrencyId>>;
+      collateralCurrencyIds: Vec<CurrencyId> & AugmentedConst<ApiType>;
     };
     loans: {
-      [index: string]: AugmentedConst<object & Codec>;
+      [key: string]: Codec;
       /**
        * The loan's module id, keep all collaterals of CDPs.
        **/
-      moduleId: AugmentedConst<ModuleId>;
+      moduleId: ModuleId & AugmentedConst<ApiType>;
     };
     nomineesElection: {
-      [index: string]: AugmentedConst<object & Codec>;
-      maxUnlockingChunks: AugmentedConst<u32>;
-      minBondThreshold: AugmentedConst<Balance>;
-      nominateesCount: AugmentedConst<u32>;
+      [key: string]: Codec;
+      maxUnlockingChunks: u32 & AugmentedConst<ApiType>;
+      minBondThreshold: Balance & AugmentedConst<ApiType>;
+      nominateesCount: u32 & AugmentedConst<ApiType>;
     };
     polkadotBridge: {
-      [index: string]: AugmentedConst<object & Codec>;
-      bondingDuration: AugmentedConst<EraIndex>;
-      eraLength: AugmentedConst<BlockNumber>;
+      [key: string]: Codec;
+      bondingDuration: EraIndex & AugmentedConst<ApiType>;
+      eraLength: BlockNumber & AugmentedConst<ApiType>;
     };
     prices: {
-      [index: string]: AugmentedConst<object & Codec>;
-      getLiquidCurrencyId: AugmentedConst<CurrencyId>;
-      getStableCurrencyId: AugmentedConst<CurrencyId>;
-      getStakingCurrencyId: AugmentedConst<CurrencyId>;
-      stableCurrencyFixedPrice: AugmentedConst<Price>;
+      [key: string]: Codec;
+      getLiquidCurrencyId: CurrencyId & AugmentedConst<ApiType>;
+      getStableCurrencyId: CurrencyId & AugmentedConst<ApiType>;
+      getStakingCurrencyId: CurrencyId & AugmentedConst<ApiType>;
+      stableCurrencyFixedPrice: Price & AugmentedConst<ApiType>;
     };
     stakingPool: {
-      [index: string]: AugmentedConst<object & Codec>;
-      claimFeeReturnRatio: AugmentedConst<Ratio>;
-      defaultExchangeRate: AugmentedConst<ExchangeRate>;
-      liquidCurrencyId: AugmentedConst<CurrencyId>;
-      maxBondRatio: AugmentedConst<Ratio>;
-      maxClaimFee: AugmentedConst<Rate>;
-      minBondRatio: AugmentedConst<Ratio>;
-      moduleId: AugmentedConst<ModuleId>;
-      stakingCurrencyId: AugmentedConst<CurrencyId>;
+      [key: string]: Codec;
+      claimFeeReturnRatio: Ratio & AugmentedConst<ApiType>;
+      defaultExchangeRate: ExchangeRate & AugmentedConst<ApiType>;
+      liquidCurrencyId: CurrencyId & AugmentedConst<ApiType>;
+      maxBondRatio: Ratio & AugmentedConst<ApiType>;
+      maxClaimFee: Rate & AugmentedConst<ApiType>;
+      minBondRatio: Ratio & AugmentedConst<ApiType>;
+      moduleId: ModuleId & AugmentedConst<ApiType>;
+      stakingCurrencyId: CurrencyId & AugmentedConst<ApiType>;
     };
+  }
+
+  export interface QueryableConsts<ApiType extends ApiTypes> extends AugmentedConsts<ApiType> {
+    [key: string]: QueryableModuleConsts;
   }
 }

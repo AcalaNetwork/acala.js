@@ -63,7 +63,7 @@ export function loanType (instanceId: string, api: ApiInterfaceRx): (currncy: Cu
 export function allLoanTypes (instanceId: string, api: ApiInterfaceRx): () => Observable<DerivedLoanType[]> {
   return memo(instanceId, () => {
     const collateralCurrencyIds = getCollateralCurrencyIds(api);
-    const loanTypeQuery = loanType(api);
+    const loanTypeQuery = loanType(instanceId, api);
 
     return combineLatest(collateralCurrencyIds.map((currencyId) => loanTypeQuery(currencyId)));
   });
@@ -91,7 +91,7 @@ export function loanOverview (instanceId: string, api: ApiInterfaceRx): (currenc
 export function allLoanOverviews (instanceId: string, api: ApiInterfaceRx): () => Observable<DerivedLoanOverView[]> {
   return memo(instanceId, () => {
     const collateralCurrencyIds = getCollateralCurrencyIds(api);
-    const loanOverViewQuery = loanOverview(api);
+    const loanOverViewQuery = loanOverview(instanceId, api);
 
     return combineLatest(collateralCurrencyIds.map((currencyId) => loanOverViewQuery(currencyId)));
   });

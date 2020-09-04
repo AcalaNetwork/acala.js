@@ -34,7 +34,7 @@ export function loan (instanceId: string, api: ApiInterfaceRx): (account: Accoun
 export function allLoans (instanceId: string, api: ApiInterfaceRx): (account: AccountId | string) => Observable<DerivedUserLoan[]> {
   return memo(instanceId, (account: AccountId | string) => {
     const collateralCurrencyIds = getCollateralCurrencyIds(api);
-    const loanQuery = loan(api);
+    const loanQuery = loan(instanceId, api);
 
     return combineLatest(collateralCurrencyIds.map((currency) => loanQuery(account, currency)));
   });

@@ -1,23 +1,22 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-import { AnyNumber, ITuple } from '@polkadot/types/types';
+import { AnyNumber } from '@polkadot/types/types';
 import { Compact, Option, Vec } from '@polkadot/types/codec';
-import { bool, u32 } from '@polkadot/types/primitive';
+import { bool } from '@polkadot/types/primitive';
 import { ChangeBalance, ChangeOptionRate, ChangeOptionRatio } from '@acala-network/types/interfaces/cdpEngine';
 import { RedeemStrategy } from '@acala-network/types/interfaces/homa';
 import { AirDropCurrencyId, CurrencyId } from '@acala-network/types/interfaces/primitives';
-import { AccountId, AccountIndex, Address, Amount, AmountOf, AuctionId, Balance, BalanceOf, BlockNumber, Call, CurrencyIdOf, LookupSource, OracleKey, OracleValue, Share } from '@acala-network/types/interfaces/runtime';
+import { AccountId, AccountIndex, Address, Amount, AmountOf, AuctionId, Balance, BalanceOf, BlockNumber, Call, CurrencyIdOf, LookupSource, Share } from '@acala-network/types/interfaces/runtime';
 import { PolkadotAccountId } from '@acala-network/types/interfaces/stakingPool';
 import { Rate } from '@acala-network/types/interfaces/support';
-import { AuthorityId } from '@polkadot/types/interfaces/consensus';
-import { Extrinsic, Signature } from '@polkadot/types/interfaces/extrinsics';
+import { Extrinsic } from '@polkadot/types/interfaces/extrinsics';
 import { ApiTypes, SubmittableExtrinsic } from '@polkadot/api/types';
 
 declare module '@polkadot/api/types/submittable' {
   export interface AugmentedSubmittables<ApiType> {
     accounts: {
-      [index: string]: SubmittableExtrinsicFunction<ApiType>;
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
        * Kill self account from system.
        * 
@@ -41,13 +40,17 @@ declare module '@polkadot/api/types/submittable' {
       enableFreeTransfer: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>>;
     };
     airDrop: {
-      [index: string]: SubmittableExtrinsicFunction<ApiType>;
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       airdrop: AugmentedSubmittable<(to: AccountId | string | Uint8Array, currencyId: AirDropCurrencyId | 'KAR'|'ACA' | number | Uint8Array, amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       updateAirdrop: AugmentedSubmittable<(to: AccountId | string | Uint8Array, currencyId: AirDropCurrencyId | 'KAR'|'ACA' | number | Uint8Array, amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     auction: {
-      [index: string]: SubmittableExtrinsicFunction<ApiType>;
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
+       * Bid an auction.
+       * 
+       * The dispatch origin for this call must be `Signed` by the transactor.
+       * 
        * # <weight>
        * - Preconditions:
        * - T::Handler is module_auction_manager of Acala
@@ -89,7 +92,7 @@ declare module '@polkadot/api/types/submittable' {
       bid: AugmentedSubmittable<(id: AuctionId | AnyNumber | Uint8Array, value: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     auctionManager: {
-      [index: string]: SubmittableExtrinsicFunction<ApiType>;
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
        * Cancel active auction after system shutdown
        * 
@@ -121,7 +124,7 @@ declare module '@polkadot/api/types/submittable' {
       cancel: AugmentedSubmittable<(id: AuctionId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     cdpEngine: {
-      [index: string]: SubmittableExtrinsicFunction<ApiType>;
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
        * Liquidate unsafe CDP
        * 
@@ -207,7 +210,7 @@ declare module '@polkadot/api/types/submittable' {
       settle: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, who: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     cdpTreasury: {
-      [index: string]: SubmittableExtrinsicFunction<ApiType>;
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       auctionCollateral: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, amount: Balance | AnyNumber | Uint8Array, target: Balance | AnyNumber | Uint8Array, splited: bool | boolean | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       auctionDebit: AugmentedSubmittable<(amount: Balance | AnyNumber | Uint8Array, initialPrice: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       auctionSurplus: AugmentedSubmittable<(amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
@@ -230,7 +233,7 @@ declare module '@polkadot/api/types/submittable' {
       setCollateralAuctionMaximumSize: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, size: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     currencies: {
-      [index: string]: SubmittableExtrinsicFunction<ApiType>;
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
        * Transfer some balance to another account under `currency_id`.
        * 
@@ -291,7 +294,7 @@ declare module '@polkadot/api/types/submittable' {
       updateBalance: AugmentedSubmittable<(who: LookupSource | Address | AccountId | AccountIndex | LookupSource | string | Uint8Array, currencyId: CurrencyIdOf | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, amount: AmountOf | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     dex: {
-      [index: string]: SubmittableExtrinsicFunction<ApiType>;
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
        * Injecting liquidity to specific liquidity pool in the form of depositing currencies in trading pairs
        * into liquidity pool, and issue shares in proportion to the caller. Shares are temporarily not
@@ -402,7 +405,7 @@ declare module '@polkadot/api/types/submittable' {
       withdrawLiquidity: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, shareAmount: Compact<Share> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     emergencyShutdown: {
-      [index: string]: SubmittableExtrinsicFunction<ApiType>;
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
        * Start emergency shutdown
        * 
@@ -459,13 +462,13 @@ declare module '@polkadot/api/types/submittable' {
       refundCollaterals: AugmentedSubmittable<(amount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     homa: {
-      [index: string]: SubmittableExtrinsicFunction<ApiType>;
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       mint: AugmentedSubmittable<(amount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       redeem: AugmentedSubmittable<(amount: Compact<Balance> | AnyNumber | Uint8Array, strategy: RedeemStrategy | { Immediately: any } | { Target: any } | { WaitForUnbonding: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       withdrawRedemption: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>>;
     };
     honzon: {
-      [index: string]: SubmittableExtrinsicFunction<ApiType>;
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
        * Adjust the loans of `currency_id` by specific `collateral_adjustment` and `debit_adjustment`
        * 
@@ -544,7 +547,7 @@ declare module '@polkadot/api/types/submittable' {
       unauthorizeAll: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>>;
     };
     nomineesElection: {
-      [index: string]: SubmittableExtrinsicFunction<ApiType>;
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       bond: AugmentedSubmittable<(amount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       chill: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>>;
       nominate: AugmentedSubmittable<(targets: Vec<PolkadotAccountId> | (PolkadotAccountId | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
@@ -552,21 +555,8 @@ declare module '@polkadot/api/types/submittable' {
       unbond: AugmentedSubmittable<(amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       withdrawUnbonded: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>>;
     };
-    oracle: {
-      [index: string]: SubmittableExtrinsicFunction<ApiType>;
-      /**
-       * Feed the external value.
-       * 
-       * Require unsigned. However a valid signature signed by session key is required along with payload.
-       **/
-      feedValues: AugmentedSubmittable<(values: Vec<ITuple<[OracleKey, OracleValue]>> | ([OracleKey | 'ACA' | 'AUSD' | 'DOT' | 'XBTC' | 'LDOT' | 'RENBTC' | number | Uint8Array, OracleValue | AnyNumber | Uint8Array])[], index: Compact<u32> | AnyNumber | Uint8Array, block: BlockNumber | AnyNumber | Uint8Array, signature: Signature | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
-      /**
-       * Update the session key.
-       **/
-      setSessionKey: AugmentedSubmittable<(key: AuthorityId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
-    };
     polkadotBridge: {
-      [index: string]: SubmittableExtrinsicFunction<ApiType>;
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       forceEra: AugmentedSubmittable<(at: BlockNumber | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       setMockRewardRate: AugmentedSubmittable<(mockRewardRate: Option<Rate> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       simualteReceive: AugmentedSubmittable<(to: AccountId | string | Uint8Array, amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
@@ -577,7 +567,7 @@ declare module '@polkadot/api/types/submittable' {
       simulateWithdrawUnbonded: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>>;
     };
     prices: {
-      [index: string]: SubmittableExtrinsicFunction<ApiType>;
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
        * Lock the price and feed it to system.
        * 
@@ -599,6 +589,6 @@ declare module '@polkadot/api/types/submittable' {
 
   export interface SubmittableExtrinsics<ApiType extends ApiTypes> extends AugmentedSubmittables<ApiType> {
     (extrinsic: Call | Extrinsic | Uint8Array | string): SubmittableExtrinsic<ApiType>;
-    [index: string]: SubmittableModuleExtrinsics<ApiType>;
+    [key: string]: SubmittableModuleExtrinsics<ApiType>;
   }
 }
