@@ -16,7 +16,7 @@ import { BalanceInfo, LiquidBalance, LiquidBalanceOf, PolkadotAccountId, Polkado
 import { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
 import { CallOf } from '@open-web3/orml-types/interfaces/authority';
 import { GraduallyUpdate, StorageValue } from '@open-web3/orml-types/interfaces/graduallyUpdates';
-import { OrderedSet, TimestampedValue, TimestampedValueOf } from '@open-web3/orml-types/interfaces/oracle';
+import { DataProviderId, OrderedSet, TimestampedValue, TimestampedValueOf } from '@open-web3/orml-types/interfaces/oracle';
 import { OrmlAccountData, OrmlBalanceLock } from '@open-web3/orml-types/interfaces/tokens';
 import { AuctionInfo, DelayedDispatchTime, DispatchId, Price } from '@open-web3/orml-types/interfaces/traits';
 import { VestingScheduleOf } from '@open-web3/orml-types/interfaces/vesting';
@@ -1747,6 +1747,10 @@ declare module '@polkadot/types/types/registry' {
     CallOf: CallOf;
     'Option<CallOf>': Option<CallOf>;
     'Vec<CallOf>': Vec<CallOf>;
+    DataProviderId: DataProviderId;
+    'Compact<DataProviderId>': Compact<DataProviderId>;
+    'Option<DataProviderId>': Option<DataProviderId>;
+    'Vec<DataProviderId>': Vec<DataProviderId>;
     TimestampedValue: TimestampedValue;
     'Option<TimestampedValue>': Option<TimestampedValue>;
     'Vec<TimestampedValue>': Vec<TimestampedValue>;
