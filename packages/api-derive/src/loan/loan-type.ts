@@ -2,10 +2,10 @@ import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { ApiInterfaceRx } from '@polkadot/api/types';
+import { memo } from '@polkadot/api-derive/util';
 
 import { CurrencyId, Rate, ExchangeRate, Balance, Position, Ratio } from '@acala-network/types/interfaces';
 
-import { memo } from '../utils/memo';
 import { DerivedLoanConstants, DerivedLoanType, DerivedLoanOverView, CollateralParams } from '../types/loan';
 import { getCollateralCurrencyIds } from '../helps/currency';
 
@@ -28,8 +28,8 @@ function loanConstants (api: ApiInterfaceRx): DerivedLoanConstants {
  * @description get loan type
  * @param {(CurrencyId | string)} currency
  */
-export function loanType (api: ApiInterfaceRx): (currncy: CurrencyId | string) => Observable<DerivedLoanType> {
-  return memo((currency: CurrencyId | string) => {
+export function loanType (instanceId: string, api: ApiInterfaceRx): (currncy: CurrencyId | string) => Observable<DerivedLoanType> {
+  return memo(instanceId, (currency: CurrencyId | string) => {
     return combineLatest([
       api.query.cdpEngine.globalStabilityFee<Rate>(),
       api.query.cdpEngine.debitExchangeRate<Rate>(currency),
@@ -60,10 +60,10 @@ export function loanType (api: ApiInterfaceRx): (currncy: CurrencyId | string) =
  * @name allLoanTypes
  * @description  get loan types of all kinds of collateral
  */
-export function allLoanTypes (api: ApiInterfaceRx): () => Observable<DerivedLoanType[]> {
-  return memo(() => {
+export function allLoanTypes (instanceId: string, api: ApiInterfaceRx): () => Observable<DerivedLoanType[]> {
+  return memo(instanceId, () => {
     const collateralCurrencyIds = getCollateralCurrencyIds(api);
-    const loanTypeQuery = loanType(api);
+    const loanTypeQuery = loanType(instanceId, api);
 
     return combineLatest(collateralCurrencyIds.map((currencyId) => loanTypeQuery(currencyId)));
   });
@@ -74,8 +74,8 @@ export function allLoanTypes (api: ApiInterfaceRx): () => Observable<DerivedLoan
  * @description get loan overview includes total debit, total collateral
  * @param {(CurrencyId | string)} currency
  */
-export function loanOverview (api: ApiInterfaceRx): (currency: CurrencyId | string) => Observable<DerivedLoanOverView> {
-  return memo((currency: CurrencyId | string) => api.query.loans.totalPositions<Position>(currency).pipe(
+export function loanOverview (instanceId: string, api: ApiInterfaceRx): (currency: CurrencyId | string) => Observable<DerivedLoanOverView> {
+  return memo(instanceId, (currency: CurrencyId | string) => api.query.loans.totalPositions<Position>(currency).pipe(
     map((result) => {
       const { collateral, debit } = result;
 
@@ -88,10 +88,10 @@ export function loanOverview (api: ApiInterfaceRx): (currency: CurrencyId | stri
  * @name allLoanOverview
  * @description get loan overviews of all kinds of collatearl
  */
-export function allLoanOverviews (api: ApiInterfaceRx): () => Observable<DerivedLoanOverView[]> {
-  return memo(() => {
+export function allLoanOverviews (instanceId: string, api: ApiInterfaceRx): () => Observable<DerivedLoanOverView[]> {
+  return memo(instanceId, () => {
     const collateralCurrencyIds = getCollateralCurrencyIds(api);
-    const loanOverViewQuery = loanOverview(api);
+    const loanOverViewQuery = loanOverview(instanceId, api);
 
     return combineLatest(collateralCurrencyIds.map((currencyId) => loanOverViewQuery(currencyId)));
   });

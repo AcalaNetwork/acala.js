@@ -9,7 +9,7 @@ import { RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine'
 import { Position } from '@acala-network/types/interfaces/loans';
 import { BondingLedger } from '@acala-network/types/interfaces/nomineesElection';
 import { AirDropCurrencyId, CurrencyId } from '@acala-network/types/interfaces/primitives';
-import { AccountId, AccountIndex, AuctionId, Balance, BalanceOf, BlockNumber, ExtrinsicsWeight, Hash, KeyTypeId, Moment, OpaqueCall, OracleKey, Perbill, Releases, Share, ValidatorId } from '@acala-network/types/interfaces/runtime';
+import { AccountId, AccountIndex, AuctionId, Balance, BalanceOf, BlockNumber, ExtrinsicsWeight, H160, H256, Hash, KeyTypeId, Moment, OpaqueCall, OracleKey, Perbill, Releases, Share, ValidatorId } from '@acala-network/types/interfaces/runtime';
 import { PolkadotAccountId } from '@acala-network/types/interfaces/stakingPool';
 import { ExchangeRate, Rate } from '@acala-network/types/interfaces/support';
 import { GraduallyUpdate } from '@open-web3/orml-types/interfaces/graduallyUpdates';
@@ -21,6 +21,7 @@ import { BabeAuthorityWeight, MaybeRandomness, NextConfigDescriptor, Randomness 
 import { AccountData, BalanceLock } from '@polkadot/types/interfaces/balances';
 import { ProposalIndex, Votes } from '@polkadot/types/interfaces/collective';
 import { AuthorityId } from '@polkadot/types/interfaces/consensus';
+import { CodeHash, ContractInfo, PrefabWasmModule, Schedule } from '@polkadot/types/interfaces/contracts';
 import { Proposal } from '@polkadot/types/interfaces/democracy';
 import { EcdsaSignature } from '@polkadot/types/interfaces/extrinsics';
 import { SetId, StoredPendingChange, StoredState } from '@polkadot/types/interfaces/grandpa';
@@ -35,6 +36,28 @@ import { Multisig } from '@polkadot/types/interfaces/utility';
 import { BaseStorageType, StorageDoubleMap, StorageMap } from '@open-web3/api-mobx';
 
 export interface StorageType extends BaseStorageType {
+  acalaOracle: {    /**
+     * If an oracle operator has feed a value in this block
+     **/
+    hasDispatched: OrderedSet | null;
+    /**
+     * True if Self::values(key) is up to date, otherwise the value is stale
+     **/
+    isUpdated: StorageMap<OracleKey | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, bool>;
+    /**
+     * The current members of the collective. This is stored sorted (just by value).
+     **/
+    members: OrderedSet | null;
+    nonces: StorageMap<AccountId | string, u32>;
+    /**
+     * Raw values for each oracle operators
+     **/
+    rawValues: StorageDoubleMap<AccountId | string, OracleKey | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Option<TimestampedValueOf>>;
+    /**
+     * Combined value, may not be up to date
+     **/
+    values: StorageMap<OracleKey | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Option<TimestampedValueOf>>;
+  };
   acalaTreasury: {    /**
      * Proposal indices that have been approved but not yet awarded.
      **/
@@ -216,6 +239,28 @@ export interface StorageType extends BaseStorageType {
      **/
     totalIssuance: Balance | null;
   };
+  bandOracle: {    /**
+     * If an oracle operator has feed a value in this block
+     **/
+    hasDispatched: OrderedSet | null;
+    /**
+     * True if Self::values(key) is up to date, otherwise the value is stale
+     **/
+    isUpdated: StorageMap<OracleKey | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, bool>;
+    /**
+     * The current members of the collective. This is stored sorted (just by value).
+     **/
+    members: OrderedSet | null;
+    nonces: StorageMap<AccountId | string, u32>;
+    /**
+     * Raw values for each oracle operators
+     **/
+    rawValues: StorageDoubleMap<AccountId | string, OracleKey | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Option<TimestampedValueOf>>;
+    /**
+     * Combined value, may not be up to date
+     **/
+    values: StorageMap<OracleKey | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Option<TimestampedValueOf>>;
+  };
   cdpEngine: {    /**
      * Mapping from collateral type to its risk management params
      **/
@@ -238,6 +283,29 @@ export interface StorageType extends BaseStorageType {
      * it is the bad debt of the system.
      **/
     debitPool: Balance | null;
+  };
+  contracts: {    /**
+     * The subtrie counter.
+     **/
+    accountCounter: u64 | null;
+    /**
+     * A mapping between an original code hash and instrumented wasm code, ready for execution.
+     **/
+    codeStorage: StorageMap<CodeHash | string, Option<PrefabWasmModule>>;
+    /**
+     * The code associated with a given account.
+     * 
+     * TWOX-NOTE: SAFE since `AccountId` is a secure hash.
+     **/
+    contractInfoOf: StorageMap<AccountId | string, Option<ContractInfo>>;
+    /**
+     * Current cost schedule for contracts.
+     **/
+    currentSchedule: Schedule | null;
+    /**
+     * A mapping from an original code hash to the original code, untouched by instrumentation.
+     **/
+    pristineCode: StorageMap<CodeHash | string, Option<Bytes>>;
   };
   dex: {    /**
      * Incentive reward rate for different currency type
@@ -270,6 +338,30 @@ export interface StorageType extends BaseStorageType {
      **/
     withdrawnInterest: StorageDoubleMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, AccountId | string, Balance>;
   };
+  electionsPhragmen: {    /**
+     * The present candidate list. Sorted based on account-id. A current member or runner-up
+     * can never enter this vector and is always implicitly assumed to be a candidate.
+     **/
+    candidates: Vec<AccountId> | null;
+    /**
+     * The total number of vote rounds that have happened, excluding the upcoming one.
+     **/
+    electionRounds: u32 | null;
+    /**
+     * The current elected membership. Sorted based on account id.
+     **/
+    members: Vec<ITuple<[AccountId, BalanceOf]>> | null;
+    /**
+     * The current runners_up. Sorted based on low to high merit (worse to best runner).
+     **/
+    runnersUp: Vec<ITuple<[AccountId, BalanceOf]>> | null;
+    /**
+     * Votes and locked stake of a particular voter.
+     * 
+     * TWOX-NOTE: SAFE as `AccountId` is a crypto hash
+     **/
+    voting: StorageMap<AccountId | string, ITuple<[BalanceOf, Vec<AccountId>]>>;
+  };
   emergencyShutdown: {    /**
      * Open final redemption flag
      **/
@@ -278,6 +370,9 @@ export interface StorageType extends BaseStorageType {
      * Emergency shutdown flag
      **/
     isShutdown: bool | null;
+  };
+  evm: {    accountCodes: StorageMap<H160 | string, Bytes>;
+    accountStorages: StorageDoubleMap<H160 | string, H256 | string, H256>;
   };
   generalCouncil: {    /**
      * The current members of the collective. This is stored sorted (just by value).
@@ -456,7 +551,7 @@ export interface StorageType extends BaseStorageType {
     nominees: Vec<PolkadotAccountId> | null;
     votes: StorageMap<PolkadotAccountId | string, Balance>;
   };
-  operatorMembership: {    /**
+  operatorMembershipAcala: {    /**
      * The current membership, stored as an ordered Vec.
      **/
     members: Vec<AccountId> | null;
@@ -465,31 +560,14 @@ export interface StorageType extends BaseStorageType {
      **/
     prime: Option<AccountId> | null;
   };
-  oracle: {    /**
-     * If an oracle operator has feed a value in this block
+  operatorMembershipBand: {    /**
+     * The current membership, stored as an ordered Vec.
      **/
-    hasDispatched: OrderedSet | null;
+    members: Vec<AccountId> | null;
     /**
-     * True if Self::values(key) is up to date, otherwise the value is stale
+     * The current prime member, if one exists.
      **/
-    isUpdated: StorageMap<OracleKey | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, bool>;
-    /**
-     * The current members of the collective. This is stored sorted (just by value).
-     **/
-    members: OrderedSet | null;
-    nonces: StorageMap<AccountId | string, u32>;
-    /**
-     * Raw values for each oracle operators
-     **/
-    rawValues: StorageDoubleMap<AccountId | string, OracleKey | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Option<TimestampedValueOf>>;
-    /**
-     * Session key for oracle operators
-     **/
-    sessionKeys: StorageMap<AccountId | string, Option<AuthorityId>>;
-    /**
-     * Combined value, may not be up to date
-     **/
-    values: StorageMap<OracleKey | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Option<TimestampedValueOf>>;
+    prime: Option<AccountId> | null;
   };
   polkadotBridge: {    available: Balance | null;
     bonded: Balance | null;
