@@ -7,9 +7,10 @@ import { bool } from '@polkadot/types/primitive';
 import { ChangeBalance, ChangeOptionRate, ChangeOptionRatio } from '@acala-network/types/interfaces/cdpEngine';
 import { RedeemStrategy } from '@acala-network/types/interfaces/homa';
 import { AirDropCurrencyId, CurrencyId } from '@acala-network/types/interfaces/primitives';
-import { AccountId, AccountIndex, Address, Amount, AmountOf, AuctionId, Balance, BalanceOf, BlockNumber, Call, CurrencyIdOf, LookupSource, Share } from '@acala-network/types/interfaces/runtime';
+import { AccountId, AccountIndex, Address, Amount, AmountOf, AuctionId, Balance, BalanceOf, BlockNumber, Call, CurrencyIdOf, LookupSource } from '@acala-network/types/interfaces/runtime';
 import { PolkadotAccountId } from '@acala-network/types/interfaces/stakingPool';
 import { Rate } from '@acala-network/types/interfaces/support';
+import { Share } from '@open-web3/orml-types/interfaces/rewards';
 import { Extrinsic } from '@polkadot/types/interfaces/extrinsics';
 import { ApiTypes, SubmittableExtrinsic } from '@polkadot/api/types';
 

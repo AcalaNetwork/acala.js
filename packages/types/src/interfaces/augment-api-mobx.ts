@@ -9,11 +9,12 @@ import { RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine'
 import { Position } from '@acala-network/types/interfaces/loans';
 import { BondingLedger } from '@acala-network/types/interfaces/nomineesElection';
 import { AirDropCurrencyId, CurrencyId } from '@acala-network/types/interfaces/primitives';
-import { AccountId, AccountIndex, AuctionId, Balance, BalanceOf, BlockNumber, ExtrinsicsWeight, H160, H256, Hash, KeyTypeId, Moment, OpaqueCall, OracleKey, Perbill, Releases, Share, ValidatorId } from '@acala-network/types/interfaces/runtime';
+import { AccountId, AccountIndex, AuctionId, Balance, BalanceOf, BlockNumber, ExtrinsicsWeight, H160, H256, Hash, KeyTypeId, Moment, OpaqueCall, OracleKey, Perbill, Releases, ValidatorId } from '@acala-network/types/interfaces/runtime';
 import { PolkadotAccountId } from '@acala-network/types/interfaces/stakingPool';
 import { ExchangeRate, Rate } from '@acala-network/types/interfaces/support';
 import { GraduallyUpdate } from '@open-web3/orml-types/interfaces/graduallyUpdates';
 import { OrderedSet, TimestampedValueOf } from '@open-web3/orml-types/interfaces/oracle';
+import { Share } from '@open-web3/orml-types/interfaces/rewards';
 import { AuctionInfo, Price } from '@open-web3/orml-types/interfaces/traits';
 import { VestingScheduleOf } from '@open-web3/orml-types/interfaces/vesting';
 import { UncleEntryItem } from '@polkadot/types/interfaces/authorship';
