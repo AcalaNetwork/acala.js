@@ -9,9 +9,10 @@ import { RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine'
 import { Position } from '@acala-network/types/interfaces/loans';
 import { BondingLedger } from '@acala-network/types/interfaces/nomineesElection';
 import { AirDropCurrencyId, CurrencyId } from '@acala-network/types/interfaces/primitives';
-import { AccountId, AuctionId, Balance, BlockNumber, Share } from '@acala-network/types/interfaces/runtime';
+import { AccountId, AuctionId, Balance, BlockNumber } from '@acala-network/types/interfaces/runtime';
 import { PolkadotAccountId } from '@acala-network/types/interfaces/stakingPool';
 import { ExchangeRate, Rate } from '@acala-network/types/interfaces/support';
+import { Share } from '@open-web3/orml-types/interfaces/rewards';
 import { AuctionInfo, Price } from '@open-web3/orml-types/interfaces/traits';
 import { AccountData, BalanceLock } from '@polkadot/types/interfaces/balances';
 import { EraIndex, MomentOf } from '@polkadot/types/interfaces/staking';

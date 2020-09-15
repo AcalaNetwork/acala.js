@@ -8,15 +8,17 @@ import { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@ac
 import { ChangeBalance, ChangeOptionRate, ChangeOptionRatio, LiquidationStrategy, OptionRate, OptionRatio, RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
 import { BalanceRequest, BalanceWrapper } from '@acala-network/types/interfaces/dex';
 import { RedeemStrategy } from '@acala-network/types/interfaces/homa';
+import { PoolId } from '@acala-network/types/interfaces/incentives';
 import { Position } from '@acala-network/types/interfaces/loans';
 import { BondingLedger, HomaUnlockChunk } from '@acala-network/types/interfaces/nomineesElection';
 import { AirDropCurrencyId, CurrencyId } from '@acala-network/types/interfaces/primitives';
-import { AccountId, AccountIdOf, AccountIndex, Address, Amount, AmountOf, AssetId, AuctionId, AuctionIdOf, Balance, BalanceOf, Block, BlockNumber, Call, CallHash, CallHashOf, ChangesTrieConfiguration, Consensus, ConsensusEngineId, CurrencyIdOf, DebitAmount, DebitAmountOf, DebitBalance, DebitBalanceOf, Digest, DigestItem, ExtrinsicsWeight, Fixed128, Fixed64, FixedI128, FixedI64, FixedU128, FixedU64, GenericAddress, H160, H256, H512, Hash, Header, I32F32, Index, Justification, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, ModuleId, Moment, OpaqueCall, OracleKey, OracleValue, Origin, Pays, PerU16, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, Releases, RuntimeDbWeight, Seal, SealV0, Share, SignedBlock, StorageData, TransactionPriority, U32F32, ValidatorId, Weight, WeightMultiplier } from '@acala-network/types/interfaces/runtime';
+import { AccountId, AccountIdOf, AccountIndex, Address, Amount, AmountOf, AssetId, AuctionId, AuctionIdOf, Balance, BalanceOf, Block, BlockNumber, Call, CallHash, CallHashOf, ChangesTrieConfiguration, Consensus, ConsensusEngineId, CurrencyIdOf, DebitAmount, DebitAmountOf, DebitBalance, DebitBalanceOf, Digest, DigestItem, ExtrinsicsWeight, Fixed128, Fixed64, FixedI128, FixedI64, FixedU128, FixedU64, GenericAddress, H160, H256, H512, Hash, Header, I32F32, Index, Justification, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, ModuleId, Moment, OpaqueCall, OracleKey, OracleValue, Origin, Pays, PerU16, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, Releases, RuntimeDbWeight, Seal, SealV0, SignedBlock, StorageData, TransactionPriority, U32F32, ValidatorId, Weight, WeightMultiplier } from '@acala-network/types/interfaces/runtime';
 import { BalanceInfo, LiquidBalance, LiquidBalanceOf, PolkadotAccountId, PolkadotAccountIdOf, StakingBalance, StakingBalanceOf } from '@acala-network/types/interfaces/stakingPool';
 import { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
 import { CallOf } from '@open-web3/orml-types/interfaces/authority';
 import { GraduallyUpdate, StorageValue } from '@open-web3/orml-types/interfaces/graduallyUpdates';
 import { DataProviderId, OrderedSet, TimestampedValue, TimestampedValueOf } from '@open-web3/orml-types/interfaces/oracle';
+import { PoolInfo, Share } from '@open-web3/orml-types/interfaces/rewards';
 import { OrmlAccountData, OrmlBalanceLock } from '@open-web3/orml-types/interfaces/tokens';
 import { AuctionInfo, DelayedDispatchTime, DispatchId, Price } from '@open-web3/orml-types/interfaces/traits';
 import { VestingScheduleOf } from '@open-web3/orml-types/interfaces/vesting';
@@ -1788,6 +1790,13 @@ declare module '@polkadot/types/types/registry' {
     GraduallyUpdate: GraduallyUpdate;
     'Option<GraduallyUpdate>': Option<GraduallyUpdate>;
     'Vec<GraduallyUpdate>': Vec<GraduallyUpdate>;
+    PoolInfo: PoolInfo;
+    'Option<PoolInfo>': Option<PoolInfo>;
+    'Vec<PoolInfo>': Vec<PoolInfo>;
+    Share: Share;
+    'Compact<Share>': Compact<Share>;
+    'Option<Share>': Option<Share>;
+    'Vec<Share>': Vec<Share>;
     PalletBalanceOf: PalletBalanceOf;
     'Option<PalletBalanceOf>': Option<PalletBalanceOf>;
     'Vec<PalletBalanceOf>': Vec<PalletBalanceOf>;
@@ -2078,10 +2087,6 @@ declare module '@polkadot/types/types/registry' {
     OracleValue: OracleValue;
     'Option<OracleValue>': Option<OracleValue>;
     'Vec<OracleValue>': Vec<OracleValue>;
-    Share: Share;
-    'Compact<Share>': Compact<Share>;
-    'Option<Share>': Option<Share>;
-    'Vec<Share>': Vec<Share>;
     BalanceInfo: BalanceInfo;
     'Option<BalanceInfo>': Option<BalanceInfo>;
     'Vec<BalanceInfo>': Vec<BalanceInfo>;
@@ -2112,5 +2117,8 @@ declare module '@polkadot/types/types/registry' {
     Ratio: Ratio;
     'Option<Ratio>': Option<Ratio>;
     'Vec<Ratio>': Vec<Ratio>;
+    PoolId: PoolId;
+    'Option<PoolId>': Option<PoolId>;
+    'Vec<PoolId>': Vec<PoolId>;
   }
 }
