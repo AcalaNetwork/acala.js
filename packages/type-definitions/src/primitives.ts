@@ -6,6 +6,9 @@ export default {
     },
     AirDropCurrencyId: {
       _enum: ['KAR', 'ACA']
+    },
+    DataProviderId: {
+      _enum: ['Aggregated', 'Acala', 'Band']
     }
   }
 };

@@ -19,4 +19,11 @@ export interface CurrencyId extends Enum {
   readonly isRenbtc: boolean;
 }
 
+/** @name DataProviderId */
+export interface DataProviderId extends Enum {
+  readonly isAggregated: boolean;
+  readonly isAcala: boolean;
+  readonly isBand: boolean;
+}
+
 export type PHANTOM_PRIMITIVES = 'primitives';
