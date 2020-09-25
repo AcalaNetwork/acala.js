@@ -321,24 +321,7 @@ declare module '@polkadot/api/types/submittable' {
        * - worst case: 205.7 µs
        * # </weight>
        **/
-      addLiquidity: AugmentedSubmittable<(otherCurrencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, maxOtherCurrencyAmount: Compact<Balance> | AnyNumber | Uint8Array, maxBaseCurrencyAmount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
-      /**
-       * Update liquidity incentive rate of specific liquidity pool
-       * 
-       * The dispatch origin of this call must be `UpdateOrigin`.
-       * 
-       * - `currency_id`: currency type to determine the type of liquidity pool.
-       * - `liquidity_incentive_rate`: liquidity incentive rate.
-       * 
-       * # <weight>
-       * - Complexity: `O(1)`
-       * - Db reads: 0
-       * - Db writes: 1
-       * -------------------
-       * Base Weight: 24.92 µs
-       * # </weight>
-       **/
-      setLiquidityIncentiveRate: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, liquidityIncentiveRate: Rate | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      addLiquidity: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, maxOtherCurrencyAmount: Compact<Balance> | AnyNumber | Uint8Array, maxBaseCurrencyAmount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Trading with DEX, swap supply currency to target currency
        * 
@@ -368,23 +351,6 @@ declare module '@polkadot/api/types/submittable' {
        **/
       swapCurrency: AugmentedSubmittable<(supplyCurrencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, supplyAmount: Compact<Balance> | AnyNumber | Uint8Array, targetCurrencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, acceptableTargetAmount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
-       * Just withdraw liquidity incentive interest as the additional reward for liquidity contribution
-       * 
-       * - `currency_id`: currency type to determine the type of liquidity pool.
-       * 
-       * # <weight>
-       * - Preconditions:
-       * - T::Currency is orml_currencies
-       * - T::CDPTreasury is module_cdp_treasury
-       * - Complexity: `O(1)`
-       * - Db reads: 8
-       * - Db writes: 4
-       * -------------------
-       * Base Weight: 143.4 µs
-       * # </weight>
-       **/
-      withdrawIncentiveInterest: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array) => SubmittableExtrinsic<ApiType>>;
-      /**
        * Withdraw liquidity from specific liquidity pool in the form of burning shares, and withdrawing currencies in trading pairs
        * from liquidity pool in proportion, and withdraw liquidity incentive interest.
        * 
@@ -403,7 +369,7 @@ declare module '@polkadot/api/types/submittable' {
        * - worst case: 248.2 µs
        * # </weight>
        **/
-      withdrawLiquidity: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, shareAmount: Compact<Share> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      withdrawLiquidity: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, removeShare: Compact<Share> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     emergencyShutdown: {
       [key: string]: SubmittableExtrinsicFunction<ApiType>;
