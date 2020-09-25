@@ -6,6 +6,7 @@ import { Option, U8aFixed, Vec } from '@polkadot/types/codec';
 import { Bytes, bool, u32, u64 } from '@polkadot/types/primitive';
 import { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@acala-network/types/interfaces/auctionManager';
 import { RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
+import { PoolId } from '@acala-network/types/interfaces/incentives';
 import { Position } from '@acala-network/types/interfaces/loans';
 import { BondingLedger } from '@acala-network/types/interfaces/nomineesElection';
 import { AirDropCurrencyId, CurrencyId } from '@acala-network/types/interfaces/primitives';
@@ -14,7 +15,7 @@ import { PolkadotAccountId } from '@acala-network/types/interfaces/stakingPool';
 import { ExchangeRate, Rate } from '@acala-network/types/interfaces/support';
 import { GraduallyUpdate } from '@open-web3/orml-types/interfaces/graduallyUpdates';
 import { OrderedSet, TimestampedValueOf } from '@open-web3/orml-types/interfaces/oracle';
-import { Share } from '@open-web3/orml-types/interfaces/rewards';
+import { PoolInfo, Share } from '@open-web3/orml-types/interfaces/rewards';
 import { AuctionInfo, Price } from '@open-web3/orml-types/interfaces/traits';
 import { VestingScheduleOf } from '@open-web3/orml-types/interfaces/vesting';
 import { UncleEntryItem } from '@polkadot/types/interfaces/authorship';
@@ -31,7 +32,7 @@ import { Scheduled, TaskAddress } from '@polkadot/types/interfaces/scheduler';
 import { Keys, SessionIndex } from '@polkadot/types/interfaces/session';
 import { ActiveEraInfo, ElectionResult, ElectionScore, ElectionStatus, EraIndex, EraRewardPoints, Exposure, Forcing, MomentOf, Nominations, RewardDestination, SlashingSpans, SpanIndex, SpanRecord, StakingLedger, UnappliedSlash, ValidatorPrefs } from '@polkadot/types/interfaces/staking';
 import { AccountInfo, DigestOf, EventIndex, EventRecord, LastRuntimeUpgradeInfo, Phase } from '@polkadot/types/interfaces/system';
-import { OpenTip } from '@polkadot/types/interfaces/treasury';
+import { Bounty, BountyIndex, OpenTip } from '@polkadot/types/interfaces/treasury';
 import { Multiplier } from '@polkadot/types/interfaces/txpayment';
 import { Multisig } from '@polkadot/types/interfaces/utility';
 import { BaseStorageType, StorageDoubleMap, StorageMap } from '@open-web3/api-mobx';
@@ -63,6 +64,22 @@ export interface StorageType extends BaseStorageType {
      * Proposal indices that have been approved but not yet awarded.
      **/
     approvals: Vec<ProposalIndex> | null;
+    /**
+     * Bounties that have been made.
+     **/
+    bounties: StorageMap<BountyIndex | AnyNumber, Option<Bounty>>;
+    /**
+     * Bounty indices that have been approved but not yet funded.
+     **/
+    bountyApprovals: Vec<BountyIndex> | null;
+    /**
+     * Number of bounty proposals that have been made.
+     **/
+    bountyCount: BountyIndex | null;
+    /**
+     * The description of each bounty.
+     **/
+    bountyDescriptions: StorageMap<BountyIndex | AnyNumber, Option<Bytes>>;
     /**
      * Number of proposals that have been made.
      **/
@@ -309,11 +326,6 @@ export interface StorageType extends BaseStorageType {
     pristineCode: StorageMap<CodeHash | string, Option<Bytes>>;
   };
   dex: {    /**
-     * Incentive reward rate for different currency type
-     * CurrencyType -> IncentiveRate
-     **/
-    liquidityIncentiveRate: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Rate>;
-    /**
      * Liquidity pool, which is the trading pair for specific currency type to base currency type.
      * CurrencyType -> (OtherCurrencyAmount, BaseCurrencyAmount)
      **/
@@ -324,20 +336,10 @@ export interface StorageType extends BaseStorageType {
      **/
     shares: StorageDoubleMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, AccountId | string, Share>;
     /**
-     * Total interest(include total withdrawn) and total withdrawn interest for different currency type
-     * CurrencyType -> (TotalInterest, TotalWithdrawnInterest)
-     **/
-    totalInterest: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, ITuple<[Balance, Balance]>>;
-    /**
      * Total shares amount of liquidity pool specified by currency type
      * CurrencyType -> TotalSharesAmount
      **/
     totalShares: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Share>;
-    /**
-     * Withdrawn interest indexed by currency type and account id
-     * CurrencyType -> Owner -> WithdrawnInterest
-     **/
-    withdrawnInterest: StorageDoubleMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, AccountId | string, Balance>;
   };
   electionsPhragmen: {    /**
      * The present candidate list. Sorted based on account-id. A current member or runner-up
@@ -380,8 +382,7 @@ export interface StorageType extends BaseStorageType {
      **/
     members: Vec<AccountId> | null;
     /**
-     * The member who provides the default vote for any other members that do not vote before
-     * the timeout. If None, then no member has that privilege.
+     * The prime member that helps determine the default vote behavior in case of absentations.
      **/
     prime: Option<AccountId> | null;
     /**
@@ -453,8 +454,7 @@ export interface StorageType extends BaseStorageType {
      **/
     members: Vec<AccountId> | null;
     /**
-     * The member who provides the default vote for any other members that do not vote before
-     * the timeout. If None, then no member has that privilege.
+     * The prime member that helps determine the default vote behavior in case of absentations.
      **/
     prime: Option<AccountId> | null;
     /**
@@ -494,8 +494,7 @@ export interface StorageType extends BaseStorageType {
      **/
     members: Vec<AccountId> | null;
     /**
-     * The member who provides the default vote for any other members that do not vote before
-     * the timeout. If None, then no member has that privilege.
+     * The prime member that helps determine the default vote behavior in case of absentations.
      **/
     prime: Option<AccountId> | null;
     /**
@@ -523,6 +522,23 @@ export interface StorageType extends BaseStorageType {
      * The current prime member, if one exists.
      **/
     prime: Option<AccountId> | null;
+  };
+  incentives: {    /**
+     * Mapping from dex liquidity currency type to its loans incentive reward amount per period
+     **/
+    dexIncentiveRewards: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Balance>;
+    /**
+     * Mapping from dex liquidity currency type to its saving rate
+     **/
+    dexSavingRates: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Rate>;
+    /**
+     * Homa incentive reward amount
+     **/
+    homaIncentiveReward: Balance | null;
+    /**
+     * Mapping from collateral currency type to its loans incentive reward amount per period
+     **/
+    loansIncentiveRewards: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Balance>;
   };
   indices: {    /**
      * The lookup from index to account.
@@ -609,9 +625,22 @@ export interface StorageType extends BaseStorageType {
     recoverable: StorageMap<AccountId | string, Option<RecoveryConfig>>;
   };
   renVmBridge: {    /**
+     * Record burn event details
+     **/
+    burnEvents: StorageMap<BlockNumber | AnyNumber, Vec<ITuple<[U8aFixed, Balance]>>>;
+    /**
      * Signature blacklist. This is required to prevent double claim.
      **/
     signatures: StorageMap<EcdsaSignature | string, Option<ITuple<[]>>>;
+  };
+  rewards: {    /**
+     * Stores reward pool info.
+     **/
+    pools: StorageMap<PoolId | { Loans: any } | { DexIncentive: any } | { DexSaving: any } | { Homa: any } | string, PoolInfo>;
+    /**
+     * Record share amount and withdrawn reward amount for specific `AccountId` under `PoolId`.
+     **/
+    shareAndWithdrawnReward: StorageDoubleMap<PoolId | { Loans: any } | { DexIncentive: any } | { DexSaving: any } | { Homa: any } | string, AccountId | string, ITuple<[Share, Balance]>>;
   };
   scheduler: {    /**
      * Items to be executed, indexed by the block number that they should be executed on.
@@ -939,14 +968,17 @@ export interface StorageType extends BaseStorageType {
      * Hash of the previous block.
      **/
     parentHash: Hash | null;
+    /**
+     * True if we have upgraded so that `type RefCount` is `u32`. False (default) if not.
+     **/
+    upgradedToU32RefCount: bool | null;
   };
   technicalCommittee: {    /**
      * The current members of the collective. This is stored sorted (just by value).
      **/
     members: Vec<AccountId> | null;
     /**
-     * The member who provides the default vote for any other members that do not vote before
-     * the timeout. If None, then no member has that privilege.
+     * The prime member that helps determine the default vote behavior in case of absentations.
      **/
     prime: Option<AccountId> | null;
     /**

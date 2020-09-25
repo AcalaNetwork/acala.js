@@ -26,7 +26,7 @@ function filterModules (names: string[], defs: any): string {
 
   const filtered = metadata.toJSON() as any;
 
-  filtered.metadata.V11.modules = filtered.metadata.V11.modules.filter(({ name }: any) => names.includes(name));
+  filtered.metadata.V12.modules = filtered.metadata.V12.modules.filter(({ name }: any) => names.includes(name));
 
   return new Metadata(registry, filtered).toHex();
 }

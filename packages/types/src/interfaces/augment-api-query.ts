@@ -112,11 +112,6 @@ declare module '@polkadot/api/types/storage' {
     dex: {
       [key: string]: QueryableStorageEntry<ApiType>;
       /**
-       * Incentive reward rate for different currency type
-       * CurrencyType -> IncentiveRate
-       **/
-      liquidityIncentiveRate: AugmentedQuery<ApiType, (arg: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array) => Observable<Rate>> & QueryableStorageEntry<ApiType>;
-      /**
        * Liquidity pool, which is the trading pair for specific currency type to base currency type.
        * CurrencyType -> (OtherCurrencyAmount, BaseCurrencyAmount)
        **/
@@ -127,20 +122,10 @@ declare module '@polkadot/api/types/storage' {
        **/
       shares: AugmentedQueryDoubleMap<ApiType, (key1: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, key2: AccountId | string | Uint8Array) => Observable<Share>> & QueryableStorageEntry<ApiType>;
       /**
-       * Total interest(include total withdrawn) and total withdrawn interest for different currency type
-       * CurrencyType -> (TotalInterest, TotalWithdrawnInterest)
-       **/
-      totalInterest: AugmentedQuery<ApiType, (arg: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array) => Observable<ITuple<[Balance, Balance]>>> & QueryableStorageEntry<ApiType>;
-      /**
        * Total shares amount of liquidity pool specified by currency type
        * CurrencyType -> TotalSharesAmount
        **/
       totalShares: AugmentedQuery<ApiType, (arg: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array) => Observable<Share>> & QueryableStorageEntry<ApiType>;
-      /**
-       * Withdrawn interest indexed by currency type and account id
-       * CurrencyType -> Owner -> WithdrawnInterest
-       **/
-      withdrawnInterest: AugmentedQueryDoubleMap<ApiType, (key1: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, key2: AccountId | string | Uint8Array) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
     };
     emergencyShutdown: {
       [key: string]: QueryableStorageEntry<ApiType>;
