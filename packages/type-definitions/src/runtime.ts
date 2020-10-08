@@ -11,6 +11,11 @@ export default {
     DebitBalanceOf: 'Balance',
     OracleKey: 'CurrencyId',
     OracleValue: 'Price',
-    Share: 'u128'
+    Share: 'u128',
+    DestAddress: '[u8; 20]',
+    AsOriginId: {
+      _enum: ['Root', 'AcalaTreasury', 'HonzonTreasury', 'HomaTreasury', 'DSWF']
+    },
+    PalletsOrigin: 'Bytes' //@TODO https://github.com/polkadot-js/api/issues/2691
   }
 };
