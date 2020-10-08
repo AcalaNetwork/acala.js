@@ -6,6 +6,6 @@ export default {
   rpc: {},
   types: {
     ...definitions.types,
-    ...runtime.types,
+    ...runtime.types
   }
 } as Definitions;
