@@ -24,6 +24,9 @@ function filterModules (names: string[], defs: any): string {
   registerDefinitions(registry, defs);
   const metadata = new Metadata(registry, metaHex);
 
+  // hack https://github.com/polkadot-js/api/issues/2687#issuecomment-705342442
+  metadata.asLatest.toJSON()
+
   const filtered = metadata.toJSON() as any;
 
   filtered.metadata.V12.modules = filtered.metadata.V12.modules.filter(({ name }: any) => names.includes(name));
