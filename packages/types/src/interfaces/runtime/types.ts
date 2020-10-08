@@ -6,9 +6,12 @@ import { Compact, Enum, Int, Struct, U8aFixed, UInt, Vec } from '@polkadot/types
 import { GenericAccountId, GenericAccountIndex, GenericBlock, GenericCall, GenericConsensusEngineId, GenericLookupSource } from '@polkadot/types/generic';
 import { Bytes, DoNotConstruct, Null, StorageKey, i128, u128, u16, u32, u64, u8 } from '@polkadot/types/primitive';
 import { CurrencyId } from '@acala-network/types/interfaces/primitives';
+import { DelayedOrigin } from '@open-web3/orml-types/interfaces/authority';
 import { Price } from '@open-web3/orml-types/interfaces/traits';
+import { CollectiveOrigin } from '@polkadot/types/interfaces/collective';
 import { AuthorityId } from '@polkadot/types/interfaces/consensus';
 import { Signature } from '@polkadot/types/interfaces/extrinsics';
+import { SystemOrigin } from '@polkadot/types/interfaces/system';
 
 /** @name AccountId */
 export interface AccountId extends GenericAccountId {}
@@ -210,8 +213,80 @@ export interface OracleValue extends Price {}
 /** @name Origin */
 export interface Origin extends DoNotConstruct {}
 
+/** @name OriginCaller */
+export interface OriginCaller extends Enum {
+  readonly isSystem: boolean;
+  readonly asSystem: SystemOrigin;
+}
+
 /** @name PalletsOrigin */
-export interface PalletsOrigin extends Bytes {}
+export interface PalletsOrigin extends Enum {
+  readonly isSystem: boolean;
+  readonly asSystem: SystemOrigin;
+  readonly isTimestamp: boolean;
+  readonly isRandomnessCollectiveFlip: boolean;
+  readonly isBalances: boolean;
+  readonly isAccounts: boolean;
+  readonly isCurrencies: boolean;
+  readonly isTokens: boolean;
+  readonly isVesting: boolean;
+  readonly isAcalaTreasury: boolean;
+  readonly isUtility: boolean;
+  readonly isMultisig: boolean;
+  readonly isRecovery: boolean;
+  readonly isProxy: boolean;
+  readonly isScheduler: boolean;
+  readonly isIndices: boolean;
+  readonly isGraduallyUpdate: boolean;
+  readonly isAuthorship: boolean;
+  readonly isBabe: boolean;
+  readonly isGrandpa: boolean;
+  readonly isStaking: boolean;
+  readonly isSession: boolean;
+  readonly isHistorical: boolean;
+  readonly isGeneralCouncil: boolean;
+  readonly asGeneralCouncil: CollectiveOrigin;
+  readonly isGeneralCouncilMembership: boolean;
+  readonly isHonzonCouncil: boolean;
+  readonly asHonzonCouncil: CollectiveOrigin;
+  readonly isHonzonCouncilMembership: boolean;
+  readonly isHomaCouncil: boolean;
+  readonly asHomaCouncil: CollectiveOrigin;
+  readonly isHomaCouncilMembership: boolean;
+  readonly isTechnicalCommittee: boolean;
+  readonly asTechnicalCommittee: CollectiveOrigin;
+  readonly isTechnicalCommitteeMembership: boolean;
+  readonly isAuthority: boolean;
+  readonly asAuthority: DelayedOrigin;
+  readonly isElectionsPhragmen: boolean;
+  readonly isAcalaOracle: boolean;
+  readonly isBandOracle: boolean;
+  readonly isOperatorMembershipAcala: boolean;
+  readonly isOperatorMembershipBand: boolean;
+  readonly isAuction: boolean;
+  readonly isRewards: boolean;
+  readonly isOrmlNft: boolean;
+  readonly isPrices: boolean;
+  readonly isDex: boolean;
+  readonly isAuctionManager: boolean;
+  readonly isLoans: boolean;
+  readonly isHonzon: boolean;
+  readonly isCdpTreasury: boolean;
+  readonly isCdpEngine: boolean;
+  readonly isEmergencyShutdown: boolean;
+  readonly isHoma: boolean;
+  readonly isNomineesElection: boolean;
+  readonly isStakingPool: boolean;
+  readonly isPolkadotBridge: boolean;
+  readonly isIncentives: boolean;
+  readonly isAirDrop: boolean;
+  readonly isNft: boolean;
+  readonly isRenVmBridge: boolean;
+  readonly isContracts: boolean;
+  readonly isEvm: boolean;
+  readonly isSudo: boolean;
+  readonly isTransactionPayment: boolean;
+}
 
 /** @name PalletVersion */
 export interface PalletVersion extends Struct {
