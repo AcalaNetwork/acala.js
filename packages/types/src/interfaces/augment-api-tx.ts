@@ -10,7 +10,6 @@ import { AirDropCurrencyId, CurrencyId } from '@acala-network/types/interfaces/p
 import { AccountId, AccountIndex, Address, Amount, AmountOf, AuctionId, Balance, BalanceOf, BlockNumber, Call, CurrencyIdOf, LookupSource } from '@acala-network/types/interfaces/runtime';
 import { PolkadotAccountId } from '@acala-network/types/interfaces/stakingPool';
 import { Rate } from '@acala-network/types/interfaces/support';
-import { Share } from '@open-web3/orml-types/interfaces/rewards';
 import { Extrinsic } from '@polkadot/types/interfaces/extrinsics';
 import { ApiTypes, SubmittableExtrinsic } from '@polkadot/api/types';
 
@@ -321,7 +320,7 @@ declare module '@polkadot/api/types/submittable' {
        * - worst case: 205.7 µs
        * # </weight>
        **/
-      addLiquidity: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, maxOtherCurrencyAmount: Compact<Balance> | AnyNumber | Uint8Array, maxBaseCurrencyAmount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      addLiquidity: AugmentedSubmittable<(lpShareCurrencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, maxOtherCurrencyAmount: Compact<Balance> | AnyNumber | Uint8Array, maxBaseCurrencyAmount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Trading with DEX, swap supply currency to target currency
        * 
@@ -369,7 +368,7 @@ declare module '@polkadot/api/types/submittable' {
        * - worst case: 248.2 µs
        * # </weight>
        **/
-      withdrawLiquidity: AugmentedSubmittable<(currencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, removeShare: Compact<Share> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      withdrawLiquidity: AugmentedSubmittable<(lpShareCurrencyId: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, removeShare: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     emergencyShutdown: {
       [key: string]: SubmittableExtrinsicFunction<ApiType>;

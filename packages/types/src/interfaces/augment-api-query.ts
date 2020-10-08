@@ -12,7 +12,6 @@ import { AirDropCurrencyId, CurrencyId } from '@acala-network/types/interfaces/p
 import { AccountId, AuctionId, Balance, BlockNumber } from '@acala-network/types/interfaces/runtime';
 import { PolkadotAccountId } from '@acala-network/types/interfaces/stakingPool';
 import { ExchangeRate, Rate } from '@acala-network/types/interfaces/support';
-import { Share } from '@open-web3/orml-types/interfaces/rewards';
 import { AuctionInfo, Price } from '@open-web3/orml-types/interfaces/traits';
 import { AccountData, BalanceLock } from '@polkadot/types/interfaces/balances';
 import { EraIndex, MomentOf } from '@polkadot/types/interfaces/staking';
@@ -116,16 +115,6 @@ declare module '@polkadot/api/types/storage' {
        * CurrencyType -> (OtherCurrencyAmount, BaseCurrencyAmount)
        **/
       liquidityPool: AugmentedQuery<ApiType, (arg: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array) => Observable<ITuple<[Balance, Balance]>>> & QueryableStorageEntry<ApiType>;
-      /**
-       * Shares records indexed by currency type and account id
-       * CurrencyType -> Owner -> ShareAmount
-       **/
-      shares: AugmentedQueryDoubleMap<ApiType, (key1: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array, key2: AccountId | string | Uint8Array) => Observable<Share>> & QueryableStorageEntry<ApiType>;
-      /**
-       * Total shares amount of liquidity pool specified by currency type
-       * CurrencyType -> TotalSharesAmount
-       **/
-      totalShares: AugmentedQuery<ApiType, (arg: CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number | Uint8Array) => Observable<Share>> & QueryableStorageEntry<ApiType>;
     };
     emergencyShutdown: {
       [key: string]: QueryableStorageEntry<ApiType>;

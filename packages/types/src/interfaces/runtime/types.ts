@@ -28,6 +28,15 @@ export interface Amount extends i128 {}
 /** @name AmountOf */
 export interface AmountOf extends Amount {}
 
+/** @name AsOriginId */
+export interface AsOriginId extends Enum {
+  readonly isRoot: boolean;
+  readonly isAcalaTreasury: boolean;
+  readonly isHonzonTreasury: boolean;
+  readonly isHomaTreasury: boolean;
+  readonly isDswf: boolean;
+}
+
 /** @name AssetId */
 export interface AssetId extends u32 {}
 
@@ -84,6 +93,9 @@ export interface DebitBalance extends Balance {}
 
 /** @name DebitBalanceOf */
 export interface DebitBalanceOf extends Balance {}
+
+/** @name DestAddress */
+export interface DestAddress extends U8aFixed {}
 
 /** @name Digest */
 export interface Digest extends Struct {
@@ -197,6 +209,9 @@ export interface OracleValue extends Price {}
 
 /** @name Origin */
 export interface Origin extends DoNotConstruct {}
+
+/** @name PalletsOrigin */
+export interface PalletsOrigin extends Bytes {}
 
 /** @name PalletVersion */
 export interface PalletVersion extends Struct {
