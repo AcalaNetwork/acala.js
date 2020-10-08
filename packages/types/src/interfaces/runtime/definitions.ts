@@ -6,6 +6,12 @@ export default {
   rpc: {},
   types: {
     ...definitions.types,
-    ...runtime.types
+    ...runtime.types,
+    DestAddress: '[u8; 20]',
+    AsOriginId: {
+      _enum: ['Root', 'AcalaTreasury', 'HonzonTreasury', 'HomaTreasury', 'DSWF']
+    },
+    //@TODO https://github.com/polkadot-js/api/issues/2691
+    PalletsOrigin: 'Bytes'
   }
 } as Definitions;
