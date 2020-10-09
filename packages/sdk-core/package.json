@@ -1,0 +1,24 @@
+{
+  "name": "@acala-network/sdk-core",
+  "version": "0.4.0-beta.9",
+  "description": "the core of acala network sdk",
+  "main": "index.js",
+  "author": "Acala Developers <hello@acala.network>",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "repository": "https://github.com/AcalaNetwork/acala.js.git",
+  "bugs": {
+    "url": "https://github.com/AcalaNetwork/acala.js/issues"
+  },
+  "homepage": "https://github.com/AcalaNetwork/acala.js",
+  "dependencies": {
+    "bignumber.js": "^9.0.0",
+    "lodash": "^4.17.20"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.161"
+  }
+}
