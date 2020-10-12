@@ -19,13 +19,13 @@ import * as acalaDefinations from '../src/interfaces/definitions';
 
 // Only keep our own modules to avoid confllicts with the one provided by polkadot.js
 // TODO: make an issue on polkadot.js
-function filterModules (names: string[], defs: any): string {
+function filterModules(names: string[], defs: any): string {
   const registry = new TypeRegistry();
   registerDefinitions(registry, defs);
   const metadata = new Metadata(registry, metaHex);
 
   // hack https://github.com/polkadot-js/api/issues/2687#issuecomment-705342442
-  metadata.asLatest.toJSON()
+  metadata.asLatest.toJSON();
 
   const filtered = metadata.toJSON() as any;
 
