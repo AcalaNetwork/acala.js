@@ -1,15 +1,13 @@
+import _typesBundle from '@acala-network/type-definitions/types-known/typesBundle';
+import * as ormlDefinations from '@open-web3/orml-types/interfaces/definitions';
+import polkadotJSONRpc from '@polkadot/types/interfaces/jsonrpc';
+import { OverrideBundleType, OverrideModuleType, RegistryTypes } from '@polkadot/types/types';
+
+import './interfaces/augment-api';
 import './interfaces/augment-api-consts';
 import './interfaces/augment-api-query';
 import './interfaces/augment-api-tx';
-import './interfaces/augment-api';
 import './interfaces/augment-types';
-
-import { RegistryTypes, OverrideModuleType } from '@polkadot/types/types';
-import polkadotJSONRpc from '@polkadot/types/interfaces/jsonrpc';
-import * as ormlDefinations from '@open-web3/orml-types/interfaces/definitions';
-import _typesBundle from '@acala-network/type-definitions/types-known/typesBundle';
-import { OverrideBundleType } from '@polkadot/types/types';
-
 import * as acalaDefinations from './interfaces/definitions';
 import jsonrpc from './interfaces/jsonrpc';
 
