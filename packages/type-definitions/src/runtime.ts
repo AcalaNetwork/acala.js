@@ -15,7 +15,7 @@ export default {
     DestAddress: '[u8; 20]',
     AsOriginId: {
       _enum: ['Root', 'AcalaTreasury', 'HonzonTreasury', 'HomaTreasury', 'DSWF']
-    },
+    }
     // @TODO https://github.com/polkadot-js/api/pull/2692/files#r502010063
     // PalletsOrigin: {
     //   _enum: {
