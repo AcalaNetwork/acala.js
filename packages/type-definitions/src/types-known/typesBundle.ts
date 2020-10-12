@@ -12,7 +12,7 @@ const typesBundle = {
           }
         },
         {
-          minmax: [499, 599] as any,
+          minmax: [500, 599] as any,
           types: {
             CurrencyId: {
               _enum: ['ACA', 'AUSD', 'DOT', 'XBTC', 'LDOT', 'RENBTC']
