@@ -8,6 +8,7 @@ import { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@ac
 import { RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
 import { PoolId } from '@acala-network/types/interfaces/incentives';
 import { Position } from '@acala-network/types/interfaces/loans';
+import { ClassId, ClassInfoOf, TokenId, TokenInfoOf } from '@acala-network/types/interfaces/nft';
 import { BondingLedger } from '@acala-network/types/interfaces/nomineesElection';
 import { AirDropCurrencyId, CurrencyId } from '@acala-network/types/interfaces/primitives';
 import { AccountId, AccountIndex, AuctionId, Balance, BalanceOf, BlockNumber, ExtrinsicsWeight, H160, H256, Hash, KeyTypeId, Moment, OpaqueCall, OracleKey, Perbill, Releases, ValidatorId } from '@acala-network/types/interfaces/runtime';
@@ -27,6 +28,7 @@ import { CodeHash, ContractInfo, PrefabWasmModule, Schedule } from '@polkadot/ty
 import { Proposal } from '@polkadot/types/interfaces/democracy';
 import { EcdsaSignature } from '@polkadot/types/interfaces/extrinsics';
 import { SetId, StoredPendingChange, StoredState } from '@polkadot/types/interfaces/grandpa';
+import { ProxyAnnouncement, ProxyDefinition } from '@polkadot/types/interfaces/proxy';
 import { ActiveRecovery, RecoveryConfig } from '@polkadot/types/interfaces/recovery';
 import { Scheduled, TaskAddress } from '@polkadot/types/interfaces/scheduler';
 import { Keys, SessionIndex } from '@polkadot/types/interfaces/session';
@@ -330,16 +332,6 @@ export interface StorageType extends BaseStorageType {
      * CurrencyType -> (OtherCurrencyAmount, BaseCurrencyAmount)
      **/
     liquidityPool: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, ITuple<[Balance, Balance]>>;
-    /**
-     * Shares records indexed by currency type and account id
-     * CurrencyType -> Owner -> ShareAmount
-     **/
-    shares: StorageDoubleMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, AccountId | string, Share>;
-    /**
-     * Total shares amount of liquidity pool specified by currency type
-     * CurrencyType -> TotalSharesAmount
-     **/
-    totalShares: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Share>;
   };
   electionsPhragmen: {    /**
      * The present candidate list. Sorted based on account-id. A current member or runner-up
@@ -586,6 +578,31 @@ export interface StorageType extends BaseStorageType {
      **/
     prime: Option<AccountId> | null;
   };
+  ormlNft: {    /**
+     * Store class info.
+     * 
+     * Returns `None` if class info not set or removed.
+     **/
+    classes: StorageMap<ClassId | AnyNumber, Option<ClassInfoOf>>;
+    /**
+     * Next available class ID.
+     **/
+    nextClassId: ClassId | null;
+    /**
+     * Next available token ID.
+     **/
+    nextTokenId: TokenId | null;
+    /**
+     * Store token info.
+     * 
+     * Returns `None` if token info not set or removed.
+     **/
+    tokens: StorageDoubleMap<ClassId | AnyNumber, TokenId | AnyNumber, Option<TokenInfoOf>>;
+    /**
+     * Token existence check by owner and class ID.
+     **/
+    tokensByOwner: StorageDoubleMap<AccountId | string, ITuple<[ClassId, TokenId]> | [ClassId | AnyNumber, TokenId | AnyNumber], Option<ITuple<[]>>>;
+  };
   polkadotBridge: {    available: Balance | null;
     bonded: Balance | null;
     currentEra: EraIndex | null;
@@ -598,6 +615,16 @@ export interface StorageType extends BaseStorageType {
      * Mapping from currency id to it's locked price
      **/
     lockedPrice: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Option<Price>>;
+  };
+  proxy: {    /**
+     * The announcements made by the proxy (key).
+     **/
+    announcements: StorageMap<AccountId | string, ITuple<[Vec<ProxyAnnouncement>, BalanceOf]>>;
+    /**
+     * The set of account proxies. Maps the account which has delegated to the accounts
+     * which are being delegated to, together with the amount held on deposit.
+     **/
+    proxies: StorageMap<AccountId | string, ITuple<[Vec<ProxyDefinition>, BalanceOf]>>;
   };
   randomnessCollectiveFlip: {    /**
      * Series of block headers from the last 81 blocks that acts as random seed material. This
