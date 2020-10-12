@@ -7,6 +7,8 @@ import './interfaces/augment-types';
 import { RegistryTypes, OverrideModuleType } from '@polkadot/types/types';
 import polkadotJSONRpc from '@polkadot/types/interfaces/jsonrpc';
 import * as ormlDefinations from '@open-web3/orml-types/interfaces/definitions';
+import _typesBundle from '@acala-network/type-definitions/types-known/typesBundle';
+import { OverrideBundleType } from '@polkadot/types/types';
 
 import * as acalaDefinations from './interfaces/definitions';
 import jsonrpc from './interfaces/jsonrpc';
@@ -17,7 +19,70 @@ export * from './interfaces/augment-api-mobx';
 // This will make it behave correctly in runtime, but wrong types in TS defination.
 const additionalOverride = {
   types: {
-    Keys: 'SessionKeys2'
+    Keys: 'SessionKeys2',
+    PalletsOrigin: {
+      _enum: {
+        System: 'SystemOrigin',
+        Timestamp: 'Null',
+        RandomnessCollectiveFlip: 'Null',
+        Balances: 'Null',
+        Accounts: 'Null',
+        Currencies: 'Null',
+        Tokens: 'Null',
+        Vesting: 'Null',
+        AcalaTreasury: 'Null',
+        Utility: 'Null',
+        Multisig: 'Null',
+        Recovery: 'Null',
+        Proxy: 'Null',
+        Scheduler: 'Null',
+        Indices: 'Null',
+        GraduallyUpdate: 'Null',
+        Authorship: 'Null',
+        Babe: 'Null',
+        Grandpa: 'Null',
+        Staking: 'Null',
+        Session: 'Null',
+        Historical: 'Null',
+        GeneralCouncil: 'CollectiveOrigin',
+        GeneralCouncilMembership: 'Null',
+        HonzonCouncil: 'CollectiveOrigin',
+        HonzonCouncilMembership: 'Null',
+        HomaCouncil: 'CollectiveOrigin',
+        HomaCouncilMembership: 'Null',
+        TechnicalCommittee: 'CollectiveOrigin',
+        TechnicalCommitteeMembership: 'Null',
+        Authority: 'DelayedOrigin',
+        ElectionsPhragmen: 'Null',
+        AcalaOracle: 'Null',
+        BandOracle: 'Null',
+        OperatorMembershipAcala: 'Null',
+        OperatorMembershipBand: 'Null',
+        Auction: 'Null',
+        Rewards: 'Null',
+        OrmlNFT: 'Null',
+        Prices: 'Null',
+        Dex: 'Null',
+        AuctionManager: 'Null',
+        Loans: 'Null',
+        Honzon: 'Null',
+        CdpTreasury: 'Null',
+        CdpEngine: 'Null',
+        EmergencyShutdown: 'Null',
+        Homa: 'Null',
+        NomineesElection: 'Null',
+        StakingPool: 'Null',
+        PolkadotBridge: 'Null',
+        Incentives: 'Null',
+        AirDrop: 'Null',
+        NFT: 'Null',
+        RenVmBridge: 'Null',
+        Contracts: 'Null',
+        EVM: 'Null',
+        Sudo: 'Null',
+        TransactionPayment: 'Null'
+      }
+    }
   }
 };
 
@@ -36,11 +101,9 @@ export const types: RegistryTypes = Object.values(allDefinitions)
   .map(({ types }) => types)
   .reduce((all, types) => Object.assign(all, types), {} as RegistryTypes);
 
-export const typesAlias: Record<string, OverrideModuleType> = Object.values(allDefinitions)
-  .reduce((all, def) => Object.assign(all, (def as any).typesAlias), {});
+export const typesAlias: Record<string, OverrideModuleType> = Object.values(allDefinitions).reduce(
+  (all, def) => Object.assign(all, (def as any).typesAlias),
+  {}
+);
 
-export const typeChain = {
-  'Acala Mandala TC3': {
-    Weight: 'u32'
-  }
-};
+export const typesBundle = _typesBundle as OverrideBundleType;

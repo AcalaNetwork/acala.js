@@ -12,7 +12,7 @@ import { PoolId } from '@acala-network/types/interfaces/incentives';
 import { Position } from '@acala-network/types/interfaces/loans';
 import { CID, ClassData, ClassId, ClassInfoOf, Properties, TokenData, TokenId, TokenInfoOf } from '@acala-network/types/interfaces/nft';
 import { BondingLedger, HomaUnlockChunk } from '@acala-network/types/interfaces/nomineesElection';
-import { AirDropCurrencyId, CurrencyId } from '@acala-network/types/interfaces/primitives';
+import { AirDropCurrencyId, CurrencyId, TokenSymbol } from '@acala-network/types/interfaces/primitives';
 import { AccountId, AccountIdOf, AccountIndex, Address, Amount, AmountOf, AsOriginId, AssetId, AuctionId, AuctionIdOf, Balance, BalanceOf, Block, BlockNumber, Call, CallHash, CallHashOf, ChangesTrieConfiguration, Consensus, ConsensusEngineId, CurrencyIdOf, DebitAmount, DebitAmountOf, DebitBalance, DebitBalanceOf, DestAddress, Digest, DigestItem, ExtrinsicsWeight, Fixed128, Fixed64, FixedI128, FixedI64, FixedU128, FixedU64, GenericAddress, H160, H256, H512, Hash, Header, I32F32, Index, Justification, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, ModuleId, Moment, OpaqueCall, OracleKey, OracleValue, Origin, OriginCaller, PalletVersion, PalletsOrigin, Pays, PerU16, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, Releases, RuntimeDbWeight, Seal, SealV0, SignedBlock, StorageData, TransactionPriority, U32F32, ValidatorId, Weight, WeightMultiplier } from '@acala-network/types/interfaces/runtime';
 import { BalanceInfo, LiquidBalance, LiquidBalanceOf, PolkadotAccountId, PolkadotAccountIdOf, StakingBalance, StakingBalanceOf } from '@acala-network/types/interfaces/stakingPool';
 import { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
@@ -1605,6 +1605,9 @@ declare module '@polkadot/types/types/registry' {
     BondingLedger: BondingLedger;
     'Option<BondingLedger>': Option<BondingLedger>;
     'Vec<BondingLedger>': Vec<BondingLedger>;
+    TokenSymbol: TokenSymbol;
+    'Option<TokenSymbol>': Option<TokenSymbol>;
+    'Vec<TokenSymbol>': Vec<TokenSymbol>;
     CurrencyId: CurrencyId;
     'Option<CurrencyId>': Option<CurrencyId>;
     'Vec<CurrencyId>': Vec<CurrencyId>;

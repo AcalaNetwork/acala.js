@@ -1,8 +1,14 @@
 export default {
   rpc: {},
   types: {
-    CurrencyId: {
+    TokenSymbol: {
       _enum: ['ACA', 'AUSD', 'DOT', 'XBTC', 'LDOT', 'RENBTC']
+    },
+    CurrencyId: {
+      _enum: {
+        Token: 'TokenSymbol',
+        DEXShare: '(TokenSymbol, TokenSymbol)'
+      }
     },
     AirDropCurrencyId: {
       _enum: ['KAR', 'ACA']
