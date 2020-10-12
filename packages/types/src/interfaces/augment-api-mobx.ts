@@ -47,7 +47,7 @@ export interface StorageType extends BaseStorageType {
     /**
      * True if Self::values(key) is up to date, otherwise the value is stale
      **/
-    isUpdated: StorageMap<OracleKey | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, bool>;
+    isUpdated: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | string, bool>;
     /**
      * The current members of the collective. This is stored sorted (just by value).
      **/
@@ -56,11 +56,11 @@ export interface StorageType extends BaseStorageType {
     /**
      * Raw values for each oracle operators
      **/
-    rawValues: StorageDoubleMap<AccountId | string, OracleKey | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Option<TimestampedValueOf>>;
+    rawValues: StorageDoubleMap<AccountId | string, OracleKey | { Token: any } | { DEXShare: any } | string, Option<TimestampedValueOf>>;
     /**
      * Combined value, may not be up to date
      **/
-    values: StorageMap<OracleKey | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Option<TimestampedValueOf>>;
+    values: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | string, Option<TimestampedValueOf>>;
   };
   acalaTreasury: {    /**
      * Proposal indices that have been approved but not yet awarded.
@@ -142,7 +142,7 @@ export interface StorageType extends BaseStorageType {
      * Record of the total collateral amount of all active collateral auctions under specific collateral type
      * CollateralType -> TotalAmount
      **/
-    totalCollateralInAuction: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Balance>;
+    totalCollateralInAuction: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, Balance>;
     /**
      * Record of total fix amount of all active debit auctions
      **/
@@ -266,7 +266,7 @@ export interface StorageType extends BaseStorageType {
     /**
      * True if Self::values(key) is up to date, otherwise the value is stale
      **/
-    isUpdated: StorageMap<OracleKey | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, bool>;
+    isUpdated: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | string, bool>;
     /**
      * The current members of the collective. This is stored sorted (just by value).
      **/
@@ -275,20 +275,20 @@ export interface StorageType extends BaseStorageType {
     /**
      * Raw values for each oracle operators
      **/
-    rawValues: StorageDoubleMap<AccountId | string, OracleKey | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Option<TimestampedValueOf>>;
+    rawValues: StorageDoubleMap<AccountId | string, OracleKey | { Token: any } | { DEXShare: any } | string, Option<TimestampedValueOf>>;
     /**
      * Combined value, may not be up to date
      **/
-    values: StorageMap<OracleKey | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Option<TimestampedValueOf>>;
+    values: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | string, Option<TimestampedValueOf>>;
   };
   cdpEngine: {    /**
      * Mapping from collateral type to its risk management params
      **/
-    collateralParams: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, RiskManagementParams>;
+    collateralParams: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, RiskManagementParams>;
     /**
      * Mapping from collateral type to its exchange rate of debit units and debit value
      **/
-    debitExchangeRate: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Option<ExchangeRate>>;
+    debitExchangeRate: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, Option<ExchangeRate>>;
     /**
      * Global stability fee rate for all types of collateral
      **/
@@ -297,7 +297,7 @@ export interface StorageType extends BaseStorageType {
   cdpTreasury: {    /**
      * The maximum amount of collateral amount for sale per collateral auction
      **/
-    collateralAuctionMaximumSize: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Balance>;
+    collateralAuctionMaximumSize: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, Balance>;
     /**
      * Current total debit value of system. It's not same as debit in CDP engine,
      * it is the bad debt of the system.
@@ -331,7 +331,7 @@ export interface StorageType extends BaseStorageType {
      * Liquidity pool, which is the trading pair for specific currency type to base currency type.
      * CurrencyType -> (OtherCurrencyAmount, BaseCurrencyAmount)
      **/
-    liquidityPool: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, ITuple<[Balance, Balance]>>;
+    liquidityPool: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, ITuple<[Balance, Balance]>>;
   };
   electionsPhragmen: {    /**
      * The present candidate list. Sorted based on account-id. A current member or runner-up
@@ -479,7 +479,7 @@ export interface StorageType extends BaseStorageType {
      * The authorization relationship map from
      * Authorizer -> (CollateralType, Authorizee) -> Authorized
      **/
-    authorization: StorageDoubleMap<AccountId | string, ITuple<[CurrencyId, AccountId]> | [CurrencyId | 'ACA' | 'AUSD' | 'DOT' | 'XBTC' | 'LDOT' | 'RENBTC' | number, AccountId | string], bool>;
+    authorization: StorageDoubleMap<AccountId | string, ITuple<[CurrencyId, AccountId]> | [CurrencyId | { Token: any } | { DEXShare: any } | string, AccountId | string], bool>;
   };
   honzonCouncil: {    /**
      * The current members of the collective. This is stored sorted (just by value).
@@ -518,11 +518,11 @@ export interface StorageType extends BaseStorageType {
   incentives: {    /**
      * Mapping from dex liquidity currency type to its loans incentive reward amount per period
      **/
-    dexIncentiveRewards: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Balance>;
+    dexIncentiveRewards: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, Balance>;
     /**
      * Mapping from dex liquidity currency type to its saving rate
      **/
-    dexSavingRates: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Rate>;
+    dexSavingRates: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, Rate>;
     /**
      * Homa incentive reward amount
      **/
@@ -530,7 +530,7 @@ export interface StorageType extends BaseStorageType {
     /**
      * Mapping from collateral currency type to its loans incentive reward amount per period
      **/
-    loansIncentiveRewards: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Balance>;
+    loansIncentiveRewards: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, Balance>;
   };
   indices: {    /**
      * The lookup from index to account.
@@ -541,12 +541,12 @@ export interface StorageType extends BaseStorageType {
      * The collateralized debit positions, map from
      * Owner -> CollateralType -> Position
      **/
-    positions: StorageDoubleMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, AccountId | string, Position>;
+    positions: StorageDoubleMap<CurrencyId | { Token: any } | { DEXShare: any } | string, AccountId | string, Position>;
     /**
      * The total collateralized debit positions, map from
      * CollateralType -> Position
      **/
-    totalPositions: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Position>;
+    totalPositions: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, Position>;
   };
   multisig: {    calls: StorageMap<U8aFixed | string, Option<ITuple<[OpaqueCall, AccountId, BalanceOf]>>>;
     /**
@@ -614,7 +614,7 @@ export interface StorageType extends BaseStorageType {
   prices: {    /**
      * Mapping from currency id to it's locked price
      **/
-    lockedPrice: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Option<Price>>;
+    lockedPrice: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, Option<Price>>;
   };
   proxy: {    /**
      * The announcements made by the proxy (key).
@@ -1050,16 +1050,16 @@ export interface StorageType extends BaseStorageType {
      * 
      * NOTE: This is only used in the case that this module is used to store balances.
      **/
-    accounts: StorageDoubleMap<AccountId | string, CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, AccountData>;
+    accounts: StorageDoubleMap<AccountId | string, CurrencyId | { Token: any } | { DEXShare: any } | string, AccountData>;
     /**
      * Any liquidity locks of a token type under an account.
      * NOTE: Should only be accessed when setting, changing and freeing a lock.
      **/
-    locks: StorageDoubleMap<AccountId | string, CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Vec<BalanceLock>>;
+    locks: StorageDoubleMap<AccountId | string, CurrencyId | { Token: any } | { DEXShare: any } | string, Vec<BalanceLock>>;
     /**
      * The total issuance of a token type.
      **/
-    totalIssuance: StorageMap<CurrencyId | 'ACA'|'AUSD'|'DOT'|'XBTC'|'LDOT'|'RENBTC' | number, Balance>;
+    totalIssuance: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, Balance>;
   };
   transactionPayment: {    nextFeeMultiplier: Multiplier | null;
     storageVersion: Releases | null;

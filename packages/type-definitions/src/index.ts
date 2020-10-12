@@ -12,3 +12,4 @@ export { default as primitives } from './primitives';
 export { default as runtime } from './runtime';
 export { default as stakingPool } from './stakingPool';
 export { default as support } from './support';
+export { default as typesBundle } from './types-known/typesBundle';
