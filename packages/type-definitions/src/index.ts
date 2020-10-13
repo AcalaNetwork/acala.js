@@ -117,12 +117,18 @@ export const rpc = jsonrpcFromDefs(acalaDefs, { ...ormlRpc });
 export const typesAlias = typesAliasFromDefs(acalaDefs, { ...ormlAlias });
 
 // Type overrides have priority issues
-export const typesBundleForPolkadot = [...versioned].map(version => {
-  return {
-    minmax: version.minmax,
-    types: {
-      ...types,
-      ...version.types
+export const typesBundleForPolkadot = {
+  spec: {
+    acala: {
+      types: [...versioned].map(version => {
+        return {
+          minmax: version.minmax,
+          types: {
+            ...types,
+            ...version.types
+          }
+        };
+      })
     }
-  };
-});
+  }
+};
