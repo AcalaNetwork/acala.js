@@ -15,6 +15,7 @@ export default {
     },
     DataProviderId: {
       _enum: ['Aggregated', 'Acala', 'Band']
-    }
+    },
+    TradingPair: '(CurrencyId,  CurrencyId)'
   }
 };
