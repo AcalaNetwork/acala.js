@@ -35,4 +35,7 @@ export interface TokenSymbol extends Enum {
   readonly isRenbtc: boolean;
 }
 
+/** @name TradingPair */
+export interface TradingPair extends ITuple<[CurrencyId, CurrencyId]> {}
+
 export type PHANTOM_PRIMITIVES = 'primitives';
