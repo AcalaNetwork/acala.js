@@ -1,10 +1,8 @@
-import { convertToFixed18 } from "packages/app-util/src";
-import { FixedPointNumber } from "./fixed-point-number";
-
-export type CHAIN = 'acala' | 'kurara' | 'polkadot' | 'kusama';
+import { FixedPointNumber } from './fixed-point-number';
+import { CHAIN } from './type';
 
 export interface TokenConfig {
-  chain: CHAIN; // which chain the token is in
+  chain?: CHAIN; // which chain the token is in
   name: string; // The name of the token
   symbol?: string; // short name of the token
   precision: number; // the precision of the token
@@ -71,7 +69,7 @@ const presetTokensConfig: Record<CHAIN, Record<string, TokenConfig>> = {
 };
 
 export class Token {
-  readonly __chain!: CHAIN;
+  readonly chain!: CHAIN;
   // keep all properties about token readonly
   readonly name!: string;
   readonly symbol!: string;
@@ -82,7 +80,7 @@ export class Token {
     this.name = config.name;
     this.symbol = config.symbol || config.name;
     this.precision = config.precision;
-    this.__chain = config.chain;
+    this.chain = config.chain || 'acala';
     this.amount = new FixedPointNumber(config.amount || 0, this.precision);
   }
 
@@ -91,7 +89,11 @@ export class Token {
    * @description check if `token` equal current
    */
   isEqual (token: Token): boolean {
-    return this.__chain === token.__chain && this.name === token.name;
+    return this.chain === token.chain && this.name === token.name;
+  }
+
+  toString (): string {
+    return `${this.name} ${this.amount.toNumber()}`;
   }
 }
 
@@ -109,6 +111,6 @@ function convert (config: Record<CHAIN, Record<string, TokenConfig>>): Record<CH
 
 export const PRESET_TOKENS = convert(presetTokensConfig);
 
-export function getToken (name: string, chain: CHAIN = 'acala'): Token | undefined {
+export function getPresetToken (name: string, chain: CHAIN = 'acala'): Token | undefined {
   return PRESET_TOKENS[chain] ? PRESET_TOKENS[chain][name] : undefined;
 }

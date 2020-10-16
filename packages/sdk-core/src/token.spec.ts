@@ -8,7 +8,7 @@ describe('token', () => {
   test('token constructor', () => {
     expect(t1.name).toEqual('T1');
     expect(t1.symbol).toEqual('Token1');
-    expect(t1.__chain).toEqual('acala');
+    expect(t1.chain).toEqual('acala');
     expect(t1.amount.toNumber()).toEqual(1);
     expect(t1.precision).toEqual(18);
   });
