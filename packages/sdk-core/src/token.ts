@@ -9,8 +9,10 @@ export interface TokenConfig {
   amount?: number; // the amount of the token
 }
 
+type PresetToken = 'ACA' | 'AUSD' | 'DOT' | 'XBTC' | 'LDOT' | 'RENBTC' | 'KSM';
+
 // common tokens config in acala network and polkadot
-const presetTokensConfig: Record<CHAIN, Record<string, TokenConfig>> = {
+const presetTokensConfig: Record<CHAIN, Record<PresetToken, TokenConfig>> = {
   acala: {
     ACA: {
       chain: 'acala',
@@ -48,7 +50,7 @@ const presetTokensConfig: Record<CHAIN, Record<string, TokenConfig>> = {
       symbol: 'XBTC',
       precision: 18
     }
-  },
+  } as Record<PresetToken, TokenConfig>,
   polkadot: {
     DOT: {
       chain: 'polkadot',
@@ -56,8 +58,8 @@ const presetTokensConfig: Record<CHAIN, Record<string, TokenConfig>> = {
       symbol: 'DOT',
       precision: 10
     }
-  },
-  kurara: {},
+  } as Record<PresetToken, TokenConfig>,
+  kurara: {} as Record<PresetToken, TokenConfig>,
   kusama: {
     KSM: {
       chain: 'kusama',
@@ -65,8 +67,10 @@ const presetTokensConfig: Record<CHAIN, Record<string, TokenConfig>> = {
       symbol: 'KSM',
       precision: 12
     }
-  }
+  } as Record<PresetToken, TokenConfig>
 };
+
+export const TokenAmount = FixedPointNumber;
 
 export class Token {
   readonly chain!: CHAIN;
@@ -81,7 +85,10 @@ export class Token {
     this.symbol = config.symbol || config.name;
     this.precision = config.precision;
     this.chain = config.chain || 'acala';
-    this.amount = new FixedPointNumber(config.amount || 0, this.precision);
+
+    if (config.amount) {
+      this.amount = new TokenAmount(config.amount || 0, this.precision);
+    }
   }
 
   /**
@@ -111,6 +118,21 @@ function convert (config: Record<CHAIN, Record<string, TokenConfig>>): Record<CH
 
 export const PRESET_TOKENS = convert(presetTokensConfig);
 
-export function getPresetToken (name: string, chain: CHAIN = 'acala'): Token | undefined {
-  return PRESET_TOKENS[chain] ? PRESET_TOKENS[chain][name] : undefined;
+export function getPresetToken (name: PresetToken, chain: CHAIN = 'acala'): Token {
+  return PRESET_TOKENS[chain][name];
+}
+
+const TOKEN_SORT: Record<string, number> = {
+  ACA: 0,
+  AUSD: 1,
+  DOT: 2,
+  XBTC: 3,
+  LDOT: 4,
+  RENBTC: 5
+};
+
+export function sortTokens (token1: Token, token2: Token, ...other: Token[]): Token[] {
+  const result = [token1, token2, ...other];
+
+  return result.sort((a, b) => TOKEN_SORT[a.name] - TOKEN_SORT[b.name]);
 }

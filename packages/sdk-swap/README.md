@@ -1,4 +1,4 @@
-# @acala-network/sdk-honzon
+# @acala-network/sdk-swap
 
 ```bash
 npm install @acala-network/sdk @acala-network/sdk-honzon
@@ -32,5 +32,23 @@ sdk.honzon.depositAndBrow({
   brow: targetbrowAUSD
 });
 
+const trade = sdk.swap.trade.create({
+  input: TOKEN1,
+  output: TOKEN2,
+  mode: 'EXTECT_INPUT'
+});
 
+trade.getInput();
+trade.getOutput();
+trade.getPaths();
+trade.getParameter();
+trade.getImpact();
+
+trade.setInput(NEW_INPUT).subscribe((new_trade) => {
+
+});
+
+trade.setOutput(NEW_INPUT).subscribe((new_trade) => {
+
+});
 ```

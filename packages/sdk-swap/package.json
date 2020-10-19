@@ -1,7 +1,7 @@
 {
-  "name": "@acala-network/sdk-honzon",
+  "name": "@acala-network/sdk-swap",
   "version": "0.4.0-beta.9",
-  "description": "the honzon submodule in acala network sdk",
+  "description": "the swap sub module in acala network sdk",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
   "license": "Apache-2.0",
