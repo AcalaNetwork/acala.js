@@ -8,27 +8,19 @@ import { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@ac
 import { RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
 import { Position } from '@acala-network/types/interfaces/loans';
 import { BondingLedger } from '@acala-network/types/interfaces/nomineesElection';
-import { AirDropCurrencyId, CurrencyId } from '@acala-network/types/interfaces/primitives';
+import { AirDropCurrencyId, CurrencyId, TradingPair } from '@acala-network/types/interfaces/primitives';
 import { AccountId, AuctionId, Balance, BlockNumber } from '@acala-network/types/interfaces/runtime';
 import { PolkadotAccountId } from '@acala-network/types/interfaces/stakingPool';
 import { ExchangeRate, Rate } from '@acala-network/types/interfaces/support';
 import { AuctionInfo, Price } from '@open-web3/orml-types/interfaces/traits';
 import { AccountData, BalanceLock } from '@polkadot/types/interfaces/balances';
-import { EraIndex, MomentOf } from '@polkadot/types/interfaces/staking';
+import { EraIndex } from '@polkadot/types/interfaces/staking';
 import { ApiTypes } from '@polkadot/api/types';
 
 declare module '@polkadot/api/types/storage' {
   export interface AugmentedQueries<ApiType> {
     accounts: {
       [key: string]: QueryableStorageEntry<ApiType>;
-      /**
-       * Mapping from account id to flag for free transfer.
-       **/
-      freeTransferEnabledAccounts: AugmentedQuery<ApiType, (arg: AccountId | string | Uint8Array) => Observable<Option<ITuple<[]>>>> & QueryableStorageEntry<ApiType>;
-      /**
-       * Mapping from account id to free transfer records, record moment when a transfer tx occurs.
-       **/
-      lastFreeTransfers: AugmentedQuery<ApiType, (arg: AccountId | string | Uint8Array) => Observable<Vec<MomentOf>>> & QueryableStorageEntry<ApiType>;
     };
     airDrop: {
       [key: string]: QueryableStorageEntry<ApiType>;
@@ -111,10 +103,10 @@ declare module '@polkadot/api/types/storage' {
     dex: {
       [key: string]: QueryableStorageEntry<ApiType>;
       /**
-       * Liquidity pool, which is the trading pair for specific currency type to base currency type.
-       * CurrencyType -> (OtherCurrencyAmount, BaseCurrencyAmount)
+       * Liquidity pool for specific pair(a tuple consisting of two sorted CurrencyIds).
+       * (CurrencyId_0, CurrencyId_1) -> (Amount_0, Amount_1)
        **/
-      liquidityPool: AugmentedQuery<ApiType, (arg: CurrencyId | { Token: any } | { DEXShare: any } | string | Uint8Array) => Observable<ITuple<[Balance, Balance]>>> & QueryableStorageEntry<ApiType>;
+      liquidityPool: AugmentedQuery<ApiType, (arg: TradingPair) => Observable<ITuple<[Balance, Balance]>>> & QueryableStorageEntry<ApiType>;
     };
     emergencyShutdown: {
       [key: string]: QueryableStorageEntry<ApiType>;
