@@ -1,5 +1,7 @@
 import { FixedPointNumber } from '@acala-network/sdk-core/fixed-point-number';
 
+export type SwapTradeMode = 'EXACT_INPUT' | 'EXACT_OUTPUT';
+
 export interface Fee {
   numerator: FixedPointNumber;
   denominator: FixedPointNumber;

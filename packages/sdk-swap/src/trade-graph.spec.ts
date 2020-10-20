@@ -1,5 +1,4 @@
-import { getPresetToken } from '@acala-network/sdk-core';
-import { TokenPair } from './token-pair';
+import { getPresetToken, TokenPair } from '@acala-network/sdk-core';
 import { TradeGraph } from './trade-graph';
 
 describe('trade graph', () => {

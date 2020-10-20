@@ -1,54 +1,53 @@
 # @acala-network/sdk-swap
 
 ```bash
-npm install @acala-network/sdk @acala-network/sdk-honzon
+npm install @acala-network/sdk-core @acala-network/sdk-swap
 ```
 
 ```js
-import { AcalaSDK, PRESET_TOKENS } from '@acala-network/sdk';
-import { honzon } from '@acala-network/sdk-honzon';
+import { ApiPromise, WsProvider } from '@polkadot/api';
+import { options } from '@acala-network/api';
+import { Token, FixedPointNumber, getPresetToken } from '@acala-network/sdk-core';
+import { SwapTrade } from '@acala-network/sdk-swap';
 
-const sdk = new AcalaSDK({ endpoint: 'http://localhost:9933' });
-const mnemonic = '';
+const provider = new WsProvider('ws://localhost:9944');
+const api = ApiPromise.create(options({ provider }));
 
-// inject honzon module
-sdk.modules.inject(honzon);
+const aca = getPresetToken('ACA').clone({ amount: new FixedPointNumber(100) });
+const ausd = getPresetToken('AUSD');
 
-// insert sender account
-sdk.address.insert({
-  type: 'ss2556',
-  name: 'account1',
-  mnemonic: mnemonic,
+const availableTokenPairs = SwapTrade.getAvailableToenPairs(api);
+const maxTradePathLength = new FixedPointNumber(api.const.dex.tradingPathLimit.toString());
+const fee = {
+  numerator: new FixedPointNumber(api.const.dex.getExchangeFee[0].toString()),
+  denominator: new FixedPointNumber(api.const.dex.getExchanngeFee[1].toString())
+};
+
+const swapTrade = new SwapTrade({
+  input: aca,
+  output: ausd,
+  mode: 'EXACT_INPUT',
+  availableTokenPairs,
+  maxTradePathLength,
+  fee,
+  acceptSlippage: new FixedPointNumber(0.001)
 });
 
-const dotAmount = sdk.queryTokenBalance('account1', PRESET_TOKENS.acala.DOT);
+const tradePairs = SwapTrade.getTradeTokenPairsByPaths();
 
+const unsub = api.query.queryMulti(
+  tradePairs.map((item) => ([api.query.dex.liquidityPool, ...item.toChainData()])),
+  (result) => {
+    const pools = SwapTrade.convertLiquidityPoolsToTokenPairs(result, tradePairs);
+    const tradeParameters = swapTrade.getTradeParameters(pools)
 
-const depositDOT = new Token({ amount: 1, name: 'DOT' });
-const targetBrowAUSD = new Token({ amount: 100, name: 'AUSD' });
+    if (tradeParameters.mode === 'EXECT_INPUT') {
+      api.tx.dex.swapWithExactSupply(...tradeParameters.toChainData(tradeParameters.mode)).signAndSend(...)
+    } else {
+      api.tx.dex.swapWithExactTarget(...tradeParameters.toChainData(tradeParameters.mode)).signAndSend(...)
+    }
 
-sdk.honzon.depositAndBrow({
-  deposit: depositDOT,
-  brow: targetbrowAUSD
-});
-
-const trade = sdk.swap.trade.create({
-  input: TOKEN1,
-  output: TOKEN2,
-  mode: 'EXTECT_INPUT'
-});
-
-trade.getInput();
-trade.getOutput();
-trade.getPaths();
-trade.getParameter();
-trade.getImpact();
-
-trade.setInput(NEW_INPUT).subscribe((new_trade) => {
-
-});
-
-trade.setOutput(NEW_INPUT).subscribe((new_trade) => {
-
-});
+    unsub();
+  }
+);
 ```

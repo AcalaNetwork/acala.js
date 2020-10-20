@@ -118,7 +118,7 @@ export class Token {
     return str;
   }
 
-  public toChainString (): { Token: string } | string {
+  public toChainData (): { Token: string } | string {
     if (this.chain === 'acala') {
       return { Token: this.name };
     }

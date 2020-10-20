@@ -1,5 +1,4 @@
-import { TokenPair } from './token-pair';
-import { Token } from '@acala-network/sdk-core/token';
+import { Token, TokenPair } from '@acala-network/sdk-core';
 
 export class TradeGraph {
   private adj: Map<Token, Token[]>;

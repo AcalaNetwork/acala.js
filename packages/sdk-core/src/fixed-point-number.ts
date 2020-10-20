@@ -93,6 +93,13 @@ export class FixedPointNumber {
     return this.inner.shiftedBy(-this.precision).toString();
   }
 
+  /**
+   * @name toChainData
+   */
+  public toChainData (): string {
+    return this.inner.toFixed(0, 3);
+  }
+
   // set b's precision to this.precision
   private alignPrecision (b: FixedPointNumber): void {
     if (this.precision !== b.precision) {
