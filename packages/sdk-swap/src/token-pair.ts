@@ -27,4 +27,8 @@ export class TokenPair {
   public isEqual (pair: TokenPair): boolean {
     return pair.token1.isEqual(this.token1) && pair.token2.isEqual(this.token2);
   }
+
+  public toChainString (): [string | { Token: string }, string | { Token: string }] {
+    return [this.token1.toChainString(), this.token2.toChainString()];
+  }
 }

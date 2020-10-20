@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 
+// generate function from BN class
 function genFnFromBigNumber<T extends keyof BigNumber, U extends boolean> (fn: T, noRight: U):
 BigNumber[typeof fn] extends (...params: any) => any ?
   (typeof noRight) extends true ?
@@ -26,6 +27,7 @@ BigNumber[typeof fn] extends (...params: any) => any ?
 
 const BN = BigNumber.clone();
 
+// default BN object setting
 BN.config({
   DECIMAL_PLACES: 0,
   EXPONENTIAL_AT: [-100, 100]
@@ -42,7 +44,10 @@ export class FixedPointNumber {
     this.inner = new BN(origin).shiftedBy(this.precision);
   }
 
-  // construct from inner
+  /**
+   * @name fromInner
+   * @description constructor form inner
+   */
   public static fromInner (origin: number | string, precision = 18): FixedPointNumber {
     const inner = new BN(origin);
     const temp = new FixedPointNumber(0, precision);
@@ -52,7 +57,10 @@ export class FixedPointNumber {
     return temp;
   }
 
-  // construct from BN
+  /**
+   * @name _fromBN
+   * @description constructor from BN
+   */
   public static _fromBN (origin: BigNumber, precision = 18): FixedPointNumber {
     const temp = new FixedPointNumber(0, precision);
 
@@ -71,15 +79,21 @@ export class FixedPointNumber {
     return this.inner;
   }
 
+  /**
+   * @name toNumber
+   */
   public toNumber (): number {
     return this.inner.shiftedBy(-this.precision).toNumber();
   }
 
+  /**
+   * @name toStirng
+   */
   public toString (): string {
     return this.inner.shiftedBy(-this.precision).toString();
   }
 
-  // set b's precision equal to precision
+  // set b's precision to this.precision
   private alignPrecision (b: FixedPointNumber): void {
     if (this.precision !== b.precision) {
       b.setPrecision(this.precision);
@@ -155,21 +169,56 @@ export class FixedPointNumber {
     return FixedPointNumber._fromBN(this.inner.div(right.inner).shiftedBy(this.precision), this.precision);
   }
 
+  /**
+   * @name isGreaterThan
+   */
   public isGreaterThan = genFnFromBigNumber('isGreaterThan', false).bind(this);
 
+  /**
+   * @name isGreaterThanOrEqualTo
+   */
   public isGreaterThanOrEqualTo = genFnFromBigNumber('isGreaterThanOrEqualTo', false).bind(this);
 
+  /**
+   * @name isLessThan
+   */
   public isLessThan = genFnFromBigNumber('isLessThan', false).bind(this);
 
+  /**
+   * @name isLessOrEqualTo
+   */
   public isLessOrEqualTo = genFnFromBigNumber('isLessThanOrEqualTo', false).bind(this);
 
+  /**
+   * @name isEqualTo
+   */
   public isEqualTo = genFnFromBigNumber('isEqualTo', false).bind(this);
 
+  /**
+   * @name isZero
+   */
   public isZero = genFnFromBigNumber('isZero', true).bind(this);
 
+  /**
+   * @name isNaN
+   */
   public isNaN = genFnFromBigNumber('isNaN', true).bind(this);
 
+  /**
+   * @name isNegative
+   */
   public isNegative = genFnFromBigNumber('isNegative', true).bind(this);
 
+  /**
+   * @name isPositive
+   */
   public isPositive = genFnFromBigNumber('isPositive', true).bind(this);
+
+  static ZERO = new FixedPointNumber(0);
+  static ONE = new FixedPointNumber(1);
+  static TWO = new FixedPointNumber(2);
+  static THREE = new FixedPointNumber(3);
+  static FOUR = new FixedPointNumber(3);
+  static FIVE = new FixedPointNumber(5);
+  static SIX = new FixedPointNumber(6);
 }

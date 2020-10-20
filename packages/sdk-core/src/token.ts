@@ -9,10 +9,11 @@ export interface TokenConfig {
   amount?: number | string | FixedPointNumber; // the amount of the token
 }
 
-type PresetToken = 'ACA' | 'AUSD' | 'DOT' | 'XBTC' | 'LDOT' | 'RENBTC' | 'KSM';
+// preset token type
+export type PresetToken = 'ACA' | 'AUSD' | 'DOT' | 'XBTC' | 'LDOT' | 'RENBTC' | 'KSM';
 
 // common tokens config in acala network and polkadot
-const presetTokensConfig: Record<CHAIN, Record<PresetToken, TokenConfig>> = {
+export const presetTokensConfig: Record<CHAIN, Record<PresetToken, TokenConfig>> = {
   acala: {
     ACA: {
       chain: 'acala',
@@ -99,11 +100,11 @@ export class Token {
    * @name isEqual
    * @description check if `token` equal current
    */
-  isEqual (token: Token): boolean {
+  public isEqual (token: Token): boolean {
     return this.chain === token.chain && this.name === token.name;
   }
 
-  toString (): string {
+  public toString (): string {
     let str = '';
 
     if (this.name) {
@@ -117,7 +118,15 @@ export class Token {
     return str;
   }
 
-  clone (newConfig?: Partial<TokenConfig>): Token {
+  public toChainString (): { Token: string } | string {
+    if (this.chain === 'acala') {
+      return { Token: this.name };
+    }
+
+    return this.name;
+  }
+
+  public clone (newConfig?: Partial<TokenConfig>): Token {
     return new Token({
       name: this.name || newConfig?.name || '',
       chain: this.chain || newConfig?.chain || '',

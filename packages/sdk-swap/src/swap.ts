@@ -1,11 +1,10 @@
-import { ApiRx } from '@polkadot/api';
-import { u32 } from '@polkadot/types';
-import { TradingPair, Balance } from '@acala-network/types/interfaces';
-import { combineLatest, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { ApiRx, ApiPromise } from '@polkadot/api';
 import { assert } from '@polkadot/util';
-import { Token, getPresetToken } from '@acala-network/sdk-core/token';
+
+import { TradingPair } from '@acala-network/types/interfaces';
+import { Token, getPresetToken, PresetToken } from '@acala-network/sdk-core';
 import { FixedPointNumber } from '@acala-network/sdk-core/fixed-point-number';
+
 import { TradeGraph } from './trade-graph';
 import { getSupplyAmount, getTargetAmount, Fee } from './help';
 
@@ -14,69 +13,72 @@ import { TokenPair } from './token-pair';
 type SwapTradeMode = 'EXACT_INPUT' | 'EXACT_OUTPUT';
 
 interface SwapTradeConfig {
-  input: Token;
-  output: Token;
-  mode: SwapTradeMode;
-  maxTradePathLength: number;
+  input: Token; // input token includes token amount
+  output: Token; // output token includes token amount
+  mode: SwapTradeMode; // trade mode
+  availableTokenPairs: TokenPair[]; // available trading token pairs
+  maxTradePathLength: number; // the max length of the trade path
+  fee: Fee; // the trade fee for liquidity provider
+  acceptSlippage: FixedPointNumber; // the slippage can accept
 }
 
-interface TradeResult {
-  inputAmount: FixedPointNumber;
-  outputAmount: FixedPointNumber;
+interface TradeParameter {
+  input: Token;
+  output: Token;
+  path: Token[];
+  priceImpact: FixedPointNumber;
+  midPrice: FixedPointNumber;
 }
 
 export class SwapTrade {
-  private api!: ApiRx;
-  private input!: Token; // input token and token amount
-  private output!: Token; // out token and token amount
-  private mode!: SwapTradeMode; // trade mode
-  private inputAmount!: FixedPointNumber;
-  private outputAmount!: FixedPointNumber;
-  private paths!: Token[]; // trade path
-  private liquidityProviderFee!: Token; // trade fee for liquidity provider
-  private priceImpact!: FixedPointNumber; // trade price impact
+  private input: Token; // input token and token amount
+  private output: Token; // out token and token amount
+  private mode: SwapTradeMode; // trade mode
+  private availableTokenPairs: TokenPair[]; // available trading token pairs
   private maxTradePathLength!: number; // the max length for the trade path
-  private fee!: Fee;
+  private fee: Fee; // the trade fee for liquidity provider
+  private acceptSlippage: FixedPointNumber; // the slippage can accept
 
-  constructor (api: ApiRx, config: SwapTradeConfig) {
-    this.api = api;
-
+  constructor (config: SwapTradeConfig) {
     this.input = config.input;
     this.output = config.output;
     this.mode = config.mode;
+    this.availableTokenPairs = config.availableTokenPairs;
     this.maxTradePathLength = config.maxTradePathLength;
-
-    this.getExchangeFee();
+    this.fee = config.fee;
+    this.acceptSlippage = config.acceptSlippage;
   }
 
-  private getExchangeFee (): void {
-    const exchangeFee = this.api.consts.dex.getExchangeFee as any as [u32, u32];
-
-    this.fee = {
-      numerator: FixedPointNumber.fromInner(exchangeFee[0].toString()),
-      denominator: FixedPointNumber.fromInner(exchangeFee[1].toString())
-    };
-  }
-
-  private getAvailableTokenPairs (): TokenPair[] {
-    return (this.api.consts.dex.enabledTradingPairs as any as TradingPair[]).map((pair: TradingPair) => {
+  /**
+   * @name getAvailableTokenPairs
+   * @description help function to convert constants **dex.enabledTradingPairs** to **TokenPair**
+   */
+  static getAvailableTokenPairs (api: ApiRx | ApiPromise): TokenPair[] {
+    return api.consts.dex.enabledTradingPairs.map((pair: TradingPair) => {
       return new TokenPair(
-        // TODO: need remove any
-        getPresetToken(pair[0].toString() as any),
-        getPresetToken(pair[1].toString() as any)
+        getPresetToken(pair[0].toString() as PresetToken),
+        getPresetToken(pair[1].toString() as PresetToken)
       );
     });
   }
 
-  private getTradePath (): Token[][] {
-    const availableTokenPairs = this.getAvailableTokenPairs();
+  /**
+   * @name getTradePaths
+   * @description get all possible trade path, filter by this.maxTradePathLength
+   */
+  public getTradePaths (): Token[][] {
+    const availableTokenPairs = this.availableTokenPairs;
     const tradeGraph = new TradeGraph(availableTokenPairs);
 
     return tradeGraph.getPathes(this.input, this.output)
       .filter(item => item.length <= this.maxTradePathLength);
   }
 
-  private getUsedTokenPairs (paths: Token[][]): TokenPair[] {
+  /**
+   * @name getUsedTokenPairs
+   * @description extract token paris from trade path
+   */
+  static getUsedTokenPairs (paths: Token[][]): TokenPair[] {
     const result: TokenPair[] = [];
 
     for (const path of paths) {
@@ -95,10 +97,14 @@ export class SwapTrade {
     return result;
   }
 
-  private getTradeResult (inputAmount: FixedPointNumber, path: Token[], pairs: TokenPair[]): TradeResult {
-    const result: TradeResult = {
-      inputAmount,
-      outputAmount: new FixedPointNumber(0)
+  private getTradeParameterByPath (path: Token[], pairs: TokenPair[]): TradeParameter {
+    // create the default trade result
+    const result: TradeParameter = {
+      input: this.input,
+      output: this.output.clone({ amount: new FixedPointNumber(0) }),
+      path: path,
+      priceImpact: new FixedPointNumber(0),
+      midPrice: new FixedPointNumber(0)
     };
 
     if (this.mode === 'EXACT_INPUT') {
@@ -106,14 +112,14 @@ export class SwapTrade {
         const temp = new TokenPair(path[i], path[i + 1]);
         const pair = pairs.find(item => item.isEqual(temp));
 
-        if (!pair) throw new Error('no trade pair found in getTradeResult');
+        if (!pair) throw new Error('no trade pair found in getTradeParameter');
 
         const [supplyToken, targetToken] = pair.getPair();
 
-        result.outputAmount = getTargetAmount(
+        result.output.amount = getTargetAmount(
           supplyToken.amount,
           targetToken.amount,
-          i === 0 ? result.inputAmount : result.outputAmount,
+          i === 0 ? result.input.amount : result.output.amount,
           this.fee
         );
       }
@@ -122,14 +128,14 @@ export class SwapTrade {
         const temp = new TokenPair(path[i], path[i - 1]);
         const pair = pairs.find(item => item.isEqual(temp));
 
-        if (!pair) throw new Error('no trade pair found in getTradeResult');
+        if (!pair) throw new Error('no trade pair found in getTradeParameter');
 
         const [supplyToken, targetToken] = pair.getPair();
 
-        result.outputAmount = getSupplyAmount(
+        result.output.amount = getSupplyAmount(
           supplyToken.amount,
           targetToken.amount,
-          i === 0 ? result.inputAmount : result.outputAmount,
+          i === 0 ? result.input.amount : result.output.amount,
           this.fee
         );
       }
@@ -138,70 +144,85 @@ export class SwapTrade {
     return result;
   }
 
-  private getBestTradePath (inputAmount: FixedPointNumber): Observable<TradeResult> {
-    const tradePath = this.getTradePath();
+  /**
+   * @name getTradeParameter
+   * @description get the parameter about this swap trade
+   */
+  public getTradeParameter (liquidityPools: TokenPair[]): TradeParameter {
+    const tradePaths = this.getTradePaths();
 
-    if (tradePath.length === 0) throw new Error('no trade path found');
+    if (tradePaths.length === 0) throw new Error('no trade path found');
 
-    const usedTokenPairs: TokenPair[] = this.getUsedTokenPairs(tradePath);
+    const tradeResults = tradePaths.map((path) => this.getTradeParameterByPath(path, liquidityPools));
 
-    return combineLatest(usedTokenPairs.map(item => {
-      const pair = item.getPair();
+    // find the best trade result
+    const result = ((): TradeParameter => {
+      switch (this.mode) {
+        case 'EXACT_INPUT': {
+          return tradeResults.reduce((acc, cur) => {
+            if (acc.output.amount.isGreaterThanOrEqualTo(cur.output.amount)) {
+              return acc;
+            }
 
-      // TODO: need remove any
-      return (this.api.query.dex.liquidityPool as any)([pair[0], pair[1]]) as Observable<[Balance, Balance]>;
-    })).pipe(
-      map((result) => {
-        return result.map((item, pairIndex) => {
-          const pair = usedTokenPairs[pairIndex].getPair();
-          return new TokenPair(
-            pair[0].clone({
-              amount: FixedPointNumber.fromInner(item[0].toString())
-            }),
-            pair[1].clone({
-              amount: FixedPointNumber.fromInner(item[1].toString())
-            })
-          );
-        });
-      }),
-      map((pairs) => {
-        const tradeResults = tradePath.map((path) => this.getTradeResult(inputAmount, path, pairs));
-
-        switch (this.mode) {
-          case 'EXACT_INPUT': {
-            return tradeResults.reduce((acc, cur) => {
-              if (acc.outputAmount.isGreaterThanOrEqualTo(cur.outputAmount)) {
-                return acc;
-              }
-
-              return cur;
-            }, tradeResults[0]);
-          }
-          case 'EXACT_OUTPUT': {
-            return tradeResults.reduce((acc, cur) => {
-              if (acc.outputAmount.isLessOrEqualTo(cur.outputAmount)) {
-                return acc;
-              }
-
-              return cur;
-            }, tradeResults[0]);
-          }
+            return cur;
+          }, tradeResults[0]);
         }
-      })
-    );
+        case 'EXACT_OUTPUT': {
+          return tradeResults.reduce((acc, cur) => {
+            if (acc.input.amount.isLessOrEqualTo(cur.input.amount)) {
+              return acc;
+            }
+
+            return cur;
+          }, tradeResults[0]);
+        }
+      }
+    })();
+
+    // adjust slippage
+    switch (this.mode) {
+      case 'EXACT_INPUT': {
+        result.output.amount = result.output.amount.times(FixedPointNumber.ONE.minus(this.acceptSlippage));
+
+        break;
+      }
+      case 'EXACT_OUTPUT': {
+        result.output.amount = result.input.amount.times(FixedPointNumber.ONE.plus(this.acceptSlippage));
+
+        break;
+      }
+    }
+
+    return result;
   }
 
-  setInputAmount (amount: FixedPointNumber): Observable<TradeResult> {
+  /**
+   * @name setInput
+   * @description set input token and amount
+   */
+  public setInput (input: Token): void {
     // ensure that mode is EXACT_INTPU
-    assert(this.mode === 'EXACT_INPUT', 'when the mode is EXACT_OUTPUT, you should use setOutputAmount');
+    assert(this.mode === 'EXACT_INPUT', 'when the mode is EXACT_OUTPUT, you should use setOutput');
 
-    return this.getBestTradePath(amount);
+    this.input = input;
   }
 
-  setOutputAmount (amount: FixedPointNumber): Observable<TradeResult> {
+  /**
+   * @name setOutput
+   * @description set output token and amount
+   */
+  public setOutput (output: Token): void {
     // ensure that mode is EXACT_INTPU
-    assert(this.mode === 'EXACT_OUTPUT', 'when the mode is EXACT_INPUT, you should use setInputAmount');
+    assert(this.mode === 'EXACT_OUTPUT', 'when the mode is EXACT_INPUT, you should use setInput');
 
-    return this.getBestTradePath(amount);
+    this.output = output;
+  }
+
+  /**
+   * @name setOutput
+   * @description set output token and amount
+   */
+  public setAcceptSlippage (slippage: FixedPointNumber): void {
+    this.acceptSlippage = slippage;
   }
 }
