@@ -26,18 +26,6 @@ declare module '@polkadot/api/types/submittable' {
        * None means no recipient is specified.
        **/
       closeAccount: AugmentedSubmittable<(recipient: Option<AccountId> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
-      /**
-       * Unlock free transfer deposit.
-       * 
-       * The dispatch origin of this call must be Signed.
-       **/
-      disableFreeTransfers: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>>;
-      /**
-       * Freeze some native currency to be able to free transfer.
-       * 
-       * The dispatch origin of this call must be Signed.
-       **/
-      enableFreeTransfer: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>>;
     };
     airDrop: {
       [key: string]: SubmittableExtrinsicFunction<ApiType>;
@@ -120,6 +108,7 @@ declare module '@polkadot/api/types/submittable' {
        * - debit auction worst case: 66.04 µs
        * - collateral auction worst case: 197.5 µs
        * # </weight>
+       * Use the collateral auction worst case as default weight.
        **/
       cancel: AugmentedSubmittable<(id: AuctionId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
@@ -132,23 +121,6 @@ declare module '@polkadot/api/types/submittable' {
        * 
        * - `currency_id`: CDP's collateral type.
        * - `who`: CDP's owner.
-       * 
-       * # <weight>
-       * - Preconditions:
-       * - T::CDPTreasury is module_cdp_treasury
-       * - T::DEX is module_dex
-       * - Complexity: `O(1)`
-       * - Db reads:
-       * - liquidate by auction: 19
-       * - liquidate by dex: 19
-       * - Db writes:
-       * - liquidate by auction: 14
-       * - liquidate by dex: 14
-       * -------------------
-       * Base Weight:
-       * - liquidate by auction: 200.1 µs
-       * - liquidate by dex: 325.3 µs
-       * # </weight>
        **/
       liquidate: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | string | Uint8Array, who: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
@@ -199,7 +171,6 @@ declare module '@polkadot/api/types/submittable' {
        * # <weight>
        * - Preconditions:
        * - T::CDPTreasury is module_cdp_treasury
-       * - T::DEX is module_dex
        * - Complexity: `O(1)`
        * - Db reads: 10
        * - Db writes: 6
@@ -300,75 +271,37 @@ declare module '@polkadot/api/types/submittable' {
        * into liquidity pool, and issue shares in proportion to the caller. Shares are temporarily not
        * allowed to transfer and trade, it represents the proportion of assets in liquidity pool.
        * 
-       * - `other_currency_id`: currency type to determine the type of liquidity pool.
-       * - `max_other_currency_amount`: maximum currency amount allowed to inject to liquidity pool.
-       * - `max_base_currency_amount`: maximum base currency(stable currency) amount allowed to inject to liquidity pool.
-       * 
-       * # <weight>
-       * - Preconditions:
-       * - T::Currency is orml_currencies
-       * - Complexity: `O(1)`
-       * - Db reads:
-       * - best case: 9
-       * - worst case: 10
-       * - Db writes:
-       * - best case: 7
-       * - worst case: 9
-       * -------------------
-       * Base Weight:
-       * - best case: 177.6 µs
-       * - worst case: 205.7 µs
-       * # </weight>
+       * - `currency_id_a`: currency id A.
+       * - `currency_id_b`: currency id B.
+       * - `max_amount_a`: maximum currency A amount allowed to inject to liquidity pool.
+       * - `max_amount_b`: maximum currency A amount allowed to inject to liquidity pool.
        **/
-      addLiquidity: AugmentedSubmittable<(lpShareCurrencyId: CurrencyId | { Token: any } | { DEXShare: any } | string | Uint8Array, maxOtherCurrencyAmount: Compact<Balance> | AnyNumber | Uint8Array, maxBaseCurrencyAmount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      addLiquidity: AugmentedSubmittable<(currencyIdA: CurrencyId | { Token: any } | { DEXShare: any } | string | Uint8Array, currencyIdB: CurrencyId | { Token: any } | { DEXShare: any } | string | Uint8Array, maxAmountA: Compact<Balance> | AnyNumber | Uint8Array, maxAmountB: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
-       * Trading with DEX, swap supply currency to target currency
-       * 
-       * - `supply_currency_id`: supply currency type.
-       * - `supply_amount`: supply currency amount.
-       * - `target_currency_id`: target currency type.
-       * - `acceptable_target_amount`: acceptable target amount, if actual amount is under it, swap will not happen
-       * 
-       * # <weight>
-       * - Preconditions:
-       * - T::Currency is orml_currencies
-       * - Complexity: `O(1)`
-       * - Db reads:
-       * - swap base to other: 8
-       * - swap other to base: 8
-       * - swap other to other: 9
-       * - Db writes:
-       * - swap base to other: 5
-       * - swap other to base: 5
-       * - swap other to other: 6
-       * -------------------
-       * Base Weight:
-       * - swap base to other: 192.1 µs
-       * - swap other to base: 175.8 µs
-       * - swap other to other: 199.7 µs
-       * # </weight>
-       **/
-      swapCurrency: AugmentedSubmittable<(supplyCurrencyId: CurrencyId | { Token: any } | { DEXShare: any } | string | Uint8Array, supplyAmount: Compact<Balance> | AnyNumber | Uint8Array, targetCurrencyId: CurrencyId | { Token: any } | { DEXShare: any } | string | Uint8Array, acceptableTargetAmount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
-      /**
-       * Withdraw liquidity from specific liquidity pool in the form of burning shares, and withdrawing currencies in trading pairs
+       * Remove liquidity from specific liquidity pool in the form of burning shares, and withdrawing currencies in trading pairs
        * from liquidity pool in proportion, and withdraw liquidity incentive interest.
        * 
-       * - `currency_id`: currency type to determine the type of liquidity pool.
-       * - `share_amount`: share amount to burn.
-       * 
-       * # <weight>
-       * - Preconditions:
-       * - T::Currency is orml_currencies
-       * - Complexity: `O(1)`
-       * - Db reads: 11
-       * - Db writes: 9
-       * -------------------
-       * Base Weight:
-       * - best case: 240.1 µs
-       * - worst case: 248.2 µs
-       * # </weight>
+       * - `currency_id_a`: currency id A.
+       * - `currency_id_b`: currency id B.
+       * - `remove_share`: liquidity amount to remove.
        **/
-      withdrawLiquidity: AugmentedSubmittable<(lpShareCurrencyId: CurrencyId | { Token: any } | { DEXShare: any } | string | Uint8Array, removeShare: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      removeLiquidity: AugmentedSubmittable<(currencyIdA: CurrencyId | { Token: any } | { DEXShare: any } | string | Uint8Array, currencyIdB: CurrencyId | { Token: any } | { DEXShare: any } | string | Uint8Array, removeShare: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      /**
+       * Trading with DEX, swap with exact supply amount
+       * 
+       * - `path`: trading path.
+       * - `supply_amount`: exact supply amount.
+       * - `min_target_amount`: acceptable minimum target amount.
+       **/
+      swapWithExactSupply: AugmentedSubmittable<(path: Vec<CurrencyId> | (CurrencyId | { Token: any } | { DEXShare: any } | string | Uint8Array)[], supplyAmount: Compact<Balance> | AnyNumber | Uint8Array, minTargetAmount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      /**
+       * Trading with DEX, swap with exact target amount
+       * 
+       * - `path`: trading path.
+       * - `target_amount`: exact target amount.
+       * - `max_supply_amount`: acceptable maxmum supply amount.
+       **/
+      swapWithExactTarget: AugmentedSubmittable<(path: Vec<CurrencyId> | (CurrencyId | { Token: any } | { DEXShare: any } | string | Uint8Array)[], targetAmount: Compact<Balance> | AnyNumber | Uint8Array, maxSupplyAmount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     emergencyShutdown: {
       [key: string]: SubmittableExtrinsicFunction<ApiType>;

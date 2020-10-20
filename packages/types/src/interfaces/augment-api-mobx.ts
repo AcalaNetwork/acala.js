@@ -10,7 +10,7 @@ import { PoolId } from '@acala-network/types/interfaces/incentives';
 import { Position } from '@acala-network/types/interfaces/loans';
 import { ClassId, ClassInfoOf, TokenId, TokenInfoOf } from '@acala-network/types/interfaces/nft';
 import { BondingLedger } from '@acala-network/types/interfaces/nomineesElection';
-import { AirDropCurrencyId, CurrencyId } from '@acala-network/types/interfaces/primitives';
+import { AirDropCurrencyId, CurrencyId, TradingPair } from '@acala-network/types/interfaces/primitives';
 import { AccountId, AccountIndex, AuctionId, Balance, BalanceOf, BlockNumber, ExtrinsicsWeight, H160, H256, Hash, KeyTypeId, Moment, OpaqueCall, OracleKey, Perbill, Releases, ValidatorId } from '@acala-network/types/interfaces/runtime';
 import { PolkadotAccountId } from '@acala-network/types/interfaces/stakingPool';
 import { ExchangeRate, Rate } from '@acala-network/types/interfaces/support';
@@ -32,7 +32,7 @@ import { ProxyAnnouncement, ProxyDefinition } from '@polkadot/types/interfaces/p
 import { ActiveRecovery, RecoveryConfig } from '@polkadot/types/interfaces/recovery';
 import { Scheduled, TaskAddress } from '@polkadot/types/interfaces/scheduler';
 import { Keys, SessionIndex } from '@polkadot/types/interfaces/session';
-import { ActiveEraInfo, ElectionResult, ElectionScore, ElectionStatus, EraIndex, EraRewardPoints, Exposure, Forcing, MomentOf, Nominations, RewardDestination, SlashingSpans, SpanIndex, SpanRecord, StakingLedger, UnappliedSlash, ValidatorPrefs } from '@polkadot/types/interfaces/staking';
+import { ActiveEraInfo, ElectionResult, ElectionScore, ElectionStatus, EraIndex, EraRewardPoints, Exposure, Forcing, Nominations, RewardDestination, SlashingSpans, SpanIndex, SpanRecord, StakingLedger, UnappliedSlash, ValidatorPrefs } from '@polkadot/types/interfaces/staking';
 import { AccountInfo, DigestOf, EventIndex, EventRecord, LastRuntimeUpgradeInfo, Phase } from '@polkadot/types/interfaces/system';
 import { Bounty, BountyIndex, OpenTip } from '@polkadot/types/interfaces/treasury';
 import { Multiplier } from '@polkadot/types/interfaces/txpayment';
@@ -102,15 +102,7 @@ export interface StorageType extends BaseStorageType {
      **/
     tips: StorageMap<Hash | string, Option<OpenTip>>;
   };
-  accounts: {    /**
-     * Mapping from account id to flag for free transfer.
-     **/
-    freeTransferEnabledAccounts: StorageMap<AccountId | string, Option<ITuple<[]>>>;
-    /**
-     * Mapping from account id to free transfer records, record moment when a transfer tx occurs.
-     **/
-    lastFreeTransfers: StorageMap<AccountId | string, Vec<MomentOf>>;
-  };
+  accounts: {  };
   airDrop: {    airDrops: StorageDoubleMap<AccountId | string, AirDropCurrencyId | 'KAR'|'ACA' | number, Balance>;
   };
   auction: {    /**
@@ -328,10 +320,10 @@ export interface StorageType extends BaseStorageType {
     pristineCode: StorageMap<CodeHash | string, Option<Bytes>>;
   };
   dex: {    /**
-     * Liquidity pool, which is the trading pair for specific currency type to base currency type.
-     * CurrencyType -> (OtherCurrencyAmount, BaseCurrencyAmount)
+     * Liquidity pool for specific pair(a tuple consisting of two sorted CurrencyIds).
+     * (CurrencyId_0, CurrencyId_1) -> (Amount_0, Amount_1)
      **/
-    liquidityPool: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, ITuple<[Balance, Balance]>>;
+    liquidityPool: StorageMap<TradingPair, ITuple<[Balance, Balance]>>;
   };
   electionsPhragmen: {    /**
      * The present candidate list. Sorted based on account-id. A current member or runner-up

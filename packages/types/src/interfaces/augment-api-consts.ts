@@ -1,14 +1,14 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-import { Codec } from '@polkadot/types/types';
+import { Codec, ITuple } from '@polkadot/types/types';
 import { Vec } from '@polkadot/types/codec';
-import { u32, u8 } from '@polkadot/types/primitive';
-import { CurrencyId } from '@acala-network/types/interfaces/primitives';
+import { u32 } from '@polkadot/types/primitive';
+import { CurrencyId, TradingPair } from '@acala-network/types/interfaces/primitives';
 import { Balance, BlockNumber, CurrencyIdOf, ModuleId } from '@acala-network/types/interfaces/runtime';
 import { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
 import { Price } from '@open-web3/orml-types/interfaces/traits';
-import { EraIndex, MomentOf } from '@polkadot/types/interfaces/staking';
+import { EraIndex } from '@polkadot/types/interfaces/staking';
 import { ApiTypes } from '@polkadot/api/types';
 
 declare module '@polkadot/api/types/consts' {
@@ -20,29 +20,21 @@ declare module '@polkadot/api/types/consts' {
        **/
       allNonNativeCurrencyIds: Vec<CurrencyId> & AugmentedConst<ApiType>;
       /**
-       * The number of fee transfer times per period.
-       **/
-      freeTransferCount: u8 & AugmentedConst<ApiType>;
-      /**
-       * Deposit for free transfer service.
-       **/
-      freeTransferDeposit: Balance & AugmentedConst<ApiType>;
-      /**
-       * The period to count free transfer.
-       **/
-      freeTransferPeriod: MomentOf & AugmentedConst<ApiType>;
-      /**
        * The max slippage allowed when swap open account deposit or fee with DEX
        **/
       maxSlippageSwapWithDex: Ratio & AugmentedConst<ApiType>;
       /**
-       * Native currency id, the actual received currency type as fee for treasury
+       * Native currency id, the actual received currency type as fee for treasury.
        **/
       nativeCurrencyId: CurrencyId & AugmentedConst<ApiType>;
       /**
        * Deposit for opening account, would be reserved until account closed.
        **/
       newAccountDeposit: Balance & AugmentedConst<ApiType>;
+      /**
+       * Stable currency id.
+       **/
+      stableCurrencyId: CurrencyId & AugmentedConst<ApiType>;
       /**
        * The treasury module account id to recycle assets.
        **/
@@ -128,21 +120,21 @@ declare module '@polkadot/api/types/consts' {
     dex: {
       [key: string]: Codec;
       /**
-       * Tradable currency type list
+       * Allowed trading pair list
        **/
-      enabledCurrencyIds: Vec<CurrencyId> & AugmentedConst<ApiType>;
-      /**
-       * Base currency type id
-       **/
-      getBaseCurrencyId: CurrencyId & AugmentedConst<ApiType>;
+      enabledTradingPairs: Vec<TradingPair> & AugmentedConst<ApiType>;
       /**
        * Trading fee rate
        **/
-      getExchangeFee: Rate & AugmentedConst<ApiType>;
+      getExchangeFee: ITuple<[u32, u32]> & AugmentedConst<ApiType>;
       /**
        * The DEX's module id, keep all assets in DEX.
        **/
       moduleId: ModuleId & AugmentedConst<ApiType>;
+      /**
+       * The limit for length of trading path
+       **/
+      tradingPathLimit: u32 & AugmentedConst<ApiType>;
     };
     emergencyShutdown: {
       [key: string]: Codec;
