@@ -16,6 +16,10 @@
         "@acala-network/api-derive/*": ["packages/api-derive/src/*"],
         "@acala-network/type-definitions": ["packages/type-definitions/src"],
         "@acala-network/type-definitions/*": ["packages/type-definitions/src/*"],
+        "@acala-network/sdk-core": ["packages/sdk-core/src"],
+        "@acala-network/sdk-core/*": ["packages/sdk-core/src/*"],
+        "@acala-network/sdk-swap": ["packages/sdk-swap/src"],
+        "@acala-network/sdk-swap/*": ["packages/sdk-swap/src/*"],
       },
       "skipLibCheck": true,
       "typeRoots": [
