@@ -5,8 +5,8 @@ export interface TokenConfig {
   chain?: CHAIN; // which chain the token is in
   name: string; // The name of the token
   symbol?: string; // short name of the token
-  precision: number; // the precision of the token
-  amount?: number; // the amount of the token
+  precision?: number; // the precision of the token
+  amount?: number | string | FixedPointNumber; // the amount of the token
 }
 
 type PresetToken = 'ACA' | 'AUSD' | 'DOT' | 'XBTC' | 'LDOT' | 'RENBTC' | 'KSM';
@@ -83,11 +83,15 @@ export class Token {
   constructor (config: TokenConfig) {
     this.name = config.name;
     this.symbol = config.symbol || config.name;
-    this.precision = config.precision;
+    this.precision = config.precision || 18;
     this.chain = config.chain || 'acala';
 
     if (config.amount) {
-      this.amount = new TokenAmount(config.amount || 0, this.precision);
+      if (config.amount instanceof FixedPointNumber) {
+        this.amount = config.amount;
+      } else {
+        this.amount = new TokenAmount(config.amount || 0, this.precision);
+      }
     }
   }
 
@@ -100,7 +104,27 @@ export class Token {
   }
 
   toString (): string {
-    return `${this.name} ${this.amount.toNumber()}`;
+    let str = '';
+
+    if (this.name) {
+      str += this.name;
+    }
+
+    if (this.amount) {
+      str += (' ' + this.amount.toNumber());
+    }
+
+    return str;
+  }
+
+  clone (newConfig?: Partial<TokenConfig>): Token {
+    return new Token({
+      name: this.name || newConfig?.name || '',
+      chain: this.chain || newConfig?.chain || '',
+      precision: this.precision || newConfig?.precision || 0,
+      amount: this.amount || newConfig?.amount || new FixedPointNumber(0),
+      symbol: this.symbol || newConfig?.symbol || ''
+    });
   }
 }
 

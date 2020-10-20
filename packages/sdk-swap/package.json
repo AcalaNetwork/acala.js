@@ -15,7 +15,7 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
-    "@acala-network/sdk-core": "0.4.0-beta.9",
+    "@acala-network/sdk-core": "0.4.0-beta.15",
     "lodash": "^4.17.20"
   },
   "devDependencies": {

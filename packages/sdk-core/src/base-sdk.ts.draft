@@ -1,8 +1,10 @@
+// @ts-nocheck
+// draft
 import { ApiPromise } from '@polkadot/api';
 import { EventEmitter } from 'events';
 import { isEmpty } from 'lodash';
 import { FCModule, BaseModule } from './module';
-import { KNOWN_MODULES, CHAIN } from './type';
+import { CHAIN } from './type';
 
 /**
  * BaseSKD support the base feaatur for the SKD

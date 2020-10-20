@@ -126,7 +126,11 @@ declare module '@polkadot/api/types/consts' {
       /**
        * Trading fee rate
        **/
+<<<<<<< HEAD
       getExchangeFee: ITuple<[u32, u32]> & AugmentedConst<ApiType>;
+=======
+      getExchangeFee: Vec<u32> & AugmentedConst<ApiType>;
+>>>>>>> update swap sdk
       /**
        * The DEX's module id, keep all assets in DEX.
        **/

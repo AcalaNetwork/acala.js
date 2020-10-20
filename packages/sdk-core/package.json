@@ -1,8 +1,8 @@
 {
   "name": "@acala-network/sdk-core",
-  "version": "0.4.0-beta.9",
+  "version": "0.4.0-beta.15",
   "description": "the core of acala network sdk",
-  "main": "src/index.ts",
+  "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
   "license": "Apache-2.0",
   "publishConfig": {
