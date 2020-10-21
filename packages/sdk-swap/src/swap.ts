@@ -47,8 +47,8 @@ export class SwapTrade {
   static getAvailableTokenPairs (api: ApiRx | ApiPromise): TokenPair[] {
     return api.consts.dex.enabledTradingPairs.map((pair: TradingPair) => {
       return new TokenPair(
-        getPresetToken(pair[0].toString() as PresetToken),
-        getPresetToken(pair[1].toString() as PresetToken)
+        getPresetToken(pair[0].asToken.toString() as PresetToken),
+        getPresetToken(pair[1].asToken.toString() as PresetToken)
       );
     });
   }
@@ -247,9 +247,6 @@ export class SwapTrade {
    * @description set input token and amount
    */
   public setInput (input: Token): void {
-    // ensure that mode is EXACT_INTPU
-    assert(this.mode === 'EXACT_INPUT', 'when the mode is EXACT_OUTPUT, you should use setOutput');
-
     this.input = input;
   }
 
@@ -258,9 +255,6 @@ export class SwapTrade {
    * @description set output token and amount
    */
   public setOutput (output: Token): void {
-    // ensure that mode is EXACT_INTPU
-    assert(this.mode === 'EXACT_OUTPUT', 'when the mode is EXACT_INPUT, you should use setInput');
-
     this.output = output;
   }
 
@@ -270,5 +264,12 @@ export class SwapTrade {
    */
   public setAcceptSlippage (slippage: FixedPointNumber): void {
     this.acceptSlippage = slippage;
+  }
+
+  /**
+   * @name setMode
+   */
+  public setMode (mode: SwapTradeMode): void {
+    this.mode = mode;
   }
 }
