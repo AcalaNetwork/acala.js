@@ -107,17 +107,7 @@ export class Token {
   }
 
   public toString (): string {
-    let str = '';
-
-    if (this.name) {
-      str += this.name;
-    }
-
-    if (this.amount) {
-      str += (' ' + this.amount.toNumber());
-    }
-
-    return str;
+    return this.name;
   }
 
   public toChainData (): { Token: string } | string {

@@ -74,8 +74,8 @@ export function allLoanTypes (instanceId: string, api: ApiInterfaceRx): () => Ob
  * @description get loan overview includes total debit, total collateral
  * @param {(CurrencyId | string)} currency
  */
-export function loanOverview (instanceId: string, api: ApiInterfaceRx): (currency: CurrencyId | string) => Observable<DerivedLoanOverView> {
-  return memo(instanceId, (currency: CurrencyId | string) => api.query.loans.totalPositions<Position>(currency).pipe(
+export function loanOverview (instanceId: string, api: ApiInterfaceRx): (currency: CurrencyId) => Observable<DerivedLoanOverView> {
+  return memo(instanceId, (currency: CurrencyId) => api.query.loans.totalPositions<Position>(currency).pipe(
     map((result) => {
       const { collateral, debit } = result;
 
