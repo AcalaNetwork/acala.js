@@ -1,27 +1,28 @@
 import { Token, TokenPair } from '@acala-network/sdk-core';
+import { set } from 'lodash';
 
 export class TradeGraph {
-  private adj: Map<Token, Token[]>;
+  private adj: Record<string, Token[]>;
 
   constructor (data: TokenPair[]) {
-    this.adj = new Map();
+    this.adj = {};
 
     for (const item of data) {
       const [token1, token2] = item.getPair();
 
-      this.adj.set(token1, this.adj.get(token1) ? [...this.adj.get(token1) || [], token2] : [token2]);
-      this.adj.set(token2, this.adj.get(token2) ? [...this.adj.get(token2) || [], token1] : [token1]);
+      set(this.adj, token1.toString(), [...(this.adj[token1.toString()] || []), token2]);
+      set(this.adj, token2.toString(), [...(this.adj[token2.toString()] || []), token1]);
     }
   }
 
   public getAdj (token: Token): Token[] | undefined {
-    return this.adj.get(token);
+    return this.adj[token.toString()];
   }
 
   public getPathes (start: Token, end: Token): Token[][] {
     const result: Token[][] = [];
     const path: Token[] = [start];
-    const searchList: Token[][] = [(this.adj.get(start) || []).slice()];
+    const searchList: Token[][] = [(this.adj[start.toString()] || []).slice()];
 
     while (path.length > 0) {
       const searchListHead = searchList.pop() || [];
@@ -33,7 +34,7 @@ export class TradeGraph {
         path.push(firstNode);
         searchList.push(searchListHead);
 
-        let nextSearchPathItem = (this.adj.get(firstNode) || []).slice();
+        let nextSearchPathItem = (this.adj[firstNode.toString()] || []).slice();
 
         if (nextSearchPathItem.length > 0) {
           nextSearchPathItem = nextSearchPathItem.filter((m) => {
