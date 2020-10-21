@@ -14,9 +14,13 @@ export function getTargetAmount (
   supplyAmount: FixedPointNumber,
   exchangeFee: Fee
 ): FixedPointNumber {
+  if (supplyAmount.isZero() || supplyPool.isZero() || targetPool.isZero()) return FixedPointNumber.ZERO;
+
   const supplyAmountWithFee = supplyAmount.times(exchangeFee.denominator.minus(exchangeFee.numerator));
   const numerator = supplyAmountWithFee.times(targetPool);
   const denominator = supplyPool.times(exchangeFee.denominator).plus(supplyAmountWithFee);
+
+  if (denominator.isZero()) return FixedPointNumber.ZERO;
 
   return numerator.div(denominator);
 }
@@ -28,9 +32,14 @@ export function getSupplyAmount (
   targetAmount: FixedPointNumber,
   exchangeFee: Fee
 ): FixedPointNumber {
+  if (targetAmount.isZero() || supplyPool.isZero() || targetPool.isZero()) return FixedPointNumber.ZERO;
+
   const { numerator: feeNumerator, denominator: feeDenominator } = exchangeFee;
+
   const numerator = supplyPool.times(targetAmount).times(feeDenominator);
   const denominator = targetPool.minus(targetAmount).times(feeDenominator.minus(feeNumerator));
 
-  return numerator.div(denominator).plus(new FixedPointNumber(1));
+  if (denominator.isZero()) return FixedPointNumber.ZERO;
+
+  return FixedPointNumber.fromInner(numerator.div(denominator)._getInner().toNumber() + 1, numerator.getPrecision());
 }
