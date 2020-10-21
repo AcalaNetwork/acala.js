@@ -7,18 +7,45 @@ import { memo } from '@polkadot/api-derive/util';
 
 import { DerivedDexPool } from '../types/dex';
 
+const TOKEN_SORT: Record<string, number> = {
+  ACA: 0,
+  AUSD: 1,
+  DOT: 2,
+  XBTC: 3,
+  LDOT: 4,
+  RENBTC: 5
+};
+
+function sortTokens (token1: CurrencyId, token2: CurrencyId): CurrencyId[] {
+  const result = [token1, token2];
+
+  return result.sort((a, b) => TOKEN_SORT[a.asToken.toString()] - TOKEN_SORT[b.asToken.toString()]);
+}
+
 /**
  * @name pool
  * @description get liquidity pool of the target currency id
- * @param {(CurrencyId | string)} currency target currency id
+ * @param {CurrencyId} currency target currency id
  */
-export function pool (instanceId: string, api: ApiInterfaceRx): (currency: CurrencyId | string) => Observable<DerivedDexPool> {
-  return memo(instanceId, (currency: CurrencyId | string) => {
-    return api.query.dex.liquidityPool<[Balance, Balance]>(currency).pipe(
-      map((result) => {
-        const [other, base] = result;
+export function pool (instanceId: string, api: ApiInterfaceRx): (token1: CurrencyId, token2: CurrencyId) => Observable<DerivedDexPool> {
+  return memo(instanceId, (token1: CurrencyId, token2: CurrencyId) => {
+    const params = sortTokens(token1, token2);
 
-        return { other: other, base: base };
+    return api.query.dex.liquidityPool<[Balance, Balance]>(params).pipe(
+      map((result) => {
+        const [token1Amount, token2Amount] = result;
+
+        if (token1.eq(params[0]) && token2.eq(params[1])) {
+          return new Map([
+            [token1, token1Amount],
+            [token2, token2Amount]
+          ]);
+        } else {
+          return new Map([
+            [token2, token1Amount],
+            [token1, token2Amount]
+          ]);
+        }
       })
     );
   });

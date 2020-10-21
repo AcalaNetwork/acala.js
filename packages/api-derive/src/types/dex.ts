@@ -1,6 +1,3 @@
-import { Balance } from '@acala-network/types/interfaces';
+import { Balance, CurrencyId } from '@acala-network/types/interfaces';
 
-export interface DerivedDexPool {
-  other: Balance;
-  base: Balance;
-}
+export type DerivedDexPool = Map<CurrencyId, Balance>;
