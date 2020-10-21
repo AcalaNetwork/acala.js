@@ -120,11 +120,11 @@ export class Token {
 
   public clone (newConfig?: Partial<TokenConfig>): Token {
     return new Token({
-      name: this.name || newConfig?.name || '',
-      chain: this.chain || newConfig?.chain || '',
-      precision: this.precision || newConfig?.precision || 0,
-      amount: this.amount || newConfig?.amount || new FixedPointNumber(0),
-      symbol: this.symbol || newConfig?.symbol || ''
+      name: newConfig?.name || this.name || '',
+      chain: newConfig?.chain || this.chain || '',
+      precision: newConfig?.precision || this.precision || 0,
+      amount: newConfig?.amount || this.amount || new FixedPointNumber(0),
+      symbol: newConfig?.symbol || this.symbol || ''
     });
   }
 }
