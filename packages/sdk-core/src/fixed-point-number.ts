@@ -27,12 +27,6 @@ BigNumber[typeof fn] extends (...params: any) => any ?
 
 const BN = BigNumber.clone();
 
-// default BN object setting
-BN.config({
-  DECIMAL_PLACES: 0,
-  EXPONENTIAL_AT: [-100, 100]
-});
-
 export class FixedPointNumber {
   private precision!: number;
   private inner: BigNumber;
@@ -79,17 +73,29 @@ export class FixedPointNumber {
     return this.inner;
   }
 
+  private setMode (dp = 0, rm = 3): void {
+    BN.config({
+      DECIMAL_PLACES: dp,
+      ROUNDING_MODE: rm as any,
+      EXPONENTIAL_AT: [-100, 100]
+    });
+  }
+
   /**
    * @name toNumber
    */
-  public toNumber (): number {
+  public toNumber (dp = 0, rm = 3): number {
+    this.setMode(dp, rm);
+
     return this.inner.shiftedBy(-this.precision).toNumber();
   }
 
   /**
    * @name toStirng
    */
-  public toString (): string {
+  public toString (dp = 0, rm = 3): string {
+    this.setMode(dp, rm);
+
     return this.inner.shiftedBy(-this.precision).toString();
   }
 
@@ -142,6 +148,7 @@ export class FixedPointNumber {
    */
   public plus (right: FixedPointNumber): FixedPointNumber {
     this.alignPrecision(right);
+    this.setMode();
 
     return FixedPointNumber._fromBN(this.inner.plus(right.inner), this.precision);
   }
@@ -152,6 +159,7 @@ export class FixedPointNumber {
    */
   public minus (right: FixedPointNumber): FixedPointNumber {
     this.alignPrecision(right);
+    this.setMode();
 
     return FixedPointNumber._fromBN(this.inner.minus(right.inner), this.precision);
   }
@@ -162,6 +170,7 @@ export class FixedPointNumber {
    */
   public times (right: FixedPointNumber): FixedPointNumber {
     this.alignPrecision(right);
+    this.setMode();
 
     return FixedPointNumber._fromBN(this.inner.times(right.inner).shiftedBy(-this.precision), this.precision);
   }
@@ -172,8 +181,11 @@ export class FixedPointNumber {
    */
   public div (right: FixedPointNumber): FixedPointNumber {
     this.alignPrecision(right);
+    this.setMode();
 
-    return FixedPointNumber._fromBN(this.inner.div(right.inner).shiftedBy(this.precision), this.precision);
+    return FixedPointNumber._fromBN(
+      this.inner.shiftedBy(this.precision).div(right.inner), this.precision
+    );
   }
 
   /**
