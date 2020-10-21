@@ -10,8 +10,8 @@ export class TradeGraph {
     for (const item of data) {
       const [token1, token2] = item.getPair();
 
-      set(this.adj, token1.toString(), [...(this.adj[token1.toString()] || []), token2]);
-      set(this.adj, token2.toString(), [...(this.adj[token2.toString()] || []), token1]);
+      set(this.adj, token1.name, [...(this.adj[token1.name] || []), token2]);
+      set(this.adj, token2.name, [...(this.adj[token2.name] || []), token1]);
     }
   }
 
@@ -22,7 +22,7 @@ export class TradeGraph {
   public getPathes (start: Token, end: Token): Token[][] {
     const result: Token[][] = [];
     const path: Token[] = [start];
-    const searchList: Token[][] = [(this.adj[start.toString()] || []).slice()];
+    const searchList: Token[][] = [(this.adj[start.name] || []).slice()];
 
     while (path.length > 0) {
       const searchListHead = searchList.pop() || [];
@@ -34,7 +34,7 @@ export class TradeGraph {
         path.push(firstNode);
         searchList.push(searchListHead);
 
-        let nextSearchPathItem = (this.adj[firstNode.toString()] || []).slice();
+        let nextSearchPathItem = (this.adj[firstNode.name] || []).slice();
 
         if (nextSearchPathItem.length > 0) {
           nextSearchPathItem = nextSearchPathItem.filter((m) => {

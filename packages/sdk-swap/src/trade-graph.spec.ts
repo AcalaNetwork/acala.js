@@ -32,7 +32,9 @@ describe('trade graph', () => {
       new TokenPair(dot, ausd)
     ]);
 
-    const dot2renbtc = tradeGraph.getPathes(dot, renbtc);
+    const _dot = getPresetToken('DOT');
+
+    const dot2renbtc = tradeGraph.getPathes(_dot, renbtc);
 
     expect(dot2renbtc[0]).toEqual([dot, aca, renbtc]);
     expect(dot2renbtc[1]).toEqual([dot, renbtc]);

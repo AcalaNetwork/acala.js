@@ -14,8 +14,8 @@ import { getCollateralCurrencyIds } from '../helps/currency';
  * @param {(AccountId | string)} account
  * @param {(CurrencyId | string)} currency
  */
-export function loan (instanceId: string, api: ApiInterfaceRx): (account: AccountId | string, currency: CurrencyId | string) => Observable<DerivedUserLoan> {
-  return memo(instanceId, (account: AccountId | string, currency: CurrencyId | string) =>
+export function loan (instanceId: string, api: ApiInterfaceRx): (account: AccountId | string, currency: CurrencyId) => Observable<DerivedUserLoan> {
+  return memo(instanceId, (account: AccountId | string, currency: CurrencyId) =>
     api.query.loans.positions<Position>(currency, account).pipe(
       map((result) => {
         const { debit, collateral } = result;

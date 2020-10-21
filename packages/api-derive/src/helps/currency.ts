@@ -6,9 +6,11 @@ import { CurrencyId } from '@acala-network/types/interfaces';
  * @name getCurrencyIds
  * @description get currency id list.
  */
-export function getCurrencyIds (api: ApiInterfaceRx): string[] {
+export function getCurrencyIds (api: ApiInterfaceRx): CurrencyId[] {
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  return api.registry.createType('CurrencyId' as any).defKeys;
+  const keys = api.registry.createType('TokenSymbol' as any).defKeys as string[];
+
+  return keys.map((item) => api.registry.createType('CurrencyId', { token: item }));
 }
 
 /**
