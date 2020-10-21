@@ -1,5 +1,4 @@
 import { ApiRx, ApiPromise } from '@polkadot/api';
-import { assert } from '@polkadot/util';
 
 import { TradingPair, Balance } from '@acala-network/types/interfaces';
 import { Token, getPresetToken, PresetToken, TokenPair } from '@acala-network/sdk-core';
