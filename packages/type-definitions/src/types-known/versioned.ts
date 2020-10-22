@@ -19,7 +19,21 @@ const typesBundleTypes = [
     }
   },
   {
-    minmax: [600, undefined] as any,
+    minmax: [600, 1499] as any,
+    types: {}
+  },
+  // Mandala PC1
+  {
+    minmax: [1500, 1599] as any,
+    types: {
+      RefCount: 'RefCountTo259',
+      CurrencyId: {
+        _enum: ['ACA', 'AUSD', 'DOT', 'XBTC', 'LDOT', 'RENBTC']
+      }
+    }
+  },
+  {
+    minmax: [1600, undefined] as any,
     types: {}
   }
 ];
