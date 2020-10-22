@@ -19,13 +19,13 @@ interface SwapTradeConfig {
 }
 
 export class SwapTrade {
-  private input: Token; // input token and token amount
-  private output: Token; // out token and token amount
-  private mode: SwapTradeMode; // trade mode
-  private availableTokenPairs: TokenPair[]; // available trading token pairs
-  private maxTradePathLength!: number; // the max length for the trade path
-  private fee: Fee; // the trade fee for liquidity provider
-  private acceptSlippage: FixedPointNumber; // the slippage can accept
+  public input: Token; // input token and token amount
+  public output: Token; // out token and token amount
+  public mode: SwapTradeMode; // trade mode
+  public availableTokenPairs: TokenPair[]; // available trading token pairs
+  public maxTradePathLength!: number; // the max length for the trade path
+  public fee: Fee; // the trade fee for liquidity provider
+  public acceptSlippage: FixedPointNumber; // the slippage can accept
   private tradePaths: Token[][];
 
   constructor (config: SwapTradeConfig) {
@@ -95,6 +95,16 @@ export class SwapTrade {
     return SwapTrade.getUsedTokenPairs(this.tradePaths);
   }
 
+  private getPairWithOrder (pair: TokenPair, order: [Token, Token]) {
+    const _pair = pair.getPair();
+
+    if (_pair[0].isEqual(order[0]) && _pair[1].isEqual(order[1])) {
+      return _pair;
+    }
+
+    return _pair.reverse();
+  }
+
   private getTradeParametersByPath (path: Token[], pairs: TokenPair[]): TradeParameters {
     // create the default trade result
     const result: TradeParameters = new TradeParameters({
@@ -114,7 +124,7 @@ export class SwapTrade {
 
         if (!pair) throw new Error('no trade pair found in getTradeParameter');
 
-        const [supplyToken, targetToken] = pair.getPair();
+        const [supplyToken, targetToken] = this.getPairWithOrder(pair, [path[i], path[i + 1]]);
 
         const outputAmount = getTargetAmount(
           supplyToken.amount,
@@ -137,21 +147,21 @@ export class SwapTrade {
 
         if (!pair) throw new Error('no trade pair found in getTradeParameter');
 
-        const [supplyToken, targetToken] = pair.getPair();
+        const [supplyToken, targetToken] = this.getPairWithOrder(pair, [path[i - 1], path[i]]);
 
         const inputAmount = getSupplyAmount(
           supplyToken.amount,
           targetToken.amount,
-          i === 0 ? result.input.amount : result.output.amount,
+          i === path.length - 1 ? result.output.amount : result.input.amount,
           this.fee
         );
 
-        routeTemp[i] = {
+        routeTemp[i - 1] = {
           input: inputAmount,
-          output: i === 0 ? result.output.amount : routeTemp[i + 1].output
+          output: i === path.length - 1 ? result.output.amount : routeTemp[i + 1].input
         };
 
-        result.output.amount = inputAmount;
+        result.input.amount = inputAmount;
       }
     }
 
@@ -239,36 +249,5 @@ export class SwapTrade {
     }
 
     return result;
-  }
-
-  /**
-   * @name setInput
-   * @description set input token and amount
-   */
-  public setInput (input: Token): void {
-    this.input = input;
-  }
-
-  /**
-   * @name setOutput
-   * @description set output token and amount
-   */
-  public setOutput (output: Token): void {
-    this.output = output;
-  }
-
-  /**
-   * @name setOutput
-   * @description set output token and amount
-   */
-  public setAcceptSlippage (slippage: FixedPointNumber): void {
-    this.acceptSlippage = slippage;
-  }
-
-  /**
-   * @name setMode
-   */
-  public setMode (mode: SwapTradeMode): void {
-    this.mode = mode;
   }
 }

@@ -19,9 +19,9 @@
     "@babel/runtime": "^7.10.2",
     "@open-web3/api-mobx": "^0.6.0-beta.26",
     "@open-web3/orml-types": "^0.6.0-beta.26",
-    "@polkadot/api": "^2.2.1",
-    "@polkadot/typegen": "^2.2.1",
-    "@polkadot/types": "^2.2.1"
+    "@polkadot/api": "^2.3.2-4",
+    "@polkadot/typegen": "^2.3.2-4",
+    "@polkadot/types": "^2.3.2-4"
   },
   "devDependencies": {
     "@types/websocket": "^1.0.0",
