@@ -19,13 +19,13 @@ interface SwapTradeConfig {
 }
 
 export class SwapTrade {
-  private input: Token; // input token and token amount
-  private output: Token; // out token and token amount
-  private mode: SwapTradeMode; // trade mode
-  private availableTokenPairs: TokenPair[]; // available trading token pairs
-  private maxTradePathLength!: number; // the max length for the trade path
-  private fee: Fee; // the trade fee for liquidity provider
-  private acceptSlippage: FixedPointNumber; // the slippage can accept
+  public input: Token; // input token and token amount
+  public output: Token; // out token and token amount
+  public mode: SwapTradeMode; // trade mode
+  public availableTokenPairs: TokenPair[]; // available trading token pairs
+  public maxTradePathLength!: number; // the max length for the trade path
+  public fee: Fee; // the trade fee for liquidity provider
+  public acceptSlippage: FixedPointNumber; // the slippage can accept
   private tradePaths: Token[][];
 
   constructor (config: SwapTradeConfig) {
@@ -239,36 +239,5 @@ export class SwapTrade {
     }
 
     return result;
-  }
-
-  /**
-   * @name setInput
-   * @description set input token and amount
-   */
-  public setInput (input: Token): void {
-    this.input = input;
-  }
-
-  /**
-   * @name setOutput
-   * @description set output token and amount
-   */
-  public setOutput (output: Token): void {
-    this.output = output;
-  }
-
-  /**
-   * @name setOutput
-   * @description set output token and amount
-   */
-  public setAcceptSlippage (slippage: FixedPointNumber): void {
-    this.acceptSlippage = slippage;
-  }
-
-  /**
-   * @name setMode
-   */
-  public setMode (mode: SwapTradeMode): void {
-    this.mode = mode;
   }
 }
