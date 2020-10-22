@@ -95,6 +95,16 @@ export class SwapTrade {
     return SwapTrade.getUsedTokenPairs(this.tradePaths);
   }
 
+  private getPairWithOrder (pair: TokenPair, order: [Token, Token]) {
+    const _pair = pair.getPair();
+
+    if (_pair[0].isEqual(order[0]) && _pair[1].isEqual(order[1])) {
+      return _pair;
+    }
+
+    return _pair.reverse();
+  }
+
   private getTradeParametersByPath (path: Token[], pairs: TokenPair[]): TradeParameters {
     // create the default trade result
     const result: TradeParameters = new TradeParameters({
@@ -114,7 +124,7 @@ export class SwapTrade {
 
         if (!pair) throw new Error('no trade pair found in getTradeParameter');
 
-        const [supplyToken, targetToken] = pair.getPair();
+        const [supplyToken, targetToken] = this.getPairWithOrder(pair, [path[i], path[i + 1]]);
 
         const outputAmount = getTargetAmount(
           supplyToken.amount,
@@ -137,21 +147,21 @@ export class SwapTrade {
 
         if (!pair) throw new Error('no trade pair found in getTradeParameter');
 
-        const [supplyToken, targetToken] = pair.getPair();
+        const [supplyToken, targetToken] = this.getPairWithOrder(pair, [path[i - 1], path[i]]);
 
         const inputAmount = getSupplyAmount(
           supplyToken.amount,
           targetToken.amount,
-          i === 0 ? result.input.amount : result.output.amount,
+          i === path.length - 1 ? result.output.amount : result.input.amount,
           this.fee
         );
 
-        routeTemp[i] = {
+        routeTemp[i - 1] = {
           input: inputAmount,
-          output: i === 0 ? result.output.amount : routeTemp[i + 1].output
+          output: i === path.length - 1 ? result.output.amount : routeTemp[i + 1].input
         };
 
-        result.output.amount = inputAmount;
+        result.input.amount = inputAmount;
       }
     }
 
