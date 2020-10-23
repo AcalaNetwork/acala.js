@@ -95,21 +95,21 @@ export class SwapTrade {
     return SwapTrade.getUsedTokenPairs(this.tradePaths);
   }
 
-  private getPairWithOrder (pair: TokenPair, order: [Token, Token]) {
+  private getPairWithOrder (pair: TokenPair, order: [Token, Token]): [Token, Token] {
     const _pair = pair.getPair();
 
     if (_pair[0].isEqual(order[0]) && _pair[1].isEqual(order[1])) {
       return _pair;
     }
 
-    return _pair.reverse();
+    return _pair.reverse() as [Token, Token];
   }
 
   private getTradeParametersByPath (path: Token[], pairs: TokenPair[]): TradeParameters {
     // create the default trade result
     const result: TradeParameters = new TradeParameters({
       input: this.input,
-      output: this.output.clone({ amount: new FixedPointNumber(0) }),
+      output: this.output,
       path: path,
       priceImpact: new FixedPointNumber(0),
       midPrice: new FixedPointNumber(0)
@@ -158,7 +158,7 @@ export class SwapTrade {
 
         routeTemp[i - 1] = {
           input: inputAmount,
-          output: i === path.length - 1 ? result.output.amount : routeTemp[i + 1].input
+          output: i === path.length - 1 ? result.output.amount : routeTemp[i].input
         };
 
         result.input.amount = inputAmount;
