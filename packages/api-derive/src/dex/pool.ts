@@ -37,16 +37,10 @@ export function pool (instanceId: string, api: ApiInterfaceRx): (token1: Currenc
         const [token1Amount, token2Amount] = result;
 
         if (token1.eq(params[0]) && token2.eq(params[1])) {
-          return new Map([
-            [token1, token1Amount],
-            [token2, token2Amount]
-          ]);
-        } else {
-          return new Map([
-            [token2, token1Amount],
-            [token1, token2Amount]
-          ]);
+          return [token1Amount, token2Amount];
         }
+
+        return [token2Amount, token1Amount];
       })
     );
   });
