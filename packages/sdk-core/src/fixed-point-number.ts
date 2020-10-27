@@ -84,10 +84,9 @@ export class FixedPointNumber {
   /**
    * @name toNumber
    */
-  public toNumber (dp = 0, rm = 3): number {
-    this.setMode(dp, rm);
-
-    return this.inner.shiftedBy(-this.precision).toNumber();
+  public toNumber (dp = 8, rm = 3): number {
+    this.setMode();
+    return this.inner.shiftedBy(-this.precision).dp(dp, rm as any).toNumber();
   }
 
   /**
