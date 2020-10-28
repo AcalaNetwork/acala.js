@@ -232,6 +232,30 @@ export class FixedPointNumber {
    */
   public isPositive = genFnFromBigNumber('isPositive', true).bind(this);
 
+  /**
+   * @name min
+   */
+  public min (...targets: FixedPointNumber[]): FixedPointNumber {
+    targets.forEach(item => this.alignPrecision(item));
+
+    return FixedPointNumber._fromBN(
+      BigNumber.min.apply(null, [this.inner, ...targets.map((i) => i._getInner())]),
+      this.precision
+    );
+  }
+
+  /**
+   * @name max
+   */
+  public max (...targets: FixedPointNumber[]): FixedPointNumber {
+    targets.forEach(item => this.alignPrecision(item));
+
+    return FixedPointNumber._fromBN(
+      BigNumber.max.apply(null, [this.inner, ...targets.map((i) => i._getInner())]),
+      this.precision
+    );
+  }
+
   static ZERO = new FixedPointNumber(0);
   static ONE = new FixedPointNumber(1);
   static TWO = new FixedPointNumber(2);
