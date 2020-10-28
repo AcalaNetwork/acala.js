@@ -5,7 +5,7 @@ import { ApiInterfaceRx } from '@polkadot/api/types';
 import { EraIndex } from '@polkadot/types/interfaces';
 import { memo } from '@polkadot/api-derive/util';
 
-import { StakingBalance, Ratio, ExchangeRate, Rate, Balance, BlockNumber } from '@acala-network/types/interfaces';
+import { Ratio, ExchangeRate, Rate, Balance, BlockNumber } from '@acala-network/types/interfaces';
 
 import { DerivedStakingPool, DerivedStakingPoolConstants } from '../types/staking-pool';
 
@@ -55,11 +55,11 @@ export function stakingPool (instanceId: string, api: ApiInterfaceRx): () => Obs
 
         return {
           currentEra: currentEra as EraIndex,
-          nextEraUnbond: nextEraUnbond as [StakingBalance, StakingBalance],
-          totalClaimedUnbonded: totalClaimedUnbonded as StakingBalance,
-          totalBonded: totalBonded as StakingBalance,
-          unbondingToFree: unbondingToFree as StakingBalance,
-          freeUnbonded: freeUnbonded as StakingBalance,
+          nextEraUnbond: nextEraUnbond as [Balance, Balance],
+          totalClaimedUnbonded: totalClaimedUnbonded as Balance,
+          totalBonded: totalBonded as Balance,
+          unbondingToFree: unbondingToFree as Balance,
+          freeUnbonded: freeUnbonded as Balance,
           liquidTokenIssuance: liquidTokenIssuance as Balance,
           ...constants
         };
