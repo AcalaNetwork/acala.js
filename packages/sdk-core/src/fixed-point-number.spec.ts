@@ -5,7 +5,6 @@ describe('fixed point number constructor should worker', () => {
     const a = FixedPointNumber.fromInner('123456789123456789123456789');
     const b = FixedPointNumber.fromInner('123456789123456781123456789');
 
-    console.log(a.toNumber());
     expect(a.toString()).toEqual('123456789.123456789123456789');
     expect(a.toNumber()).toEqual(123456789.12345678);
     expect(b.toNumber()).toEqual(123456789.12345678);
@@ -210,5 +209,19 @@ describe('fixed point number compare should worker', () => {
     const b = new FixedPointNumber(2, 3);
 
     expect(a.isEqualTo(b)).toEqual(true);
+  });
+
+  test('min max', () => {
+    const a = new FixedPointNumber(2, 2);
+    const b = new FixedPointNumber(2, 3);
+    const c = new FixedPointNumber(2, 18);
+    const d = new FixedPointNumber(4, 3);
+
+    expect(a.max(b).toString()).toEqual(b.toString());
+    expect(a.min(b).toString()).toEqual(b.toString());
+    expect(a.max(c).toString()).toEqual(c.toString());
+    expect(a.min(c).toString()).toEqual(c.toString());
+    expect(a.max(d).toString()).toEqual(d.toString());
+    expect(a.min(d).toString()).toEqual(a.toString());
   });
 });
