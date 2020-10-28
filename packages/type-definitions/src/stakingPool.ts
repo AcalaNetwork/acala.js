@@ -17,13 +17,34 @@ export default {
     }
   },
   types: {
+    SubAccountStatus: {
+      bonded: 'Balance',
+      available: 'Balance',
+      unbonding: 'Vec<(EraIndex,Balance)>',
+      mockRewardRate: 'Rate'
+    },
+    Params: {
+      targetMaxFreeUnbondedRatio: 'Ratio',
+      targetMinFreeUnbondedRatio: 'Ratio',
+      targetUnbondingToFreeRatio: 'Ratio',
+      unbondingToFreeAdjustment: 'Ratio',
+      baseFeeRate: 'Rate'
+    },
+    ChangeRate: {
+      _enum: {
+        NoChange: 'Null',
+        NewValue: 'Rate'
+      }
+    },
+    ChangeRatio: {
+      _enum: {
+        NoChange: 'Null',
+        NewValue: 'Ratio'
+      }
+    },
     BalanceInfo: {
       amount: 'Balance'
     },
-    StakingBalance: 'Balance',
-    LiquidBalance: 'Balance',
-    StakingBalanceOf: 'StakingBalance',
-    LiquidBalanceOf: 'LiquidBalance',
     PolkadotAccountId: 'AccountId',
     PolkadotAccountIdOf: 'PolkadotAccountId'
   }

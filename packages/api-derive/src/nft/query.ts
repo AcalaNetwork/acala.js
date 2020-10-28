@@ -3,7 +3,7 @@ import { map, tap } from 'rxjs/operators';
 import { ApiInterfaceRx } from '@polkadot/api/types';
 import { Option } from '@polkadot/types';
 
-import { AccountId, ClassId, TokenInfoOf, CID, ClassInfoOf } from '@acala-network/types/interfaces';
+import { AccountId, ClassId, TokenInfoOf, CID, ClassInfoOf, TokenId } from '@acala-network/types/interfaces';
 
 import { memo } from '@polkadot/api-derive/util';
 
@@ -15,14 +15,24 @@ interface ClassInfo {
   data: OptionClassInfo;
 }
 
-const cachedNFTs: Record<string, OptionTokenInfo[]> = {};
+interface TokenInfo {
+  tokenId: TokenId;
+  data: OptionTokenInfo;
+}
+
+const cachedNFTs: Record<string, TokenInfo[]> = {};
 let cachedClasses: ClassInfo[] = [];
 
-function queryNFTs (api: ApiInterfaceRx, cid: ClassId): Observable<OptionTokenInfo[]> {
+function queryNFTs (api: ApiInterfaceRx, cid: ClassId): Observable<TokenInfo[]> {
   return api.query.ormlNft.tokens.entries(cid).pipe(
-    map((entries): OptionTokenInfo[] => {
+    map((entries): TokenInfo[] => {
       return entries.map((item) => {
-        return item[1] as OptionTokenInfo;
+        const tokenId = api.registry.createType('TokenId', item[0].args[0]);
+
+        return {
+          tokenId,
+          data: item[1] as OptionTokenInfo
+        };
       });
     })
   );
@@ -32,7 +42,7 @@ function queryClasses (api: ApiInterfaceRx): Observable<ClassInfo[]> {
   return api.query.ormlNft.classes.entries().pipe(
     map((entries): ClassInfo[] => {
       return entries.map((item) => {
-        const cid = api.registry.createType('CID', item[0]);
+        const cid = api.registry.createType('CID', item[0].args[0]);
 
         return {
           cid,
@@ -49,14 +59,14 @@ function queryClasses (api: ApiInterfaceRx): Observable<ClassInfo[]> {
  * @param {(AccountId | string)} account
  * @param {CID} cid
  */
-export function queryTokensByAccount (instanceId: string, api: ApiInterfaceRx): (account: AccountId | string, cid: ClassId, useCache?: boolean) => Observable<OptionTokenInfo[]> {
-  return memo(instanceId, (account: AccountId | string, cid: ClassId, useCache = true): Observable<OptionTokenInfo[]> => {
+export function queryTokensByAccount (instanceId: string, api: ApiInterfaceRx): (account: AccountId | string, cid: ClassId, useCache?: boolean) => Observable<TokenInfo[]> {
+  return memo(instanceId, (account: AccountId | string, cid: ClassId, useCache = true): Observable<TokenInfo[]> => {
     return (useCache && cachedNFTs[cid.toString()] ? of(cachedNFTs[cid.toString()]) : queryNFTs(api, cid)).pipe(
       tap((result) => {
         cachedNFTs[cid.toString()] = result;
       }),
       map((item) => item.filter((info) => {
-        return info.unwrap().owner.toString() === account.toString();
+        return info.data.unwrap().owner.toString() === account.toString();
       }))
     );
   });
@@ -68,8 +78,8 @@ export function queryTokensByAccount (instanceId: string, api: ApiInterfaceRx): 
  * @param {(AccountId | string)} account
  * @param {CID} cid
  */
-export function queryTokensByCID (instanceId: string, api: ApiInterfaceRx): (cid: ClassId, useCache?: boolean) => Observable<OptionTokenInfo[]> {
-  return memo(instanceId, (cid: ClassId, useCache = false): Observable<OptionTokenInfo[]> => {
+export function queryTokensByCID (instanceId: string, api: ApiInterfaceRx): (cid: ClassId, useCache?: boolean) => Observable<TokenInfo[]> {
+  return memo(instanceId, (cid: ClassId, useCache = false): Observable<TokenInfo[]> => {
     return (useCache && cachedNFTs[cid.toString()] ? of(cachedNFTs[cid.toString()]) : queryNFTs(api, cid)).pipe(
       tap((result) => {
         cachedNFTs[cid.toString()] = result;
