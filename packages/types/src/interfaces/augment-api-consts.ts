@@ -4,11 +4,13 @@
 import { Codec, ITuple } from '@polkadot/types/types';
 import { Vec } from '@polkadot/types/codec';
 import { u32 } from '@polkadot/types/primitive';
+import { PalletBalanceOf } from '@acala-network/types/interfaces/accounts';
 import { CurrencyId, TradingPair } from '@acala-network/types/interfaces/primitives';
 import { Balance, BlockNumber, CurrencyIdOf, ModuleId } from '@acala-network/types/interfaces/runtime';
 import { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
 import { Price } from '@open-web3/orml-types/interfaces/traits';
 import { EraIndex } from '@polkadot/types/interfaces/staking';
+import { WeightToFeeCoefficient } from '@polkadot/types/interfaces/support';
 import { ApiTypes } from '@polkadot/api/types';
 
 declare module '@polkadot/api/types/consts' {
@@ -36,9 +38,17 @@ declare module '@polkadot/api/types/consts' {
        **/
       stableCurrencyId: CurrencyId & AugmentedConst<ApiType>;
       /**
+       * The fee to be paid for making a transaction; the per-byte portion.
+       **/
+      transactionByteFee: PalletBalanceOf & AugmentedConst<ApiType>;
+      /**
        * The treasury module account id to recycle assets.
        **/
       treasuryModuleId: ModuleId & AugmentedConst<ApiType>;
+      /**
+       * The polynomial that is applied in order to derive fee from weight.
+       **/
+      weightToFee: Vec<WeightToFeeCoefficient> & AugmentedConst<ApiType>;
     };
     auctionManager: {
       [key: string]: Codec;
@@ -170,13 +180,25 @@ declare module '@polkadot/api/types/consts' {
     };
     stakingPool: {
       [key: string]: Codec;
-      claimFeeReturnRatio: Ratio & AugmentedConst<ApiType>;
+      /**
+       * The default exchange rate for liquid currency to staking currency.
+       **/
       defaultExchangeRate: ExchangeRate & AugmentedConst<ApiType>;
+      /**
+       * The liquid currency id(should be LDOT in acala)
+       **/
       liquidCurrencyId: CurrencyId & AugmentedConst<ApiType>;
-      maxBondRatio: Ratio & AugmentedConst<ApiType>;
-      maxClaimFee: Rate & AugmentedConst<ApiType>;
-      minBondRatio: Ratio & AugmentedConst<ApiType>;
+      /**
+       * The staking pool's module id, keep all staking currency belong to Homa protocol.
+       **/
       moduleId: ModuleId & AugmentedConst<ApiType>;
+      /**
+       * The sub account indexs of parachain to vault assets of Homa protocol in Polkadot.
+       **/
+      poolAccountIndexes: Vec<u32> & AugmentedConst<ApiType>;
+      /**
+       * The staking currency id(should be DOT in acala)
+       **/
       stakingCurrencyId: CurrencyId & AugmentedConst<ApiType>;
     };
   }

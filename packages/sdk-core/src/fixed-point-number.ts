@@ -39,6 +39,21 @@ export class FixedPointNumber {
   }
 
   /**
+   * @name fromRational
+   * @description constructor form inner
+   */
+  public static fromRational (numerator: number | string | FixedPointNumber, denominator: number | string | FixedPointNumber, precision = 18): FixedPointNumber {
+    const _numerator = (numerator instanceof FixedPointNumber) ? numerator._getInner() : new BN(numerator);
+    const _denominator = (denominator instanceof FixedPointNumber) ? denominator._getInner() : new BN(denominator);
+    const inner = _numerator.times(10 ** precision).div(_denominator);
+    const temp = new FixedPointNumber(0, precision);
+
+    temp._setInner(inner);
+
+    return temp;
+  }
+
+  /**
    * @name fromInner
    * @description constructor form inner
    */
@@ -103,6 +118,37 @@ export class FixedPointNumber {
    */
   public toChainData (): string {
     return this.inner.toFixed(0, 3);
+  }
+
+  /**
+   * @name trunc
+   */
+  public trunc (): FixedPointNumber {
+    this.setMode();
+
+    const DIV = 10 ** this.precision;
+    const inner = this._getInner().abs().div(DIV).times(DIV);
+
+    if (this.isNegative()) {
+      return FixedPointNumber._fromBN(inner.negated());
+    } else {
+      return FixedPointNumber._fromBN(inner);
+    }
+  }
+
+  /**
+   * @name frac
+   */
+  public frac (): FixedPointNumber {
+    const integer = this.trunc();
+
+    const fractional = this.minus(integer);
+
+    if (integer.isZero()) {
+      return fractional;
+    } else {
+      return fractional.abs();
+    }
   }
 
   // set b's precision to this.precision
@@ -188,6 +234,13 @@ export class FixedPointNumber {
   }
 
   /**
+   * @name reciprocal
+   */
+  public reciprocal (): FixedPointNumber {
+    return FixedPointNumber.ONE.div(this);
+  }
+
+  /**
    * @name isGreaterThan
    */
   public isGreaterThan = genFnFromBigNumber('isGreaterThan', false).bind(this);
@@ -221,6 +274,11 @@ export class FixedPointNumber {
    * @name isNaN
    */
   public isNaN = genFnFromBigNumber('isNaN', true).bind(this);
+
+  /**
+   * @name isFinaite
+   */
+  public isFinaite = genFnFromBigNumber('isFinite', true).bind(this);
 
   /**
    * @name isNegative
@@ -263,4 +321,5 @@ export class FixedPointNumber {
   static FOUR = new FixedPointNumber(3);
   static FIVE = new FixedPointNumber(5);
   static SIX = new FixedPointNumber(6);
+  static TEN = new FixedPointNumber(10);
 }
