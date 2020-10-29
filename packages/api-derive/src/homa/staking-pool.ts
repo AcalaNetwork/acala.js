@@ -5,23 +5,17 @@ import { ApiInterfaceRx } from '@polkadot/api/types';
 import { EraIndex } from '@polkadot/types/interfaces';
 import { memo } from '@polkadot/api-derive/util';
 
-import { Ratio, ExchangeRate, Rate, Balance, BlockNumber } from '@acala-network/types/interfaces';
+import { Balance, Params } from '@acala-network/types/interfaces';
 
 import { DerivedStakingPool, DerivedStakingPoolConstants } from '../types/staking-pool';
 
 function getConstants (api: ApiInterfaceRx): DerivedStakingPoolConstants {
-  const liquidCurrency = api.consts.stakingPool.liquidCurrencyId;
-  const stakingCurrency = api.consts.stakingPool.stakingCurrencyId;
-
   return {
-    maxBondRatio: api.consts.stakingPool.maxBondRatio as Ratio,
-    minBondRatio: api.consts.stakingPool.minBondRatio as Ratio,
-    maxClaimFee: api.consts.stakingPool.maxClaimFee as Rate,
-    defaultExchangeRate: api.consts.stakingPool.defaultExchangeRate as ExchangeRate,
-    bondingDuration: api.consts.polkadotBridge.bondingDuration as EraIndex,
-    eraLength: api.consts.polkadotBridge.eraLength as BlockNumber,
-    stakingCurrency,
-    liquidCurrency
+    defaultExchangeRate: api.consts.stakingPool.defaultExchangeRate,
+    bondingDuration: api.consts.polkadotBridge.bondingDuration,
+    eraLength: api.consts.polkadotBridge.eraLength,
+    stakingCurrency: api.consts.stakingPool.stakingCurrencyId,
+    liquidCurrency: api.consts.stakingPool.liquidCurrencyId
   };
 }
 
@@ -40,6 +34,7 @@ export function stakingPool (instanceId: string, api: ApiInterfaceRx): () => Obs
       api.query.stakingPool.totalBonded(),
       api.query.stakingPool.unbondingToFree(),
       api.query.stakingPool.freeUnbonded(),
+      api.query.stakingPool.stakingPoolParams(),
       api.query.tokens.totalIssuance(constants.liquidCurrency)
     ]).pipe(
       map((result) => {
@@ -50,16 +45,18 @@ export function stakingPool (instanceId: string, api: ApiInterfaceRx): () => Obs
           totalBonded,
           unbondingToFree,
           freeUnbonded,
+          stakingPoolParams,
           liquidTokenIssuance
         ] = result;
 
         return {
           currentEra: currentEra as EraIndex,
-          nextEraUnbond: nextEraUnbond as [Balance, Balance],
+          nextEraUnbond: nextEraUnbond as unknown as [Balance, Balance],
           totalClaimedUnbonded: totalClaimedUnbonded as Balance,
           totalBonded: totalBonded as Balance,
           unbondingToFree: unbondingToFree as Balance,
           freeUnbonded: freeUnbonded as Balance,
+          stakingPoolParams: stakingPoolParams as Params,
           liquidTokenIssuance: liquidTokenIssuance as Balance,
           ...constants
         };

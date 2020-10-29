@@ -3,24 +3,26 @@
 
 import { AnyNumber, ITuple, Observable } from '@polkadot/types/types';
 import { Option, Vec } from '@polkadot/types/codec';
-import { bool } from '@polkadot/types/primitive';
+import { bool, u32 } from '@polkadot/types/primitive';
 import { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@acala-network/types/interfaces/auctionManager';
 import { RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
 import { Position } from '@acala-network/types/interfaces/loans';
 import { BondingLedger } from '@acala-network/types/interfaces/nomineesElection';
 import { AirDropCurrencyId, CurrencyId, TradingPair } from '@acala-network/types/interfaces/primitives';
 import { AccountId, AuctionId, Balance, BlockNumber } from '@acala-network/types/interfaces/runtime';
-import { PolkadotAccountId } from '@acala-network/types/interfaces/stakingPool';
+import { Params, PolkadotAccountId, SubAccountStatus } from '@acala-network/types/interfaces/stakingPool';
 import { ExchangeRate, Rate } from '@acala-network/types/interfaces/support';
 import { AuctionInfo, Price } from '@open-web3/orml-types/interfaces/traits';
 import { AccountData, BalanceLock } from '@polkadot/types/interfaces/balances';
 import { EraIndex } from '@polkadot/types/interfaces/staking';
+import { Multiplier } from '@polkadot/types/interfaces/txpayment';
 import { ApiTypes } from '@polkadot/api/types';
 
 declare module '@polkadot/api/types/storage' {
   export interface AugmentedQueries<ApiType> {
     accounts: {
       [key: string]: QueryableStorageEntry<ApiType>;
+      nextFeeMultiplier: AugmentedQuery<ApiType, () => Observable<Multiplier>> & QueryableStorageEntry<ApiType>;
     };
     airDrop: {
       [key: string]: QueryableStorageEntry<ApiType>;
@@ -150,13 +152,10 @@ declare module '@polkadot/api/types/storage' {
     };
     polkadotBridge: {
       [key: string]: QueryableStorageEntry<ApiType>;
-      available: AugmentedQuery<ApiType, () => Observable<Balance>> & QueryableStorageEntry<ApiType>;
-      bonded: AugmentedQuery<ApiType, () => Observable<Balance>> & QueryableStorageEntry<ApiType>;
       currentEra: AugmentedQuery<ApiType, () => Observable<EraIndex>> & QueryableStorageEntry<ApiType>;
       eraStartBlockNumber: AugmentedQuery<ApiType, () => Observable<BlockNumber>> & QueryableStorageEntry<ApiType>;
       forcedEra: AugmentedQuery<ApiType, () => Observable<Option<BlockNumber>>> & QueryableStorageEntry<ApiType>;
-      mockRewardRate: AugmentedQuery<ApiType, () => Observable<Option<Rate>>> & QueryableStorageEntry<ApiType>;
-      unbonding: AugmentedQuery<ApiType, () => Observable<Vec<ITuple<[Balance, EraIndex]>>>> & QueryableStorageEntry<ApiType>;
+      subAccounts: AugmentedQuery<ApiType, (arg: u32 | AnyNumber | Uint8Array) => Observable<SubAccountStatus>> & QueryableStorageEntry<ApiType>;
     };
     prices: {
       [key: string]: QueryableStorageEntry<ApiType>;
@@ -171,9 +170,10 @@ declare module '@polkadot/api/types/storage' {
       currentEra: AugmentedQuery<ApiType, () => Observable<EraIndex>> & QueryableStorageEntry<ApiType>;
       freeUnbonded: AugmentedQuery<ApiType, () => Observable<Balance>> & QueryableStorageEntry<ApiType>;
       nextEraUnbond: AugmentedQuery<ApiType, () => Observable<ITuple<[Balance, Balance]>>> & QueryableStorageEntry<ApiType>;
+      stakingPoolParams: AugmentedQuery<ApiType, () => Observable<Params>> & QueryableStorageEntry<ApiType>;
       totalBonded: AugmentedQuery<ApiType, () => Observable<Balance>> & QueryableStorageEntry<ApiType>;
       totalClaimedUnbonded: AugmentedQuery<ApiType, () => Observable<Balance>> & QueryableStorageEntry<ApiType>;
-      unbonding: AugmentedQuery<ApiType, (arg: EraIndex | AnyNumber | Uint8Array) => Observable<ITuple<[Balance, Balance]>>> & QueryableStorageEntry<ApiType>;
+      unbonding: AugmentedQuery<ApiType, (arg: EraIndex | AnyNumber | Uint8Array) => Observable<ITuple<[Balance, Balance, Balance]>>> & QueryableStorageEntry<ApiType>;
       unbondingToFree: AugmentedQuery<ApiType, () => Observable<Balance>> & QueryableStorageEntry<ApiType>;
     };
     tokens: {

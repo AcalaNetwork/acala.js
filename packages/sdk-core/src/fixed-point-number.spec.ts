@@ -224,4 +224,28 @@ describe('fixed point number compare should worker', () => {
     expect(a.max(d).toString()).toEqual(d.toString());
     expect(a.min(d).toString()).toEqual(a.toString());
   });
+
+  test('trunc frac', () => {
+    const a = FixedPointNumber.fromRational(5, 2);
+    const a1 = a.trunc();
+    const a2 = a.frac();
+
+    expect(a1.plus(a2).toString()).toEqual(a.toString());
+
+    const b = FixedPointNumber.fromRational(5, 2).frac().times(FixedPointNumber.TEN);
+
+    expect(b.toString()).toEqual(FixedPointNumber.FIVE.toString());
+
+    const c = FixedPointNumber.fromRational(-5, 2);
+    const c1 = c.trunc();
+    const c2 = c.frac();
+
+    console.log(c1.toString(), c2.toString());
+
+    expect(c1.minus(c2).toString()).toEqual(c.toString());
+    expect(c2.times(FixedPointNumber.TEN).toString()).toEqual(FixedPointNumber.FIVE.toString());
+
+    const d = FixedPointNumber.fromRational(-1, 2).frac().times(FixedPointNumber.TEN);
+    expect(d.toString()).toEqual(FixedPointNumber.ZERO.minus(FixedPointNumber.FIVE).toString());
+  });
 });

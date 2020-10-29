@@ -1,0 +1,24 @@
+{
+  "name": "@acala-network/sdk-homa",
+  "version": "0.4.0-beta.30",
+  "description": "the homa sub module in acala network sdk",
+  "main": "index.js",
+  "author": "Acala Developers <hello@acala.network>",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "repository": "https://github.com/AcalaNetwork/acala.js.git",
+  "bugs": {
+    "url": "https://github.com/AcalaNetwork/acala.js/issues"
+  },
+  "homepage": "https://github.com/AcalaNetwork/acala.js",
+  "dependencies": {
+    "@acala-network/sdk-core": "^0.4.0-beta.30",
+    "lodash": "^4.17.20"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.161"
+  }
+}

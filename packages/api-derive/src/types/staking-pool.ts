@@ -1,10 +1,7 @@
 import { EraIndex, Balance } from '@polkadot/types/interfaces';
-import { Ratio, Rate, ExchangeRate, CurrencyId, BlockNumber } from '@acala-network/types/interfaces';
+import { ExchangeRate, CurrencyId, BlockNumber, Params } from '@acala-network/types/interfaces';
 
 export interface DerivedStakingPoolConstants {
-  maxBondRatio: Ratio;
-  minBondRatio: Ratio;
-  maxClaimFee: Rate;
   defaultExchangeRate: ExchangeRate;
   stakingCurrency: CurrencyId;
   liquidCurrency: CurrencyId;
@@ -20,4 +17,5 @@ export interface DerivedStakingPool extends DerivedStakingPoolConstants {
   unbondingToFree: Balance;
   freeUnbonded: Balance;
   liquidTokenIssuance: Balance;
+  stakingPoolParams: Params;
 }
