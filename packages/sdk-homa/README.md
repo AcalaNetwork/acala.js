@@ -1,1 +1,1 @@
-# @acala-network/sdk-swap
+# @acala-network/sdk-homa
