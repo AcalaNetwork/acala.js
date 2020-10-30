@@ -125,9 +125,11 @@ export class StakingPool {
       const currentFreeUnbondedRatio = this.getFreeUnbondedRatio();
       const remainAvailablePercent = currentFreeUnbondedRatio
         .minus(stakingPoolParams.targetMinFreeUnbondedRatio)
-        .div(stakingPoolParams.targetMaxFreeUnbondedRatio.max(currentFreeUnbondedRatio))
-        .minus(stakingPoolParams.targetMaxFreeUnbondedRatio);
-
+        .div(
+          stakingPoolParams.targetMaxFreeUnbondedRatio
+            .max(currentFreeUnbondedRatio)
+            .minus(stakingPoolParams.targetMinFreeUnbondedRatio)
+        );
       const feeInStaking = getFee(
         remainAvailablePercent,
         availableFreeUnbonded,
@@ -204,7 +206,11 @@ export class StakingPool {
       const currentUnclaimedRatio = FixedPointNumber.fromRational(unclaimed, initialUnclaimed);
       const remainAvailablePercent = currentUnclaimedRatio
         .minus(stakingPoolParams.targetMinFreeUnbondedRatio)
-        .div(stakingPoolParams.targetMaxFreeUnbondedRatio.max(currentUnclaimedRatio));
+        .div(
+          stakingPoolParams.targetMaxFreeUnbondedRatio
+            .max(currentUnclaimedRatio)
+            .minus(stakingPoolParams.targetMinFreeUnbondedRatio)
+        );
 
       const feeInStaking = getFee(
         remainAvailablePercent,

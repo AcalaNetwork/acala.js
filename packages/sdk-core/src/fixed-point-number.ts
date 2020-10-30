@@ -127,7 +127,7 @@ export class FixedPointNumber {
     this.setMode();
 
     const DIV = 10 ** this.precision;
-    const inner = this._getInner().abs().div(DIV).times(DIV);
+    const inner = this._getInner().abs().div(DIV).dp(0, 3).times(DIV);
 
     if (this.isNegative()) {
       return FixedPointNumber._fromBN(inner.negated());
