@@ -88,7 +88,26 @@ export class StakingPool {
   }
 
   /**
-   * @name getStakingAmountInRedeemByFeeUnbonded
+   * @name getMaxLiquidInputInRedeemByFreeUnbonded
+   */
+  public getMaxLiquidInputInRedeemByFreeUnbonded (): { staking: FixedPointNumber; liquid: FixedPointNumber } {
+    const liquidExchangeRate = this.liquidExchangeRate();
+    const stakingPoolParams = this.stakingPoolParams;
+    const availableFreeUnbonded = this.freeUnbonded
+      .minus(
+        stakingPoolParams.targetMinFreeUnbondedRatio
+          .times(this.getTotalCommunalBalance())
+      )
+      .max(FixedPointNumber.ZERO);
+
+    return {
+      staking: availableFreeUnbonded,
+      liquid: availableFreeUnbonded.div(liquidExchangeRate)
+    };
+  }
+
+  /**
+   * @name getStakingAmountInRedeemByFreeUnbonded
    * @description get staking amount with redeem by free unbonded
    */
   public getStakingAmountInRedeemByFreeUnbonded (amount: FixedPointNumber): {
@@ -150,6 +169,36 @@ export class StakingPool {
       demand: FixedPointNumber.ZERO,
       fee: FixedPointNumber.ZERO,
       received: FixedPointNumber.ZERO
+    };
+  }
+
+  public getMaxLiquidInputInClaimUnbonding (
+    amount: FixedPointNumber,
+    targetEra: number,
+    unbondingState: {
+      unbonding: FixedPointNumber;
+      claimedUnbonding: FixedPointNumber;
+      initialClaimedUnbonding: FixedPointNumber;
+    }
+  ): { staking: FixedPointNumber; liquid: FixedPointNumber } {
+    const currentEra = this.currentEra;
+    const bondingDuration = this.bondingDuration;
+
+    if (!(targetEra > currentEra && (targetEra <= currentEra + bondingDuration))) {
+      throw new Error('invalide era');
+    }
+
+    const liquidExchangeRate = this.liquidExchangeRate();
+    const stakingPoolParams = this.stakingPoolParams;
+    const { unbonding, claimedUnbonding, initialClaimedUnbonding } = unbondingState;
+    const initialUnclaimed = unbonding.minus(initialClaimedUnbonding);
+    const unclaimed = unbonding.minus(claimedUnbonding);
+    const availableUnclaimedUnbonding = unclaimed
+      .minus(stakingPoolParams.targetMinFreeUnbondedRatio.times(initialUnclaimed));
+
+    return {
+      staking: availableUnclaimedUnbonding,
+      liquid: availableUnclaimedUnbonding.div(liquidExchangeRate)
     };
   }
 
