@@ -175,27 +175,24 @@ export function getFee (
   const usedBufferPrecent = FixedPointNumber.ONE.minus(remainAvailablePercent);
   const demandInAvailablePercent = FixedPointNumber.fromRational(requestAmount, availableAmount);
   const x = usedBufferPrecent.times(FixedPointNumber.TEN);
-  const x0 = x.trunc();
+  const x0 = x.trunc().toNumber();
   const prefixX = x.frac();
   const y = demandInAvailablePercent.times(FixedPointNumber.TEN);
-  let y0 = y.trunc();
+  let y0 = y.trunc().toNumber();
   let prefixY = y.frac();
 
-  const _x0 = x0.toNumber();
-  const _y0 = y0.toNumber();
-
-  let multiplier = FeeRateMatrix[_x0][_y0];
+  let multiplier = FeeRateMatrix[x0][y0];
 
   if (!(prefixX.isZero() && prefixY.isZero())) {
-    if (y0.isEqualTo(FixedPointNumber.TEN)) {
-      y0 = y0.minus(FixedPointNumber.ONE);
+    if (y0 === 10) {
+      y0 = y0 - 1;
       prefixY = prefixY.plus(FixedPointNumber.fromRational(10, 100));
     }
 
-    const x0y0Rate = FeeRateMatrix[_x0][_y0];
-    const x0y1Rate = FeeRateMatrix[_x0][_y0 + 1];
-    const x1y0Rate = FeeRateMatrix[_x0 + 1][_y0];
-    const x1y1Rate = FeeRateMatrix[_x0 + 1][_y0];
+    const x0y0Rate = FeeRateMatrix[x0][y0];
+    const x0y1Rate = FeeRateMatrix[x0][y0 + 1];
+    const x1y0Rate = FeeRateMatrix[x0 + 1][y0];
+    const x1y1Rate = FeeRateMatrix[x0 + 1][y0 + 1];
 
     const y0x = prefixX.times(x1y0Rate.minus(x0y0Rate)).plus(x0y0Rate);
     const y1x = prefixX.times(x1y1Rate.minus(x0y1Rate)).plus(x0y1Rate);
