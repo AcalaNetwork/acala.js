@@ -14,6 +14,7 @@ import runtime from './runtime';
 import stakingPool from './stakingPool';
 import support from './support';
 import ren from './ren';
+import evm from './evm';
 import versioned from './types-known/versioned';
 
 // FIXME: currently we cannot override this in runtime definations because the code generation script cannot handle overrides
@@ -90,6 +91,7 @@ const acalaDefs = {
   auctionManager,
   cdpEngine,
   dex,
+  evm,
   homa,
   incentives,
   loans,

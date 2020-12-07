@@ -57,6 +57,7 @@ const metadata = filterModules(
     'Currencies',
     'Dex',
     'EmergencyShutdown',
+    'Evm',
     'Homa',
     'HomaTreasury',
     'Honzon',

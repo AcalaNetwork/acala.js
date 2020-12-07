@@ -38,11 +38,24 @@ export default {
     }
   },
   types: {
+    TradingPairProvisionParameters: {
+      minContribution: '(Balance, Balance)',
+      targetProvision: '(Balance, Balance)',
+      accumulatedProvision: '(Balance, Balance)',
+      notBefore: 'BlockNumber'
+    },
     BalanceWrapper: {
       amount: 'Balance'
     },
     BalanceRequest: {
       amount: 'Balance'
+    },
+    TradingPairStatus: {
+      _enum: {
+        NotEnabled: 'Null',
+        Enabled: 'Null',
+        Provisioning: 'TradingPairProvisionParameters'
+      }
     }
   }
 };
