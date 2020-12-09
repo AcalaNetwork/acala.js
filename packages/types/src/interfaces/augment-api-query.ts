@@ -26,7 +26,7 @@ declare module '@polkadot/api/types/storage' {
     };
     airDrop: {
       [key: string]: QueryableStorageEntry<ApiType>;
-      airDrops: AugmentedQueryDoubleMap<ApiType, (key1: AccountId | string | Uint8Array, key2: AirDropCurrencyId | 'KAR'|'ACA' | number | Uint8Array) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
+      airDrops: AugmentedQueryDoubleMap<ApiType, (key1: AccountId | string | Uint8Array, key2: AirDropCurrencyId | 'KAR' | 'ACA' | number | Uint8Array) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
     };
     auction: {
       [key: string]: QueryableStorageEntry<ApiType>;

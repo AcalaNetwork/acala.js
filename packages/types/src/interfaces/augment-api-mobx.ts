@@ -186,7 +186,7 @@ export interface StorageType extends BaseStorageType {
     initialized: Option<MaybeRandomness> | null;
     /**
      * How late the current block is compared to its parent.
-     * 
+     *
      * This entry is populated as part of block execution and is cleaned up
      * on block finalization. Querying this storage entry outside of block
      * execution context should always yield zero.
@@ -202,9 +202,9 @@ export interface StorageType extends BaseStorageType {
     nextRandomness: Randomness | null;
     /**
      * The epoch randomness for the *current* epoch.
-     * 
+     *
      * # Security
-     * 
+     *
      * This MUST NOT be used for gambling, as it can be influenced by a
      * malicious validator in the short term. It MAY be used in many
      * cryptographic protocols, however, so long as one remembers that this
@@ -215,11 +215,11 @@ export interface StorageType extends BaseStorageType {
     randomness: Randomness | null;
     /**
      * Randomness under construction.
-     * 
+     *
      * We make a tradeoff between storage accesses and list length.
      * We store the under-construction randomness in segments of up to
      * `UNDER_CONSTRUCTION_SEGMENT_LENGTH`.
-     * 
+     *
      * Once a segment reaches this length, we begin the next one.
      * We reset all segments and return to `0` at the beginning of every
      * epoch.
@@ -232,7 +232,7 @@ export interface StorageType extends BaseStorageType {
   };
   balances: {    /**
      * The balance of an account.
-     * 
+     *
      * NOTE: This is only used in the case that this module is used to store balances.
      **/
     account: StorageMap<AccountId | string, AccountData>;
@@ -243,7 +243,7 @@ export interface StorageType extends BaseStorageType {
     locks: StorageMap<AccountId | string, Vec<BalanceLock>>;
     /**
      * Storage version of the pallet.
-     * 
+     *
      * This is set to v2.0.0 for new networks.
      **/
     storageVersion: Releases | null;
@@ -307,7 +307,7 @@ export interface StorageType extends BaseStorageType {
     codeStorage: StorageMap<CodeHash | string, Option<PrefabWasmModule>>;
     /**
      * The code associated with a given account.
-     * 
+     *
      * TWOX-NOTE: SAFE since `AccountId` is a secure hash.
      **/
     contractInfoOf: StorageMap<AccountId | string, Option<ContractInfo>>;
@@ -345,7 +345,7 @@ export interface StorageType extends BaseStorageType {
     runnersUp: Vec<ITuple<[AccountId, BalanceOf]>> | null;
     /**
      * Votes and locked stake of a particular voter.
-     * 
+     *
      * TWOX-NOTE: SAFE as `AccountId` is a crypto hash
      **/
     voting: StorageMap<AccountId | string, ITuple<[BalanceOf, Vec<AccountId>]>>;
@@ -421,7 +421,7 @@ export interface StorageType extends BaseStorageType {
     /**
      * A mapping from grandpa set ID to the index of the *most recent* session for which its
      * members were responsible.
-     * 
+     *
      * TWOX-NOTE: `SetId` is not under user control.
      **/
     setIdSession: StorageMap<SetId | AnyNumber, Option<SessionIndex>>;
@@ -573,7 +573,7 @@ export interface StorageType extends BaseStorageType {
   };
   ormlNft: {    /**
      * Store class info.
-     * 
+     *
      * Returns `None` if class info not set or removed.
      **/
     classes: StorageMap<ClassId | AnyNumber, Option<ClassInfoOf>>;
@@ -587,7 +587,7 @@ export interface StorageType extends BaseStorageType {
     nextTokenId: TokenId | null;
     /**
      * Store token info.
-     * 
+     *
      * Returns `None` if token info not set or removed.
      **/
     tokens: StorageDoubleMap<ClassId | AnyNumber, TokenId | AnyNumber, Option<TokenInfoOf>>;
@@ -625,14 +625,14 @@ export interface StorageType extends BaseStorageType {
   };
   recovery: {    /**
      * Active recovery attempts.
-     * 
+     *
      * First account is the account to be recovered, and the second account
      * is the user trying to recover the account.
      **/
     activeRecoveries: StorageDoubleMap<AccountId | string, AccountId | string, Option<ActiveRecovery>>;
     /**
      * The list of allowed proxy accounts.
-     * 
+     *
      * Map from the user who can access it to the recovered account.
      **/
     proxy: StorageMap<AccountId | string, Option<AccountId>>;
@@ -673,7 +673,7 @@ export interface StorageType extends BaseStorageType {
     lookup: StorageMap<Bytes | string, Option<TaskAddress>>;
     /**
      * Storage version of the pallet.
-     * 
+     *
      * New networks start with last version.
      **/
     storageVersion: Releases | null;
@@ -684,7 +684,7 @@ export interface StorageType extends BaseStorageType {
     currentIndex: SessionIndex | null;
     /**
      * Indices of disabled validators.
-     * 
+     *
      * The set is cleared when `on_session_ending` returns a new set of identities.
      **/
     disabledValidators: Vec<u32> | null;
@@ -713,7 +713,7 @@ export interface StorageType extends BaseStorageType {
   };
   staking: {    /**
      * The active era information, it holds index and start.
-     * 
+     *
      * The active era is the era currently rewarded.
      * Validator set of this era must be equal to `SessionInterface::validators`.
      **/
@@ -724,7 +724,7 @@ export interface StorageType extends BaseStorageType {
     bonded: StorageMap<AccountId | string, Option<AccountId>>;
     /**
      * A mapping from still-bonded eras to the first session index of that era.
-     * 
+     *
      * Must contains information for eras for the range:
      * `[active_era - bounding_duration; active_era]`
      **/
@@ -736,7 +736,7 @@ export interface StorageType extends BaseStorageType {
     canceledSlashPayout: BalanceOf | null;
     /**
      * The current era index.
-     * 
+     *
      * This is the latest planned era, depending on how the Session pallet queues the validator
      * set, it might be active or not.
      **/
@@ -757,23 +757,23 @@ export interface StorageType extends BaseStorageType {
     erasRewardPoints: StorageMap<EraIndex | AnyNumber, EraRewardPoints>;
     /**
      * Exposure of validator at era.
-     * 
+     *
      * This is keyed first by the era index to allow bulk deletion and then the stash account.
-     * 
+     *
      * Is it removed after `HISTORY_DEPTH` eras.
      * If stakers hasn't been set or has been removed then empty exposure is returned.
      **/
     erasStakers: StorageDoubleMap<EraIndex | AnyNumber, AccountId | string, Exposure>;
     /**
      * Clipped Exposure of validator at era.
-     * 
+     *
      * This is similar to [`ErasStakers`] but number of nominators exposed is reduced to the
      * `T::MaxNominatorRewardedPerValidator` biggest stakers.
      * (Note: the field `total` and `own` of the exposure remains unchanged).
      * This is used to limit the i/o cost for the nominator payout.
-     * 
+     *
      * This is keyed fist by the era index to allow bulk deletion and then the stash account.
-     * 
+     *
      * Is it removed after `HISTORY_DEPTH` eras.
      * If stakers hasn't been set or has been removed then empty exposure is returned.
      **/
@@ -789,15 +789,15 @@ export interface StorageType extends BaseStorageType {
     erasTotalStake: StorageMap<EraIndex | AnyNumber, BalanceOf>;
     /**
      * Similar to `ErasStakers`, this holds the preferences of validators.
-     * 
+     *
      * This is keyed first by the era index to allow bulk deletion and then the stash account.
-     * 
+     *
      * Is it removed after `HISTORY_DEPTH` eras.
      **/
     erasValidatorPrefs: StorageDoubleMap<EraIndex | AnyNumber, AccountId | string, ValidatorPrefs>;
     /**
      * The total validator era payout for the last `HISTORY_DEPTH` eras.
-     * 
+     *
      * Eras that haven't finished yet or has been removed doesn't have reward.
      **/
     erasValidatorReward: StorageMap<EraIndex | AnyNumber, Option<BalanceOf>>;
@@ -807,9 +807,9 @@ export interface StorageType extends BaseStorageType {
     forceEra: Forcing | null;
     /**
      * Number of eras to keep in history.
-     * 
+     *
      * Information is kept for eras in `[current_era - history_depth; current_era]`.
-     * 
+     *
      * Must be more than the number of eras delayed by session otherwise. I.e. active era must
      * always be in history. I.e. `active_era > current_era - history_depth` must be
      * guaranteed.
@@ -862,7 +862,7 @@ export interface StorageType extends BaseStorageType {
     slashingSpans: StorageMap<AccountId | string, Option<SlashingSpans>>;
     /**
      * The percentage of the slash that is distributed to reporters.
-     * 
+     *
      * The rest of the slashed value is handled by the `Slash`.
      **/
     slashRewardFraction: Perbill | null;
@@ -884,7 +884,7 @@ export interface StorageType extends BaseStorageType {
     /**
      * True if network has been upgraded to this version.
      * Storage version of the pallet.
-     * 
+     *
      * This is set to v3.0.0 for new networks.
      **/
     storageVersion: Releases | null;
@@ -952,11 +952,11 @@ export interface StorageType extends BaseStorageType {
     /**
      * Mapping between a topic (represented by T::Hash) and a vector of indexes
      * of events in the `<Events<T>>` list.
-     * 
+     *
      * All topic vectors have deterministic storage locations depending on the topic. This
      * allows light-clients to leverage the changes trie storage tracking mechanism and
      * in case of changes fetch the list of events of interest.
-     * 
+     *
      * The value has the type `(T::BlockNumber, EventIndex)` because if we used only just
      * the `EventIndex` then in case if the topic has the same contents on the next block
      * no notification will be triggered thus the event might be lost.
@@ -1040,9 +1040,9 @@ export interface StorageType extends BaseStorageType {
   };
   tokens: {    /**
      * The balance of a token type under an account.
-     * 
+     *
      * NOTE: If the total is ever zero, decrease account ref account.
-     * 
+     *
      * NOTE: This is only used in the case that this module is used to store balances.
      **/
     accounts: StorageDoubleMap<AccountId | string, CurrencyId | { Token: any } | { DEXShare: any } | string, AccountData>;

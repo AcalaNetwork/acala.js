@@ -3,7 +3,7 @@
 
 import { ITuple } from '@polkadot/types/types';
 import { Compact, Enum, Int, Struct, U8aFixed, UInt, Vec } from '@polkadot/types/codec';
-import { GenericAccountId, GenericAccountIndex, GenericBlock, GenericCall, GenericConsensusEngineId, GenericLookupSource } from '@polkadot/types/generic';
+import { GenericAccountId, GenericAccountIndex, GenericBlock, GenericCall, GenericConsensusEngineId, GenericLookupSource, GenericMultiAddress } from '@polkadot/types/generic';
 import { Bytes, DoNotConstruct, Null, StorageKey, i128, u128, u16, u32, u64, u8 } from '@polkadot/types/primitive';
 import { CurrencyId } from '@acala-network/types/interfaces/primitives';
 import { Price } from '@open-web3/orml-types/interfaces/traits';
@@ -21,7 +21,7 @@ export interface AccountIdOf extends AccountId {}
 export interface AccountIndex extends GenericAccountIndex {}
 
 /** @name Address */
-export interface Address extends GenericAddress {}
+export interface Address extends LookupSource {}
 
 /** @name Amount */
 export interface Amount extends i128 {}
@@ -145,9 +145,6 @@ export interface FixedU128 extends UInt {}
 /** @name FixedU64 */
 export interface FixedU64 extends UInt {}
 
-/** @name GenericAddress */
-export interface GenericAddress extends LookupSource {}
-
 /** @name H160 */
 export interface H160 extends U8aFixed {}
 
@@ -175,6 +172,9 @@ export interface I32F32 extends Int {}
 /** @name Index */
 export interface Index extends u32 {}
 
+/** @name IndicesLookupSource */
+export interface IndicesLookupSource extends GenericLookupSource {}
+
 /** @name Justification */
 export interface Justification extends Bytes {}
 
@@ -188,7 +188,7 @@ export interface KeyValue extends ITuple<[StorageKey, StorageData]> {}
 export interface LockIdentifier extends U8aFixed {}
 
 /** @name LookupSource */
-export interface LookupSource extends GenericLookupSource {}
+export interface LookupSource extends IndicesLookupSource {}
 
 /** @name LookupTarget */
 export interface LookupTarget extends AccountId {}
@@ -198,6 +198,9 @@ export interface ModuleId extends LockIdentifier {}
 
 /** @name Moment */
 export interface Moment extends u64 {}
+
+/** @name MultiAddress */
+export interface MultiAddress extends GenericMultiAddress {}
 
 /** @name OpaqueCall */
 export interface OpaqueCall extends Bytes {}
