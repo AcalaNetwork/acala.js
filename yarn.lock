@@ -2117,7 +2117,7 @@
   dependencies:
     "@types/node" ">= 8"
 
-"@open-web3/api-mobx@^0.8.2-1":
+"@open-web3/api-mobx@^0.8.2-2":
   version "0.8.2-1"
   resolved "https://registry.yarnpkg.com/@open-web3/api-mobx/-/api-mobx-0.8.2-1.tgz#b677b74700d8d833b5724b27781d35ae6073e165"
   integrity sha512-XzG0FNiAh6brhaKSFY/fUrhAZSghmZZ042515kkBWGT7GiAxqUPUpSbDgoCWg3kZyTN6us0yPNGQzMbUj7HC6g==
@@ -2126,7 +2126,7 @@
     mobx "^5.15.4"
     mobx-utils "^5.5.7"
 
-"@open-web3/orml-api-derive@^0.8.2-1":
+"@open-web3/orml-api-derive@^0.8.2-2":
   version "0.8.2-1"
   resolved "https://registry.yarnpkg.com/@open-web3/orml-api-derive/-/orml-api-derive-0.8.2-1.tgz#2b81c7eb91ffc3d24d22347bbce647c0964fb52e"
   integrity sha512-MkdFUP2krWRkql7x91Pk/djCRi4weGEofAKN0qtAQHWPEecyqPkvJtuMz+Ezwfv/UB0NOGO43gEpEW3BkR6vHQ==
@@ -2134,19 +2134,19 @@
     memoizee "^0.4.14"
     rxjs "^6.6.3"
 
-"@open-web3/orml-type-definitions@^0.8.2-1":
+"@open-web3/orml-type-definitions@^0.8.2-2":
   version "0.8.2-1"
   resolved "https://registry.yarnpkg.com/@open-web3/orml-type-definitions/-/orml-type-definitions-0.8.2-1.tgz#06c9eef1726fb7d0efdf86ceae17a21c5ccb30ad"
   integrity sha512-z9ZE0jiPK9Tl5HTaKbbR8tqGQvnpVddOk//lJuAcUzZspyp2K2C/AyPDq7plFSib4NfiW0pna2mbK6+xFKQkNg==
 
-"@open-web3/orml-types@^0.8.2-1":
+"@open-web3/orml-types@^0.8.2-2":
   version "0.8.2-1"
   resolved "https://registry.yarnpkg.com/@open-web3/orml-types/-/orml-types-0.8.2-1.tgz#8968d88cb34fa79685cace31ca5cd15452464985"
   integrity sha512-1CED751HyuW7cTlgWNhRgYUMos/lgcFa7rr4mHzPhktEPgfrcun9Kt2vX/fA/UDDuIHcszqSNYUiQYVXMkTWMg==
   dependencies:
-    "@open-web3/orml-type-definitions" "^0.8.2-1"
+    "@open-web3/orml-type-definitions" "^0.8.2-2"
 
-"@open-web3/util@^0.8.2-1":
+"@open-web3/util@^0.8.2-2":
   version "0.8.2-1"
   resolved "https://registry.yarnpkg.com/@open-web3/util/-/util-0.8.2-1.tgz#6ea2bb36592e32d43cafa9f9446e3e5686283aaf"
   integrity sha512-w1tuRf8ccqGImgf7NWhPZoOjPM1a+qeMvXGHtrijliTPNNN2/Jb3daqjUgeXz3Ph7SYz2UIbUZq/nBSGEbLD0g==
