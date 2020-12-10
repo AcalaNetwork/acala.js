@@ -1,9 +1,9 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import { Enum, Option, Struct } from '@polkadot/types/codec';
-import { Balance } from '@acala-network/types/interfaces/runtime';
-import { Rate, Ratio } from '@acala-network/types/interfaces/support';
+import type { Enum, Option, Struct } from '@polkadot/types';
+import type { Balance } from '@acala-network/types/interfaces/runtime';
+import type { Rate, Ratio } from '@acala-network/types/interfaces/support';
 
 /** @name ChangeBalance */
 export interface ChangeBalance extends Enum {

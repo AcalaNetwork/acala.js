@@ -1,11 +1,11 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import { ITuple } from '@polkadot/types/types';
-import { Enum, Struct, Vec } from '@polkadot/types/codec';
-import { AccountId, Balance } from '@acala-network/types/interfaces/runtime';
-import { Rate, Ratio } from '@acala-network/types/interfaces/support';
-import { EraIndex } from '@polkadot/types/interfaces/staking';
+import type { Enum, Struct, Vec } from '@polkadot/types';
+import type { ITuple } from '@polkadot/types/types';
+import type { AccountId, Balance } from '@acala-network/types/interfaces/runtime';
+import type { Rate, Ratio } from '@acala-network/types/interfaces/support';
+import type { EraIndex } from '@polkadot/types/interfaces/staking';
 
 /** @name BalanceInfo */
 export interface BalanceInfo extends Struct {

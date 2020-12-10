@@ -1,9 +1,8 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import { Set, Struct } from '@polkadot/types/codec';
-import { Bytes, u64 } from '@polkadot/types/primitive';
-import { AccountId, Balance } from '@acala-network/types/interfaces/runtime';
+import type { Bytes, Set, Struct, u64 } from '@polkadot/types';
+import type { AccountId, Balance } from '@acala-network/types/interfaces/runtime';
 
 /** @name CID */
 export interface CID extends Bytes {}

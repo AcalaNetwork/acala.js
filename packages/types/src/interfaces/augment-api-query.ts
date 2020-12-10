@@ -1,22 +1,21 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-import { AnyNumber, ITuple, Observable } from '@polkadot/types/types';
-import { Option, Vec } from '@polkadot/types/codec';
-import { bool, u32 } from '@polkadot/types/primitive';
-import { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@acala-network/types/interfaces/auctionManager';
-import { RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
-import { Position } from '@acala-network/types/interfaces/loans';
-import { BondingLedger } from '@acala-network/types/interfaces/nomineesElection';
-import { AirDropCurrencyId, CurrencyId, TradingPair } from '@acala-network/types/interfaces/primitives';
-import { AccountId, AuctionId, Balance, BlockNumber } from '@acala-network/types/interfaces/runtime';
-import { Params, PolkadotAccountId, SubAccountStatus } from '@acala-network/types/interfaces/stakingPool';
-import { ExchangeRate, Rate } from '@acala-network/types/interfaces/support';
-import { AuctionInfo, Price } from '@open-web3/orml-types/interfaces/traits';
-import { AccountData, BalanceLock } from '@polkadot/types/interfaces/balances';
-import { EraIndex } from '@polkadot/types/interfaces/staking';
-import { Multiplier } from '@polkadot/types/interfaces/txpayment';
-import { ApiTypes } from '@polkadot/api/types';
+import type { Option, Vec, bool, u32 } from '@polkadot/types';
+import type { AnyNumber, ITuple, Observable } from '@polkadot/types/types';
+import type { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@acala-network/types/interfaces/auctionManager';
+import type { RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
+import type { Position } from '@acala-network/types/interfaces/loans';
+import type { BondingLedger } from '@acala-network/types/interfaces/nomineesElection';
+import type { AirDropCurrencyId, CurrencyId, TradingPair } from '@acala-network/types/interfaces/primitives';
+import type { AccountId, AuctionId, Balance, BlockNumber } from '@acala-network/types/interfaces/runtime';
+import type { Params, PolkadotAccountId, SubAccountStatus } from '@acala-network/types/interfaces/stakingPool';
+import type { ExchangeRate, Rate } from '@acala-network/types/interfaces/support';
+import type { AuctionInfo, Price } from '@open-web3/orml-types/interfaces/traits';
+import type { AccountData, BalanceLock } from '@polkadot/types/interfaces/balances';
+import type { EraIndex } from '@polkadot/types/interfaces/staking';
+import type { Multiplier } from '@polkadot/types/interfaces/txpayment';
+import type { ApiTypes } from '@polkadot/api/types';
 
 declare module '@polkadot/api/types/storage' {
   export interface AugmentedQueries<ApiType> {

@@ -1,8 +1,8 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import { Enum } from '@polkadot/types/codec';
-import { EraIndex } from '@polkadot/types/interfaces/staking';
+import type { Enum } from '@polkadot/types';
+import type { EraIndex } from '@polkadot/types/interfaces/staking';
 
 /** @name RedeemStrategy */
 export interface RedeemStrategy extends Enum {

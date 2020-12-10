@@ -1,15 +1,13 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import { ITuple } from '@polkadot/types/types';
-import { Compact, Enum, Int, Struct, U8aFixed, UInt, Vec } from '@polkadot/types/codec';
-import { GenericAccountId, GenericAccountIndex, GenericBlock, GenericCall, GenericConsensusEngineId, GenericLookupSource, GenericMultiAddress } from '@polkadot/types/generic';
-import { Bytes, DoNotConstruct, Null, StorageKey, i128, u128, u16, u32, u64, u8 } from '@polkadot/types/primitive';
-import { CurrencyId } from '@acala-network/types/interfaces/primitives';
-import { Price } from '@open-web3/orml-types/interfaces/traits';
-import { AuthorityId } from '@polkadot/types/interfaces/consensus';
-import { Signature } from '@polkadot/types/interfaces/extrinsics';
-import { SystemOrigin } from '@polkadot/types/interfaces/system';
+import type { Bytes, Compact, DoNotConstruct, Enum, GenericAccountId, GenericAccountIndex, GenericBlock, GenericCall, GenericConsensusEngineId, GenericLookupSource, GenericMultiAddress, Int, Null, StorageKey, Struct, U8aFixed, UInt, Vec, i128, u128, u16, u32, u64, u8 } from '@polkadot/types';
+import type { ITuple } from '@polkadot/types/types';
+import type { CurrencyId } from '@acala-network/types/interfaces/primitives';
+import type { Price } from '@open-web3/orml-types/interfaces/traits';
+import type { AuthorityId } from '@polkadot/types/interfaces/consensus';
+import type { Signature } from '@polkadot/types/interfaces/extrinsics';
+import type { SystemOrigin } from '@polkadot/types/interfaces/system';
 
 /** @name AccountId */
 export interface AccountId extends GenericAccountId {}

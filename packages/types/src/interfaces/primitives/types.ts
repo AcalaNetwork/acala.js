@@ -1,8 +1,8 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import { ITuple } from '@polkadot/types/types';
-import { Enum } from '@polkadot/types/codec';
+import type { Enum } from '@polkadot/types';
+import type { ITuple } from '@polkadot/types/types';
 
 /** @name AirDropCurrencyId */
 export interface AirDropCurrencyId extends Enum {

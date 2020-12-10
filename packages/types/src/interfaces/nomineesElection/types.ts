@@ -1,9 +1,9 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import { Compact, Struct, Vec } from '@polkadot/types/codec';
-import { Balance } from '@acala-network/types/interfaces/runtime';
-import { EraIndex, UnlockChunk } from '@polkadot/types/interfaces/staking';
+import type { Compact, Struct, Vec } from '@polkadot/types';
+import type { Balance } from '@acala-network/types/interfaces/runtime';
+import type { EraIndex, UnlockChunk } from '@polkadot/types/interfaces/staking';
 
 /** @name BondingLedger */
 export interface BondingLedger extends Struct {

@@ -1,17 +1,16 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-import { AnyNumber } from '@polkadot/types/types';
-import { Compact, Option, Vec } from '@polkadot/types/codec';
-import { bool, u32 } from '@polkadot/types/primitive';
-import { ChangeBalance, ChangeOptionRate, ChangeOptionRatio } from '@acala-network/types/interfaces/cdpEngine';
-import { RedeemStrategy } from '@acala-network/types/interfaces/homa';
-import { AirDropCurrencyId, CurrencyId } from '@acala-network/types/interfaces/primitives';
-import { AccountId, AccountIndex, Address, Amount, AmountOf, AuctionId, Balance, BalanceOf, BlockNumber, Call, CurrencyIdOf, LookupSource } from '@acala-network/types/interfaces/runtime';
-import { ChangeRate, ChangeRatio, PolkadotAccountId } from '@acala-network/types/interfaces/stakingPool';
-import { Rate } from '@acala-network/types/interfaces/support';
-import { Extrinsic } from '@polkadot/types/interfaces/extrinsics';
-import { ApiTypes, SubmittableExtrinsic } from '@polkadot/api/types';
+import type { Compact, Option, Vec, bool, u32 } from '@polkadot/types';
+import type { AnyNumber } from '@polkadot/types/types';
+import type { ChangeBalance, ChangeOptionRate, ChangeOptionRatio } from '@acala-network/types/interfaces/cdpEngine';
+import type { RedeemStrategy } from '@acala-network/types/interfaces/homa';
+import type { AirDropCurrencyId, CurrencyId } from '@acala-network/types/interfaces/primitives';
+import type { AccountId, AccountIndex, Address, Amount, AmountOf, AuctionId, Balance, BalanceOf, BlockNumber, Call, CurrencyIdOf, LookupSource } from '@acala-network/types/interfaces/runtime';
+import type { ChangeRate, ChangeRatio, PolkadotAccountId } from '@acala-network/types/interfaces/stakingPool';
+import type { Rate } from '@acala-network/types/interfaces/support';
+import type { Extrinsic } from '@polkadot/types/interfaces/extrinsics';
+import type { ApiTypes, SubmittableExtrinsic } from '@polkadot/api/types';
 
 declare module '@polkadot/api/types/submittable' {
   export interface AugmentedSubmittables<ApiType> {
