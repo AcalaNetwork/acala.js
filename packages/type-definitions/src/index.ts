@@ -112,6 +112,9 @@ export const types = {
 
 export const typesBundle = {
   spec: {
+    mandala: {
+      types: versioned
+    },
     acala: {
       types: versioned
     }

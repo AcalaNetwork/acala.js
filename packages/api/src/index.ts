@@ -43,6 +43,10 @@ export const options = ({
       acala: {
         ...acalaTypesBundle?.spec?.acala,
         ...typesBundle?.spec?.acala
+      },
+      mandala: {
+        ...acalaTypesBundle?.spec?.mandala,
+        ...typesBundle?.spec?.mandala
       }
     }
   },
