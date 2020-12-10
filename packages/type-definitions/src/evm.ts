@@ -35,13 +35,14 @@ export default {
   },
   typesAlias: {
     evm: {
-      AccountInfo: 'EvmAccountInfo'
+      AccountInfo: 'EvmAccountInfo',
+      ContractInfo: 'EvmContractInfo'
     }
   },
   types: {
     EvmAccountInfo: {
       nonce: 'Index',
-      contractInfo: 'Option<ContractInfo>',
+      contractInfo: 'Option<EvmContractInfo>',
       storageRentDeposit: 'Balance',
       storageQuota: 'u32',
       storageUsage: 'u32'
@@ -50,7 +51,7 @@ export default {
       codeSize: 'u32',
       refCount: 'u32'
     },
-    ContractInfo: {
+    EvmContractInfo: {
       storageCount: 'u32',
       codeHash: 'H256',
       existentialDeposit: 'Balance',

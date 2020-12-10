@@ -19,18 +19,10 @@ export interface CodeInfo extends Struct {
   readonly refCount: u32;
 }
 
-/** @name ContractInfo */
-export interface ContractInfo extends Struct {
-  readonly storageCount: u32;
-  readonly codeHash: H256;
-  readonly existentialDeposit: Balance;
-  readonly maintainer: H160;
-}
-
 /** @name EvmAccountInfo */
 export interface EvmAccountInfo extends Struct {
   readonly nonce: Index;
-  readonly contractInfo: Option<ContractInfo>;
+  readonly contractInfo: Option<EvmContractInfo>;
   readonly storageRentDeposit: Balance;
   readonly storageQuota: u32;
   readonly storageUsage: u32;
@@ -38,6 +30,14 @@ export interface EvmAccountInfo extends Struct {
 
 /** @name EvmAddress */
 export interface EvmAddress extends H160 {}
+
+/** @name EvmContractInfo */
+export interface EvmContractInfo extends Struct {
+  readonly storageCount: u32;
+  readonly codeHash: H256;
+  readonly existentialDeposit: Balance;
+  readonly maintainer: H160;
+}
 
 /** @name ExitError */
 export interface ExitError extends Enum {

@@ -6,7 +6,7 @@ import type { PalletBalanceOf } from '@acala-network/types/interfaces/accounts';
 import type { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@acala-network/types/interfaces/auctionManager';
 import type { ChangeBalance, ChangeOptionRate, ChangeOptionRatio, LiquidationStrategy, OptionRate, OptionRatio, RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
 import type { BalanceRequest, BalanceWrapper, TradingPairProvisionParameters, TradingPairStatus } from '@acala-network/types/interfaces/dex';
-import type { CallRequest, CodeInfo, EvmAccountInfo, EvmAddress, ExitError, ExitFatal, ExitReason, ExitRevert, ExitSucceed } from '@acala-network/types/interfaces/evm';
+import type { CallRequest, CodeInfo, EvmAccountInfo, EvmAddress, EvmContractInfo, ExitError, ExitFatal, ExitReason, ExitRevert, ExitSucceed } from '@acala-network/types/interfaces/evm';
 import type { RedeemStrategy } from '@acala-network/types/interfaces/homa';
 import type { PoolId } from '@acala-network/types/interfaces/incentives';
 import type { Position } from '@acala-network/types/interfaces/loans';
@@ -1807,6 +1807,9 @@ declare module '@polkadot/types/types/registry' {
     CodeInfo: CodeInfo;
     'Option<CodeInfo>': Option<CodeInfo>;
     'Vec<CodeInfo>': Vec<CodeInfo>;
+    EvmContractInfo: EvmContractInfo;
+    'Option<EvmContractInfo>': Option<EvmContractInfo>;
+    'Vec<EvmContractInfo>': Vec<EvmContractInfo>;
     EvmAddress: EvmAddress;
     'Option<EvmAddress>': Option<EvmAddress>;
     'Vec<EvmAddress>': Vec<EvmAddress>;
