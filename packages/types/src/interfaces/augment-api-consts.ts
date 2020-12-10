@@ -1,17 +1,16 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-import { Codec, ITuple } from '@polkadot/types/types';
-import { Vec } from '@polkadot/types/codec';
-import { u32 } from '@polkadot/types/primitive';
-import { PalletBalanceOf } from '@acala-network/types/interfaces/accounts';
-import { CurrencyId, TradingPair } from '@acala-network/types/interfaces/primitives';
-import { Balance, BlockNumber, CurrencyIdOf, ModuleId } from '@acala-network/types/interfaces/runtime';
-import { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
-import { Price } from '@open-web3/orml-types/interfaces/traits';
-import { EraIndex } from '@polkadot/types/interfaces/staking';
-import { WeightToFeeCoefficient } from '@polkadot/types/interfaces/support';
-import { ApiTypes } from '@polkadot/api/types';
+import type { Vec, u32 } from '@polkadot/types';
+import type { Codec, ITuple } from '@polkadot/types/types';
+import type { PalletBalanceOf } from '@acala-network/types/interfaces/accounts';
+import type { CurrencyId, TradingPair } from '@acala-network/types/interfaces/primitives';
+import type { Balance, BlockNumber, CurrencyIdOf, ModuleId } from '@acala-network/types/interfaces/runtime';
+import type { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
+import type { Price } from '@open-web3/orml-types/interfaces/traits';
+import type { EraIndex } from '@polkadot/types/interfaces/staking';
+import type { WeightToFeeCoefficient } from '@polkadot/types/interfaces/support';
+import type { ApiTypes } from '@polkadot/api/types';
 
 declare module '@polkadot/api/types/consts' {
   export interface AugmentedConsts<ApiType> {

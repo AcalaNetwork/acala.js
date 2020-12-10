@@ -1,17 +1,16 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-import { AnyNumber } from '@polkadot/types/types';
-import { Compact, Option, Vec } from '@polkadot/types/codec';
-import { bool, u32 } from '@polkadot/types/primitive';
-import { ChangeBalance, ChangeOptionRate, ChangeOptionRatio } from '@acala-network/types/interfaces/cdpEngine';
-import { RedeemStrategy } from '@acala-network/types/interfaces/homa';
-import { AirDropCurrencyId, CurrencyId } from '@acala-network/types/interfaces/primitives';
-import { AccountId, AccountIndex, Address, Amount, AmountOf, AuctionId, Balance, BalanceOf, BlockNumber, Call, CurrencyIdOf, LookupSource } from '@acala-network/types/interfaces/runtime';
-import { ChangeRate, ChangeRatio, PolkadotAccountId } from '@acala-network/types/interfaces/stakingPool';
-import { Rate } from '@acala-network/types/interfaces/support';
-import { Extrinsic } from '@polkadot/types/interfaces/extrinsics';
-import { ApiTypes, SubmittableExtrinsic } from '@polkadot/api/types';
+import type { Compact, Option, Vec, bool, u32 } from '@polkadot/types';
+import type { AnyNumber } from '@polkadot/types/types';
+import type { ChangeBalance, ChangeOptionRate, ChangeOptionRatio } from '@acala-network/types/interfaces/cdpEngine';
+import type { RedeemStrategy } from '@acala-network/types/interfaces/homa';
+import type { AirDropCurrencyId, CurrencyId } from '@acala-network/types/interfaces/primitives';
+import type { AccountId, AccountIndex, Address, Amount, AmountOf, AuctionId, Balance, BalanceOf, BlockNumber, Call, CurrencyIdOf, LookupSource } from '@acala-network/types/interfaces/runtime';
+import type { ChangeRate, ChangeRatio, PolkadotAccountId } from '@acala-network/types/interfaces/stakingPool';
+import type { Rate } from '@acala-network/types/interfaces/support';
+import type { Extrinsic } from '@polkadot/types/interfaces/extrinsics';
+import type { ApiTypes, SubmittableExtrinsic } from '@polkadot/api/types';
 
 declare module '@polkadot/api/types/submittable' {
   export interface AugmentedSubmittables<ApiType> {
@@ -29,8 +28,8 @@ declare module '@polkadot/api/types/submittable' {
     };
     airDrop: {
       [key: string]: SubmittableExtrinsicFunction<ApiType>;
-      airdrop: AugmentedSubmittable<(to: AccountId | string | Uint8Array, currencyId: AirDropCurrencyId | 'KAR'|'ACA' | number | Uint8Array, amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
-      updateAirdrop: AugmentedSubmittable<(to: AccountId | string | Uint8Array, currencyId: AirDropCurrencyId | 'KAR'|'ACA' | number | Uint8Array, amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      airdrop: AugmentedSubmittable<(to: AccountId | string | Uint8Array, currencyId: AirDropCurrencyId | 'KAR' | 'ACA' | number | Uint8Array, amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      updateAirdrop: AugmentedSubmittable<(to: AccountId | string | Uint8Array, currencyId: AirDropCurrencyId | 'KAR' | 'ACA' | number | Uint8Array, amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     auction: {
       [key: string]: SubmittableExtrinsicFunction<ApiType>;
@@ -223,7 +222,7 @@ declare module '@polkadot/api/types/submittable' {
        * - native currency in worst case: 70 µs
        * # </weight>
        **/
-      transfer: AugmentedSubmittable<(dest: LookupSource | Address | AccountId | AccountIndex | LookupSource | string | Uint8Array, currencyId: CurrencyIdOf | { Token: any } | { DEXShare: any } | string | Uint8Array, amount: Compact<BalanceOf> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      transfer: AugmentedSubmittable<(dest: LookupSource | Address | AccountId | AccountIndex | string | Uint8Array, currencyId: CurrencyIdOf | { Token: any } | { DEXShare: any } | string | Uint8Array, amount: Compact<BalanceOf> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Transfer some native currency to another account.
        * 
@@ -240,7 +239,7 @@ declare module '@polkadot/api/types/submittable' {
        * Base Weight: 70 µs
        * # </weight>
        **/
-      transferNativeCurrency: AugmentedSubmittable<(dest: LookupSource | Address | AccountId | AccountIndex | LookupSource | string | Uint8Array, amount: Compact<BalanceOf> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      transferNativeCurrency: AugmentedSubmittable<(dest: LookupSource | Address | AccountId | AccountIndex | string | Uint8Array, amount: Compact<BalanceOf> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * update amount of account `who` under `currency_id`.
        * 
@@ -262,7 +261,7 @@ declare module '@polkadot/api/types/submittable' {
        * - native currency and create account: 27.39 µs
        * # </weight>
        **/
-      updateBalance: AugmentedSubmittable<(who: LookupSource | Address | AccountId | AccountIndex | LookupSource | string | Uint8Array, currencyId: CurrencyIdOf | { Token: any } | { DEXShare: any } | string | Uint8Array, amount: AmountOf | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      updateBalance: AugmentedSubmittable<(who: LookupSource | Address | AccountId | AccountIndex | string | Uint8Array, currencyId: CurrencyIdOf | { Token: any } | { DEXShare: any } | string | Uint8Array, amount: AmountOf | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     dex: {
       [key: string]: SubmittableExtrinsicFunction<ApiType>;

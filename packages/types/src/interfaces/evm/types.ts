@@ -1,7 +1,7 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import { H160 } from '@acala-network/types/interfaces/runtime';
+import type { H160 } from '@acala-network/types/interfaces/runtime';
 
 /** @name EvmAddress */
 export interface EvmAddress extends H160 {}
