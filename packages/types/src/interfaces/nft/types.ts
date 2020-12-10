@@ -1,7 +1,7 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { Bytes, Set, Struct, u64 } from '@polkadot/types';
+import type { Bytes, Set, Struct, u32, u64 } from '@polkadot/types';
 import type { AccountId, Balance } from '@acala-network/types/interfaces/runtime';
 
 /** @name CID */
@@ -14,7 +14,10 @@ export interface ClassData extends Struct {
 }
 
 /** @name ClassId */
-export interface ClassId extends u64 {}
+export interface ClassId extends u32 {}
+
+/** @name ClassIdOf */
+export interface ClassIdOf extends ClassId {}
 
 /** @name ClassInfoOf */
 export interface ClassInfoOf extends Struct {
@@ -37,6 +40,9 @@ export interface TokenData extends Struct {
 
 /** @name TokenId */
 export interface TokenId extends u64 {}
+
+/** @name TokenIdOf */
+export interface TokenIdOf extends TokenId {}
 
 /** @name TokenInfoOf */
 export interface TokenInfoOf extends Struct {

@@ -2,8 +2,10 @@ export default {
   rpc: {},
   types: {
     CID: 'Vec<u8>',
-    ClassId: 'u64',
+    ClassId: 'u32',
+    ClassIdOf: 'ClassId',
     TokenId: 'u64',
+    TokenIdOf: 'TokenId',
     ClassInfoOf: {
       metadata: 'CID',
       totalIssuance: 'TokenId',
