@@ -16,6 +16,8 @@ export default {
     DestAddress: '[u8; 20]',
     AsOriginId: {
       _enum: ['Root', 'AcalaTreasury', 'HonzonTreasury', 'HomaTreasury', 'DSWF']
-    }
+    },
+    Address: 'GenericMultiAddress',
+    LookupSource: 'GenericMultiAddress'
   }
 };
