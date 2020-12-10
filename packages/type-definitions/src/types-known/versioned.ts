@@ -19,8 +19,15 @@ const typesBundleTypes = [
     }
   },
   {
-    minmax: [600, 1499] as any,
+    minmax: [600, 699] as any,
     types: {}
+  },
+  {
+    minmax: [700, 1499] as any,
+    types: {
+      Address: 'GenericMultiAddress',
+      LookupSource: 'GenericMultiAddress'
+    }
   },
   // Mandala PC1
   {
@@ -33,8 +40,15 @@ const typesBundleTypes = [
     }
   },
   {
-    minmax: [1600, undefined] as any,
+    minmax: [1600, 1699] as any,
     types: {}
+  },
+  {
+    minmax: [1700, undefined] as any,
+    types: {
+      Address: 'GenericMultiAddress',
+      LookupSource: 'GenericMultiAddress'
+    }
   }
 ];
 

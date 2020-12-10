@@ -6,7 +6,7 @@ import type { AnyNumber } from '@polkadot/types/types';
 import type { ChangeBalance, ChangeOptionRate, ChangeOptionRatio } from '@acala-network/types/interfaces/cdpEngine';
 import type { RedeemStrategy } from '@acala-network/types/interfaces/homa';
 import type { AirDropCurrencyId, CurrencyId } from '@acala-network/types/interfaces/primitives';
-import type { AccountId, Amount, AmountOf, AuctionId, Balance, BalanceOf, BlockNumber, Call, CurrencyIdOf, LookupSource } from '@acala-network/types/interfaces/runtime';
+import type { AccountId, AccountIndex, Address, Amount, AmountOf, AuctionId, Balance, BalanceOf, BlockNumber, Call, CurrencyIdOf, LookupSource } from '@acala-network/types/interfaces/runtime';
 import type { ChangeRate, ChangeRatio, PolkadotAccountId } from '@acala-network/types/interfaces/stakingPool';
 import type { Rate } from '@acala-network/types/interfaces/support';
 import type { Extrinsic } from '@polkadot/types/interfaces/extrinsics';
@@ -222,7 +222,7 @@ declare module '@polkadot/api/types/submittable' {
        * - native currency in worst case: 70 µs
        * # </weight>
        **/
-      transfer: AugmentedSubmittable<(dest: LookupSource | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, currencyId: CurrencyIdOf | { Token: any } | { DEXShare: any } | string | Uint8Array, amount: Compact<BalanceOf> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      transfer: AugmentedSubmittable<(dest: LookupSource | Address | AccountId | AccountIndex | string | Uint8Array, currencyId: CurrencyIdOf | { Token: any } | { DEXShare: any } | string | Uint8Array, amount: Compact<BalanceOf> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Transfer some native currency to another account.
        * 
@@ -239,7 +239,7 @@ declare module '@polkadot/api/types/submittable' {
        * Base Weight: 70 µs
        * # </weight>
        **/
-      transferNativeCurrency: AugmentedSubmittable<(dest: LookupSource | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, amount: Compact<BalanceOf> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      transferNativeCurrency: AugmentedSubmittable<(dest: LookupSource | Address | AccountId | AccountIndex | string | Uint8Array, amount: Compact<BalanceOf> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * update amount of account `who` under `currency_id`.
        * 
@@ -261,7 +261,7 @@ declare module '@polkadot/api/types/submittable' {
        * - native currency and create account: 27.39 µs
        * # </weight>
        **/
-      updateBalance: AugmentedSubmittable<(who: LookupSource | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, currencyId: CurrencyIdOf | { Token: any } | { DEXShare: any } | string | Uint8Array, amount: AmountOf | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      updateBalance: AugmentedSubmittable<(who: LookupSource | Address | AccountId | AccountIndex | string | Uint8Array, currencyId: CurrencyIdOf | { Token: any } | { DEXShare: any } | string | Uint8Array, amount: AmountOf | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     dex: {
       [key: string]: SubmittableExtrinsicFunction<ApiType>;
