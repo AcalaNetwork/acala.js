@@ -17,7 +17,7 @@ const TOKEN_SORT: Record<string, number> = {
   RENBTC: 5
 };
 
-function sortTokens (token1: CurrencyId, token2: CurrencyId): CurrencyId[] {
+function sortTokens(token1: CurrencyId, token2: CurrencyId): CurrencyId[] {
   const result = [token1, token2];
 
   return result.sort((a, b) => TOKEN_SORT[a.asToken.toString()] - TOKEN_SORT[b.asToken.toString()]);
@@ -28,7 +28,10 @@ function sortTokens (token1: CurrencyId, token2: CurrencyId): CurrencyId[] {
  * @description get liquidity pool of the target currency id
  * @param {CurrencyId} currency target currency id
  */
-export function pool (instanceId: string, api: ApiInterfaceRx): (token1: CurrencyId, token2: CurrencyId) => Observable<DerivedDexPool> {
+export function pool(
+  instanceId: string,
+  api: ApiInterfaceRx
+): (token1: CurrencyId, token2: CurrencyId) => Observable<DerivedDexPool> {
   return memo(instanceId, (token1: CurrencyId, token2: CurrencyId) => {
     const params = sortTokens(token1, token2);
 
@@ -50,10 +53,17 @@ export function pool (instanceId: string, api: ApiInterfaceRx): (token1: Currenc
  * @name lpTokens
  * @description get all lp CurrencyId
  */
-export function allLPCurrencyIds (instanceId: string, api: ApiInterfaceRx): () => Observable<CurrencyId[]> {
+export function allLPCurrencyIds(instanceId: string, api: ApiInterfaceRx): () => Observable<CurrencyId[]> {
   return memo(instanceId, () => {
     const allTradingPirs = api.consts.dex.enabledTradingPairs as Vec<TradingPair>;
 
-    return of(allTradingPirs.map((item): CurrencyId => api.registry.createType('CurrencyId' as any, { DEXShare: [item[0].asToken.toString(), item[1].asToken.toString()] })));
+    return of(
+      allTradingPirs.map(
+        (item): CurrencyId =>
+          api.registry.createType('CurrencyId' as any, {
+            DEXShare: [item[0].asToken.toString(), item[1].asToken.toString()]
+          })
+      )
+    );
   });
 }

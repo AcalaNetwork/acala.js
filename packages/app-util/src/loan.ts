@@ -8,7 +8,7 @@ import { Codec } from '@polkadot/types/types';
  * @param {Fixed18} debitExchangeRate - loan debit exchange rate
  * @returns {Fixed18} return the stable coin quantity
  */
-export function debitToStableCoin (quantity: Fixed18, debitExchangeRate: Fixed18): Fixed18 {
+export function debitToStableCoin(quantity: Fixed18, debitExchangeRate: Fixed18): Fixed18 {
   return quantity.mul(debitExchangeRate);
 }
 
@@ -19,7 +19,7 @@ export function debitToStableCoin (quantity: Fixed18, debitExchangeRate: Fixed18
  * @param {Fixed18} debitExchangeRate - loan debit exchange rate
  * @returns {Fixed18} return the debit quantity
  */
-export function stableCoinToDebit (amount: Fixed18, debitExchangeRate: Fixed18): Fixed18 {
+export function stableCoinToDebit(amount: Fixed18, debitExchangeRate: Fixed18): Fixed18 {
   return debitExchangeRate.isZero() ? Fixed18.ZERO : amount.div(debitExchangeRate);
 }
 
@@ -31,7 +31,7 @@ export function stableCoinToDebit (amount: Fixed18, debitExchangeRate: Fixed18):
  * @param {Fixed18} stableCoinPrice - stable coin price
  * @returns {Fixed18} return the debit amount denominated in USD
  */
-export function debitToUSD (quantity: Fixed18, debitExchangeRate: Fixed18, stableCoinPrice: Fixed18): Fixed18 {
+export function debitToUSD(quantity: Fixed18, debitExchangeRate: Fixed18, stableCoinPrice: Fixed18): Fixed18 {
   return debitToStableCoin(quantity, debitExchangeRate).mul(stableCoinPrice);
 }
 
@@ -43,7 +43,7 @@ export function debitToUSD (quantity: Fixed18, debitExchangeRate: Fixed18, stabl
  * @param {Fixed18} stableCoinPrice - stable coin price
  * @returns {Fixed18} return the debit quantity
  */
-export function USDToDebit (amount: Fixed18, debitExchangeRate: Fixed18, stableCoinPrice: Fixed18): Fixed18 {
+export function USDToDebit(amount: Fixed18, debitExchangeRate: Fixed18, stableCoinPrice: Fixed18): Fixed18 {
   return stableCoinPrice.isZero() ? Fixed18.ZERO : stableCoinToDebit(amount.div(stableCoinPrice), debitExchangeRate);
 }
 
@@ -54,7 +54,7 @@ export function USDToDebit (amount: Fixed18, debitExchangeRate: Fixed18, stableC
  * @param {Fixed18} collateralPrice - collateral price
  * @returns {Fixed18} return the collateral amount denominated in USD
  */
-export function collateralToUSD (quantity: Fixed18, collateralPrice: Fixed18): Fixed18 {
+export function collateralToUSD(quantity: Fixed18, collateralPrice: Fixed18): Fixed18 {
   return quantity.mul(collateralPrice);
 }
 
@@ -65,7 +65,7 @@ export function collateralToUSD (quantity: Fixed18, collateralPrice: Fixed18): F
  * @param {Fixed18} collateralPrice - collateral price
  * @returns {Fixed18} return the collateral quantity
  */
-export function USDToCollateral (amount: Fixed18, collateralPrice: Fixed18): Fixed18 {
+export function USDToCollateral(amount: Fixed18, collateralPrice: Fixed18): Fixed18 {
   return amount.div(collateralPrice);
 }
 
@@ -76,7 +76,7 @@ export function USDToCollateral (amount: Fixed18, collateralPrice: Fixed18): Fix
  * @param {Fixed18} debitAmount - debit amount (USD)
  * @returns {Fixed18} return collateral ratio
  */
-export function calcCollateralRatio (collateralAmount: Fixed18, debitAmount: Fixed18): Fixed18 {
+export function calcCollateralRatio(collateralAmount: Fixed18, debitAmount: Fixed18): Fixed18 {
   return collateralAmount.div(debitAmount);
 }
 
@@ -88,7 +88,7 @@ const YEAR = 365 * 24 * 60 * 60; // second of one year
  * @param {number} expectedBlockTime - expected block time on the chain config (precision in milliseconds)
  * @return {Fixed18} return stable fee annual percentage rate
  */
-export function calcStableFeeAPR (stableFee: Fixed18, blockTime: number): Fixed18 {
+export function calcStableFeeAPR(stableFee: Fixed18, blockTime: number): Fixed18 {
   // set stable fee decimal places to 18 and round mode to ROUND_FLOOR
   return Fixed18.fromNatural((1 + stableFee.toNumber(18, 3)) ** ((YEAR / blockTime) * 1000) - 1);
 }
@@ -102,7 +102,11 @@ export function calcStableFeeAPR (stableFee: Fixed18, blockTime: number): Fixed1
  * @param {Fixed18} collateralPrice - collateral price
  * @returns {Fixed18} return the collateral quantity which is required
  */
-export function calcRequiredCollateral (debitAmount: Fixed18, requiredCollateralRatio: Fixed18, collateralPrice: Fixed18): Fixed18 {
+export function calcRequiredCollateral(
+  debitAmount: Fixed18,
+  requiredCollateralRatio: Fixed18,
+  collateralPrice: Fixed18
+): Fixed18 {
   const result = debitAmount.mul(requiredCollateralRatio).div(collateralPrice);
   if (result.isLessThan(Fixed18.ZERO) || !result.isFinity()) {
     return Fixed18.ZERO;
@@ -119,7 +123,11 @@ export function calcRequiredCollateral (debitAmount: Fixed18, requiredCollateral
  * @param {Fixed18} liquidationRatio - required liquidation ratio on the chain config
  * @returns {Fixed18} return liquidation price
  */
-export function calcLiquidationPrice (collateralQuantity: Fixed18, debitAmount: Fixed18, liquidationRatio: Fixed18): Fixed18 {
+export function calcLiquidationPrice(
+  collateralQuantity: Fixed18,
+  debitAmount: Fixed18,
+  liquidationRatio: Fixed18
+): Fixed18 {
   const result = debitAmount.mul(liquidationRatio).div(collateralQuantity);
   if (result.isLessThan(Fixed18.ZERO) || result.isEqualTo(Fixed18.ZERO) || !result.isFinity()) {
     return Fixed18.fromNatural(NaN);
@@ -138,7 +146,13 @@ export function calcLiquidationPrice (collateralQuantity: Fixed18, debitAmount: 
  * @param {Fixed18} [slippage=0] - slippage amount, because canGenerate amount is reduce every block time.
  * @returns {Fixed18} return stable coin quantity which can be generated
  */
-export function calcCanGenerate (collateralAmount: Fixed18, currentDebitAmount: Fixed18, requiredCollateralRatio: Fixed18, stableCoinPrice: Fixed18, slippage = Fixed18.ZERO): Fixed18 {
+export function calcCanGenerate(
+  collateralAmount: Fixed18,
+  currentDebitAmount: Fixed18,
+  requiredCollateralRatio: Fixed18,
+  stableCoinPrice: Fixed18,
+  slippage = Fixed18.ZERO
+): Fixed18 {
   const result = collateralAmount
     .div(requiredCollateralRatio)
     .sub(currentDebitAmount)
@@ -179,7 +193,7 @@ export class LoanHelper {
   public stableCoinPrice: Fixed18;
   public debitExchangeRate: Fixed18;
 
-  constructor (params: LoanParams) {
+  constructor(params: LoanParams) {
     this.debits = convertToFixed18(params.debits);
     this.collaterals = convertToFixed18(params.collaterals);
     this.requiredCollateralRatio = convertToFixed18(params.requiredCollateralRatio);
@@ -196,57 +210,63 @@ export class LoanHelper {
   /**
    * @property {Fixed18} debitAmount
    */
-  get debitAmount (): Fixed18 {
+  get debitAmount(): Fixed18 {
     return debitToUSD(this.debits, this.debitExchangeRate, this.stableCoinPrice);
   }
 
   /**
    * @property {Fixed18} collateralAmount
    */
-  get collateralAmount (): Fixed18 {
+  get collateralAmount(): Fixed18 {
     return collateralToUSD(this.collaterals, this.collateralPrice);
   }
 
   /**
    * @property {Fixed18} collateralRatio
    */
-  get collateralRatio (): Fixed18 {
+  get collateralRatio(): Fixed18 {
     return calcCollateralRatio(this.collateralAmount, this.debitAmount);
   }
 
   /**
    * @property {Fixed18} requiredCollateral
    */
-  get requiredCollateral (): Fixed18 {
+  get requiredCollateral(): Fixed18 {
     return calcRequiredCollateral(this.debitAmount, this.requiredCollateralRatio, this.collateralPrice);
   }
 
   /**
    * @property {Fixed18} stableFeAPR
    */
-  get stableFeeAPR (): Fixed18 {
+  get stableFeeAPR(): Fixed18 {
     return calcStableFeeAPR(this.stableFee.add(this.globalStableFee), this.expectedBlockTime);
   }
 
   /**
    * @property {Fixed18} liquidationPrice
    */
-  get liquidationPrice (): Fixed18 {
+  get liquidationPrice(): Fixed18 {
     return calcLiquidationPrice(this.collaterals, this.debitAmount, this.liquidationRatio);
   }
 
   /**
    * @property {Fixed18} canGenerate
    */
-  get canGenerate (): Fixed18 {
+  get canGenerate(): Fixed18 {
     // set slippage to 0.000001
-    return calcCanGenerate(this.collateralAmount, this.debitAmount, this.requiredCollateralRatio, this.stableCoinPrice, Fixed18.fromNatural(0.000001));
+    return calcCanGenerate(
+      this.collateralAmount,
+      this.debitAmount,
+      this.requiredCollateralRatio,
+      this.stableCoinPrice,
+      Fixed18.fromNatural(0.000001)
+    );
   }
 
   /**
    * @property {Fixed18} canPayback
    */
-  get canPayBack (): Fixed18 {
+  get canPayBack(): Fixed18 {
     return this.debitAmount;
   }
 }

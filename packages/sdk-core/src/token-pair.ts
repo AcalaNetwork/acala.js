@@ -6,7 +6,7 @@ export class TokenPair {
   private token2: Token;
   private origin: [Token, Token];
 
-  constructor (token1: Token, token2: Token) {
+  constructor(token1: Token, token2: Token) {
     if (token1.isEqual(token2)) throw new Error("can't create token pair by equal tokens.");
 
     const sorted = sortTokens(token1, token2);
@@ -16,19 +16,19 @@ export class TokenPair {
     this.origin = [token1, token2];
   }
 
-  public getOrigin (): [Token, Token] {
+  public getOrigin(): [Token, Token] {
     return this.origin;
   }
 
-  public getPair (): [Token, Token] {
+  public getPair(): [Token, Token] {
     return [this.token1, this.token2];
   }
 
-  public isEqual (pair: TokenPair): boolean {
+  public isEqual(pair: TokenPair): boolean {
     return pair.token1.isEqual(this.token1) && pair.token2.isEqual(this.token2);
   }
 
-  public toChainData (): [string | { Token: string }, string | { Token: string }] {
+  public toChainData(): [string | { Token: string }, string | { Token: string }] {
     return [this.token1.toChainData(), this.token2.toChainData()];
   }
 }

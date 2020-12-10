@@ -9,7 +9,7 @@ import { Balance, Params } from '@acala-network/types/interfaces';
 
 import { DerivedStakingPool, DerivedStakingPoolConstants } from '../types/staking-pool';
 
-function getConstants (api: ApiInterfaceRx): DerivedStakingPoolConstants {
+function getConstants(api: ApiInterfaceRx): DerivedStakingPoolConstants {
   return {
     defaultExchangeRate: api.consts.stakingPool.defaultExchangeRate,
     bondingDuration: api.consts.polkadotBridge.bondingDuration,
@@ -23,7 +23,7 @@ function getConstants (api: ApiInterfaceRx): DerivedStakingPoolConstants {
  * @name stakingPool
  * @description get staking pool information
  */
-export function stakingPool (instanceId: string, api: ApiInterfaceRx): () => Observable<DerivedStakingPool> {
+export function stakingPool(instanceId: string, api: ApiInterfaceRx): () => Observable<DerivedStakingPool> {
   return memo(instanceId, () => {
     const constants = getConstants(api);
 
@@ -51,7 +51,7 @@ export function stakingPool (instanceId: string, api: ApiInterfaceRx): () => Obs
 
         return {
           currentEra: currentEra as EraIndex,
-          nextEraUnbond: nextEraUnbond as unknown as [Balance, Balance],
+          nextEraUnbond: (nextEraUnbond as unknown) as [Balance, Balance],
           totalClaimedUnbonded: totalClaimedUnbonded as Balance,
           totalBonded: totalBonded as Balance,
           unbondingToFree: unbondingToFree as Balance,

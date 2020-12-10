@@ -1,4 +1,6 @@
-module.exports = {
+const config = require('@open-web3/dev-config/config/jest.cjs');
+
+module.exports = Object.assign({}, config, {
   moduleNameMapper: {
     '@acala-network/api-derive(.*)$': '<rootDir>/packages/api-derive/src/$1',
     '@acala-network/api(.*)$': '<rootDir>/packages/api/src/$1',
@@ -16,4 +18,4 @@ module.exports = {
     '<rootDir>/packages/sdk-core/build',
     '<rootDir>/packages/sdk-swap/build'
   ]
-};
+});

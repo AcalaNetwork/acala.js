@@ -18,14 +18,16 @@ const ONE = Fixed18.fromNatural(1);
  * @param {Fixed18} [slippage=0] - swap slippage
  * @returns {number} return target token amount which can be received
  */
-export function calcSwapTargetAmount (
+export function calcSwapTargetAmount(
   supply: number,
   supplyPool: number,
   targetPool: number,
   feeRate: Fixed18,
   slippage = Fixed18.ZERO
 ): number {
-  const newTargetPool = Fixed18.fromRational(supplyPool, supplyPool + supply).mul(Fixed18.fromNatural(targetPool)).toNumber(0, 3);
+  const newTargetPool = Fixed18.fromRational(supplyPool, supplyPool + supply)
+    .mul(Fixed18.fromNatural(targetPool))
+    .toNumber(0, 3);
 
   // if new target pool is too small, return target as 0
   if (newTargetPool <= 0) return 0;
@@ -35,7 +37,9 @@ export function calcSwapTargetAmount (
 
   // if fee is too small, ignore fee
   fee = fee <= 0 ? 0 : fee;
-  return ONE.sub(slippage).mul(Fixed18.fromNatural(receivedAmount - fee)).toNumber(0, 3);
+  return ONE.sub(slippage)
+    .mul(Fixed18.fromNatural(receivedAmount - fee))
+    .toNumber(0, 3);
 }
 
 /**
@@ -49,7 +53,7 @@ export function calcSwapTargetAmount (
  * @param {Fixed18} [slippage=0] - swap slippage
  * @returns {number} return target token amount which can be received
  */
-export function calcSwapSupplyAmount (
+export function calcSwapSupplyAmount(
   target: number,
   supplyPool: number,
   targetPool: number,
@@ -63,7 +67,11 @@ export function calcSwapSupplyAmount (
   // new_target_pool = target_pool - target_amount / (1 - GetExchangeFee)
   const rate = ONE.div(ONE.sub(feeRate)).decimalPlaces(18, 3);
   const newTargetPool = targetPool - rate.mul(Fixed18.fromNatural(target)).toNumber(0, 3);
-  const result = (Fixed18.fromRational(supplyPool, newTargetPool).add(Fixed18.fromParts(1))).mul(Fixed18.fromNatural(targetPool)).toNumber(0, 3) - supplyPool;
+  const result =
+    Fixed18.fromRational(supplyPool, newTargetPool)
+      .add(Fixed18.fromParts(1))
+      .mul(Fixed18.fromNatural(targetPool))
+      .toNumber(0, 3) - supplyPool;
 
   return result < 0 ? 0 : result;
 }
@@ -78,7 +86,7 @@ export function calcSwapSupplyAmount (
  * @param {Fixed18} [slippage=0] - swap slippage
  * @returns {Fixed} return amount of received base tokens in other-to-base process
  */
-export function calcTargetInOtherToBase (
+export function calcTargetInOtherToBase(
   supply: Fixed18,
   pool: Pool,
   feeRate: Fixed18,
@@ -104,7 +112,7 @@ export function calcTargetInOtherToBase (
  * @param {Fixed18} [slippage=0] - swap slippage
  * @returns {Fixed} return amount of required base tokens in other-to-base process
  */
-export function calcSupplyInOtherToBase (
+export function calcSupplyInOtherToBase(
   target: Fixed18,
   pool: Pool,
   feeRate: Fixed18,
@@ -130,7 +138,7 @@ export function calcSupplyInOtherToBase (
  * @param {Fixed18} [slippage=0] - swap slippage
  * @returns {Fixed} return amount of received other tokens in base-to-other process
  */
-export function calcTargetInBaseToOther (
+export function calcTargetInBaseToOther(
   supply: Fixed18,
   pool: Pool,
   feeRate: Fixed18,
@@ -156,7 +164,7 @@ export function calcTargetInBaseToOther (
  * @param {Fixed18} [slippage=0] - swap slippage
  * @returns {Fixed} return amount of required base tokens in base-to-other process
  */
-export function calcSupplyInBaseToOther (
+export function calcSupplyInBaseToOther(
   target: Fixed18,
   pool: Pool,
   feeRate: Fixed18,
@@ -182,7 +190,7 @@ export function calcSupplyInBaseToOther (
  * @param {Fixed18} [slippage=0] - swap slippage
  * @returns {Fixed} return amount of received other tokens in base-to-other process
  */
-export function calcTargetInOtherToOther (
+export function calcTargetInOtherToOther(
   supply: Fixed18,
   supplyPool: Pool,
   targetPool: Pool,
@@ -217,7 +225,7 @@ export function calcTargetInOtherToOther (
  * @param {Fixed18} [slippage=0] - swap slippage
  * @returns {Fixed} return amount of received other tokens in base-to-other process
  */
-export function calcSupplyInOtherToOther (
+export function calcSupplyInOtherToOther(
   target: Fixed18,
   supplyPool: Pool,
   targetPool: Pool,

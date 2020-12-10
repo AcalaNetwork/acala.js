@@ -4,7 +4,7 @@ import { set } from 'lodash';
 export class TradeGraph {
   private adj: Record<string, Token[]>;
 
-  constructor (data: TokenPair[]) {
+  constructor(data: TokenPair[]) {
     this.adj = {};
 
     for (const item of data) {
@@ -15,11 +15,11 @@ export class TradeGraph {
     }
   }
 
-  public getAdj (token: Token): Token[] | undefined {
+  public getAdj(token: Token): Token[] | undefined {
     return this.adj[token.toString()];
   }
 
-  public getPathes (start: Token, end: Token): Token[][] {
+  public getPathes(start: Token, end: Token): Token[][] {
     const result: Token[][] = [];
     const path: Token[] = [start];
     const searchList: Token[][] = [(this.adj[start.name] || []).slice()];

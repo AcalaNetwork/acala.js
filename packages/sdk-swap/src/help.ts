@@ -8,7 +8,7 @@ export interface Fee {
 }
 
 // get how much target amount will be got fro specific supply amount and price impact
-export function getTargetAmount (
+export function getTargetAmount(
   supplyPool: FixedPointNumber,
   targetPool: FixedPointNumber,
   supplyAmount: FixedPointNumber,
@@ -26,7 +26,7 @@ export function getTargetAmount (
 }
 
 // get how much supply amount will be paid for specific target amount
-export function getSupplyAmount (
+export function getSupplyAmount(
   supplyPool: FixedPointNumber,
   targetPool: FixedPointNumber,
   targetAmount: FixedPointNumber,

@@ -1,30 +1,55 @@
 {
-    "extends": "./node_modules/@polkadot/dev/config/tsconfig",
-    "exclude": [
-      "build/**/*",
-      "**/build/**/*"
-    ],
-    "compilerOptions": {
-      "baseUrl": ".",
-      "paths":
-      {
-        "@acala-network/api": ["packages/api/src"],
-        "@acala-network/api/*": ["packages/api/src/*"],
-        "@acala-network/types": ["packages/types/src"],
-        "@acala-network/types/*": ["packages/types/src/*"],
-        "@acala-network/api-derive": ["packages/api-derive/src"],
-        "@acala-network/api-derive/*": ["packages/api-derive/src/*"],
-        "@acala-network/type-definitions": ["packages/type-definitions/src"],
-        "@acala-network/type-definitions/*": ["packages/type-definitions/src/*"],
-        "@acala-network/sdk-core": ["packages/sdk-core/src"],
-        "@acala-network/sdk-core/*": ["packages/sdk-core/src/*"],
-        "@acala-network/sdk-swap": ["packages/sdk-swap/src"],
-        "@acala-network/sdk-swap/*": ["packages/sdk-swap/src/*"],
-      },
-      "skipLibCheck": true,
-      "typeRoots": [
-        "./node_modules/@polkadot/ts",
-        "./node_modules/@types"
-      ]
-    }
+  "extends": "@open-web3/dev-config/config/tsconfig.json",
+  "exclude": [
+    "build/**/*",
+    "**/build/**/*"
+  ],
+  "compilerOptions": {
+    "target": "es2019",
+    "module": "CommonJS",
+    "baseUrl": ".",
+    "paths": {
+      "@acala-network/api": [
+        "packages/api/src"
+      ],
+      "@acala-network/api/*": [
+        "packages/api/src/*"
+      ],
+      "@acala-network/types": [
+        "packages/types/src"
+      ],
+      "@acala-network/types/*": [
+        "packages/types/src/*"
+      ],
+      "@acala-network/api-derive": [
+        "packages/api-derive/src"
+      ],
+      "@acala-network/api-derive/*": [
+        "packages/api-derive/src/*"
+      ],
+      "@acala-network/type-definitions": [
+        "packages/type-definitions/src"
+      ],
+      "@acala-network/type-definitions/*": [
+        "packages/type-definitions/src/*"
+      ],
+      "@acala-network/sdk-core": [
+        "packages/sdk-core/src"
+      ],
+      "@acala-network/sdk-core/*": [
+        "packages/sdk-core/src/*"
+      ],
+      "@acala-network/sdk-swap": [
+        "packages/sdk-swap/src"
+      ],
+      "@acala-network/sdk-swap/*": [
+        "packages/sdk-swap/src/*"
+      ],
+    },
+    "skipLibCheck": true,
+    "typeRoots": [
+      "./node_modules/@polkadot/ts",
+      "./node_modules/@types"
+    ]
   }
+}

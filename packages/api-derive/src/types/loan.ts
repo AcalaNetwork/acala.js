@@ -1,4 +1,14 @@
-import { CurrencyId, Rate, OptionRatio, OptionRate, Balance, Moment, AccountId, DebitBalance, ExchangeRate } from '@acala-network/types/interfaces';
+import {
+  CurrencyId,
+  Rate,
+  OptionRatio,
+  OptionRate,
+  Balance,
+  Moment,
+  AccountId,
+  DebitBalance,
+  ExchangeRate
+} from '@acala-network/types/interfaces';
 
 export interface DerivedLoanConstants {
   minimumDebitValue: Balance;
