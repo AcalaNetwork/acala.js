@@ -12,6 +12,7 @@
   },
   "scripts": {
     "build": "yarn build:interfaces && polkadot-dev-build-ts",
+    "build:release": "polkadot-ci-ghact-build",
     "build:interfaces": "node -r ts-node/register -r tsconfig-paths/register packages/types/scripts/generate.ts",
     "lint": "polkadot-dev-run-lint",
     "clean": "polkadot-dev-clean-build",
