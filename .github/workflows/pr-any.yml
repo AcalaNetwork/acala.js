@@ -9,15 +9,15 @@ jobs:
       matrix:
         node-version: [12.x]
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: lint
-      run: |
-        yarn install --frozen-lockfile
-        yarn lint
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: lint
+        run: |
+          yarn install --immutable | grep -v 'YN0013'
+          yarn lint
 
   test:
     name: Testing
@@ -26,15 +26,15 @@ jobs:
       matrix:
         node-version: [12.x]
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: test
-      run: |
-        yarn install --frozen-lockfile
-        yarn test
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: test
+        run: |
+          yarn install --immutable | grep -v 'YN0013'
+          yarn test
 
   build_code:
     name: Build Code
@@ -43,12 +43,12 @@ jobs:
       matrix:
         node-version: [12.x]
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: build
-      run: |
-        yarn install --frozen-lockfile
-        yarn build
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: build
+        run: |
+          yarn install --immutable | grep -v 'YN0013'
+          yarn build

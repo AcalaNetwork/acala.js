@@ -1,5 +1,5 @@
 {
-  "version": "0.4.0-beta.37",
+  "version": "0.5.0",
   "private": true,
   "engines": {
     "yarn": "^1.10.1"
@@ -11,12 +11,12 @@
     "typescript": "3.8.3"
   },
   "scripts": {
-    "build": "yarn check-deps && yarn build:interfaces && polkadot-dev-build-ts",
+    "build": "yarn build:interfaces && polkadot-dev-build-ts",
     "build:interfaces": "node -r ts-node/register -r tsconfig-paths/register packages/types/scripts/generate.ts",
-    "lint": "eslint --ext .js,.jsx,.ts,.tsx . && tsc --noEmit --pretty",
+    "lint": "polkadot-dev-run-lint",
     "clean": "polkadot-dev-clean-build",
     "postinstall": "polkadot-dev-yarn-only",
-    "test": "jest --testPathIgnorePatterns e2e",
+    "test": "polkadot-dev-run-test --coverage",
     "check-deps": "./node_modules/@open-web3/util/scripts/check-deps.js yarn.lock @polkadot/ @open-web3/",
     "update-metadata": "ts-node --project ./tsconfig.json packages/types/scripts/updateMetadata.ts"
   },
@@ -24,9 +24,9 @@
     "@babel/core": "^7.10.2",
     "@babel/register": "^7.10.1",
     "@babel/runtime": "^7.10.2",
+    "@open-web3/dev-config": "^0.1.10",
     "@open-web3/util": "^0.8.2-2",
-    "@polkadot/dev": "^0.32.17",
-    "@polkadot/ts": "^0.2.1",
+    "@types/jest": "^25.2.3",
     "ts-node": "^8.6.1",
     "tsconfig-paths": "^3.9.0"
   }

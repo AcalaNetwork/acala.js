@@ -23,7 +23,7 @@ interface TokenInfo {
 const cachedNFTs: Record<string, TokenInfo[]> = {};
 let cachedClasses: ClassInfo[] = [];
 
-function queryNFTs (api: ApiInterfaceRx, cid: ClassId): Observable<TokenInfo[]> {
+function queryNFTs(api: ApiInterfaceRx, cid: ClassId): Observable<TokenInfo[]> {
   return api.query.ormlNft.tokens.entries(cid).pipe(
     map((entries): TokenInfo[] => {
       return entries.map((item) => {
@@ -38,7 +38,7 @@ function queryNFTs (api: ApiInterfaceRx, cid: ClassId): Observable<TokenInfo[]> 
   );
 }
 
-function queryClasses (api: ApiInterfaceRx): Observable<ClassInfo[]> {
+function queryClasses(api: ApiInterfaceRx): Observable<ClassInfo[]> {
   return api.query.ormlNft.classes.entries().pipe(
     map((entries): ClassInfo[] => {
       return entries.map((item) => {
@@ -59,17 +59,25 @@ function queryClasses (api: ApiInterfaceRx): Observable<ClassInfo[]> {
  * @param {(AccountId | string)} account
  * @param {CID} cid
  */
-export function queryTokensByAccount (instanceId: string, api: ApiInterfaceRx): (account: AccountId | string, cid: ClassId, useCache?: boolean) => Observable<TokenInfo[]> {
-  return memo(instanceId, (account: AccountId | string, cid: ClassId, useCache = true): Observable<TokenInfo[]> => {
-    return (useCache && cachedNFTs[cid.toString()] ? of(cachedNFTs[cid.toString()]) : queryNFTs(api, cid)).pipe(
-      tap((result) => {
-        cachedNFTs[cid.toString()] = result;
-      }),
-      map((item) => item.filter((info) => {
-        return info.data.unwrap().owner.toString() === account.toString();
-      }))
-    );
-  });
+export function queryTokensByAccount(
+  instanceId: string,
+  api: ApiInterfaceRx
+): (account: AccountId | string, cid: ClassId, useCache?: boolean) => Observable<TokenInfo[]> {
+  return memo(
+    instanceId,
+    (account: AccountId | string, cid: ClassId, useCache = true): Observable<TokenInfo[]> => {
+      return (useCache && cachedNFTs[cid.toString()] ? of(cachedNFTs[cid.toString()]) : queryNFTs(api, cid)).pipe(
+        tap((result) => {
+          cachedNFTs[cid.toString()] = result;
+        }),
+        map((item) =>
+          item.filter((info) => {
+            return info.data.unwrap().owner.toString() === account.toString();
+          })
+        )
+      );
+    }
+  );
 }
 
 /**
@@ -78,22 +86,34 @@ export function queryTokensByAccount (instanceId: string, api: ApiInterfaceRx): 
  * @param {(AccountId | string)} account
  * @param {CID} cid
  */
-export function queryTokensByCID (instanceId: string, api: ApiInterfaceRx): (cid: ClassId, useCache?: boolean) => Observable<TokenInfo[]> {
-  return memo(instanceId, (cid: ClassId, useCache = false): Observable<TokenInfo[]> => {
-    return (useCache && cachedNFTs[cid.toString()] ? of(cachedNFTs[cid.toString()]) : queryNFTs(api, cid)).pipe(
-      tap((result) => {
-        cachedNFTs[cid.toString()] = result;
-      })
-    );
-  });
+export function queryTokensByCID(
+  instanceId: string,
+  api: ApiInterfaceRx
+): (cid: ClassId, useCache?: boolean) => Observable<TokenInfo[]> {
+  return memo(
+    instanceId,
+    (cid: ClassId, useCache = false): Observable<TokenInfo[]> => {
+      return (useCache && cachedNFTs[cid.toString()] ? of(cachedNFTs[cid.toString()]) : queryNFTs(api, cid)).pipe(
+        tap((result) => {
+          cachedNFTs[cid.toString()] = result;
+        })
+      );
+    }
+  );
 }
 
-export function queryAllClasses (instanceId: string, api: ApiInterfaceRx): (useCache?: boolean) => Observable<ClassInfo[]> {
-  return memo(instanceId, (useCache = false): Observable<ClassInfo[]> => {
-    return (useCache ? of(cachedClasses) : queryClasses(api)).pipe(
-      tap((result) => {
-        cachedClasses = result;
-      })
-    );
-  });
+export function queryAllClasses(
+  instanceId: string,
+  api: ApiInterfaceRx
+): (useCache?: boolean) => Observable<ClassInfo[]> {
+  return memo(
+    instanceId,
+    (useCache = false): Observable<ClassInfo[]> => {
+      return (useCache ? of(cachedClasses) : queryClasses(api)).pipe(
+        tap((result) => {
+          cachedClasses = result;
+        })
+      );
+    }
+  );
 }

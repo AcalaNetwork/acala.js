@@ -124,7 +124,7 @@ export const typesAlias = typesAliasFromDefs(acalaDefs, { ...ormlAlias });
 export const typesBundleForPolkadot = {
   spec: {
     acala: {
-      types: [...versioned].map(version => {
+      types: [...versioned].map((version) => {
         return {
           minmax: version.minmax,
           types: {

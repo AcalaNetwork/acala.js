@@ -20,7 +20,7 @@ const KNOWN_ORIGINS = {
   ...ACALA_KNOWN_ORIGINS
 };
 
-function getOriginCallerDef (): void {
+function getOriginCallerDef(): void {
   const registry = new TypeRegistry();
   const metadata = new Metadata(registry, metaHex);
   const modules = metadata.asLatest.modules;

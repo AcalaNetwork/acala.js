@@ -156,7 +156,7 @@ export const FeeRateMatrix: FixedPointNumber[][] = [
   ]
 ];
 
-export function getFee (
+export function getFee(
   remainAvailablePercent: FixedPointNumber,
   availableAmount: FixedPointNumber,
   requestAmount: FixedPointNumber,

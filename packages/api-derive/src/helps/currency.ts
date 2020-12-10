@@ -6,7 +6,7 @@ import { CurrencyId } from '@acala-network/types/interfaces';
  * @name getCurrencyIds
  * @description get currency id list.
  */
-export function getCurrencyIds (api: ApiInterfaceRx): CurrencyId[] {
+export function getCurrencyIds(api: ApiInterfaceRx): CurrencyId[] {
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   const keys = api.registry.createType('TokenSymbol' as any).defKeys as string[];
 
@@ -17,7 +17,7 @@ export function getCurrencyIds (api: ApiInterfaceRx): CurrencyId[] {
  * @name getCollateralCurrencyIds
  * @description get collateral currency id list.
  */
-export function getCollateralCurrencyIds (api: ApiInterfaceRx): Vec<CurrencyId> {
+export function getCollateralCurrencyIds(api: ApiInterfaceRx): Vec<CurrencyId> {
   return api.consts.cdpEngine.collateralCurrencyIds as Vec<CurrencyId>;
 }
 
@@ -25,7 +25,7 @@ export function getCollateralCurrencyIds (api: ApiInterfaceRx): Vec<CurrencyId> 
  * @name getStableCurrencyId
  * @description get stable coin id.
  */
-export function getStableCurrencyId (api: ApiInterfaceRx): CurrencyId {
+export function getStableCurrencyId(api: ApiInterfaceRx): CurrencyId {
   return api.consts.cdpTreasury.getStableCurrencyId as CurrencyId;
 }
 
@@ -33,6 +33,6 @@ export function getStableCurrencyId (api: ApiInterfaceRx): CurrencyId {
  * @name getNativeCurreencyId
  * @description get native currency id.
  */
-export function getNativeCurrencyId (api: ApiInterfaceRx): CurrencyId {
+export function getNativeCurrencyId(api: ApiInterfaceRx): CurrencyId {
   return api.consts.currencies.nativeCurrencyId as CurrencyId;
 }

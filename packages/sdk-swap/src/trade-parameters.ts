@@ -17,7 +17,7 @@ export class TradeParameters {
   public priceImpact: FixedPointNumber;
   public midPrice: FixedPointNumber;
 
-  constructor (config: Config) {
+  constructor(config: Config) {
     this.input = config.input;
     this.output = config.output;
     this.path = config.path;
@@ -25,18 +25,18 @@ export class TradeParameters {
     this.midPrice = config.midPrice;
   }
 
-  public toChainData (mode: SwapTradeMode): [ { Token: string }[], string, string ] {
+  public toChainData(mode: SwapTradeMode): [{ Token: string }[], string, string] {
     switch (mode) {
       case 'EXACT_INPUT': {
         return [
-          this.path.map((item) => item.toChainData()) as { Token: string}[],
+          this.path.map((item) => item.toChainData()) as { Token: string }[],
           this.input.amount.toChainData(),
           this.output.amount.toChainData()
         ];
       }
       case 'EXACT_OUTPUT': {
         return [
-          this.path.map((item) => item.toChainData()) as { Token: string}[],
+          this.path.map((item) => item.toChainData()) as { Token: string }[],
           this.output.amount.toChainData(),
           this.input.amount.toChainData()
         ];

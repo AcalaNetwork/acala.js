@@ -13,7 +13,7 @@ import { getCollateralCurrencyIds } from '../helps/currency';
  * @name loanConstants
  * @description get constants in loan module
  */
-function loanConstants (api: ApiInterfaceRx): DerivedLoanConstants {
+function loanConstants(api: ApiInterfaceRx): DerivedLoanConstants {
   return {
     minimumDebitValue: api.consts.cdpEngine.minimumDebitValue as Balance,
     defaultDebitExchangeRate: api.consts.cdpEngine.defaultDebitExchangeRate as ExchangeRate,
@@ -28,7 +28,10 @@ function loanConstants (api: ApiInterfaceRx): DerivedLoanConstants {
  * @description get loan type
  * @param {(CurrencyId | string)} currency
  */
-export function loanType (instanceId: string, api: ApiInterfaceRx): (currncy: CurrencyId | string) => Observable<DerivedLoanType> {
+export function loanType(
+  instanceId: string,
+  api: ApiInterfaceRx
+): (currncy: CurrencyId | string) => Observable<DerivedLoanType> {
   return memo(instanceId, (currency: CurrencyId | string) => {
     return combineLatest([
       api.query.cdpEngine.globalStabilityFee<Rate>(),
@@ -42,8 +45,12 @@ export function loanType (instanceId: string, api: ApiInterfaceRx): (currncy: Cu
         return {
           currency,
           debitExchangeRate: debitExchangeRate.isEmpty ? constants.defaultDebitExchangeRate : debitExchangeRate,
-          liquidationPenalty: collateralParams.liquidationPenalty.isEmpty ? constants.defaultLiquidationPenalty : collateralParams.liquidationPenalty,
-          liquidationRatio: collateralParams.liquidationRatio.isEmpty ? constants.defaultLiquidationRatio : collateralParams.liquidationRatio,
+          liquidationPenalty: collateralParams.liquidationPenalty.isEmpty
+            ? constants.defaultLiquidationPenalty
+            : collateralParams.liquidationPenalty,
+          liquidationRatio: collateralParams.liquidationRatio.isEmpty
+            ? constants.defaultLiquidationRatio
+            : collateralParams.liquidationRatio,
           requiredCollateralRatio: collateralParams.requiredCollateralRatio,
           stabilityFee: collateralParams.stabilityFee,
           globalStabilityFee: globalStabilityFee,
@@ -60,7 +67,7 @@ export function loanType (instanceId: string, api: ApiInterfaceRx): (currncy: Cu
  * @name allLoanTypes
  * @description  get loan types of all kinds of collateral
  */
-export function allLoanTypes (instanceId: string, api: ApiInterfaceRx): () => Observable<DerivedLoanType[]> {
+export function allLoanTypes(instanceId: string, api: ApiInterfaceRx): () => Observable<DerivedLoanType[]> {
   return memo(instanceId, () => {
     const collateralCurrencyIds = getCollateralCurrencyIds(api);
     const loanTypeQuery = loanType(instanceId, api);
@@ -74,21 +81,26 @@ export function allLoanTypes (instanceId: string, api: ApiInterfaceRx): () => Ob
  * @description get loan overview includes total debit, total collateral
  * @param {(CurrencyId | string)} currency
  */
-export function loanOverview (instanceId: string, api: ApiInterfaceRx): (currency: CurrencyId) => Observable<DerivedLoanOverView> {
-  return memo(instanceId, (currency: CurrencyId) => api.query.loans.totalPositions<Position>(currency).pipe(
-    map((result) => {
-      const { collateral, debit } = result;
+export function loanOverview(
+  instanceId: string,
+  api: ApiInterfaceRx
+): (currency: CurrencyId) => Observable<DerivedLoanOverView> {
+  return memo(instanceId, (currency: CurrencyId) =>
+    api.query.loans.totalPositions<Position>(currency).pipe(
+      map((result) => {
+        const { collateral, debit } = result;
 
-      return { currency, totalDebit: debit, totalCollateral: collateral };
-    })
-  ));
+        return { currency, totalDebit: debit, totalCollateral: collateral };
+      })
+    )
+  );
 }
 
 /**
  * @name allLoanOverview
  * @description get loan overviews of all kinds of collatearl
  */
-export function allLoanOverviews (instanceId: string, api: ApiInterfaceRx): () => Observable<DerivedLoanOverView[]> {
+export function allLoanOverviews(instanceId: string, api: ApiInterfaceRx): () => Observable<DerivedLoanOverView[]> {
   return memo(instanceId, () => {
     const collateralCurrencyIds = getCollateralCurrencyIds(api);
     const loanOverViewQuery = loanOverview(instanceId, api);

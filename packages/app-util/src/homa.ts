@@ -56,7 +56,12 @@ export const calcLiquidExchangeRate = (
  * @param {number} targetEra - target era
  * @param {number} bondingDuration - bonding duration era
  */
-export const calcClaimFeeRatio = (targetEra: number, currentEra: number, maxClaimFee: Fixed18, bondingDuration: number): Fixed18 => {
+export const calcClaimFeeRatio = (
+  targetEra: number,
+  currentEra: number,
+  maxClaimFee: Fixed18,
+  bondingDuration: number
+): Fixed18 => {
   const claimPeriodPercent = Fixed18.fromRational(Math.max(targetEra - currentEra, 0), bondingDuration + 1);
   return Fixed18.fromNatural(1).sub(claimPeriodPercent).mul(maxClaimFee);
 };
@@ -69,7 +74,13 @@ export const calcClaimFeeRatio = (targetEra: number, currentEra: number, maxClai
  * @param {number} targetEra - target era
  * @param {number} bondingDuration - bonding duration era
  */
-export const calcClaimFee = (amount: Fixed18, targetEra: number, currentEra: number, maxClaimFee: Fixed18, bondingDuration: number): Fixed18 => {
+export const calcClaimFee = (
+  amount: Fixed18,
+  targetEra: number,
+  currentEra: number,
+  maxClaimFee: Fixed18,
+  bondingDuration: number
+): Fixed18 => {
   return amount.mul(calcClaimFeeRatio(targetEra, currentEra, maxClaimFee, bondingDuration));
 };
 
@@ -106,7 +117,7 @@ export class StakingPoolHelper {
   public bondingDuration: number;
   public currentEra: number;
 
-  constructor (params: StakingPoolParams) {
+  constructor(params: StakingPoolParams) {
     this.totalBonded = convertToFixed18(params.totalBonded);
     this.communalFree = convertToFixed18(params.communalFree);
     this.unbondingToFree = convertToFixed18(params.unbondingToFree);
@@ -118,31 +129,31 @@ export class StakingPoolHelper {
     this.currentEra = convertToNumber(params.currentEra);
   }
 
-  get communalBonded (): Fixed18 {
+  get communalBonded(): Fixed18 {
     return calcCommunalBonded(this.totalBonded, this.nextEraClaimedUnbonded);
   }
 
-  get communalTotal (): Fixed18 {
+  get communalTotal(): Fixed18 {
     return calcCommunalTotal(this.communalBonded, this.communalFree, this.unbondingToFree);
   }
 
-  get communalBondedRatio (): Fixed18 {
+  get communalBondedRatio(): Fixed18 {
     return calcCommunalBondedRatio(this.communalBonded, this.communalTotal);
   }
 
-  get liquidExchangeRate (): Fixed18 {
+  get liquidExchangeRate(): Fixed18 {
     return calcLiquidExchangeRate(this.liquidTokenIssuance, this.communalTotal, this.defaultExchangeRate);
   }
 
-  public convertToLiquid (amount: Fixed18): Fixed18 {
+  public convertToLiquid(amount: Fixed18): Fixed18 {
     return Fixed18.fromNatural(1).div(this.liquidExchangeRate).mul(amount);
   }
 
-  public claimFeeRatio (era: number): Fixed18 {
+  public claimFeeRatio(era: number): Fixed18 {
     return calcClaimFeeRatio(era, this.currentEra, this.maxClaimFee, this.bondingDuration);
   }
 
-  public claimFee (amount: Fixed18, era: number): Fixed18 {
+  public claimFee(amount: Fixed18, era: number): Fixed18 {
     return calcClaimFee(amount, era, this.currentEra, this.maxClaimFee, this.bondingDuration);
   }
 }

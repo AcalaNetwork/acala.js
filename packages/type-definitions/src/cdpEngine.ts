@@ -2,10 +2,7 @@ export default {
   rpc: {},
   types: {
     LiquidationStrategy: {
-      _enum: [
-        'Auction',
-        'Exchange'
-      ]
+      _enum: ['Auction', 'Exchange']
     },
     OptionRate: 'Option<Rate>',
     OptionRatio: 'Option<Ratio>',

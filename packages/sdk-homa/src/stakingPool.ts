@@ -39,13 +39,13 @@ export class StakingPool {
   private unbondingToFree!: FixedPointNumber; // unbonding
   private freeUnbonded!: FixedPointNumber; // free
 
-  constructor (config: StakingPoolConfig) {
+  constructor(config: StakingPoolConfig) {
     this.setParameters(config);
   }
 
-  public setParameters (config: Partial<StakingPoolConfig>): void {
-    (Object.keys(config) as unknown as StakingPoolConfigKeys[]).map((item) => {
-      (this as any)[item] = config[item] as unknown as FixedPointNumber;
+  public setParameters(config: Partial<StakingPoolConfig>): void {
+    ((Object.keys(config) as unknown) as StakingPoolConfigKeys[]).forEach((item) => {
+      (this as any)[item] = (config[item] as unknown) as FixedPointNumber;
     });
   }
 
@@ -53,26 +53,22 @@ export class StakingPool {
    * @name getLiquidAmountInMint
    * @description get the amount of liquid currency with mint
    */
-  public getLiquidAmountInMint (amount: FixedPointNumber): FixedPointNumber {
+  public getLiquidAmountInMint(amount: FixedPointNumber): FixedPointNumber {
     if (amount.isZero()) return FixedPointNumber.ZERO;
 
-    return this.liquidExchangeRate()
-      .reciprocal()
-      .times(amount);
+    return this.liquidExchangeRate().reciprocal().times(amount);
   }
 
   /**
    * @name getStakingAmountInRedeemByUnbond
    * @description get the staking currency amount with redeem by unbond
    */
-  public getStakingAmountInRedeemByUnbond (amount: FixedPointNumber): { atEra: number; amount: FixedPointNumber } {
+  public getStakingAmountInRedeemByUnbond(amount: FixedPointNumber): { atEra: number; amount: FixedPointNumber } {
     const liquidExchangeRate = this.liquidExchangeRate();
     const communalBondedStakingAmount = this.getCommunalBonded();
 
     // will redeem all if communal bonded staking amount is not enough
-    const stakingAmountToUnbond = liquidExchangeRate
-      .times(amount)
-      .min(communalBondedStakingAmount);
+    const stakingAmountToUnbond = liquidExchangeRate.times(amount).min(communalBondedStakingAmount);
 
     if (!stakingAmountToUnbond.isZero() && !communalBondedStakingAmount.isZero()) {
       return {
@@ -90,14 +86,11 @@ export class StakingPool {
   /**
    * @name getMaxLiquidInputInRedeemByFreeUnbonded
    */
-  public getMaxLiquidInputInRedeemByFreeUnbonded (): { staking: FixedPointNumber; liquid: FixedPointNumber } {
+  public getMaxLiquidInputInRedeemByFreeUnbonded(): { staking: FixedPointNumber; liquid: FixedPointNumber } {
     const liquidExchangeRate = this.liquidExchangeRate();
     const stakingPoolParams = this.stakingPoolParams;
     const availableFreeUnbonded = this.freeUnbonded
-      .minus(
-        stakingPoolParams.targetMinFreeUnbondedRatio
-          .times(this.getTotalCommunalBalance())
-      )
+      .minus(stakingPoolParams.targetMinFreeUnbondedRatio.times(this.getTotalCommunalBalance()))
       .max(FixedPointNumber.ZERO);
 
     return {
@@ -110,7 +103,9 @@ export class StakingPool {
    * @name getStakingAmountInRedeemByFreeUnbonded
    * @description get staking amount with redeem by free unbonded
    */
-  public getStakingAmountInRedeemByFreeUnbonded (amount: FixedPointNumber): {
+  public getStakingAmountInRedeemByFreeUnbonded(
+    amount: FixedPointNumber
+  ): {
     demand: FixedPointNumber;
     fee: FixedPointNumber;
     received: FixedPointNumber;
@@ -124,18 +119,12 @@ export class StakingPool {
 
     // get available free unbonded amount in free unbonded pool
     const availableFreeUnbonded = this.freeUnbonded
-      .minus(
-        stakingPoolParams.targetMinFreeUnbondedRatio
-          .times(this.getTotalCommunalBalance())
-      )
+      .minus(stakingPoolParams.targetMinFreeUnbondedRatio.times(this.getTotalCommunalBalance()))
       .max(FixedPointNumber.ZERO);
 
     if (!demandStakingAmount.isZero() && !availableFreeUnbonded.isZero()) {
       if (demandStakingAmount.isGreaterThan(availableFreeUnbonded)) {
-        const ratio = FixedPointNumber.fromRational(
-          availableFreeUnbonded,
-          demandStakingAmount
-        );
+        const ratio = FixedPointNumber.fromRational(availableFreeUnbonded, demandStakingAmount);
 
         redeemLiquidAmount = ratio.times(redeemLiquidAmount);
         demandStakingAmount = availableFreeUnbonded;
@@ -149,12 +138,9 @@ export class StakingPool {
             .max(currentFreeUnbondedRatio)
             .minus(stakingPoolParams.targetMinFreeUnbondedRatio)
         );
-      const feeInStaking = getFee(
-        remainAvailablePercent,
-        availableFreeUnbonded,
-        demandStakingAmount,
-        stakingPoolParams.baseFeeRate
-      ) || FixedPointNumber.ZERO;
+      const feeInStaking =
+        getFee(remainAvailablePercent, availableFreeUnbonded, demandStakingAmount, stakingPoolParams.baseFeeRate) ||
+        FixedPointNumber.ZERO;
 
       const receivedStakingAmount = demandStakingAmount.minus(feeInStaking);
 
@@ -172,7 +158,7 @@ export class StakingPool {
     };
   }
 
-  public getMaxLiquidInputInClaimUnbonding (
+  public getMaxLiquidInputInClaimUnbonding(
     amount: FixedPointNumber,
     targetEra: number,
     unbondingState: {
@@ -184,7 +170,7 @@ export class StakingPool {
     const currentEra = this.currentEra;
     const bondingDuration = this.bondingDuration;
 
-    if (!(targetEra > currentEra && (targetEra <= currentEra + bondingDuration))) {
+    if (!(targetEra > currentEra && targetEra <= currentEra + bondingDuration)) {
       throw new Error('invalide era');
     }
 
@@ -193,8 +179,9 @@ export class StakingPool {
     const { unbonding, claimedUnbonding, initialClaimedUnbonding } = unbondingState;
     const initialUnclaimed = unbonding.minus(initialClaimedUnbonding);
     const unclaimed = unbonding.minus(claimedUnbonding);
-    const availableUnclaimedUnbonding = unclaimed
-      .minus(stakingPoolParams.targetMinFreeUnbondedRatio.times(initialUnclaimed));
+    const availableUnclaimedUnbonding = unclaimed.minus(
+      stakingPoolParams.targetMinFreeUnbondedRatio.times(initialUnclaimed)
+    );
 
     return {
       staking: availableUnclaimedUnbonding,
@@ -202,7 +189,7 @@ export class StakingPool {
     };
   }
 
-  public getStakingAmountInClaimUnbonding (
+  public getStakingAmountInClaimUnbonding(
     amount: FixedPointNumber,
     targetEra: number,
     unbondingState: {
@@ -211,15 +198,15 @@ export class StakingPool {
       initialClaimedUnbonding: FixedPointNumber;
     }
   ): {
-      atEra: number;
-      demand: FixedPointNumber;
-      received: FixedPointNumber;
-      fee: FixedPointNumber;
-    } {
+    atEra: number;
+    demand: FixedPointNumber;
+    received: FixedPointNumber;
+    fee: FixedPointNumber;
+  } {
     const currentEra = this.currentEra;
     const bondingDuration = this.bondingDuration;
 
-    if (!(targetEra > currentEra && (targetEra <= currentEra + bondingDuration))) {
+    if (!(targetEra > currentEra && targetEra <= currentEra + bondingDuration)) {
       throw new Error('invalide era');
     }
 
@@ -228,25 +215,17 @@ export class StakingPool {
 
     let redeemLiquidAmount = amount;
     let demandStakingAmount = liquidExchangeRate.times(redeemLiquidAmount);
-    const {
-      unbonding,
-      claimedUnbonding,
-      initialClaimedUnbonding
-    } = unbondingState;
+    const { unbonding, claimedUnbonding, initialClaimedUnbonding } = unbondingState;
 
     const initialUnclaimed = unbonding.minus(initialClaimedUnbonding);
     const unclaimed = unbonding.minus(claimedUnbonding);
-    const availableUnclaimedUnbonding = unclaimed
-      .minus(
-        stakingPoolParams.targetMinFreeUnbondedRatio.times(initialUnclaimed)
-      );
+    const availableUnclaimedUnbonding = unclaimed.minus(
+      stakingPoolParams.targetMinFreeUnbondedRatio.times(initialUnclaimed)
+    );
 
     if (!demandStakingAmount.isZero() && !availableUnclaimedUnbonding.isZero()) {
       if (demandStakingAmount.isGreaterThan(availableUnclaimedUnbonding)) {
-        const ratio = FixedPointNumber.fromRational(
-          availableUnclaimedUnbonding,
-          demandStakingAmount
-        );
+        const ratio = FixedPointNumber.fromRational(availableUnclaimedUnbonding, demandStakingAmount);
 
         redeemLiquidAmount = ratio.times(redeemLiquidAmount);
         demandStakingAmount = availableUnclaimedUnbonding;
@@ -261,12 +240,13 @@ export class StakingPool {
             .minus(stakingPoolParams.targetMinFreeUnbondedRatio)
         );
 
-      const feeInStaking = getFee(
-        remainAvailablePercent,
-        availableUnclaimedUnbonding,
-        demandStakingAmount,
-        stakingPoolParams.baseFeeRate
-      ) || FixedPointNumber.ZERO;
+      const feeInStaking =
+        getFee(
+          remainAvailablePercent,
+          availableUnclaimedUnbonding,
+          demandStakingAmount,
+          stakingPoolParams.baseFeeRate
+        ) || FixedPointNumber.ZERO;
 
       const claimedStakingAmount = demandStakingAmount.minus(feeInStaking);
 
@@ -287,50 +267,43 @@ export class StakingPool {
   }
 
   // how much bonded DOT is belone to LDOT holders
-  public getCommunalBonded (): FixedPointNumber {
+  public getCommunalBonded(): FixedPointNumber {
     return this.totalBonded.minus(this.unbondNextEra).max(FixedPointNumber.ZERO);
   }
 
   // get bonded DOT(include bonded, unbonded, unbonding) relong to LDOT
-  public getTotalCommunalBalance (): FixedPointNumber {
-    return this.getCommunalBonded()
-      .plus(this.freeUnbonded)
-      .plus(this.unbondingToFree);
+  public getTotalCommunalBalance(): FixedPointNumber {
+    return this.getCommunalBonded().plus(this.freeUnbonded).plus(this.unbondingToFree);
   }
 
   // ratio of free pool and total communal
-  public getFreeUnbondedRatio (): FixedPointNumber {
-    return FixedPointNumber
-      .fromRational(this.freeUnbonded, this.getTotalCommunalBalance())
-      .max(FixedPointNumber.ZERO);
+  public getFreeUnbondedRatio(): FixedPointNumber {
+    return FixedPointNumber.fromRational(this.freeUnbonded, this.getTotalCommunalBalance()).max(FixedPointNumber.ZERO);
   }
 
   // ratio of unbonding to free and total communal
-  public getUnbondingToFreeRatio (): FixedPointNumber {
-    return FixedPointNumber
-      .fromRational(this.unbondingToFree, this.getTotalCommunalBalance())
-      .max(FixedPointNumber.ZERO);
+  public getUnbondingToFreeRatio(): FixedPointNumber {
+    return FixedPointNumber.fromRational(this.unbondingToFree, this.getTotalCommunalBalance()).max(
+      FixedPointNumber.ZERO
+    );
   }
 
   // ratio of bonded and total communal
-  public getBondedRatio (): FixedPointNumber {
-    return FixedPointNumber
-      .fromRational(this.getCommunalBonded(), this.getTotalCommunalBalance())
-      .max(FixedPointNumber.ZERO);
+  public getBondedRatio(): FixedPointNumber {
+    return FixedPointNumber.fromRational(this.getCommunalBonded(), this.getTotalCommunalBalance()).max(
+      FixedPointNumber.ZERO
+    );
   }
 
   // formula: liquid = (total communal staking / total supply) * staking
-  public liquidExchangeRate (): FixedPointNumber {
+  public liquidExchangeRate(): FixedPointNumber {
     const totalCommunalStakingAmount = this.getTotalCommunalBalance();
 
     if (totalCommunalStakingAmount.isZero()) {
       return this.defaultExchangeRate;
     }
 
-    const result = FixedPointNumber.fromRational(
-      totalCommunalStakingAmount,
-      this.liquidTotalIssuance
-    );
+    const result = FixedPointNumber.fromRational(totalCommunalStakingAmount, this.liquidTotalIssuance);
 
     return result.isFinaite() ? result : this.defaultExchangeRate;
   }

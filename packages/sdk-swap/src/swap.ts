@@ -28,7 +28,7 @@ export class SwapTrade {
   public acceptSlippage: FixedPointNumber; // the slippage can accept
   private tradePaths: Token[][];
 
-  constructor (config: SwapTradeConfig) {
+  constructor(config: SwapTradeConfig) {
     this.input = config.input;
     this.output = config.output;
     this.mode = config.mode;
@@ -43,7 +43,7 @@ export class SwapTrade {
    * @name getAvailableTokenPairs
    * @description help function to convert constants **dex.enabledTradingPairs** to **TokenPair**
    */
-  static getAvailableTokenPairs (api: ApiRx | ApiPromise): TokenPair[] {
+  static getAvailableTokenPairs(api: ApiRx | ApiPromise): TokenPair[] {
     return api.consts.dex.enabledTradingPairs.map((pair: TradingPair) => {
       return new TokenPair(
         getPresetToken(pair[0].asToken.toString() as PresetToken),
@@ -56,19 +56,18 @@ export class SwapTrade {
    * @name getTradePaths
    * @description get all possible trade path, filter by this.maxTradePathLength
    */
-  public getTradePaths (): Token[][] {
+  public getTradePaths(): Token[][] {
     const availableTokenPairs = this.availableTokenPairs;
     const tradeGraph = new TradeGraph(availableTokenPairs);
 
-    return tradeGraph.getPathes(this.input, this.output)
-      .filter(item => item.length <= this.maxTradePathLength);
+    return tradeGraph.getPathes(this.input, this.output).filter((item) => item.length <= this.maxTradePathLength);
   }
 
   /**
    * @name getUsedTokenPairs
    * @description extract token pairs from trade path
    */
-  static getUsedTokenPairs (paths: Token[][]): TokenPair[] {
+  static getUsedTokenPairs(paths: Token[][]): TokenPair[] {
     const result: TokenPair[] = [];
 
     for (const path of paths) {
@@ -76,7 +75,7 @@ export class SwapTrade {
         const pair = new TokenPair(path[i], path[i + 1]);
 
         // insert union token pair into result
-        const tryIndex = result.findIndex(item => item.isEqual(pair));
+        const tryIndex = result.findIndex((item) => item.isEqual(pair));
 
         if (tryIndex === -1) {
           result.push(new TokenPair(path[i], path[i + 1]));
@@ -91,11 +90,11 @@ export class SwapTrade {
    * @name getTradeTokenPairsByPaths
    * @description get all token pairs from path
    */
-  public getTradeTokenPairsByPaths (): TokenPair[] {
+  public getTradeTokenPairsByPaths(): TokenPair[] {
     return SwapTrade.getUsedTokenPairs(this.tradePaths);
   }
 
-  private getPairWithOrder (pair: TokenPair, order: [Token, Token]): [Token, Token] {
+  private getPairWithOrder(pair: TokenPair, order: [Token, Token]): [Token, Token] {
     const _pair = pair.getPair();
 
     if (_pair[0].isEqual(order[0]) && _pair[1].isEqual(order[1])) {
@@ -105,7 +104,7 @@ export class SwapTrade {
     return _pair.reverse() as [Token, Token];
   }
 
-  private getTradeParametersByPath (path: Token[], pairs: TokenPair[]): TradeParameters {
+  private getTradeParametersByPath(path: Token[], pairs: TokenPair[]): TradeParameters {
     // create the default trade result
     const result: TradeParameters = new TradeParameters({
       input: this.input,
@@ -120,7 +119,7 @@ export class SwapTrade {
     if (this.mode === 'EXACT_INPUT') {
       for (let i = 0; i < path.length - 1; i++) {
         const temp = new TokenPair(path[i], path[i + 1]);
-        const pair = pairs.find(item => item.isEqual(temp));
+        const pair = pairs.find((item) => item.isEqual(temp));
 
         if (!pair) throw new Error('no trade pair found in getTradeParameter');
 
@@ -143,7 +142,7 @@ export class SwapTrade {
     } else if (this.mode === 'EXACT_OUTPUT') {
       for (let i = path.length - 1; i > 0; i--) {
         const temp = new TokenPair(path[i], path[i - 1]);
-        const pair = pairs.find(item => item.isEqual(temp));
+        const pair = pairs.find((item) => item.isEqual(temp));
 
         if (!pair) throw new Error('no trade pair found in getTradeParameter');
 
@@ -171,7 +170,7 @@ export class SwapTrade {
     return result;
   }
 
-  private getPrices (route: { input: FixedPointNumber; output: FixedPointNumber }[]): FixedPointNumber {
+  private getPrices(route: { input: FixedPointNumber; output: FixedPointNumber }[]): FixedPointNumber {
     const prices: FixedPointNumber[] = [];
 
     for (const item of route) {
@@ -183,7 +182,11 @@ export class SwapTrade {
     }, prices[0]);
   }
 
-  private getPriceImpact (price: FixedPointNumber, inputAmount: FixedPointNumber, outputAmount: FixedPointNumber): FixedPointNumber {
+  private getPriceImpact(
+    price: FixedPointNumber,
+    inputAmount: FixedPointNumber,
+    outputAmount: FixedPointNumber
+  ): FixedPointNumber {
     const temp = price.times(inputAmount);
 
     return temp.minus(outputAmount).div(temp);
@@ -193,7 +196,7 @@ export class SwapTrade {
    * @name convertLiquidityPoolsToTokenPairs
    * @description help function to convert liquidity pool data which from chain to token pairs
    */
-  static convertLiquidityPoolsToTokenPairs (tokenPairs: TokenPair[], pools: [Balance, Balance][]): TokenPair[] {
+  static convertLiquidityPoolsToTokenPairs(tokenPairs: TokenPair[], pools: [Balance, Balance][]): TokenPair[] {
     return tokenPairs.map((item, index) => {
       const tokens = item.getPair();
       return new TokenPair(
@@ -207,7 +210,7 @@ export class SwapTrade {
    * @name getTradeParameters
    * @description get the parameter about this swap trade
    */
-  public getTradeParameters (liquidityPools: TokenPair[]): TradeParameters {
+  public getTradeParameters(liquidityPools: TokenPair[]): TradeParameters {
     const tradePaths = this.getTradePaths();
 
     if (tradePaths.length === 0) throw new Error('no trade path found');
