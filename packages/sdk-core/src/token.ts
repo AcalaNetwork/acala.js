@@ -1,171 +1,198 @@
-import { FixedPointNumber } from './fixed-point-number';
-import { CHAIN } from './type';
 import { ApiPromise, ApiRx } from '@polkadot/api';
 import { CurrencyId } from '@acala-network/types/interfaces';
+import { assert, warn } from './utils';
+import { TokenPair } from './token-pair';
 
-export interface TokenConfig {
-  chain?: CHAIN; // which chain the token is in
-  name: string; // The name of the token
-  symbol?: string; // short name of the token
-  precision?: number; // the precision of the token
-  amount?: number | string | FixedPointNumber; // the amount of the token
+export type CHAIN = 'mandala' | 'acala' | 'karura' | 'polkadot' | 'kusama';
+
+// decorator for check chain
+function checkChain(chains: CHAIN[]) {
+  return (target: BasicToken, key: string, descriptor: any) => {
+    if (!chains.includes(target.chain.toLowerCase() as CHAIN)) {
+      throw new Error(`acala-sdk: the ${key} method can only be called with ${chains} chain`);
+    }
+
+    return descriptor; 
+  }
 }
 
-// preset token type
-export type PresetToken = 'ACA' | 'AUSD' | 'DOT' | 'XBTC' | 'LDOT' | 'RENBTC' | 'KSM';
+export type TokenType = 'token_symbol' | 'dex_share' | 'ERC20';
 
-// common tokens config in acala network and polkadot
-export const presetTokensConfig: Record<CHAIN, Record<PresetToken, TokenConfig>> = {
-  acala: {
-    ACA: {
-      chain: 'acala',
-      name: 'ACA',
-      symbol: 'ACA',
-      precision: 18
-    },
-    AUSD: {
-      chain: 'acala',
-      name: 'AUSD',
-      symbol: 'aUSD',
-      precision: 18
-    },
-    DOT: {
-      chain: 'acala',
-      name: 'DOT',
-      symbol: 'DOT',
-      precision: 18
-    },
-    RENBTC: {
-      chain: 'acala',
-      name: 'RENBTC',
-      symbol: 'renBTC',
-      precision: 18
-    },
-    LDOT: {
-      chain: 'acala',
-      name: 'LDOT',
-      symbol: 'LDOT',
-      precision: 18
-    },
-    XBTC: {
-      chain: 'acala',
-      name: 'XBTC',
-      symbol: 'XBTC',
-      precision: 18
-    }
-  } as Record<PresetToken, TokenConfig>,
-  polkadot: {
-    DOT: {
-      chain: 'polkadot',
-      name: 'DOT',
-      symbol: 'DOT',
-      precision: 10
-    }
-  } as Record<PresetToken, TokenConfig>,
-  kurara: {} as Record<PresetToken, TokenConfig>,
-  kusama: {
-    KSM: {
-      chain: 'kusama',
-      name: 'KSM',
-      symbol: 'KSM',
-      precision: 12
-    }
-  } as Record<PresetToken, TokenConfig>
-};
+export const ACALA_CHAINS: CHAIN[] = ['acala', 'mandala', 'karura'];
 
-export const TokenAmount = FixedPointNumber;
+export const TokenStringMap = new Map<string, string>([
+  ['KAR', 'KAR'],
+  ['ACA', 'ACA'],
+  ['AUSD', 'aUSD'],
+  ['DOT', 'DOT'],
+  ['LDOT', 'LDOT'],
+  ['XBTC', 'XBTC'],
+  ['RENBTC', 'renBTC']
+])
+
+export abstract class BasicToken {
+  constructor (
+    readonly identifier: string, // token identifier should be unique for comparing
+    readonly chain: CHAIN, // which chain the token is in
+    readonly type: TokenType, // the attribute is only effective in acala/karura chain. otherwise, the attribute is 'token_symbol' always.
+    readonly precision: number
+  ) {}
+
+  public get isTokenSymbol (): boolean {
+    return this.type === 'token_symbol';
+  }
+
+  public get isDexShare (): boolean {
+    return this.type === 'dex_share';
+  }
+
+  public get isERC20 (): boolean {
+    return this.type === 'ERC20';
+  }
+
+  public get isAcalaChain (): boolean {
+    return this.chain === 'acala'
+      || this.chain === 'karura'
+      || this.chain === 'mandala';
+  } 
+
+  public abstract toString (): string;
+
+  public abstract toChainData (): object |  string;
+
+  public isEqual (token: BasicToken) {
+    return this.identifier === token.identifier
+      && this.chain === token.chain;
+  }
+}
+
+export class TokenSymbol extends BasicToken {
+  readonly symbol: string;
+
+  constructor (symbol: string, chain: CHAIN = 'acala', precision = 18) {
+    super(
+      `token_symbol_${symbol}`,
+      chain,
+      'token_symbol',
+      precision
+    );
+    
+    assert(!!symbol, 'token symbol should not empty');
+
+    this.symbol = symbol;
+  }
+
+  static fromCurrencyId (currency: CurrencyId, chain: CHAIN, precision = 18) {
+    if (!currency.isToken) throw new Error(`acala sdk: can't convert the CurrencyId which is not Token to TokenSymbol object`);
+
+    return new TokenSymbol(
+      currency.asToken.toString(),
+      chain,
+      precision
+    );
+  }
+
+  @checkChain(ACALA_CHAINS)
+  public toCurrencyId (api: ApiPromise | ApiRx): CurrencyId {
+    return api.createType('CurrencyId', this.toChainData());
+  }
+
+  public toString () {
+    if (TokenStringMap.has(this.symbol)) {
+      // ensure that the result type is always string
+      return TokenStringMap.get(this.symbol) as string;
+    }
+
+    return this.symbol;
+  }
+
+  public toChainData (): { Token: string } | string {
+    if (this.isAcalaChain) {
+      return { Token: this.symbol };
+    }
+
+    return this.symbol;
+  }
+}
+
+export class DexShare extends BasicToken {
+  readonly token1: TokenSymbol;
+  readonly token2: TokenSymbol;
+
+  constructor (token1: string, token2: string, chain: CHAIN = 'acala', precision = 18) {
+    super(
+      `_dex_share_${token1}_${token2}`,
+      chain,
+      'dex_share',
+      precision
+    );
+
+    this.token1 = new TokenSymbol(token1, chain, precision);
+    this.token2 = new TokenSymbol(token2, chain, precision);
+  }
+
+  public static fromCurrencyId (currency: CurrencyId, chain: CHAIN, precision = 18): DexShare {
+    if (!ACALA_CHAINS.includes(chain)) {
+      throw new Error(`acala-sdk: the fromCurrencyId method can only be called with ${ACALA_CHAINS} chain`);
+    }
+
+    return new DexShare(
+      currency.asDexShare[0].toString(),
+      currency.asDexShare[1].toString(),
+      chain,
+      precision
+    );
+  }
+
+  @checkChain(ACALA_CHAINS)
+  public toCurrencyId (api: ApiPromise | ApiRx) {
+    return api.createType('CurrencyId', this.toChainData());
+  }
+
+  @checkChain(ACALA_CHAINS)
+  public toString (): string {
+    return `${this.token1.toString()} ${this.token2.toString()}`;
+  }
+
+  @checkChain(ACALA_CHAINS)
+  public toChainData (): { DEXShare: { Token: string}[] } {
+    return {
+      DEXShare: [this.token1.toChainData() as { Token: string }, this.token2.toChainData() as { Token: string }]
+    };
+  }
+
+  @checkChain(ACALA_CHAINS)
+  public toTokenPare(): TokenPair {
+    return new TokenPair(this.token1, this.token2);
+  }
+}
 
 export class Token {
-  readonly chain!: CHAIN;
-  // keep all properties about token readonly
-  readonly name!: string;
-  readonly symbol!: string;
-  readonly precision!: number;
-  public amount!: FixedPointNumber;
+  inner: BasicToken;
 
-  constructor(config: TokenConfig) {
-    this.name = config.name;
-    this.symbol = config.symbol || config.name;
-    this.precision = config.precision || 18;
-    this.chain = config.chain || 'acala';
+  constructor (inner: BasicToken, warning: boolean = true) {
+    this.inner = inner;
 
-    if (config.amount) {
-      if (config.amount instanceof FixedPointNumber) {
-        this.amount = config.amount;
-      } else {
-        this.amount = new TokenAmount(config.amount || 0, this.precision);
-      }
+    Object.defineProperties(this, Object.getOwnPropertyDescriptors(this.inner));
+
+    if (warning) {
+      warn('directly called the constructor of Token is not recommendly');
     }
   }
 
-  /**
-   * @name isEqual
-   * @description check if `token` equal current
-   */
-  public isEqual(token: Token): boolean {
-    return this.chain === token.chain && this.name === token.name;
+  public static fromBasicToken<T extends BasicToken> (token: T): T {
+    return new Token(token, false) as any as T;
   }
 
-  public toString(): string {
-    return this.name;
-  }
-
-  public toChainData(): { Token: string } | string {
-    if (this.chain === 'acala') {
-      return { Token: this.name };
+  public static fromCurrencyId (currency: CurrencyId, chain: CHAIN, precision = 18): Token | null {
+    if (currency.isToken) {
+      return new Token (TokenSymbol.fromCurrencyId(currency, chain, precision), false);
     }
 
-    return this.name;
+    if (currency.isDexShare) {
+      return new Token(DexShare.fromCurrencyId(currency, chain, precision), false);
+    }
+
+    return null;
   }
-
-  public clone(newConfig?: Partial<TokenConfig>): Token {
-    return new Token({
-      name: newConfig?.name || this.name || '',
-      chain: newConfig?.chain || this.chain || '',
-      precision: newConfig?.precision || this.precision || 0,
-      amount: newConfig?.amount || this.amount || new FixedPointNumber(0),
-      symbol: newConfig?.symbol || this.symbol || ''
-    });
-  }
-}
-
-function convert(config: Record<CHAIN, Record<string, TokenConfig>>): Record<CHAIN, Record<string, Token>> {
-  return Object.keys(config).reduce((prev, chain) => {
-    prev[chain as CHAIN] = Object.keys(config[chain as CHAIN]).reduce((prev, name) => {
-      prev[name] = new Token(config[chain as CHAIN][name]);
-
-      return prev;
-    }, {} as Record<string, Token>);
-
-    return prev;
-  }, {} as Record<CHAIN, Record<string, Token>>);
-}
-
-export const PRESET_TOKENS = convert(presetTokensConfig);
-
-export function getPresetToken(name: PresetToken, chain: CHAIN = 'acala'): Token {
-  return PRESET_TOKENS[chain][name];
-}
-
-const TOKEN_SORT: Record<string, number> = {
-  ACA: 0,
-  AUSD: 1,
-  DOT: 2,
-  XBTC: 3,
-  LDOT: 4,
-  RENBTC: 5
-};
-
-export function sortTokens(token1: Token, token2: Token, ...other: Token[]): Token[] {
-  const result = [token1, token2, ...other];
-
-  return result.sort((a, b) => TOKEN_SORT[a.name] - TOKEN_SORT[b.name]);
-}
-
-export function token2CurrencyId(api: ApiPromise | ApiRx, token: Token): CurrencyId {
-  return api.createType('CurrencyId', token.toChainData());
-}
-
-export function currencyId2Token(token: CurrencyId): Token {
-  return getPresetToken(token.asToken.toString() as PresetToken);
 }

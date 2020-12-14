@@ -203,9 +203,9 @@ describe('fixed point number compare should worker', () => {
     const b = new FixedPointNumber(10);
     const c = new FixedPointNumber(2);
 
-    expect(b.isLessOrEqualTo(a)).toEqual(false);
-    expect(a.isLessOrEqualTo(b)).toEqual(true);
-    expect(a.isLessOrEqualTo(c)).toEqual(true);
+    expect(b.isLessThanOrEqualTo(a)).toEqual(false);
+    expect(a.isLessThanOrEqualTo(b)).toEqual(true);
+    expect(a.isLessThanOrEqualTo(c)).toEqual(true);
   });
 
   test('isEqualTo', () => {

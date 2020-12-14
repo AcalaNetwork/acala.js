@@ -264,9 +264,9 @@ export class FixedPointNumber {
   public isLessThan = genFnFromBigNumber('isLessThan', false).bind(this);
 
   /**
-   * @name isLessOrEqualTo
+   * @name isLessThanOrEqualTo
    */
-  public isLessOrEqualTo = genFnFromBigNumber('isLessThanOrEqualTo', false).bind(this);
+  public isLessThanOrEqualTo = genFnFromBigNumber('isLessThanOrEqualTo', false).bind(this);
 
   /**
    * @name isEqualTo
