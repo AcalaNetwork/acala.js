@@ -1,7 +1,5 @@
-import { ApiRx, ApiPromise } from '@polkadot/api';
-
-import { TradingPair, Balance } from '@acala-network/types/interfaces';
-import { Token, getPresetToken, PresetToken, TokenPair } from '@acala-network/sdk-core';
+import { Balance } from '@acala-network/types/interfaces';
+import { Token, TokenPair } from '@acala-network/sdk-core';
 import { FixedPointNumber } from '@acala-network/sdk-core/fixed-point-number';
 
 import { TradeGraph } from './trade-graph';
@@ -37,19 +35,6 @@ export class SwapTrade {
     this.fee = config.fee;
     this.acceptSlippage = config.acceptSlippage;
     this.tradePaths = this.getTradePaths();
-  }
-
-  /**
-   * @name getAvailableTokenPairs
-   * @description help function to convert constants **dex.enabledTradingPairs** to **TokenPair**
-   */
-  static getAvailableTokenPairs(api: ApiRx | ApiPromise): TokenPair[] {
-    return api.consts.dex.enabledTradingPairs.map((pair: TradingPair) => {
-      return new TokenPair(
-        getPresetToken(pair[0].asToken.toString() as PresetToken),
-        getPresetToken(pair[1].asToken.toString() as PresetToken)
-      );
-    });
   }
 
   /**

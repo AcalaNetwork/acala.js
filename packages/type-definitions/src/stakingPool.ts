@@ -30,6 +30,12 @@ export default {
       unbondingToFreeAdjustment: 'Ratio',
       baseFeeRate: 'Rate'
     },
+    Ledger: {
+      bonded: 'Balance',
+      unbondingToFree: 'Balance',
+      freePool: 'Balance',
+      toUnbondNextEra: '(Balance, Balance)'
+    },
     ChangeRate: {
       _enum: {
         NoChange: 'Null',

@@ -3,10 +3,9 @@ import {
   Rate,
   OptionRatio,
   OptionRate,
-  Balance,
   Moment,
   AccountId,
-  DebitBalance,
+  Balance,
   ExchangeRate
 } from '@acala-network/types/interfaces';
 
@@ -39,11 +38,11 @@ export interface DerivedUserLoan {
   currency: CurrencyId | string;
   account: AccountId | string;
   collateral: Balance;
-  debit: DebitBalance;
+  debit: Balance;
 }
 
 export interface DerivedLoanOverView {
   currency: CurrencyId | string;
-  totalDebit: DebitBalance;
+  totalDebit: Balance;
   totalCollateral: Balance;
 }

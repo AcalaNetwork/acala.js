@@ -135,7 +135,8 @@ export const typesBundleForPolkadot = {
             ...version.types
           }
         };
-      })
+      }),
+      alias: typesAlias
     }
   }
 };
