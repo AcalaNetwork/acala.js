@@ -9,8 +9,8 @@ import type { PoolId } from '@acala-network/types/interfaces/incentives';
 import type { Position } from '@acala-network/types/interfaces/loans';
 import type { ClassId, ClassInfoOf, TokenId, TokenInfoOf } from '@acala-network/types/interfaces/nft';
 import type { BondingLedger } from '@acala-network/types/interfaces/nomineesElection';
-import type { AirDropCurrencyId, CurrencyId, TradingPair } from '@acala-network/types/interfaces/primitives';
-import type { AccountId, AccountIndex, AuctionId, Balance, BalanceOf, BlockNumber, DestAddress, ExtrinsicsWeight, H160, H256, Hash, KeyTypeId, Moment, OpaqueCall, OracleKey, Perbill, Releases, ValidatorId } from '@acala-network/types/interfaces/runtime';
+import type { AirDropCurrencyId, AuctionId, CurrencyId, TradingPair } from '@acala-network/types/interfaces/primitives';
+import type { AccountId, AccountIndex, Balance, BalanceOf, BlockNumber, DestAddress, ExtrinsicsWeight, H160, H256, Hash, KeyTypeId, Moment, OpaqueCall, OracleKey, Perbill, Releases, ValidatorId } from '@acala-network/types/interfaces/runtime';
 import type { Params, PolkadotAccountId, SubAccountStatus } from '@acala-network/types/interfaces/stakingPool';
 import type { ExchangeRate, Rate } from '@acala-network/types/interfaces/support';
 import type { GraduallyUpdate } from '@open-web3/orml-types/interfaces/graduallyUpdates';
@@ -46,7 +46,7 @@ export interface StorageType extends BaseStorageType {
     /**
      * True if Self::values(key) is up to date, otherwise the value is stale
      **/
-    isUpdated: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | string, bool>;
+    isUpdated: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | string, bool>;
     /**
      * The current members of the collective. This is stored sorted (just by value).
      **/
@@ -55,11 +55,11 @@ export interface StorageType extends BaseStorageType {
     /**
      * Raw values for each oracle operators
      **/
-    rawValues: StorageDoubleMap<AccountId | string, OracleKey | { Token: any } | { DEXShare: any } | string, Option<TimestampedValueOf>>;
+    rawValues: StorageDoubleMap<AccountId | string, OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Option<TimestampedValueOf>>;
     /**
      * Combined value, may not be up to date
      **/
-    values: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | string, Option<TimestampedValueOf>>;
+    values: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Option<TimestampedValueOf>>;
   };
   acalaTreasury: {    /**
      * Proposal indices that have been approved but not yet awarded.
@@ -134,7 +134,7 @@ export interface StorageType extends BaseStorageType {
      * Record of the total collateral amount of all active collateral auctions under specific collateral type
      * CollateralType -> TotalAmount
      **/
-    totalCollateralInAuction: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, Balance>;
+    totalCollateralInAuction: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Balance>;
     /**
      * Record of total fix amount of all active debit auctions
      **/
@@ -258,7 +258,7 @@ export interface StorageType extends BaseStorageType {
     /**
      * True if Self::values(key) is up to date, otherwise the value is stale
      **/
-    isUpdated: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | string, bool>;
+    isUpdated: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | string, bool>;
     /**
      * The current members of the collective. This is stored sorted (just by value).
      **/
@@ -267,20 +267,20 @@ export interface StorageType extends BaseStorageType {
     /**
      * Raw values for each oracle operators
      **/
-    rawValues: StorageDoubleMap<AccountId | string, OracleKey | { Token: any } | { DEXShare: any } | string, Option<TimestampedValueOf>>;
+    rawValues: StorageDoubleMap<AccountId | string, OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Option<TimestampedValueOf>>;
     /**
      * Combined value, may not be up to date
      **/
-    values: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | string, Option<TimestampedValueOf>>;
+    values: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Option<TimestampedValueOf>>;
   };
   cdpEngine: {    /**
      * Mapping from collateral type to its risk management params
      **/
-    collateralParams: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, RiskManagementParams>;
+    collateralParams: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, RiskManagementParams>;
     /**
      * Mapping from collateral type to its exchange rate of debit units and debit value
      **/
-    debitExchangeRate: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, Option<ExchangeRate>>;
+    debitExchangeRate: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Option<ExchangeRate>>;
     /**
      * Global stability fee rate for all types of collateral
      **/
@@ -289,7 +289,7 @@ export interface StorageType extends BaseStorageType {
   cdpTreasury: {    /**
      * The maximum amount of collateral amount for sale per collateral auction
      **/
-    collateralAuctionMaximumSize: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, Balance>;
+    collateralAuctionMaximumSize: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Balance>;
     /**
      * Current total debit value of system. It's not same as debit in CDP engine,
      * it is the bad debt of the system.
@@ -471,7 +471,7 @@ export interface StorageType extends BaseStorageType {
      * The authorization relationship map from
      * Authorizer -> (CollateralType, Authorizee) -> Authorized
      **/
-    authorization: StorageDoubleMap<AccountId | string, ITuple<[CurrencyId, AccountId]> | [CurrencyId | { Token: any } | { DEXShare: any } | string, AccountId | string], bool>;
+    authorization: StorageDoubleMap<AccountId | string, ITuple<[CurrencyId, AccountId]> | [CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, AccountId | string], bool>;
   };
   honzonCouncil: {    /**
      * The current members of the collective. This is stored sorted (just by value).
@@ -510,11 +510,11 @@ export interface StorageType extends BaseStorageType {
   incentives: {    /**
      * Mapping from dex liquidity currency type to its loans incentive reward amount per period
      **/
-    dexIncentiveRewards: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, Balance>;
+    dexIncentiveRewards: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Balance>;
     /**
      * Mapping from dex liquidity currency type to its saving rate
      **/
-    dexSavingRates: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, Rate>;
+    dexSavingRates: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Rate>;
     /**
      * Homa incentive reward amount
      **/
@@ -522,7 +522,7 @@ export interface StorageType extends BaseStorageType {
     /**
      * Mapping from collateral currency type to its loans incentive reward amount per period
      **/
-    loansIncentiveRewards: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, Balance>;
+    loansIncentiveRewards: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Balance>;
   };
   indices: {    /**
      * The lookup from index to account.
@@ -533,12 +533,12 @@ export interface StorageType extends BaseStorageType {
      * The collateralized debit positions, map from
      * Owner -> CollateralType -> Position
      **/
-    positions: StorageDoubleMap<CurrencyId | { Token: any } | { DEXShare: any } | string, AccountId | string, Position>;
+    positions: StorageDoubleMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, AccountId | string, Position>;
     /**
      * The total collateralized debit positions, map from
      * CollateralType -> Position
      **/
-    totalPositions: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, Position>;
+    totalPositions: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Position>;
   };
   multisig: {    calls: StorageMap<U8aFixed | string, Option<ITuple<[OpaqueCall, AccountId, BalanceOf]>>>;
     /**
@@ -603,7 +603,7 @@ export interface StorageType extends BaseStorageType {
   prices: {    /**
      * Mapping from currency id to it's locked price
      **/
-    lockedPrice: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, Option<Price>>;
+    lockedPrice: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Option<Price>>;
   };
   proxy: {    /**
      * The announcements made by the proxy (key).
@@ -1044,16 +1044,16 @@ export interface StorageType extends BaseStorageType {
      * 
      * NOTE: This is only used in the case that this module is used to store balances.
      **/
-    accounts: StorageDoubleMap<AccountId | string, CurrencyId | { Token: any } | { DEXShare: any } | string, AccountData>;
+    accounts: StorageDoubleMap<AccountId | string, CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, AccountData>;
     /**
      * Any liquidity locks of a token type under an account.
      * NOTE: Should only be accessed when setting, changing and freeing a lock.
      **/
-    locks: StorageDoubleMap<AccountId | string, CurrencyId | { Token: any } | { DEXShare: any } | string, Vec<BalanceLock>>;
+    locks: StorageDoubleMap<AccountId | string, CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Vec<BalanceLock>>;
     /**
      * The total issuance of a token type.
      **/
-    totalIssuance: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | string, Balance>;
+    totalIssuance: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Balance>;
   };
   vesting: {    /**
      * Vesting schedules of an account.

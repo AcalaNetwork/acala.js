@@ -1,9 +1,9 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { Bytes, Compact, DoNotConstruct, Enum, GenericAccountId, GenericAccountIndex, GenericBlock, GenericCall, GenericConsensusEngineId, GenericLookupSource, GenericMultiAddress, Int, Null, StorageKey, Struct, U8aFixed, UInt, Vec, i128, u128, u16, u32, u64, u8 } from '@polkadot/types';
+import type { Bytes, Compact, DoNotConstruct, Enum, GenericAccountId, GenericAccountIndex, GenericBlock, GenericCall, GenericConsensusEngineId, GenericLookupSource, GenericMultiAddress, Int, Null, StorageKey, Struct, U8aFixed, UInt, Vec, u16, u32, u64, u8 } from '@polkadot/types';
 import type { ITuple } from '@polkadot/types/types';
-import type { CurrencyId } from '@acala-network/types/interfaces/primitives';
+import type { AuthoritysOriginId, CurrencyId } from '@acala-network/types/interfaces/primitives';
 import type { Price } from '@open-web3/orml-types/interfaces/traits';
 import type { AuthorityId } from '@polkadot/types/interfaces/consensus';
 import type { Signature } from '@polkadot/types/interfaces/extrinsics';
@@ -21,29 +21,11 @@ export interface AccountIndex extends GenericAccountIndex {}
 /** @name Address */
 export interface Address extends LookupSource {}
 
-/** @name Amount */
-export interface Amount extends i128 {}
-
-/** @name AmountOf */
-export interface AmountOf extends Amount {}
-
 /** @name AsOriginId */
-export interface AsOriginId extends Enum {
-  readonly isRoot: boolean;
-  readonly isAcalaTreasury: boolean;
-  readonly isHonzonTreasury: boolean;
-  readonly isHomaTreasury: boolean;
-  readonly isDswf: boolean;
-}
+export interface AsOriginId extends AuthoritysOriginId {}
 
 /** @name AssetId */
 export interface AssetId extends u32 {}
-
-/** @name AuctionId */
-export interface AuctionId extends u32 {}
-
-/** @name AuctionIdOf */
-export interface AuctionIdOf extends AuctionId {}
 
 /** @name Balance */
 export interface Balance extends UInt {}
@@ -77,21 +59,6 @@ export interface Consensus extends ITuple<[ConsensusEngineId, Bytes]> {}
 
 /** @name ConsensusEngineId */
 export interface ConsensusEngineId extends GenericConsensusEngineId {}
-
-/** @name CurrencyIdOf */
-export interface CurrencyIdOf extends CurrencyId {}
-
-/** @name DebitAmount */
-export interface DebitAmount extends Amount {}
-
-/** @name DebitAmountOf */
-export interface DebitAmountOf extends DebitAmount {}
-
-/** @name DebitBalance */
-export interface DebitBalance extends Balance {}
-
-/** @name DebitBalanceOf */
-export interface DebitBalanceOf extends Balance {}
 
 /** @name DestAddress */
 export interface DestAddress extends U8aFixed {}
@@ -283,9 +250,6 @@ export interface Seal extends ITuple<[ConsensusEngineId, Bytes]> {}
 
 /** @name SealV0 */
 export interface SealV0 extends ITuple<[u64, Signature]> {}
-
-/** @name Share */
-export interface Share extends u128 {}
 
 /** @name SignedBlock */
 export interface SignedBlock extends Struct {
