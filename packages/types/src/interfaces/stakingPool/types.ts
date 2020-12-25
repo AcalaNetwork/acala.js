@@ -26,8 +26,8 @@ export interface ChangeRatio extends Enum {
   readonly asNewValue: Ratio;
 }
 
-/** @name Ledge */
-export interface Ledge extends Struct {
+/** @name Ledger */
+export interface Ledger extends Struct {
   readonly bonded: Balance;
   readonly unbondingToFree: Balance;
   readonly freePool: Balance;

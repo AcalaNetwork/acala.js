@@ -3,52 +3,15 @@
 
 import type { Vec, u32 } from '@polkadot/types';
 import type { Codec, ITuple } from '@polkadot/types/types';
-import type { PalletBalanceOf } from '@acala-network/types/interfaces/accounts';
-import type { CurrencyId, CurrencyIdOf, TradingPair } from '@acala-network/types/interfaces/primitives';
+import type { CurrencyId } from '@acala-network/types/interfaces/primitives';
 import type { Balance, BlockNumber, ModuleId } from '@acala-network/types/interfaces/runtime';
 import type { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
 import type { Price } from '@open-web3/orml-types/interfaces/traits';
 import type { EraIndex } from '@polkadot/types/interfaces/staking';
-import type { WeightToFeeCoefficient } from '@polkadot/types/interfaces/support';
 import type { ApiTypes } from '@polkadot/api/types';
 
 declare module '@polkadot/api/types/consts' {
   export interface AugmentedConsts<ApiType> {
-    accounts: {
-      [key: string]: Codec;
-      /**
-       * All non-native currency ids in Acala.
-       **/
-      allNonNativeCurrencyIds: Vec<CurrencyId> & AugmentedConst<ApiType>;
-      /**
-       * The max slippage allowed when swap open account deposit or fee with DEX
-       **/
-      maxSlippageSwapWithDex: Ratio & AugmentedConst<ApiType>;
-      /**
-       * Native currency id, the actual received currency type as fee for treasury.
-       **/
-      nativeCurrencyId: CurrencyId & AugmentedConst<ApiType>;
-      /**
-       * Deposit for opening account, would be reserved until account closed.
-       **/
-      newAccountDeposit: Balance & AugmentedConst<ApiType>;
-      /**
-       * Stable currency id.
-       **/
-      stableCurrencyId: CurrencyId & AugmentedConst<ApiType>;
-      /**
-       * The fee to be paid for making a transaction; the per-byte portion.
-       **/
-      transactionByteFee: PalletBalanceOf & AugmentedConst<ApiType>;
-      /**
-       * The treasury module account id to recycle assets.
-       **/
-      treasuryModuleId: ModuleId & AugmentedConst<ApiType>;
-      /**
-       * The polynomial that is applied in order to derive fee from weight.
-       **/
-      weightToFee: Vec<WeightToFeeCoefficient> & AugmentedConst<ApiType>;
-    };
     auctionManager: {
       [key: string]: Codec;
       /**
@@ -122,16 +85,8 @@ declare module '@polkadot/api/types/consts' {
        **/
       moduleId: ModuleId & AugmentedConst<ApiType>;
     };
-    currencies: {
-      [key: string]: Codec;
-      nativeCurrencyId: CurrencyIdOf & AugmentedConst<ApiType>;
-    };
     dex: {
       [key: string]: Codec;
-      /**
-       * Allowed trading pair list
-       **/
-      enabledTradingPairs: Vec<TradingPair> & AugmentedConst<ApiType>;
       /**
        * Trading fee rate
        **/

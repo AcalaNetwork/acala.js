@@ -30,7 +30,7 @@ export default {
       unbondingToFreeAdjustment: 'Ratio',
       baseFeeRate: 'Rate'
     },
-    Ledge: {
+    Ledger: {
       bonded: 'Balance',
       unbondingToFree: 'Balance',
       freePool: 'Balance',

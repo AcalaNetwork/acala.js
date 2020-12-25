@@ -5,13 +5,15 @@ import type { Bytes, Option, U8aFixed, Vec, bool, u32, u64 } from '@polkadot/typ
 import type { AnyNumber, ITuple } from '@polkadot/types/types';
 import type { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@acala-network/types/interfaces/auctionManager';
 import type { RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
+import type { TradingPairStatus } from '@acala-network/types/interfaces/dex';
+import type { CodeInfo, EvmAddress } from '@acala-network/types/interfaces/evm';
 import type { PoolId } from '@acala-network/types/interfaces/incentives';
 import type { Position } from '@acala-network/types/interfaces/loans';
 import type { ClassId, ClassInfoOf, TokenId, TokenInfoOf } from '@acala-network/types/interfaces/nft';
 import type { BondingLedger } from '@acala-network/types/interfaces/nomineesElection';
 import type { AirDropCurrencyId, AuctionId, CurrencyId, TradingPair } from '@acala-network/types/interfaces/primitives';
-import type { AccountId, AccountIndex, Balance, BalanceOf, BlockNumber, DestAddress, ExtrinsicsWeight, H160, H256, Hash, KeyTypeId, Moment, OpaqueCall, OracleKey, Perbill, Releases, ValidatorId } from '@acala-network/types/interfaces/runtime';
-import type { Params, PolkadotAccountId, SubAccountStatus } from '@acala-network/types/interfaces/stakingPool';
+import type { AccountId, AccountIndex, Balance, BalanceOf, BlockNumber, DestAddress, H256, Hash, KeyTypeId, Moment, OpaqueCall, OracleKey, Perbill, Releases, ValidatorId } from '@acala-network/types/interfaces/runtime';
+import type { Ledger, Params, PolkadotAccountId, SubAccountStatus } from '@acala-network/types/interfaces/stakingPool';
 import type { ExchangeRate, Rate } from '@acala-network/types/interfaces/support';
 import type { GraduallyUpdate } from '@open-web3/orml-types/interfaces/graduallyUpdates';
 import type { OrderedSet, TimestampedValueOf } from '@open-web3/orml-types/interfaces/oracle';
@@ -32,7 +34,7 @@ import type { ActiveRecovery, RecoveryConfig } from '@polkadot/types/interfaces/
 import type { Scheduled, TaskAddress } from '@polkadot/types/interfaces/scheduler';
 import type { Keys, SessionIndex } from '@polkadot/types/interfaces/session';
 import type { ActiveEraInfo, ElectionResult, ElectionScore, ElectionStatus, EraIndex, EraRewardPoints, Exposure, Forcing, Nominations, RewardDestination, SlashingSpans, SpanIndex, SpanRecord, StakingLedger, UnappliedSlash, ValidatorPrefs } from '@polkadot/types/interfaces/staking';
-import type { AccountInfo, DigestOf, EventIndex, EventRecord, LastRuntimeUpgradeInfo, Phase } from '@polkadot/types/interfaces/system';
+import type { AccountInfo, ConsumedWeight, DigestOf, EventIndex, EventRecord, LastRuntimeUpgradeInfo, Phase } from '@polkadot/types/interfaces/system';
 import type { Bounty, BountyIndex, OpenTip } from '@polkadot/types/interfaces/treasury';
 import type { Multiplier } from '@polkadot/types/interfaces/txpayment';
 import type { Multisig } from '@polkadot/types/interfaces/utility';
@@ -101,8 +103,6 @@ export interface StorageType extends BaseStorageType {
      **/
     tips: StorageMap<Hash | string, Option<OpenTip>>;
   };
-  accounts: {    nextFeeMultiplier: Multiplier | null;
-  };
   airDrop: {    airDrops: StorageDoubleMap<AccountId | string, AirDropCurrencyId | 'KAR'|'ACA' | number, Balance>;
   };
   auction: {    /**
@@ -165,6 +165,12 @@ export interface StorageType extends BaseStorageType {
      * Current epoch authorities.
      **/
     authorities: Vec<ITuple<[AuthorityId, BabeAuthorityWeight]>> | null;
+    /**
+     * Temporary value (cleared at block finalization) that includes the VRF output generated
+     * at this block. This field should always be populated during block processing unless
+     * secondary plain slots are enabled (which don't contain a VRF output).
+     **/
+    authorVrfRandomness: MaybeRandomness | null;
     /**
      * Current slot number.
      **/
@@ -320,10 +326,17 @@ export interface StorageType extends BaseStorageType {
     pristineCode: StorageMap<CodeHash | string, Option<Bytes>>;
   };
   dex: {    /**
-     * Liquidity pool for specific pair(a tuple consisting of two sorted CurrencyIds).
-     * (CurrencyId_0, CurrencyId_1) -> (Amount_0, Amount_1)
+     * Liquidity pool for TradingPair.
      **/
     liquidityPool: StorageMap<TradingPair, ITuple<[Balance, Balance]>>;
+    /**
+     * Provision of TradingPair by AccountId.
+     **/
+    provisioningPool: StorageDoubleMap<TradingPair, AccountId | string, ITuple<[Balance, Balance]>>;
+    /**
+     * Status for TradingPair.
+     **/
+    tradingPairStatuses: StorageMap<TradingPair, TradingPairStatus>;
   };
   electionsPhragmen: {    /**
      * The present candidate list. Sorted based on account-id. A current member or runner-up
@@ -339,7 +352,7 @@ export interface StorageType extends BaseStorageType {
      **/
     members: Vec<ITuple<[AccountId, BalanceOf]>> | null;
     /**
-     * The current runners_up. Sorted based on low to high merit (worse to best runner).
+     * The current runners_up. Sorted based on low to high merit (worse to best).
      **/
     runnersUp: Vec<ITuple<[AccountId, BalanceOf]>> | null;
     /**
@@ -358,8 +371,21 @@ export interface StorageType extends BaseStorageType {
      **/
     isShutdown: bool | null;
   };
-  evm: {    accountCodes: StorageMap<H160 | string, Bytes>;
-    accountStorages: StorageDoubleMap<H160 | string, H256 | string, H256>;
+  evm: {    accounts: StorageMap<EvmAddress | string, Option<AccountInfo>>;
+    accountStorages: StorageDoubleMap<EvmAddress | string, H256 | string, H256>;
+    codeInfos: StorageMap<H256 | string, Option<CodeInfo>>;
+    codes: StorageMap<H256 | string, Bytes>;
+    /**
+     * Next available system contract address.
+     **/
+    networkContractIndex: u64 | null;
+    /**
+     * Pending transfer maintainers: double_map (contract, new_maintainer) => TransferMaintainerDeposit
+     **/
+    pendingTransferMaintainers: StorageDoubleMap<EvmAddress | string, EvmAddress | string, Option<BalanceOf>>;
+  };
+  evmAccounts: {    accounts: StorageMap<EvmAddress | string, Option<AccountId>>;
+    evmAddresses: StorageMap<AccountId | string, Option<EvmAddress>>;
   };
   generalCouncil: {    /**
      * The current members of the collective. This is stored sorted (just by value).
@@ -583,7 +609,7 @@ export interface StorageType extends BaseStorageType {
     /**
      * Next available token ID.
      **/
-    nextTokenId: TokenId | null;
+    nextTokenId: StorageMap<ClassId | AnyNumber, TokenId>;
     /**
      * Store token info.
      * 
@@ -905,15 +931,33 @@ export interface StorageType extends BaseStorageType {
      **/
     validatorSlashInEra: StorageDoubleMap<EraIndex | AnyNumber, AccountId | string, Option<ITuple<[Perbill, BalanceOf]>>>;
   };
-  stakingPool: {    claimedUnbond: StorageDoubleMap<AccountId | string, EraIndex | AnyNumber, Balance>;
+  stakingPool: {    /**
+     * Current era index of Polkadot.
+     **/
     currentEra: EraIndex | null;
-    freeUnbonded: Balance | null;
-    nextEraUnbond: ITuple<[Balance, Balance]> | null;
+    /**
+     * Unbond on next era beginning by AccountId.
+     * AccountId => Unbond
+     **/
+    nextEraUnbonds: StorageMap<AccountId | string, Balance>;
+    /**
+     * The ledger of staking pool.
+     **/
+    stakingPoolLedger: Ledger | null;
+    /**
+     * The params of staking pool.
+     **/
     stakingPoolParams: Params | null;
-    totalBonded: Balance | null;
-    totalClaimedUnbonded: Balance | null;
+    /**
+     * The records of unbonding.
+     * ExpiredEraIndex => (TotalUnbounding, ClaimedUnbonding, InitialClaimedUnbonding)
+     **/
     unbonding: StorageMap<EraIndex | AnyNumber, ITuple<[Balance, Balance, Balance]>>;
-    unbondingToFree: Balance | null;
+    /**
+     * The records of unbonding by AccountId.
+     * AccountId, ExpiredEraIndex => Unbounding
+     **/
+    unbondings: StorageDoubleMap<AccountId | string, EraIndex | AnyNumber, Balance>;
   };
   sudo: {    /**
      * The `AccountId` of the sudo key.
@@ -935,7 +979,7 @@ export interface StorageType extends BaseStorageType {
     /**
      * The current weight for the block.
      **/
-    blockWeight: ExtrinsicsWeight | null;
+    blockWeight: ConsumedWeight | null;
     /**
      * Digest of the current block, also part of the block header.
      **/
@@ -1054,6 +1098,8 @@ export interface StorageType extends BaseStorageType {
      * The total issuance of a token type.
      **/
     totalIssuance: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Balance>;
+  };
+  transactionPayment: {    nextFeeMultiplier: Multiplier | null;
   };
   vesting: {    /**
      * Vesting schedules of an account.
