@@ -45,7 +45,8 @@ export default {
       contractInfo: 'Option<EvmContractInfo>',
       storageRentDeposit: 'Balance',
       storageQuota: 'u32',
-      storageUsage: 'u32'
+      storageUsage: 'u32',
+      developerDeposit: 'Option<Balance>'
     },
     CodeInfo: {
       codeSize: 'u32',
@@ -55,7 +56,8 @@ export default {
       storageCount: 'u32',
       codeHash: 'H256',
       existentialDeposit: 'Balance',
-      maintainer: 'H160'
+      maintainer: 'H160',
+      deployed: 'bool'
     },
     EvmAddress: 'H160',
     CallRequest: {
