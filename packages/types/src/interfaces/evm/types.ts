@@ -1,7 +1,7 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { Bytes, Enum, Option, Struct, Text, U128, u32 } from '@polkadot/types';
+import type { Bytes, Enum, Option, Struct, Text, U128, bool, u32 } from '@polkadot/types';
 import type { Balance, H160, H256, Index } from '@acala-network/types/interfaces/runtime';
 
 /** @name CallRequest */
@@ -26,6 +26,7 @@ export interface EvmAccountInfo extends Struct {
   readonly storageRentDeposit: Balance;
   readonly storageQuota: u32;
   readonly storageUsage: u32;
+  readonly developerDeposit: Option<Balance>;
 }
 
 /** @name EvmAddress */
@@ -37,6 +38,7 @@ export interface EvmContractInfo extends Struct {
   readonly codeHash: H256;
   readonly existentialDeposit: Balance;
   readonly maintainer: H160;
+  readonly deployed: bool;
 }
 
 /** @name ExitError */
