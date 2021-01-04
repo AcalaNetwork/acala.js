@@ -69,13 +69,13 @@ class StakingPoolLedger implements StakingPoolLedgerData {
 }
 
 export class StakingPool {
-  private params: StakingPoolParams;
-  private ledger: StakingPoolLedger;
+  public params: StakingPoolParams;
+  public ledger: StakingPoolLedger;
 
-  private defaultExchangeRate!: FixedPointNumber;
-  private liquidTotalIssuance!: FixedPointNumber;
-  private bondingDuration!: number;
-  private currentEra!: number;
+  public defaultExchangeRate!: FixedPointNumber;
+  public liquidTotalIssuance!: FixedPointNumber;
+  public bondingDuration!: number;
+  public currentEra!: number;
 
   constructor(config: StakingPoolConfig) {
     this.params = config.params;

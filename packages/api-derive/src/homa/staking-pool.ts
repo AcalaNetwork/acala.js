@@ -31,13 +31,13 @@ export function stakingPool(instanceId: string, api: ApiInterfaceRx): () => Obse
       api.query.tokens.totalIssuance(constants.liquidCurrency)
     ]).pipe(
       map((result) => {
-        const [currentEra, stakingPoolLedger, stakingPoolParams, liquidTokenIssuance] = result;
+        const [currentEra, ledger, params, liquidIssuance] = result;
 
         return {
-          currentEra: currentEra,
-          ledger: stakingPoolLedger,
-          params: stakingPoolParams,
-          liquidTokenIssuance: liquidTokenIssuance,
+          currentEra,
+          ledger,
+          params,
+          liquidIssuance,
           ...constants
         };
       })

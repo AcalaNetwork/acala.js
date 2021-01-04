@@ -7,7 +7,7 @@ import { memo } from '@polkadot/api-derive/util';
 import { CurrencyId, Rate, ExchangeRate, Balance, Position, Ratio } from '@acala-network/types/interfaces';
 
 import { DerivedLoanConstants, DerivedLoanType, DerivedLoanOverView, CollateralParams } from '../types/loan';
-import { getCollateralCurrencyIds } from '../helps/currency';
+import { getAllCollateralCurrencyIds } from '../utils';
 
 /**
  * @name loanConstants
@@ -69,7 +69,7 @@ export function loanType(
  */
 export function allLoanTypes(instanceId: string, api: ApiInterfaceRx): () => Observable<DerivedLoanType[]> {
   return memo(instanceId, () => {
-    const collateralCurrencyIds = getCollateralCurrencyIds(api);
+    const collateralCurrencyIds = getAllCollateralCurrencyIds(api);
     const loanTypeQuery = loanType(instanceId, api);
 
     return combineLatest(collateralCurrencyIds.map((currencyId) => loanTypeQuery(currencyId)));
@@ -102,7 +102,7 @@ export function loanOverview(
  */
 export function allLoanOverviews(instanceId: string, api: ApiInterfaceRx): () => Observable<DerivedLoanOverView[]> {
   return memo(instanceId, () => {
-    const collateralCurrencyIds = getCollateralCurrencyIds(api);
+    const collateralCurrencyIds = getAllCollateralCurrencyIds(api);
     const loanOverViewQuery = loanOverview(instanceId, api);
 
     return combineLatest(collateralCurrencyIds.map((currencyId) => loanOverViewQuery(currencyId)));
