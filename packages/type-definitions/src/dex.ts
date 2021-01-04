@@ -53,8 +53,8 @@ export default {
     TradingPairStatus: {
       _enum: {
         NotEnabled: 'Null',
-        Enabled: 'Null',
-        Provisioning: 'TradingPairProvisionParameters'
+        Provisioning: 'TradingPairProvisionParameters',
+        Enabled: 'Null'
       }
     }
   }

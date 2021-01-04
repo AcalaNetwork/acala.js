@@ -26,9 +26,9 @@ export interface TradingPairProvisionParameters extends Struct {
 /** @name TradingPairStatus */
 export interface TradingPairStatus extends Enum {
   readonly isNotEnabled: boolean;
-  readonly isEnabled: boolean;
   readonly isProvisioning: boolean;
   readonly asProvisioning: TradingPairProvisionParameters;
+  readonly isEnabled: boolean;
 }
 
 export type PHANTOM_DEX = 'dex';

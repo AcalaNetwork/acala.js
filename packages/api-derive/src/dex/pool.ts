@@ -1,9 +1,8 @@
 import { ApiInterfaceRx } from '@polkadot/api/types';
 import { map } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { Vec } from '@polkadot/types';
-import { CurrencyId, Balance, TradingPair } from '@acala-network/types/interfaces';
+import { CurrencyId, Balance } from '@acala-network/types/interfaces';
 import { memo } from '@polkadot/api-derive/util';
 
 import { DerivedDexPool } from '../types/dex';
@@ -45,25 +44,6 @@ export function pool(
 
         return [token2Amount, token1Amount];
       })
-    );
-  });
-}
-
-/**
- * @name lpTokens
- * @description get all lp CurrencyId
- */
-export function allLPCurrencyIds(instanceId: string, api: ApiInterfaceRx): () => Observable<CurrencyId[]> {
-  return memo(instanceId, () => {
-    const allTradingPirs = api.consts.dex.enabledTradingPairs as Vec<TradingPair>;
-
-    return of(
-      allTradingPirs.map(
-        (item): CurrencyId =>
-          api.registry.createType('CurrencyId' as any, {
-            DEXShare: [item[0].asToken.toString(), item[1].asToken.toString()]
-          })
-      )
     );
   });
 }

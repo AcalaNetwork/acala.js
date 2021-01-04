@@ -6,7 +6,7 @@ import { CurrencyId, AccountId, Position } from '@acala-network/types/interfaces
 import { memo } from '@polkadot/api-derive/util';
 
 import { DerivedUserLoan } from '../types/loan';
-import { getCollateralCurrencyIds } from '../helps/currency';
+import { getAllCollateralCurrencyIds } from '../utils';
 
 /**
  * @name loan
@@ -39,7 +39,7 @@ export function allLoans(
   api: ApiInterfaceRx
 ): (account: AccountId | string) => Observable<DerivedUserLoan[]> {
   return memo(instanceId, (account: AccountId | string) => {
-    const collateralCurrencyIds = getCollateralCurrencyIds(api);
+    const collateralCurrencyIds = getAllCollateralCurrencyIds(api);
     const loanQuery = loan(instanceId, api);
 
     return combineLatest(collateralCurrencyIds.map((currency) => loanQuery(account, currency)));
