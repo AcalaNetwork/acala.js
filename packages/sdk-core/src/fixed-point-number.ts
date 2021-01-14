@@ -1,5 +1,22 @@
 import BigNumber from 'bignumber.js';
 
+/**
+ * @constant
+ * @type {(0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8)}
+ * @description
+ * | Value | Property | Description |
+ * | 0     | ROUND_UP | Rounds away from zero |
+ * | 1     | ROUND_DOWN | Rounds towards zero |
+ * | 2     | ROUND_CEIL | Rounds towards Infinity |
+ * | 3     | ROUND_FLOOR | Rounds towards -Infinity |
+ * | 4     | ROUND_HALF_UP | Rounds towards nearest neighbour, If equidistant, rounds away form zero |
+ * | 5     | ROUND_HALF_DOWN | Rounds towards nearest neighbour, If equidistant, rounds towards zero |
+ * | 6     | ROUND_HALF_EVEN | Rounds towards nearest neighbour, If equidistant, rounds towards even zero |
+ * | 7     | ROUND_HALF_CEIL | Rounds towards nearest neighbour, If equidistant, rounds towards Infinity |
+ * | 8     | ROUND_HALF_FLOOR | Rounds towards nearest neighbour, If equidistant, rounds towards -Infinity |
+ */
+export type ROUND_MODE = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+
 // generate function from BN class
 function genFnFromBigNumber<T extends keyof BigNumber, U extends boolean>(
   fn: T,
@@ -11,19 +28,20 @@ function genFnFromBigNumber<T extends keyof BigNumber, U extends boolean>(
   : () => any {
   if (noRight) {
     return function (): number {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/ban-ts-comment */
       // @ts-ignore
       return this.inner[fn]();
+      /* eslint-enable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/ban-ts-comment */
     } as any;
   }
 
   return function (right: FixedPointNumber) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/ban-ts-comment */
     // @ts-ignore
     this.alignPrecision(right);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return this.inner[fn](right._getInner());
+    /* eslint-enable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/ban-ts-comment */
   } as any;
 }
 
@@ -98,7 +116,7 @@ export class FixedPointNumber {
   private setMode(dp = 0, rm = 3): void {
     BN.config({
       DECIMAL_PLACES: dp,
-      ROUNDING_MODE: rm as any,
+      ROUNDING_MODE: rm as ROUND_MODE,
       EXPONENTIAL_AT: [-100, 100]
     });
   }

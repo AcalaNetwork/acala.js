@@ -162,7 +162,7 @@ export class StakingPool {
 
     const liquidExchangeRate = this.liquidExchangeRate();
 
-    let liquidAmountToBurn = amount;
+    const liquidAmountToBurn = amount;
     let demandStakingAmount = liquidExchangeRate.times(liquidAmountToBurn);
 
     const stakingPoolParams = this.params;
@@ -174,9 +174,6 @@ export class StakingPool {
 
     if (!demandStakingAmount.isZero() && !availableFreePool.isZero()) {
       if (demandStakingAmount.isGreaterThan(availableFreePool)) {
-        const ratio = FixedPointNumber.fromRational(availableFreePool, demandStakingAmount);
-
-        liquidAmountToBurn = ratio.times(liquidAmountToBurn);
         demandStakingAmount = availableFreePool;
       }
 
@@ -272,7 +269,7 @@ export class StakingPool {
     const liquidExchangeRate = this.liquidExchangeRate();
     const stakingPoolParams = this.params;
 
-    let liquidAmountToBurn = amount;
+    const liquidAmountToBurn = amount;
     let demandStakingAmount = liquidExchangeRate.times(liquidAmountToBurn);
     const { unbonding, claimedUnbonding, initialClaimedUnbonding } = unbondingState;
 
@@ -284,9 +281,6 @@ export class StakingPool {
 
     if (!demandStakingAmount.isZero() && !availableUnclaimedUnbonding.isZero()) {
       if (demandStakingAmount.isGreaterThan(availableUnclaimedUnbonding)) {
-        const ratio = FixedPointNumber.fromRational(availableUnclaimedUnbonding, demandStakingAmount);
-
-        liquidAmountToBurn = ratio.times(liquidAmountToBurn);
         demandStakingAmount = availableUnclaimedUnbonding;
       }
 
