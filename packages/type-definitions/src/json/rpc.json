@@ -1,0 +1,149 @@
+{
+    "oracle": {
+        "getValue": {
+            "description": "Retrieves the oracle value for a given key.",
+            "params": [
+                {
+                    "name": "providerId",
+                    "type": "RpcDataProviderId"
+                },
+                {
+                    "name": "key",
+                    "type": "OracleKey"
+                }
+            ],
+            "type": "Option<TimestampedValue>",
+            "isSubscription": false,
+            "jsonrpc": "oracle_getValue",
+            "method": "getValue",
+            "section": "oracle"
+        },
+        "getAllValues": {
+            "description": "Retrieves all oracle values.",
+            "params": [
+                {
+                    "name": "providerId",
+                    "type": "RpcDataProviderId"
+                }
+            ],
+            "type": "Vec<(OracleKey, Option<TimestampedValue>)>",
+            "isSubscription": false,
+            "jsonrpc": "oracle_getAllValues",
+            "method": "getAllValues",
+            "section": "oracle"
+        }
+    },
+    "dex": {
+        "getSupplyAmount": {
+            "description": "Get supply amount",
+            "params": [
+                {
+                    "name": "supplyCurrencyId",
+                    "type": "CurrencyId"
+                },
+                {
+                    "name": "targetCurrencyId",
+                    "type": "CurrencyId"
+                },
+                {
+                    "name": "targetCurrencyAmount",
+                    "type": "BalanceRequest"
+                }
+            ],
+            "type": "BalanceWrapper",
+            "isSubscription": false,
+            "jsonrpc": "dex_getSupplyAmount",
+            "method": "getSupplyAmount",
+            "section": "dex"
+        },
+        "getTargetAmount": {
+            "description": "Get target amount",
+            "params": [
+                {
+                    "name": "supplyCurrencyId",
+                    "type": "CurrencyId"
+                },
+                {
+                    "name": "targetCurrencyId",
+                    "type": "CurrencyId"
+                },
+                {
+                    "name": "supplyCurrencyAmount",
+                    "type": "BalanceRequest"
+                }
+            ],
+            "type": "BalanceWrapper",
+            "isSubscription": false,
+            "jsonrpc": "dex_getTargetAmount",
+            "method": "getTargetAmount",
+            "section": "dex"
+        }
+    },
+    "evm": {
+        "call": {
+            "description": "eth call",
+            "params": [
+                {
+                    "name": "data",
+                    "type": "CallRequest"
+                },
+                {
+                    "name": "at",
+                    "type": "BlockHash",
+                    "isHistoric": true,
+                    "isOptional": true
+                }
+            ],
+            "type": "Raw",
+            "isSubscription": false,
+            "jsonrpc": "evm_call",
+            "method": "call",
+            "section": "evm"
+        },
+        "estimateGas": {
+            "description": "eth estimateGas",
+            "params": [
+                {
+                    "name": "data",
+                    "type": "CallRequest"
+                },
+                {
+                    "name": "at",
+                    "type": "BlockHash",
+                    "isHistoric": true,
+                    "isOptional": true
+                }
+            ],
+            "type": "u128",
+            "isSubscription": false,
+            "jsonrpc": "evm_estimateGas",
+            "method": "estimateGas",
+            "section": "evm"
+        }
+    },
+    "stakingPool": {
+        "getAvailableUnbonded": {
+            "description": "Get Available Unbonded",
+            "params": [
+                {
+                    "name": "account",
+                    "type": "AccountId"
+                }
+            ],
+            "type": "BalanceInfo",
+            "isSubscription": false,
+            "jsonrpc": "stakingPool_getAvailableUnbonded",
+            "method": "getAvailableUnbonded",
+            "section": "stakingPool"
+        },
+        "getLiquidStakingExchangeRate": {
+            "description": "get liquid staking exchange rate",
+            "params": [],
+            "type": "ExchangeRate",
+            "isSubscription": false,
+            "jsonrpc": "stakingPool_getLiquidStakingExchangeRate",
+            "method": "getLiquidStakingExchangeRate",
+            "section": "stakingPool"
+        }
+    }
+}
