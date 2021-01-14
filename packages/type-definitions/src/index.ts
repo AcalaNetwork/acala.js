@@ -134,12 +134,12 @@ const bundle = {
     };
   }),
   alias: typesAlias
-}
+};
 
 // Type overrides have priority issues
 export const typesBundleForPolkadot = {
   spec: {
     acala: bundle,
-    mandala: bundle,
+    mandala: bundle
   }
 };
