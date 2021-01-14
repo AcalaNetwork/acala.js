@@ -174,9 +174,6 @@ export class StakingPool {
 
     if (!demandStakingAmount.isZero() && !availableFreePool.isZero()) {
       if (demandStakingAmount.isGreaterThan(availableFreePool)) {
-        const ratio = FixedPointNumber.fromRational(availableFreePool, demandStakingAmount);
-
-        liquidAmountToBurn = ratio.times(liquidAmountToBurn);
         demandStakingAmount = availableFreePool;
       }
 
@@ -284,9 +281,6 @@ export class StakingPool {
 
     if (!demandStakingAmount.isZero() && !availableUnclaimedUnbonding.isZero()) {
       if (demandStakingAmount.isGreaterThan(availableUnclaimedUnbonding)) {
-        const ratio = FixedPointNumber.fromRational(availableUnclaimedUnbonding, demandStakingAmount);
-
-        liquidAmountToBurn = ratio.times(liquidAmountToBurn);
         demandStakingAmount = availableUnclaimedUnbonding;
       }
 
