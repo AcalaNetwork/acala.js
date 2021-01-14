@@ -162,7 +162,7 @@ export class StakingPool {
 
     const liquidExchangeRate = this.liquidExchangeRate();
 
-    let liquidAmountToBurn = amount;
+    const liquidAmountToBurn = amount;
     let demandStakingAmount = liquidExchangeRate.times(liquidAmountToBurn);
 
     const stakingPoolParams = this.params;
@@ -269,7 +269,7 @@ export class StakingPool {
     const liquidExchangeRate = this.liquidExchangeRate();
     const stakingPoolParams = this.params;
 
-    let liquidAmountToBurn = amount;
+    const liquidAmountToBurn = amount;
     let demandStakingAmount = liquidExchangeRate.times(liquidAmountToBurn);
     const { unbonding, claimedUnbonding, initialClaimedUnbonding } = unbondingState;
 
