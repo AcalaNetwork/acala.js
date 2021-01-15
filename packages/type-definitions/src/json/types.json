@@ -66,6 +66,7 @@
         "totalWithdrawnRewards": "Compact<Balance>"
     },
     "Share": "u128",
+    "OracleValue": "Price",
     "PalletBalanceOf": "Balance",
     "CollateralAuctionItem": {
         "refundRecipient": "AccountId",
@@ -308,7 +309,6 @@
     "TradingPair": "(CurrencyId,  CurrencyId)",
     "NFTBalance": "u128",
     "OracleKey": "CurrencyId",
-    "OracleValue": "Price",
     "DestAddress": "Vec<u8>",
     "AsOriginId": "AuthoritysOriginId",
     "SubAccountStatus": {
