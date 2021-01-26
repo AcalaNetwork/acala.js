@@ -124,6 +124,7 @@ export const rpc = jsonrpcFromDefs(acalaDefs, { ...ormlRpc });
 export const typesAlias = typesAliasFromDefs(acalaDefs, { ...ormlAlias });
 
 const bundle = {
+  rpc,
   types: [...versioned].map((version) => {
     return {
       minmax: version.minmax,
