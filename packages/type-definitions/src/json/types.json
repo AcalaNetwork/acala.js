@@ -309,7 +309,6 @@
     "TradingPair": "(CurrencyId,  CurrencyId)",
     "NFTBalance": "u128",
     "OracleKey": "CurrencyId",
-    "DestAddress": "Vec<u8>",
     "AsOriginId": "AuthoritysOriginId",
     "SubAccountStatus": {
         "bonded": "Balance",
@@ -350,6 +349,8 @@
     "ExchangeRate": "FixedU128",
     "Rate": "FixedU128",
     "Ratio": "FixedU128",
+    "PublicKey": "[u8; 20]",
+    "DestAddress": "Vec<u8>",
     "Keys": "SessionKeys2",
     "PalletsOrigin": {
         "_enum": {

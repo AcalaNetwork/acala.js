@@ -13,7 +13,7 @@ import primitives from './primitives';
 import runtime from './runtime';
 import stakingPool from './stakingPool';
 import support from './support';
-import ren from './ren';
+import renvmBridge from './renvmBridge';
 import evm from './evm';
 import versioned from './types-known/versioned';
 
@@ -101,7 +101,7 @@ const acalaDefs = {
   runtime,
   stakingPool,
   support,
-  ren
+  renvmBridge
 };
 
 export const types = {

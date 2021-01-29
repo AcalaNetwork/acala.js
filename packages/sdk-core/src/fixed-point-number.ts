@@ -47,16 +47,22 @@ function genFnFromBigNumber<T extends keyof BigNumber, U extends boolean>(
 
 const BN = BigNumber.clone();
 
+let GLOBAL_PRECISION = 18;
+
 export class FixedPointNumber {
   private precision!: number;
   private inner: BigNumber;
 
-  constructor(origin: number | string, precision = 18) {
+  constructor(origin: number | string, precision = GLOBAL_PRECISION) {
     if (typeof origin !== 'number' && typeof origin !== 'string')
       throw new Error('FixedPointNumber constructor should use number or string');
 
     this.precision = precision;
     this.inner = new BN(origin).shiftedBy(this.precision);
+  }
+
+  public static setGlobalPrecision(precision = 18): void {
+    GLOBAL_PRECISION = precision;
   }
 
   /**

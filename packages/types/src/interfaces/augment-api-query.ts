@@ -53,8 +53,8 @@ declare module '@polkadot/api/types/storage' {
        **/
       surplusAuctions: AugmentedQuery<ApiType, (arg: AuctionId | AnyNumber | Uint8Array) => Observable<Option<SurplusAuctionItem>>, [AuctionId]> & QueryableStorageEntry<ApiType, [AuctionId]>;
       /**
-       * Record of the total collateral amount of all active collateral auctions under specific collateral type
-       * CollateralType -> TotalAmount
+       * Record of the total collateral amount of all active collateral auctions
+       * under specific collateral type CollateralType -> TotalAmount
        **/
       totalCollateralInAuction: AugmentedQuery<ApiType, (arg: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array) => Observable<Balance>, [CurrencyId]> & QueryableStorageEntry<ApiType, [CurrencyId]>;
       /**
@@ -77,7 +77,8 @@ declare module '@polkadot/api/types/storage' {
        **/
       collateralParams: AugmentedQuery<ApiType, (arg: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array) => Observable<RiskManagementParams>, [CurrencyId]> & QueryableStorageEntry<ApiType, [CurrencyId]>;
       /**
-       * Mapping from collateral type to its exchange rate of debit units and debit value
+       * Mapping from collateral type to its exchange rate of debit units and
+       * debit value
        **/
       debitExchangeRate: AugmentedQuery<ApiType, (arg: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array) => Observable<Option<ExchangeRate>>, [CurrencyId]> & QueryableStorageEntry<ApiType, [CurrencyId]>;
       /**
@@ -92,8 +93,8 @@ declare module '@polkadot/api/types/storage' {
        **/
       collateralAuctionMaximumSize: AugmentedQuery<ApiType, (arg: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array) => Observable<Balance>, [CurrencyId]> & QueryableStorageEntry<ApiType, [CurrencyId]>;
       /**
-       * Current total debit value of system. It's not same as debit in CDP engine,
-       * it is the bad debt of the system.
+       * Current total debit value of system. It's not same as debit in CDP
+       * engine, it is the bad debt of the system.
        **/
       debitPool: AugmentedQuery<ApiType, () => Observable<Balance>, []> & QueryableStorageEntry<ApiType, []>;
     };
@@ -187,7 +188,8 @@ declare module '@polkadot/api/types/storage' {
       stakingPoolParams: AugmentedQuery<ApiType, () => Observable<Params>, []> & QueryableStorageEntry<ApiType, []>;
       /**
        * The records of unbonding.
-       * ExpiredEraIndex => (TotalUnbounding, ClaimedUnbonding, InitialClaimedUnbonding)
+       * ExpiredEraIndex => (TotalUnbounding, ClaimedUnbonding,
+       * InitialClaimedUnbonding)
        **/
       unbonding: AugmentedQuery<ApiType, (arg: EraIndex | AnyNumber | Uint8Array) => Observable<ITuple<[Balance, Balance, Balance]>>, [EraIndex]> & QueryableStorageEntry<ApiType, [EraIndex]>;
       /**
@@ -203,7 +205,8 @@ declare module '@polkadot/api/types/storage' {
        * 
        * NOTE: If the total is ever zero, decrease account ref account.
        * 
-       * NOTE: This is only used in the case that this module is used to store balances.
+       * NOTE: This is only used in the case that this module is used to store
+       * balances.
        **/
       accounts: AugmentedQueryDoubleMap<ApiType, (key1: AccountId | string | Uint8Array, key2: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array) => Observable<AccountData>, [AccountId, CurrencyId]> & QueryableStorageEntry<ApiType, [AccountId, CurrencyId]>;
       /**

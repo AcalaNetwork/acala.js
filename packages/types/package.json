@@ -17,11 +17,11 @@
   "dependencies": {
     "@acala-network/type-definitions": "^0.6.2-8",
     "@babel/runtime": "^7.10.2",
-    "@open-web3/api-mobx": "^0.8.2-6",
-    "@open-web3/orml-types": "^0.8.2-6",
-    "@polkadot/api": "^3.4.1",
-    "@polkadot/typegen": "^3.4.1",
-    "@polkadot/types": "^3.4.1"
+    "@open-web3/api-mobx": "^0.8.2-7",
+    "@open-web3/orml-types": "^0.8.2-7",
+    "@polkadot/api": "^3.6.4",
+    "@polkadot/typegen": "^3.6.4",
+    "@polkadot/types": "^3.6.4"
   },
   "devDependencies": {
     "@types/websocket": "^1.0.0",
