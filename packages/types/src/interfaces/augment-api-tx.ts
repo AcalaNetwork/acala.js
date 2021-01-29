@@ -24,45 +24,8 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Bid an auction.
        * 
-       * The dispatch origin for this call must be `Signed` by the transactor.
-       * 
-       * # <weight>
-       * - Preconditions:
-       * - T::Handler is module_auction_manager of Acala
-       * - Indirectly needs orml_currencies and module_cdp_treasury of Acala
-       * - Complexity: `O(1)`
-       * - Db reads:
-       * - collateral auction:
-       * - best cases: 7
-       * - worst cases: 14
-       * - surplus auction:
-       * - best cases: 5
-       * - worst cases: 6
-       * - debit auction:
-       * - best cases: 8
-       * - worst cases: 7
-       * - Db writes:
-       * - collateral auction:
-       * - best cases: 7
-       * - worst cases: 14
-       * - surplus auction:
-       * - best cases: 3
-       * - worst cases: 5
-       * - debit auction:
-       * - best cases: 8
-       * - worst cases: 8
-       * -------------------
-       * Base Weight:
-       * - collateral auction:
-       * - best cases: 134 µs
-       * - worst cases: 300.4 µs
-       * - surplus auction:
-       * - best cases: 97.9 µs
-       * - worst cases: 157.6 µs
-       * - debit auction:
-       * - best cases: 140.7 µs
-       * - worst cases: 142.8 µs
-       * # </weight>
+       * The dispatch origin for this call must be `Signed` by the
+       * transactor.
        **/
       bid: AugmentedSubmittable<(id: AuctionId | AnyNumber | Uint8Array, value: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AuctionId, Compact<Balance>]>;
     };
@@ -72,30 +35,6 @@ declare module '@polkadot/api/types/submittable' {
        * Cancel active auction after system shutdown
        * 
        * The dispatch origin of this call must be _None_.
-       * 
-       * - `auction_id`: auction id
-       * 
-       * # <weight>
-       * - Preconditions:
-       * - T::Currency is orml_currencies
-       * - T::CDPTreasury is module_cdp_treasury
-       * - T::Auction is orml_auction
-       * - Complexity: `O(1)`
-       * - Db reads:
-       * - surplus auction worst case: 6
-       * - debit auction worst case: 5
-       * - collateral auction worst case: 15
-       * - Db writes:
-       * - surplus auction worst case: 3
-       * - debit auction worst case: 4
-       * - collateral auction worst case: 10
-       * -------------------
-       * Base Weight:
-       * - surplus auction worst case: 63.96 µs
-       * - debit auction worst case: 66.04 µs
-       * - collateral auction worst case: 197.5 µs
-       * # </weight>
-       * Use the collateral auction worst case as default weight.
        **/
       cancel: AugmentedSubmittable<(id: AuctionId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AuctionId]>;
     };
@@ -111,24 +50,21 @@ declare module '@polkadot/api/types/submittable' {
        **/
       liquidate: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, who: LookupSource | Address | AccountId | AccountIndex | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, LookupSource]>;
       /**
-       * Update parameters related to risk management of CDP under specific collateral type
+       * Update parameters related to risk management of CDP under specific
+       * collateral type
        * 
        * The dispatch origin of this call must be `UpdateOrigin`.
        * 
        * - `currency_id`: collateral type.
-       * - `stability_fee`: extra stability fee rate, `None` means do not update, `Some(None)` means update it to `None`.
-       * - `liquidation_ratio`: liquidation ratio, `None` means do not update, `Some(None)` means update it to `None`.
-       * - `liquidation_penalty`: liquidation penalty, `None` means do not update, `Some(None)` means update it to `None`.
-       * - `required_collateral_ratio`: required collateral ratio, `None` means do not update, `Some(None)` means update it to `None`.
+       * - `stability_fee`: extra stability fee rate, `None` means do not
+       * update, `Some(None)` means update it to `None`.
+       * - `liquidation_ratio`: liquidation ratio, `None` means do not
+       * update, `Some(None)` means update it to `None`.
+       * - `liquidation_penalty`: liquidation penalty, `None` means do not
+       * update, `Some(None)` means update it to `None`.
+       * - `required_collateral_ratio`: required collateral ratio, `None`
+       * means do not update, `Some(None)` means update it to `None`.
        * - `maximum_total_debit_value`: maximum total debit value.
-       * 
-       * # <weight>
-       * - Complexity: `O(1)`
-       * - Db reads:	1
-       * - Db writes: 1
-       * -------------------
-       * Base Weight: 76.08 µs
-       * # </weight>
        **/
       setCollateralParams: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, stabilityFee: ChangeOptionRate | { NoChange: any } | { NewValue: any } | string | Uint8Array, liquidationRatio: ChangeOptionRatio | { NoChange: any } | { NewValue: any } | string | Uint8Array, liquidationPenalty: ChangeOptionRate | { NoChange: any } | { NewValue: any } | string | Uint8Array, requiredCollateralRatio: ChangeOptionRatio | { NoChange: any } | { NewValue: any } | string | Uint8Array, maximumTotalDebitValue: ChangeBalance | { NoChange: any } | { NewValue: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, ChangeOptionRate, ChangeOptionRatio, ChangeOptionRate, ChangeOptionRatio, ChangeBalance]>;
       /**
@@ -137,14 +73,6 @@ declare module '@polkadot/api/types/submittable' {
        * The dispatch origin of this call must be `UpdateOrigin`.
        * 
        * - `global_stability_fee`: global stability fee rate.
-       * 
-       * # <weight>
-       * - Complexity: `O(1)`
-       * - Db reads: 0
-       * - Db writes: 1
-       * -------------------
-       * Base Weight: 24.16 µs
-       * # </weight>
        **/
       setGlobalParams: AugmentedSubmittable<(globalStabilityFee: Rate | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Rate]>;
       /**
@@ -154,16 +82,6 @@ declare module '@polkadot/api/types/submittable' {
        * 
        * - `currency_id`: CDP's collateral type.
        * - `who`: CDP's owner.
-       * 
-       * # <weight>
-       * - Preconditions:
-       * - T::CDPTreasury is module_cdp_treasury
-       * - Complexity: `O(1)`
-       * - Db reads: 10
-       * - Db writes: 6
-       * -------------------
-       * Base Weight: 161.5 µs
-       * # </weight>
        **/
       settle: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, who: LookupSource | Address | AccountId | AccountIndex | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, LookupSource]>;
     };
@@ -173,20 +91,13 @@ declare module '@polkadot/api/types/submittable' {
       auctionDebit: AugmentedSubmittable<(amount: Balance | AnyNumber | Uint8Array, initialPrice: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Balance, Balance]>;
       auctionSurplus: AugmentedSubmittable<(amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Balance]>;
       /**
-       * Update parameters related to collateral auction under specific collateral type
+       * Update parameters related to collateral auction under specific
+       * collateral type
        * 
        * The dispatch origin of this call must be `UpdateOrigin`.
        * 
        * - `currency_id`: collateral type
        * - `surplus_buffer_size`: collateral auction maximum size
-       * 
-       * # <weight>
-       * - Complexity: `O(1)`
-       * - Db reads: 0
-       * - Db writes: 1
-       * -------------------
-       * Base Weight: 24.64 µs
-       * # </weight>
        **/
       setCollateralAuctionMaximumSize: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, size: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, Balance]>;
     };
@@ -195,75 +106,44 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Transfer some balance to another account under `currency_id`.
        * 
-       * The dispatch origin for this call must be `Signed` by the transactor.
-       * 
-       * # <weight>
-       * - Preconditions:
-       * - T::MultiCurrency is orml_tokens
-       * - T::NativeCurrency is pallet_balances
-       * - Complexity: `O(1)`
-       * - Db reads: 5
-       * - Db writes: 2
-       * -------------------
-       * Base Weight:
-       * - non-native currency: 90.23 µs
-       * - native currency in worst case: 70 µs
-       * # </weight>
+       * The dispatch origin for this call must be `Signed` by the
+       * transactor.
        **/
       transfer: AugmentedSubmittable<(dest: LookupSource | Address | AccountId | AccountIndex | string | Uint8Array, currencyId: CurrencyIdOf | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, amount: Compact<BalanceOf> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [LookupSource, CurrencyIdOf, Compact<BalanceOf>]>;
       /**
        * Transfer some native currency to another account.
        * 
-       * The dispatch origin for this call must be `Signed` by the transactor.
-       * 
-       * # <weight>
-       * - Preconditions:
-       * - T::MultiCurrency is orml_tokens
-       * - T::NativeCurrency is pallet_balances
-       * - Complexity: `O(1)`
-       * - Db reads: 2 * `Accounts`
-       * - Db writes: 2 * `Accounts`
-       * -------------------
-       * Base Weight: 70 µs
-       * # </weight>
+       * The dispatch origin for this call must be `Signed` by the
+       * transactor.
        **/
       transferNativeCurrency: AugmentedSubmittable<(dest: LookupSource | Address | AccountId | AccountIndex | string | Uint8Array, amount: Compact<BalanceOf> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [LookupSource, Compact<BalanceOf>]>;
       /**
        * update amount of account `who` under `currency_id`.
        * 
        * The dispatch origin of this call must be _Root_.
-       * 
-       * # <weight>
-       * - Preconditions:
-       * - T::MultiCurrency is orml_tokens
-       * - T::NativeCurrency is pallet_balances
-       * - Complexity: `O(1)`
-       * - Db reads:
-       * - non-native currency: 5
-       * - Db writes:
-       * - non-native currency: 2
-       * -------------------
-       * Base Weight:
-       * - non-native currency: 66.24 µs
-       * - native currency and killing account: 26.33 µs
-       * - native currency and create account: 27.39 µs
-       * # </weight>
        **/
       updateBalance: AugmentedSubmittable<(who: LookupSource | Address | AccountId | AccountIndex | string | Uint8Array, currencyId: CurrencyIdOf | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, amount: AmountOf | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [LookupSource, CurrencyIdOf, AmountOf]>;
     };
     dex: {
       [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
-       * Add liquidity to Enabled trading pair, or add provision to Provisioning trading pair.
-       * - Add liquidity success will issue shares in current price which decided by the liquidity scale. Shares are temporarily not
-       * allowed to transfer and trade, it represents the proportion of assets in liquidity pool.
-       * - Add provision success will record the provision, issue shares to caller in the initial price when trading pair convert to Enabled.
+       * Add liquidity to Enabled trading pair, or add provision to
+       * Provisioning trading pair.
+       * - Add liquidity success will issue shares in current price which
+       * decided by the liquidity scale. Shares are temporarily not
+       * allowed to transfer and trade, it represents the proportion of
+       * assets in liquidity pool.
+       * - Add provision success will record the provision, issue shares to
+       * caller in the initial price when trading pair convert to Enabled.
        * 
        * - `currency_id_a`: currency id A.
        * - `currency_id_b`: currency id B.
-       * - `max_amount_a`: maximum currency A amount allowed to inject to liquidity pool.
-       * - `max_amount_b`: maximum currency A amount allowed to inject to liquidity pool.
-       * - `deposit_increment_share`: this flag indicates whether to deposit added lp shares to obtain incentives
+       * - `max_amount_a`: maximum currency A amount allowed to inject to
+       * liquidity pool.
+       * - `max_amount_b`: maximum currency A amount allowed to inject to
+       * liquidity pool.
+       * - `deposit_increment_share`: this flag indicates whether to deposit
+       * added lp shares to obtain incentives
        **/
       addLiquidity: AugmentedSubmittable<(currencyIdA: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, currencyIdB: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, maxAmountA: Compact<Balance> | AnyNumber | Uint8Array, maxAmountB: Compact<Balance> | AnyNumber | Uint8Array, depositIncrementShare: bool | boolean | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, CurrencyId, Compact<Balance>, Compact<Balance>, bool]>;
       disableTradingPair: AugmentedSubmittable<(currencyIdA: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, currencyIdB: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, CurrencyId]>;
@@ -273,17 +153,20 @@ declare module '@polkadot/api/types/submittable' {
        **/
       enableTradingPair: AugmentedSubmittable<(currencyIdA: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, currencyIdB: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, CurrencyId]>;
       /**
-       * List a new trading pair, trading pair will become Enabled status after provision process.
+       * List a new trading pair, trading pair will become Enabled status
+       * after provision process.
        **/
       listTradingPair: AugmentedSubmittable<(currencyIdA: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, currencyIdB: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, minContributionA: Balance | AnyNumber | Uint8Array, minContributionB: Balance | AnyNumber | Uint8Array, targetProvisionA: Balance | AnyNumber | Uint8Array, targetProvisionB: Balance | AnyNumber | Uint8Array, notBefore: BlockNumber | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, CurrencyId, Balance, Balance, Balance, Balance, BlockNumber]>;
       /**
-       * Remove liquidity from specific liquidity pool in the form of burning shares, and withdrawing currencies in trading pairs
-       * from liquidity pool in proportion, and withdraw liquidity incentive interest.
+       * Remove liquidity from specific liquidity pool in the form of burning
+       * shares, and withdrawing currencies in trading pairs from liquidity
+       * pool in proportion, and withdraw liquidity incentive interest.
        * 
        * - `currency_id_a`: currency id A.
        * - `currency_id_b`: currency id B.
        * - `remove_share`: liquidity amount to remove.
-       * - `by_withdraw`: this flag indicates whether to withdraw share which is on incentives.
+       * - `by_withdraw`: this flag indicates whether to withdraw share which
+       * is on incentives.
        **/
       removeLiquidity: AugmentedSubmittable<(currencyIdA: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, currencyIdB: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, removeShare: Compact<Balance> | AnyNumber | Uint8Array, byWithdraw: bool | boolean | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, CurrencyId, Compact<Balance>, bool]>;
       /**
@@ -309,61 +192,26 @@ declare module '@polkadot/api/types/submittable' {
        * Start emergency shutdown
        * 
        * The dispatch origin of this call must be `ShutdownOrigin`.
-       * 
-       * # <weight>
-       * - Preconditions:
-       * - T::CDPTreasury is module_cdp_treasury
-       * - T::AuctionManagerHandler is module_auction_manager
-       * - T::OnShutdown is (module_cdp_treasury, module_cdp_engine, module_honzon, module_dex)
-       * - Complexity: `O(1)`
-       * - Db reads: `IsShutdown`, (length of collateral_ids) items in modules related to module_emergency_shutdown
-       * - Db writes: `IsShutdown`, (4 + length of collateral_ids) items in modules related to module_emergency_shutdown
-       * -------------------
-       * Base Weight: 148.3 µs
-       * # </weight>
        **/
       emergencyShutdown: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
       /**
        * Open final redemption if settlement is completed.
        * 
        * The dispatch origin of this call must be `ShutdownOrigin`.
-       * 
-       * # <weight>
-       * - Preconditions:
-       * - T::CDPTreasury is module_cdp_treasury
-       * - T::AuctionManagerHandler is module_auction_manager
-       * - T::OnShutdown is (module_cdp_treasury, module_cdp_engine, module_honzon, module_dex)
-       * - Complexity: `O(1)`
-       * - Db reads: `IsShutdown`, (2 + 2 * length of collateral_ids) items in modules related to module_emergency_shutdown
-       * - Db writes: `CanRefund`
-       * -------------------
-       * Base Weight: 71.8 µs
-       * # </weight>
        **/
       openCollateralRefund: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
       /**
        * Refund a basket of remaining collateral assets to caller
        * 
        * - `amount`: stable currency amount used to refund.
-       * 
-       * # <weight>
-       * - Preconditions:
-       * - T::CDPTreasury is module_cdp_treasury
-       * - T::AuctionManagerHandler is module_auction_manager
-       * - T::OnShutdown is (module_cdp_treasury, module_cdp_engine, module_honzon, module_dex)
-       * - Complexity: `O(1)`
-       * - Db reads: `CanRefund`, (2 + 3 * length of collateral_ids) items in modules related to module_emergency_shutdown
-       * - Db writes: (3 * length of collateral_ids) items in modules related to module_emergency_shutdown
-       * -------------------
-       * Base Weight: 455.1 µs
-       * # </weight>
        **/
       refundCollaterals: AugmentedSubmittable<(amount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Compact<Balance>]>;
     };
     homa: {
       [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
-       * Inject DOT to staking pool and mint LDOT in a certain exchange rate decided by staking pool.
+       * Inject DOT to staking pool and mint LDOT in a certain exchange rate
+       * decided by staking pool.
        * 
        * - `amount`: the DOT amount to inject into staking pool.
        **/
@@ -383,21 +231,17 @@ declare module '@polkadot/api/types/submittable' {
     honzon: {
       [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
-       * Adjust the loans of `currency_id` by specific `collateral_adjustment` and `debit_adjustment`
+       * Adjust the loans of `currency_id` by specific
+       * `collateral_adjustment` and `debit_adjustment`
        * 
        * - `currency_id`: collateral currency id.
-       * - `collateral_adjustment`: signed amount, positive means to deposit collateral currency into CDP,
-       * negative means withdraw collateral currency from CDP.
-       * - `debit_adjustment`: signed amount, positive means to issue some amount of stablecoin to caller according to the debit adjustment,
-       * negative means caller will payback some amount of stablecoin to CDP according to to the debit adjustment.
-       * 
-       * # <weight>
-       * - Complexity: `O(1)`
-       * - Db reads: 17
-       * - Db writes: 9
-       * -------------------
-       * Base Weight: 246.2 µs
-       * # </weight>
+       * - `collateral_adjustment`: signed amount, positive means to deposit
+       * collateral currency into CDP, negative means withdraw collateral
+       * currency from CDP.
+       * - `debit_adjustment`: signed amount, positive means to issue some
+       * amount of stablecoin to caller according to the debit adjustment,
+       * negative means caller will payback some amount of stablecoin to
+       * CDP according to to the debit adjustment.
        **/
       adjustLoan: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, collateralAdjustment: Amount | AnyNumber | Uint8Array, debitAdjustment: Amount | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, Amount, Amount]>;
       /**
@@ -405,30 +249,15 @@ declare module '@polkadot/api/types/submittable' {
        * 
        * - `currency_id`: collateral currency id.
        * - `to`: authorizee account
-       * 
-       * # <weight>
-       * - Complexity: `O(1)`
-       * - Db reads: 0
-       * - Db writes: 1
-       * -------------------
-       * Base Weight: 27.82 µs
-       * # </weight>
        **/
       authorize: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, to: LookupSource | Address | AccountId | AccountIndex | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, LookupSource]>;
       /**
-       * Transfer the whole CDP of `from` under `currency_id` to caller's CDP under the same `currency_id`,
-       * caller must have the authorization of `from` for the specific collateral type
+       * Transfer the whole CDP of `from` under `currency_id` to caller's CDP
+       * under the same `currency_id`, caller must have the authorization of
+       * `from` for the specific collateral type
        * 
        * - `currency_id`: collateral currency id.
        * - `from`: authorizer account
-       * 
-       * # <weight>
-       * - Complexity: `O(1)`
-       * - Db reads: 13
-       * - Db writes: 6
-       * -------------------
-       * Base Weight: 178.2 µs
-       * # </weight>
        **/
       transferLoanFrom: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, from: LookupSource | Address | AccountId | AccountIndex | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, LookupSource]>;
       /**
@@ -436,26 +265,10 @@ declare module '@polkadot/api/types/submittable' {
        * 
        * - `currency_id`: collateral currency id.
        * - `to`: authorizee account
-       * 
-       * # <weight>
-       * - Complexity: `O(1)`
-       * - Db reads: 0
-       * - Db writes: 1
-       * -------------------
-       * Base Weight: 28.14 µs
-       * # </weight>
        **/
       unauthorize: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, to: LookupSource | Address | AccountId | AccountIndex | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, LookupSource]>;
       /**
        * Cancel all authorization of caller
-       * 
-       * # <weight>
-       * - Complexity: `O(C + M)` where C is the length of collateral_ids and M is the number of authorizees
-       * - Db reads: 0
-       * - Db writes: 1
-       * -------------------
-       * Base Weight: 0 + 3.8 * M + 128.4 * C µs
-       * # </weight>
        **/
       unauthorizeAll: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
     };
@@ -464,8 +277,8 @@ declare module '@polkadot/api/types/submittable' {
       bond: AugmentedSubmittable<(amount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Compact<Balance>]>;
       chill: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
       nominate: AugmentedSubmittable<(targets: Vec<PolkadotAccountId> | (PolkadotAccountId | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<PolkadotAccountId>]>;
-      rebond: AugmentedSubmittable<(amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Balance]>;
-      unbond: AugmentedSubmittable<(amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Balance]>;
+      rebond: AugmentedSubmittable<(amount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Compact<Balance>]>;
+      unbond: AugmentedSubmittable<(amount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Compact<Balance>]>;
       withdrawUnbonded: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
     };
     polkadotBridge: {

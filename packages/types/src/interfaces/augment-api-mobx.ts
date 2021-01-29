@@ -12,7 +12,8 @@ import type { Position } from '@acala-network/types/interfaces/loans';
 import type { ClassId, ClassInfoOf, TokenId, TokenInfoOf } from '@acala-network/types/interfaces/nft';
 import type { BondingLedger } from '@acala-network/types/interfaces/nomineesElection';
 import type { AirDropCurrencyId, AuctionId, CurrencyId, TradingPair } from '@acala-network/types/interfaces/primitives';
-import type { AccountId, AccountIndex, Balance, BalanceOf, BlockNumber, DestAddress, H256, Hash, KeyTypeId, Moment, OpaqueCall, OracleKey, Perbill, Releases, ValidatorId } from '@acala-network/types/interfaces/runtime';
+import type { DestAddress, PublicKey } from '@acala-network/types/interfaces/renvmBridge';
+import type { AccountId, AccountIndex, Balance, BalanceOf, BlockNumber, H256, Hash, KeyTypeId, Moment, OpaqueCall, OracleKey, Perbill, Releases, ValidatorId } from '@acala-network/types/interfaces/runtime';
 import type { Ledger, Params, PolkadotAccountId, SubAccountStatus } from '@acala-network/types/interfaces/stakingPool';
 import type { ExchangeRate, Rate } from '@acala-network/types/interfaces/support';
 import type { GraduallyUpdate } from '@open-web3/orml-types/interfaces/graduallyUpdates';
@@ -25,7 +26,7 @@ import type { BabeAuthorityWeight, MaybeRandomness, NextConfigDescriptor, Random
 import type { AccountData, BalanceLock } from '@polkadot/types/interfaces/balances';
 import type { ProposalIndex, Votes } from '@polkadot/types/interfaces/collective';
 import type { AuthorityId } from '@polkadot/types/interfaces/consensus';
-import type { CodeHash, ContractInfo, PrefabWasmModule, Schedule } from '@polkadot/types/interfaces/contracts';
+import type { CodeHash, ContractInfo, DeletedContract, PrefabWasmModule, Schedule } from '@polkadot/types/interfaces/contracts';
 import type { Proposal } from '@polkadot/types/interfaces/democracy';
 import type { EcdsaSignature } from '@polkadot/types/interfaces/extrinsics';
 import type { SetId, StoredPendingChange, StoredState } from '@polkadot/types/interfaces/grandpa';
@@ -50,10 +51,11 @@ export interface StorageType extends BaseStorageType {
      **/
     isUpdated: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | string, bool>;
     /**
-     * The current members of the collective. This is stored sorted (just by value).
+     * The current members of the collective. This is stored sorted (just by
+     * value).
      **/
     members: OrderedSet | null;
-    nonces: StorageMap<AccountId | string, u32>;
+    nonces: StorageMap<AccountId | string, Option<u32>>;
     /**
      * Raw values for each oracle operators
      **/
@@ -68,22 +70,6 @@ export interface StorageType extends BaseStorageType {
      **/
     approvals: Vec<ProposalIndex> | null;
     /**
-     * Bounties that have been made.
-     **/
-    bounties: StorageMap<BountyIndex | AnyNumber, Option<Bounty>>;
-    /**
-     * Bounty indices that have been approved but not yet funded.
-     **/
-    bountyApprovals: Vec<BountyIndex> | null;
-    /**
-     * Number of bounty proposals that have been made.
-     **/
-    bountyCount: BountyIndex | null;
-    /**
-     * The description of each bounty.
-     **/
-    bountyDescriptions: StorageMap<BountyIndex | AnyNumber, Option<Bytes>>;
-    /**
      * Number of proposals that have been made.
      **/
     proposalCount: ProposalIndex | null;
@@ -91,17 +77,6 @@ export interface StorageType extends BaseStorageType {
      * Proposals that have been made.
      **/
     proposals: StorageMap<ProposalIndex | AnyNumber, Option<Proposal>>;
-    /**
-     * Simple preimage lookup from the reason's hash to the original data. Again, has an
-     * insecure enumerable hash since the key is guaranteed to be the result of a secure hash.
-     **/
-    reasons: StorageMap<Hash | string, Option<Bytes>>;
-    /**
-     * Tips that are not yet completed. Keyed by the hash of `(reason, who)` from the value.
-     * This has the insecure enumerable hash function since the key itself is already
-     * guaranteed to be a secure hash.
-     **/
-    tips: StorageMap<Hash | string, Option<OpenTip>>;
   };
   airDrop: {    airDrops: StorageDoubleMap<AccountId | string, AirDropCurrencyId | 'KAR'|'ACA' | number, Balance>;
   };
@@ -131,8 +106,8 @@ export interface StorageType extends BaseStorageType {
      **/
     surplusAuctions: StorageMap<AuctionId | AnyNumber, Option<SurplusAuctionItem>>;
     /**
-     * Record of the total collateral amount of all active collateral auctions under specific collateral type
-     * CollateralType -> TotalAmount
+     * Record of the total collateral amount of all active collateral auctions
+     * under specific collateral type CollateralType -> TotalAmount
      **/
     totalCollateralInAuction: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Balance>;
     /**
@@ -197,6 +172,10 @@ export interface StorageType extends BaseStorageType {
      * execution context should always yield zero.
      **/
     lateness: BlockNumber | null;
+    /**
+     * Next epoch authorities.
+     **/
+    nextAuthorities: Vec<ITuple<[AuthorityId, BabeAuthorityWeight]>> | null;
     /**
      * Next epoch configuration, if changed.
      **/
@@ -266,10 +245,11 @@ export interface StorageType extends BaseStorageType {
      **/
     isUpdated: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | string, bool>;
     /**
-     * The current members of the collective. This is stored sorted (just by value).
+     * The current members of the collective. This is stored sorted (just by
+     * value).
      **/
     members: OrderedSet | null;
-    nonces: StorageMap<AccountId | string, u32>;
+    nonces: StorageMap<AccountId | string, Option<u32>>;
     /**
      * Raw values for each oracle operators
      **/
@@ -279,12 +259,30 @@ export interface StorageType extends BaseStorageType {
      **/
     values: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Option<TimestampedValueOf>>;
   };
+  bounties: {    /**
+     * Bounties that have been made.
+     **/
+    bounties: StorageMap<BountyIndex | AnyNumber, Option<Bounty>>;
+    /**
+     * Bounty indices that have been approved but not yet funded.
+     **/
+    bountyApprovals: Vec<BountyIndex> | null;
+    /**
+     * Number of bounty proposals that have been made.
+     **/
+    bountyCount: BountyIndex | null;
+    /**
+     * The description of each bounty.
+     **/
+    bountyDescriptions: StorageMap<BountyIndex | AnyNumber, Option<Bytes>>;
+  };
   cdpEngine: {    /**
      * Mapping from collateral type to its risk management params
      **/
     collateralParams: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, RiskManagementParams>;
     /**
-     * Mapping from collateral type to its exchange rate of debit units and debit value
+     * Mapping from collateral type to its exchange rate of debit units and
+     * debit value
      **/
     debitExchangeRate: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Option<ExchangeRate>>;
     /**
@@ -297,8 +295,8 @@ export interface StorageType extends BaseStorageType {
      **/
     collateralAuctionMaximumSize: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Balance>;
     /**
-     * Current total debit value of system. It's not same as debit in CDP engine,
-     * it is the bad debt of the system.
+     * Current total debit value of system. It's not same as debit in CDP
+     * engine, it is the bad debt of the system.
      **/
     debitPool: Balance | null;
   };
@@ -320,6 +318,13 @@ export interface StorageType extends BaseStorageType {
      * Current cost schedule for contracts.
      **/
     currentSchedule: Schedule | null;
+    /**
+     * Evicted contracts that await child trie deletion.
+     * 
+     * Child trie deletion is a heavy operation depending on the amount of storage items
+     * stored in said trie. Therefore this operation is performed lazily in `on_initialize`.
+     **/
+    deletionQueue: Vec<DeletedContract> | null;
     /**
      * A mapping from an original code hash to the original code, untouched by instrumentation.
      **/
@@ -376,13 +381,13 @@ export interface StorageType extends BaseStorageType {
     codeInfos: StorageMap<H256 | string, Option<CodeInfo>>;
     codes: StorageMap<H256 | string, Bytes>;
     /**
+     * Extrinsics origin for the current tx.
+     **/
+    extrinsicOrigin: Option<AccountId> | null;
+    /**
      * Next available system contract address.
      **/
     networkContractIndex: u64 | null;
-    /**
-     * Pending transfer maintainers: double_map (contract, new_maintainer) => TransferMaintainerDeposit
-     **/
-    pendingTransferMaintainers: StorageDoubleMap<EvmAddress | string, EvmAddress | string, Option<BalanceOf>>;
   };
   evmAccounts: {    accounts: StorageMap<EvmAddress | string, Option<AccountId>>;
     evmAddresses: StorageMap<AccountId | string, Option<EvmAddress>>;
@@ -534,7 +539,8 @@ export interface StorageType extends BaseStorageType {
     prime: Option<AccountId> | null;
   };
   incentives: {    /**
-     * Mapping from dex liquidity currency type to its loans incentive reward amount per period
+     * Mapping from dex liquidity currency type to its loans incentive reward
+     * amount per period
      **/
     dexIncentiveRewards: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Balance>;
     /**
@@ -546,7 +552,8 @@ export interface StorageType extends BaseStorageType {
      **/
     homaIncentiveReward: Balance | null;
     /**
-     * Mapping from collateral currency type to its loans incentive reward amount per period
+     * Mapping from collateral currency type to its loans incentive reward
+     * amount per period
      **/
     loansIncentiveRewards: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Balance>;
   };
@@ -619,7 +626,7 @@ export interface StorageType extends BaseStorageType {
     /**
      * Token existence check by owner and class ID.
      **/
-    tokensByOwner: StorageDoubleMap<AccountId | string, ITuple<[ClassId, TokenId]> | [ClassId | AnyNumber, TokenId | AnyNumber], Option<ITuple<[]>>>;
+    tokensByOwner: StorageDoubleMap<AccountId | string, ITuple<[ClassId, TokenId]> | [ClassId | AnyNumber, TokenId | AnyNumber], ITuple<[]>>;
   };
   polkadotBridge: {    currentEra: EraIndex | null;
     eraStartBlockNumber: BlockNumber | null;
@@ -675,6 +682,10 @@ export interface StorageType extends BaseStorageType {
      **/
     nextBurnEventId: u32 | null;
     /**
+     * The RenVM split public key
+     **/
+    renVmPublicKey: Option<PublicKey> | null;
+    /**
      * Signature blacklist. This is required to prevent double claim.
      **/
     signatures: StorageMap<EcdsaSignature | string, Option<ITuple<[]>>>;
@@ -684,7 +695,8 @@ export interface StorageType extends BaseStorageType {
      **/
     pools: StorageMap<PoolId | { Loans: any } | { DexIncentive: any } | { DexSaving: any } | { Homa: any } | string, PoolInfo>;
     /**
-     * Record share amount and withdrawn reward amount for specific `AccountId` under `PoolId`.
+     * Record share amount and withdrawn reward amount for specific `AccountId`
+     * under `PoolId`.
      **/
     shareAndWithdrawnReward: StorageDoubleMap<PoolId | { Loans: any } | { DexIncentive: any } | { DexSaving: any } | { Homa: any } | string, AccountId | string, ITuple<[Share, Balance]>>;
   };
@@ -739,8 +751,8 @@ export interface StorageType extends BaseStorageType {
   staking: {    /**
      * The active era information, it holds index and start.
      * 
-     * The active era is the era currently rewarded.
-     * Validator set of this era must be equal to `SessionInterface::validators`.
+     * The active era is the era being currently rewarded. Validator set of this era must be
+     * equal to [`SessionInterface::validators`].
      **/
     activeEra: Option<ActiveEraInfo> | null;
     /**
@@ -805,6 +817,9 @@ export interface StorageType extends BaseStorageType {
     erasStakersClipped: StorageDoubleMap<EraIndex | AnyNumber, AccountId | string, Exposure>;
     /**
      * The session index at which the era start for the last `HISTORY_DEPTH` eras.
+     * 
+     * Note: This tracks the starting session (i.e. session index when era start being active)
+     * for the eras in `[CurrentEra - HISTORY_DEPTH, CurrentEra]`.
      **/
     erasStartSessionIndex: StorageMap<EraIndex | AnyNumber, Option<SessionIndex>>;
     /**
@@ -950,7 +965,8 @@ export interface StorageType extends BaseStorageType {
     stakingPoolParams: Params | null;
     /**
      * The records of unbonding.
-     * ExpiredEraIndex => (TotalUnbounding, ClaimedUnbonding, InitialClaimedUnbonding)
+     * ExpiredEraIndex => (TotalUnbounding, ClaimedUnbonding,
+     * InitialClaimedUnbonding)
      **/
     unbonding: StorageMap<EraIndex | AnyNumber, ITuple<[Balance, Balance, Balance]>>;
     /**
@@ -1018,10 +1034,6 @@ export interface StorageType extends BaseStorageType {
      **/
     extrinsicData: StorageMap<u32 | AnyNumber, Bytes>;
     /**
-     * Extrinsics root of the current block, also part of the block header.
-     **/
-    extrinsicsRoot: Hash | null;
-    /**
      * Stores the `spec_version` and `spec_name` of when the last runtime upgrade happened.
      **/
     lastRuntimeUpgrade: Option<LastRuntimeUpgradeInfo> | null;
@@ -1081,12 +1093,25 @@ export interface StorageType extends BaseStorageType {
      **/
     now: Moment | null;
   };
+  tips: {    /**
+     * Simple preimage lookup from the reason's hash to the original data. Again, has an
+     * insecure enumerable hash since the key is guaranteed to be the result of a secure hash.
+     **/
+    reasons: StorageMap<Hash | string, Option<Bytes>>;
+    /**
+     * TipsMap that are not yet completed. Keyed by the hash of `(reason, who)` from the value.
+     * This has the insecure enumerable hash function since the key itself is already
+     * guaranteed to be a secure hash.
+     **/
+    tips: StorageMap<Hash | string, Option<OpenTip>>;
+  };
   tokens: {    /**
      * The balance of a token type under an account.
      * 
      * NOTE: If the total is ever zero, decrease account ref account.
      * 
-     * NOTE: This is only used in the case that this module is used to store balances.
+     * NOTE: This is only used in the case that this module is used to store
+     * balances.
      **/
     accounts: StorageDoubleMap<AccountId | string, CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, AccountData>;
     /**
