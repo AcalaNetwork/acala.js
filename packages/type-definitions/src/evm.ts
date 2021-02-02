@@ -43,9 +43,6 @@ export default {
     EvmAccountInfo: {
       nonce: 'Index',
       contractInfo: 'Option<EvmContractInfo>',
-      storageRentDeposit: 'Balance',
-      storageQuota: 'u32',
-      storageUsage: 'u32',
       developerDeposit: 'Option<Balance>'
     },
     CodeInfo: {
@@ -53,9 +50,7 @@ export default {
       refCount: 'u32'
     },
     EvmContractInfo: {
-      storageCount: 'u32',
       codeHash: 'H256',
-      existentialDeposit: 'Balance',
       maintainer: 'H160',
       deployed: 'bool'
     },
@@ -64,6 +59,7 @@ export default {
       from: 'Option<H160>',
       to: 'Option<H160>',
       gasLimit: 'Option<u32>',
+      storageLimit: 'Option<u32>',
       value: 'Option<U128>',
       data: 'Option<Bytes>'
     },
