@@ -171,7 +171,7 @@ export interface LookupTarget extends AccountId {}
 export interface ModuleId extends LockIdentifier {}
 
 /** @name Moment */
-export interface Moment extends u64 {}
+export interface Moment extends UInt {}
 
 /** @name MultiAddress */
 export interface MultiAddress extends GenericMultiAddress {}
@@ -277,6 +277,9 @@ export interface U32F32 extends UInt {}
 
 /** @name ValidatorId */
 export interface ValidatorId extends AccountId {}
+
+/** @name ValidatorIdOf */
+export interface ValidatorIdOf extends ValidatorId {}
 
 /** @name Weight */
 export interface Weight extends u64 {}

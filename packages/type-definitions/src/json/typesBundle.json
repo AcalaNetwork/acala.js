@@ -175,6 +175,8 @@
                             "targetValue": "StorageValue",
                             "perBlock": "StorageValue"
                         },
+                        "StorageKeyBytes": "Vec<u8>",
+                        "StorageValueBytes": "Vec<u8>",
                         "RpcDataProviderId": "Text",
                         "DataProviderId": {
                             "_enum": [
@@ -551,6 +553,8 @@
                             "targetValue": "StorageValue",
                             "perBlock": "StorageValue"
                         },
+                        "StorageKeyBytes": "Vec<u8>",
+                        "StorageValueBytes": "Vec<u8>",
                         "RpcDataProviderId": "Text",
                         "DataProviderId": {
                             "_enum": [
@@ -1093,6 +1097,8 @@
                             "targetValue": "StorageValue",
                             "perBlock": "StorageValue"
                         },
+                        "StorageKeyBytes": "Vec<u8>",
+                        "StorageValueBytes": "Vec<u8>",
                         "RpcDataProviderId": "Text",
                         "DataProviderId": {
                             "_enum": [
@@ -1469,6 +1475,8 @@
                             "targetValue": "StorageValue",
                             "perBlock": "StorageValue"
                         },
+                        "StorageKeyBytes": "Vec<u8>",
+                        "StorageValueBytes": "Vec<u8>",
                         "RpcDataProviderId": "Text",
                         "DataProviderId": {
                             "_enum": [
