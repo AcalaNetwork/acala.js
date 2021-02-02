@@ -9,6 +9,7 @@ export interface CallRequest extends Struct {
   readonly from: Option<H160>;
   readonly to: Option<H160>;
   readonly gasLimit: Option<u32>;
+  readonly storageLimit: Option<u32>;
   readonly value: Option<U128>;
   readonly data: Option<Bytes>;
 }
@@ -23,9 +24,6 @@ export interface CodeInfo extends Struct {
 export interface EvmAccountInfo extends Struct {
   readonly nonce: Index;
   readonly contractInfo: Option<EvmContractInfo>;
-  readonly storageRentDeposit: Balance;
-  readonly storageQuota: u32;
-  readonly storageUsage: u32;
   readonly developerDeposit: Option<Balance>;
 }
 
@@ -34,9 +32,7 @@ export interface EvmAddress extends H160 {}
 
 /** @name EvmContractInfo */
 export interface EvmContractInfo extends Struct {
-  readonly storageCount: u32;
   readonly codeHash: H256;
-  readonly existentialDeposit: Balance;
   readonly maintainer: H160;
   readonly deployed: bool;
 }
