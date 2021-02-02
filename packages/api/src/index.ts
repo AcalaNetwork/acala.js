@@ -4,7 +4,8 @@ import {
   rpc as acalaRpc,
   types as acalaTypes,
   typesAlias as acalaTypesAlias,
-  typesBundle as acalaTypesBundle
+  typesBundle as acalaTypesBundle,
+  signedExtensions as acalaSignedExtensions
 } from '@acala-network/types';
 import { ApiOptions } from '@polkadot/api/types';
 
@@ -18,6 +19,7 @@ export const options = ({
   rpc = {},
   typesAlias = {},
   typesBundle = {},
+  signedExtensions,
   ...otherOptions
 }: ApiOptions = {}): ApiOptions => ({
   types: {
@@ -49,6 +51,10 @@ export const options = ({
         ...typesBundle?.spec?.mandala
       }
     }
+  },
+  signedExtensions: {
+    acalaSignedExtensions,
+    ...signedExtensions
   },
   ...otherOptions
 });

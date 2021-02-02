@@ -2,7 +2,8 @@ import {
   typesBundle as acalaTypesBundle,
   types as acalaTypes,
   typesAlias as acalaTypeAlias,
-  rpc as acalaRpc
+  rpc as acalaRpc,
+  signedExtensions as acalaSignedExtensions
 } from '@acala-network/type-definitions';
 import {
   OverrideBundleType,
@@ -27,3 +28,5 @@ export const rpc: Record<string, Record<string, DefinitionRpc | DefinitionRpcSub
 export const typesAlias: Record<string, OverrideModuleType> = acalaTypeAlias;
 
 export const typesBundle = (acalaTypesBundle as unknown) as OverrideBundleType;
+
+export const signedExtensions = acalaSignedExtensions;
