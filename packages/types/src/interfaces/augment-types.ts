@@ -18,7 +18,7 @@ import type { AccountId, AccountIdOf, AccountIndex, Address, AsOriginId, AssetId
 import type { BalanceInfo, ChangeRate, ChangeRatio, Ledger, Params, PolkadotAccountId, PolkadotAccountIdOf, SubAccountStatus } from '@acala-network/types/interfaces/stakingPool';
 import type { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
 import type { CallOf, DelayedOrigin, DispatchTime, ScheduleTaskIndex } from '@open-web3/orml-types/interfaces/authority';
-import type { GraduallyUpdate, StorageValue } from '@open-web3/orml-types/interfaces/graduallyUpdates';
+import type { GraduallyUpdate, StorageKeyBytes, StorageValue, StorageValueBytes } from '@open-web3/orml-types/interfaces/graduallyUpdates';
 import type { DataProviderId, OrderedSet, RpcDataProviderId, TimestampedValue, TimestampedValueOf } from '@open-web3/orml-types/interfaces/oracle';
 import type { PoolInfo, Share } from '@open-web3/orml-types/interfaces/rewards';
 import type { OrmlAccountData, OrmlBalanceLock } from '@open-web3/orml-types/interfaces/tokens';
@@ -861,6 +861,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<StorageHasherV12>': Option<StorageHasherV12>;
     'Option<StorageHasherV9>': Option<StorageHasherV9>;
     'Option<StorageKey>': Option<StorageKey>;
+    'Option<StorageKeyBytes>': Option<StorageKeyBytes>;
     'Option<StorageKind>': Option<StorageKind>;
     'Option<StorageMetadataLatest>': Option<StorageMetadataLatest>;
     'Option<StorageMetadataV10>': Option<StorageMetadataV10>;
@@ -868,6 +869,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<StorageMetadataV12>': Option<StorageMetadataV12>;
     'Option<StorageMetadataV9>': Option<StorageMetadataV9>;
     'Option<StorageValue>': Option<StorageValue>;
+    'Option<StorageValueBytes>': Option<StorageValueBytes>;
     'Option<StoredPendingChange>': Option<StoredPendingChange>;
     'Option<StoredState>': Option<StoredState>;
     'Option<StrikeCount>': Option<StrikeCount>;
@@ -1660,6 +1662,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<StorageHasherV12>': Vec<StorageHasherV12>;
     'Vec<StorageHasherV9>': Vec<StorageHasherV9>;
     'Vec<StorageKey>': Vec<StorageKey>;
+    'Vec<StorageKeyBytes>': Vec<StorageKeyBytes>;
     'Vec<StorageKind>': Vec<StorageKind>;
     'Vec<StorageMetadataLatest>': Vec<StorageMetadataLatest>;
     'Vec<StorageMetadataV10>': Vec<StorageMetadataV10>;
@@ -1667,6 +1670,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<StorageMetadataV12>': Vec<StorageMetadataV12>;
     'Vec<StorageMetadataV9>': Vec<StorageMetadataV9>;
     'Vec<StorageValue>': Vec<StorageValue>;
+    'Vec<StorageValueBytes>': Vec<StorageValueBytes>;
     'Vec<StoredPendingChange>': Vec<StoredPendingChange>;
     'Vec<StoredState>': Vec<StoredState>;
     'Vec<StrikeCount>': Vec<StrikeCount>;
@@ -2459,6 +2463,7 @@ declare module '@polkadot/types/types/registry' {
     StorageHasherV12: StorageHasherV12;
     StorageHasherV9: StorageHasherV9;
     StorageKey: StorageKey;
+    StorageKeyBytes: StorageKeyBytes;
     StorageKind: StorageKind;
     StorageMetadataLatest: StorageMetadataLatest;
     StorageMetadataV10: StorageMetadataV10;
@@ -2466,6 +2471,7 @@ declare module '@polkadot/types/types/registry' {
     StorageMetadataV12: StorageMetadataV12;
     StorageMetadataV9: StorageMetadataV9;
     StorageValue: StorageValue;
+    StorageValueBytes: StorageValueBytes;
     StoredPendingChange: StoredPendingChange;
     StoredState: StoredState;
     StrikeCount: StrikeCount;

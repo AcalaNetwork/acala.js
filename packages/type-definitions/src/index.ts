@@ -4,17 +4,18 @@ import accounts from './accounts';
 import auctionManager from './auctionManager';
 import cdpEngine from './cdpEngine';
 import dex from './dex';
+import evm from './evm';
 import homa from './homa';
 import incentives from './incentives';
 import loans from './loans';
 import nft from './nft';
 import nomineesElection from './nomineesElection';
 import primitives from './primitives';
+import renvmBridge from './renvmBridge';
 import runtime from './runtime';
+import { signedExtensions as acalaSignedExtensions } from './signedExtensions';
 import stakingPool from './stakingPool';
 import support from './support';
-import renvmBridge from './renvmBridge';
-import evm from './evm';
 import versioned from './types-known/versioned';
 
 // FIXME: currently we cannot override this in runtime definations because the code generation script cannot handle overrides
@@ -144,3 +145,5 @@ export const typesBundleForPolkadot = {
     mandala: bundle
   }
 };
+
+export const signedExtensions = acalaSignedExtensions;
