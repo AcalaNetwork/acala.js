@@ -4,9 +4,12 @@ import { Metadata } from '@polkadot/metadata';
 import { TypeRegistry } from '@polkadot/types/create';
 import { generateInterfaceTypes } from '@polkadot/typegen/generate/interfaceRegistry';
 import { generateTsDef } from '@polkadot/typegen/generate/tsDef';
-import { generateDefaultConsts } from '@polkadot/typegen/generate/consts';
-import { generateDefaultQuery } from '@polkadot/typegen/generate/query';
-import { generateDefaultTx } from '@polkadot/typegen/generate/tx';
+import {
+  generateDefaultConsts,
+  generateDefaultQuery,
+  generateDefaultTx,
+  generateDefaultRpc
+} from '@polkadot/typegen/generate';
 import { registerDefinitions } from '@polkadot/typegen/util';
 import generateMobx from '@open-web3/api-mobx/scripts/mobx';
 import metaHex from '../src/metadata/static-latest';
@@ -80,5 +83,5 @@ generateDefaultConsts('packages/types/src/interfaces/augment-api-consts.ts', met
 
 generateDefaultTx('packages/types/src/interfaces/augment-api-tx.ts', metadata, definations);
 generateDefaultQuery('packages/types/src/interfaces/augment-api-query.ts', metadata, definations);
-
+generateDefaultRpc('packages/types/src/interfaces/augment-api-rpc.ts', definations);
 generateMobx('packages/types/src/interfaces/augment-api-mobx.ts', metaHex, definations);
