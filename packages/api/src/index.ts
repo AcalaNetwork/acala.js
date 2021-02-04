@@ -53,7 +53,7 @@ export const options = ({
     }
   },
   signedExtensions: {
-    acalaSignedExtensions,
+    ...acalaSignedExtensions,
     ...signedExtensions
   },
   ...otherOptions
