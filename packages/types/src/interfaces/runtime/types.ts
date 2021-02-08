@@ -19,7 +19,7 @@ export interface AccountIdOf extends AccountId {}
 export interface AccountIndex extends GenericAccountIndex {}
 
 /** @name Address */
-export interface Address extends LookupSource {}
+export interface Address extends MultiAddress {}
 
 /** @name AsOriginId */
 export interface AsOriginId extends AuthoritysOriginId {}
@@ -162,7 +162,7 @@ export interface KeyValue extends ITuple<[StorageKey, StorageData]> {}
 export interface LockIdentifier extends U8aFixed {}
 
 /** @name LookupSource */
-export interface LookupSource extends IndicesLookupSource {}
+export interface LookupSource extends MultiAddress {}
 
 /** @name LookupTarget */
 export interface LookupTarget extends AccountId {}
@@ -266,8 +266,16 @@ export interface SignedBlock extends Struct {
   readonly justification: Justification;
 }
 
+/** @name Slot */
+export interface Slot extends u64 {}
+
 /** @name StorageData */
 export interface StorageData extends Bytes {}
+
+/** @name StorageProof */
+export interface StorageProof extends Struct {
+  readonly trieNodes: Vec<Bytes>;
+}
 
 /** @name TransactionPriority */
 export interface TransactionPriority extends u64 {}
