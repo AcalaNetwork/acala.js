@@ -29,6 +29,7 @@
     "@open-web3/util": "^0.8.2-9",
     "@types/jest": "^25.2.3",
     "ts-node": "^8.6.1",
-    "tsconfig-paths": "^3.9.0"
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^4.1.3"
   }
 }
