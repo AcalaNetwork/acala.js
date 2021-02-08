@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 const typesBundleTypes = [
   {
     minmax: [600, 699] as any,

@@ -16,7 +16,7 @@
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
     "@acala-network/api": "^0.6.2-13",
-    "@polkadot/api": "^3.6.4",
+    "@polkadot/api": "^3.8.1",
     "@types/events": "^3.0.0",
     "bignumber.js": "^9.0.0",
     "events": "^3.2.0",

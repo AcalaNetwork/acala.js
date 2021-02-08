@@ -17,7 +17,7 @@
   "dependencies": {
     "@acala-network/types": "^0.6.2-13",
     "@babel/runtime": "^7.10.2",
-    "@polkadot/api-derive": "^3.6.4",
+    "@polkadot/api-derive": "^3.8.1",
     "rxjs": "^6.5.5"
   }
 }
