@@ -36,7 +36,7 @@ import type { PrefixedStorageKey } from '@polkadot/types/interfaces/childstate';
 import type { EthereumAddress, StatementKind } from '@polkadot/types/interfaces/claims';
 import type { CollectiveOrigin, MemberCount, ProposalIndex, Votes, VotesTo230 } from '@polkadot/types/interfaces/collective';
 import type { AuthorityId, RawVRFOutput } from '@polkadot/types/interfaces/consensus';
-import type { AliveContractInfo, CodeHash, ContractCallRequest, ContractExecResult, ContractExecResultErr, ContractExecResultErrModule, ContractExecResultOk, ContractExecResultResult, ContractExecResultSuccessTo255, ContractExecResultSuccessTo260, ContractExecResultTo255, ContractExecResultTo260, ContractInfo, ContractStorageKey, DeletedContract, Gas, HostFnWeights, InstructionWeights, Limits, PrefabWasmModule, PrefabWasmModuleReserved, Schedule, ScheduleTo212, ScheduleTo258, SeedOf, TombstoneContractInfo, TrieId } from '@polkadot/types/interfaces/contracts';
+import type { AliveContractInfo, CodeHash, ContractCallRequest, ContractExecResult, ContractExecResultErr, ContractExecResultErrModule, ContractExecResultOk, ContractExecResultResult, ContractExecResultSuccessTo255, ContractExecResultSuccessTo260, ContractExecResultTo255, ContractExecResultTo260, ContractInfo, ContractStorageKey, DeletedContract, Gas, HostFnWeights, HostFnWeightsTo264, InstructionWeights, Limits, LimitsTo264, PrefabWasmModule, PrefabWasmModuleReserved, Schedule, ScheduleTo212, ScheduleTo258, ScheduleTo264, SeedOf, TombstoneContractInfo, TrieId } from '@polkadot/types/interfaces/contracts';
 import type { ContractConstructorSpec, ContractContractSpec, ContractCryptoHasher, ContractDiscriminant, ContractDisplayName, ContractEventParamSpec, ContractEventSpec, ContractLayoutArray, ContractLayoutCell, ContractLayoutEnum, ContractLayoutHash, ContractLayoutHashingStrategy, ContractLayoutKey, ContractLayoutStruct, ContractLayoutStructField, ContractMessageParamSpec, ContractMessageSpec, ContractProject, ContractProjectContract, ContractProjectSource, ContractSelector, ContractStorageLayout, ContractTypeSpec } from '@polkadot/types/interfaces/contractsAbi';
 import type { DeployData, FundIndex, FundInfo, LastContribution } from '@polkadot/types/interfaces/crowdloan';
 import type { AccountVote, AccountVoteSplit, AccountVoteStandard, Conviction, Delegations, PreimageStatus, PreimageStatusAvailable, PriorLock, PropIndex, Proposal, ProxyState, ReferendumIndex, ReferendumInfo, ReferendumInfoFinished, ReferendumInfoTo239, ReferendumStatus, Tally, Voting, VotingDelegating, VotingDirect, VotingDirectVote } from '@polkadot/types/interfaces/democracy';
@@ -53,7 +53,7 @@ import type { CallIndex, LotteryConfig } from '@polkadot/types/interfaces/lotter
 import type { DoubleMapTypeLatest, DoubleMapTypeV10, DoubleMapTypeV11, DoubleMapTypeV12, DoubleMapTypeV9, ErrorMetadataLatest, ErrorMetadataV10, ErrorMetadataV11, ErrorMetadataV12, ErrorMetadataV9, EventMetadataLatest, EventMetadataV10, EventMetadataV11, EventMetadataV12, EventMetadataV9, ExtrinsicMetadataLatest, ExtrinsicMetadataV11, ExtrinsicMetadataV12, FunctionArgumentMetadataLatest, FunctionArgumentMetadataV10, FunctionArgumentMetadataV11, FunctionArgumentMetadataV12, FunctionArgumentMetadataV9, FunctionMetadataLatest, FunctionMetadataV10, FunctionMetadataV11, FunctionMetadataV12, FunctionMetadataV9, MapTypeLatest, MapTypeV10, MapTypeV11, MapTypeV12, MapTypeV9, MetadataAll, MetadataLatest, MetadataV10, MetadataV11, MetadataV12, MetadataV9, ModuleConstantMetadataLatest, ModuleConstantMetadataV10, ModuleConstantMetadataV11, ModuleConstantMetadataV12, ModuleConstantMetadataV9, ModuleMetadataLatest, ModuleMetadataV10, ModuleMetadataV11, ModuleMetadataV12, ModuleMetadataV9, StorageEntryMetadataLatest, StorageEntryMetadataV10, StorageEntryMetadataV11, StorageEntryMetadataV12, StorageEntryMetadataV9, StorageEntryModifierLatest, StorageEntryModifierV10, StorageEntryModifierV11, StorageEntryModifierV12, StorageEntryModifierV9, StorageEntryTypeLatest, StorageEntryTypeV10, StorageEntryTypeV11, StorageEntryTypeV12, StorageEntryTypeV9, StorageHasher, StorageHasherV10, StorageHasherV11, StorageHasherV12, StorageHasherV9, StorageMetadataLatest, StorageMetadataV10, StorageMetadataV11, StorageMetadataV12, StorageMetadataV9 } from '@polkadot/types/interfaces/metadata';
 import type { StorageKind } from '@polkadot/types/interfaces/offchain';
 import type { DeferredOffenceOf, Kind, OffenceDetails, Offender, OpaqueTimeSlot, ReportIdOf, Reporter } from '@polkadot/types/interfaces/offences';
-import type { AbridgedCandidateReceipt, AbridgedHostConfiguration, AbridgedHrmpChannel, AbstractFungible, AbstractNonFungible, AccountId32Junction, AccountIndex64Junction, AccountKey20Junction, AssetInstance, AssignmentId, AssignmentKind, AttestedCandidate, AuctionIndex, AuthorityDiscoveryId, AvailabilityBitfield, AvailabilityBitfieldRecord, BackedCandidate, Balances, Bidder, BufferedSessionChange, CandidateCommitments, CandidateDescriptor, CandidateHash, CandidatePendingAvailability, CandidateReceipt, CollatorId, CollatorSignature, CommittedCandidateReceipt, ConcreteFungible, ConcreteNonFungible, CoreAssignment, CoreIndex, CoreOccupied, DepositAsset, DepositReserveAsset, DoubleVoteReport, DownwardMessage, ExchangeAsset, GlobalValidationSchedule, GroupIndex, HeadData, HostConfiguration, HrmpChannel, HrmpChannelId, HrmpOpenChannelRequest, InboundDownwardMessage, InboundHrmpMessage, InboundHrmpMessages, IncomingParachain, IncomingParachainDeploy, IncomingParachainFixed, InitiateReserveWithdraw, InitiateTeleport, Junction, LeasePeriod, LeasePeriodOf, LocalValidationData, MessageIngestionType, MessagingStateSnapshot, MessagingStateSnapshotEgressEntry, MultiAsset, MultiLocation, NetworkId, NewBidder, NewBidderOption, Order, OriginKind, OutboundHrmpMessage, ParaGenesisArgs, ParaId, ParaInfo, ParaPastCodeMeta, ParaScheduling, ParaValidatorIndex, ParachainDispatchOrigin, ParachainProposal, ParathreadClaim, ParathreadClaimQueue, ParathreadEntry, PersistedValidationData, QueryHolding, QueuedParathread, RegisteredParachainInfo, RelayChainBlockNumber, RelayTo, RelayedFrom, Remark, ReserveAssetDeposit, Retriable, Scheduling, SessionInfo, SessionInfoValidatorGroup, SignedAvailabilityBitfield, SignedAvailabilityBitfields, SigningContext, SlotRange, Statement, SubId, SystemInherentData, TeleportAsset, Transact, TransientValidationData, UpwardMessage, ValidationCode, ValidationData, ValidationDataType, ValidationFunctionParams, ValidatorSignature, ValidityAttestation, VecInboundHrmpMessage, VersionedMultiAsset, VersionedMultiLocation, VersionedXcm, WinnersData, WinnersDataTuple, WinningData, WinningDataEntry, WithdrawAsset, Xcm, XcmError, XcmResult } from '@polkadot/types/interfaces/parachains';
+import type { AbridgedCandidateReceipt, AbridgedHostConfiguration, AbridgedHrmpChannel, AbstractFungible, AbstractNonFungible, AccountId32Junction, AccountIndex64Junction, AccountKey20Junction, AssetInstance, AssignmentId, AssignmentKind, AttestedCandidate, AuctionIndex, AuthorityDiscoveryId, AvailabilityBitfield, AvailabilityBitfieldRecord, BackedCandidate, Balances, Bidder, BufferedSessionChange, CandidateCommitments, CandidateDescriptor, CandidateHash, CandidatePendingAvailability, CandidateReceipt, CollatorId, CollatorSignature, CommittedCandidateReceipt, ConcreteFungible, ConcreteNonFungible, CoreAssignment, CoreIndex, CoreOccupied, DepositAsset, DepositReserveAsset, DoubleVoteReport, DownwardMessage, ExchangeAsset, GlobalValidationSchedule, GroupIndex, HeadData, HostConfiguration, HrmpChannel, HrmpChannelId, HrmpOpenChannelRequest, InboundDownwardMessage, InboundHrmpMessage, InboundHrmpMessages, IncomingParachain, IncomingParachainDeploy, IncomingParachainFixed, InitiateReserveWithdraw, InitiateTeleport, Junction, LeasePeriod, LeasePeriodOf, LocalValidationData, MessageIngestionType, MessageQueueChain, MessagingStateSnapshot, MessagingStateSnapshotEgressEntry, MultiAsset, MultiLocation, NetworkId, NewBidder, NewBidderOption, Order, OriginKind, OutboundHrmpMessage, ParaGenesisArgs, ParaId, ParaInfo, ParaLifecycle, ParaPastCodeMeta, ParaScheduling, ParaValidatorIndex, ParachainDispatchOrigin, ParachainInherentData, ParachainProposal, ParathreadClaim, ParathreadClaimQueue, ParathreadEntry, PersistedValidationData, QueryHolding, QueuedParathread, RegisteredParachainInfo, RelayChainBlockNumber, RelayChainHash, RelayTo, RelayedFrom, Remark, ReserveAssetDeposit, Retriable, Scheduling, SessionInfo, SessionInfoValidatorGroup, SignedAvailabilityBitfield, SignedAvailabilityBitfields, SigningContext, SlotRange, Statement, SubId, SystemInherentData, TeleportAsset, Transact, TransientValidationData, UpwardMessage, ValidationCode, ValidationData, ValidationDataType, ValidationFunctionParams, ValidatorSignature, ValidityAttestation, VecInboundHrmpMessage, VersionedMultiAsset, VersionedMultiLocation, VersionedXcm, WinnersData, WinnersDataTuple, WinningData, WinningDataEntry, WithdrawAsset, Xcm, XcmError, XcmResult } from '@polkadot/types/interfaces/parachains';
 import type { FeeDetails, InclusionFee, RuntimeDispatchInfo } from '@polkadot/types/interfaces/payment';
 import type { Approvals } from '@polkadot/types/interfaces/poll';
 import type { ProxyAnnouncement, ProxyDefinition, ProxyType } from '@polkadot/types/interfaces/proxy';
@@ -67,7 +67,7 @@ import type { Bid, BidKind, SocietyJudgement, SocietyVote, StrikeCount, Vouching
 import type { ActiveEraInfo, CompactAssignments, CompactAssignmentsTo257, CompactScore, CompactScoreCompact, ElectionCompute, ElectionResult, ElectionScore, ElectionSize, ElectionStatus, EraIndex, EraPoints, EraRewardPoints, EraRewards, Exposure, Forcing, IndividualExposure, KeyType, MomentOf, Nominations, NominatorIndex, NominatorIndexCompact, OffchainAccuracy, OffchainAccuracyCompact, PhragmenScore, Points, RewardDestination, RewardDestinationTo257, RewardPoint, SeatHolder, SlashJournalEntry, SlashingSpans, SlashingSpansTo204, SpanIndex, SpanRecord, StakingLedger, StakingLedgerTo223, StakingLedgerTo240, UnappliedSlash, UnappliedSlashOther, UnlockChunk, ValidatorIndex, ValidatorIndexCompact, ValidatorPrefs, ValidatorPrefsTo145, ValidatorPrefsTo196, ValidatorPrefsWithBlocked, ValidatorPrefsWithCommission, Voter } from '@polkadot/types/interfaces/staking';
 import type { ApiId, KeyValueOption, ReadProof, RuntimeVersion, RuntimeVersionApi, StorageChangeSet } from '@polkadot/types/interfaces/state';
 import type { WeightToFeeCoefficient } from '@polkadot/types/interfaces/support';
-import type { AccountInfo, AccountInfoWithProviders, AccountInfoWithRefCount, ApplyExtrinsicResult, BlockLength, BlockWeights, ChainProperties, ChainType, ConsumedWeight, DigestOf, DispatchClass, DispatchError, DispatchErrorModule, DispatchErrorTo198, DispatchInfo, DispatchInfoTo190, DispatchInfoTo244, DispatchOutcome, DispatchResult, DispatchResultOf, DispatchResultTo198, Event, EventId, EventIndex, EventRecord, Health, InvalidTransaction, Key, LastRuntimeUpgradeInfo, NetworkState, NetworkStatePeerset, NetworkStatePeersetInfo, NodeRole, NotConnectedPeer, Peer, PeerEndpoint, PeerEndpointAddr, PeerInfo, PeerPing, PerDispatchClass, PerDispatchClassU32, Phase, RawOrigin, RefCount, RefCountTo259, SyncState, SystemOrigin, TransactionValidityError, UnknownTransaction, WeightPerClass } from '@polkadot/types/interfaces/system';
+import type { AccountInfo, AccountInfoWithProviders, AccountInfoWithRefCount, ApplyExtrinsicResult, BlockLength, BlockWeights, ChainProperties, ChainType, ConsumedWeight, DigestOf, DispatchClass, DispatchError, DispatchErrorModule, DispatchErrorTo198, DispatchInfo, DispatchInfoTo190, DispatchInfoTo244, DispatchOutcome, DispatchResult, DispatchResultOf, DispatchResultTo198, Event, EventId, EventIndex, EventRecord, Health, InvalidTransaction, Key, LastRuntimeUpgradeInfo, NetworkState, NetworkStatePeerset, NetworkStatePeersetInfo, NodeRole, NotConnectedPeer, Peer, PeerEndpoint, PeerEndpointAddr, PeerInfo, PeerPing, PerDispatchClassU32, PerDispatchClassWeight, PerDispatchClassWeightsPerClass, Phase, RawOrigin, RefCount, RefCountTo259, SyncState, SystemOrigin, TransactionValidityError, UnknownTransaction, WeightPerClass } from '@polkadot/types/interfaces/system';
 import type { Bounty, BountyIndex, BountyStatus, BountyStatusActive, BountyStatusCuratorProposed, BountyStatusPendingPayout, OpenTip, OpenTipFinderTo225, OpenTipTip, OpenTipTo225, TreasuryProposal } from '@polkadot/types/interfaces/treasury';
 import type { Multiplier } from '@polkadot/types/interfaces/txpayment';
 import type { Multisig, Timepoint } from '@polkadot/types/interfaces/utility';
@@ -517,6 +517,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<HomaUnlockChunk>': Option<HomaUnlockChunk>;
     'Option<HostConfiguration>': Option<HostConfiguration>;
     'Option<HostFnWeights>': Option<HostFnWeights>;
+    'Option<HostFnWeightsTo264>': Option<HostFnWeightsTo264>;
     'Option<HrmpChannel>': Option<HrmpChannel>;
     'Option<HrmpChannelId>': Option<HrmpChannelId>;
     'Option<HrmpOpenChannelRequest>': Option<HrmpOpenChannelRequest>;
@@ -573,6 +574,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<LeasePeriodOf>': Option<LeasePeriodOf>;
     'Option<Ledger>': Option<Ledger>;
     'Option<Limits>': Option<Limits>;
+    'Option<LimitsTo264>': Option<LimitsTo264>;
     'Option<LiquidationStrategy>': Option<LiquidationStrategy>;
     'Option<LocalValidationData>': Option<LocalValidationData>;
     'Option<LockIdentifier>': Option<LockIdentifier>;
@@ -589,6 +591,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<MemberCount>': Option<MemberCount>;
     'Option<MembershipProof>': Option<MembershipProof>;
     'Option<MessageIngestionType>': Option<MessageIngestionType>;
+    'Option<MessageQueueChain>': Option<MessageQueueChain>;
     'Option<MessagingStateSnapshot>': Option<MessagingStateSnapshot>;
     'Option<MessagingStateSnapshotEgressEntry>': Option<MessagingStateSnapshotEgressEntry>;
     'Option<MetadataAll>': Option<MetadataAll>;
@@ -665,10 +668,12 @@ declare module '@polkadot/types/types/registry' {
     'Option<PalletsOrigin>': Option<PalletsOrigin>;
     'Option<PalletVersion>': Option<PalletVersion>;
     'Option<ParachainDispatchOrigin>': Option<ParachainDispatchOrigin>;
+    'Option<ParachainInherentData>': Option<ParachainInherentData>;
     'Option<ParachainProposal>': Option<ParachainProposal>;
     'Option<ParaGenesisArgs>': Option<ParaGenesisArgs>;
     'Option<ParaId>': Option<ParaId>;
     'Option<ParaInfo>': Option<ParaInfo>;
+    'Option<ParaLifecycle>': Option<ParaLifecycle>;
     'Option<Params>': Option<Params>;
     'Option<ParaPastCodeMeta>': Option<ParaPastCodeMeta>;
     'Option<ParaScheduling>': Option<ParaScheduling>;
@@ -686,8 +691,9 @@ declare module '@polkadot/types/types/registry' {
     'Option<PendingResume>': Option<PendingResume>;
     'Option<Perbill>': Option<Perbill>;
     'Option<Percent>': Option<Percent>;
-    'Option<PerDispatchClass>': Option<PerDispatchClass>;
     'Option<PerDispatchClassU32>': Option<PerDispatchClassU32>;
+    'Option<PerDispatchClassWeight>': Option<PerDispatchClassWeight>;
+    'Option<PerDispatchClassWeightsPerClass>': Option<PerDispatchClassWeightsPerClass>;
     'Option<Period>': Option<Period>;
     'Option<Permill>': Option<Permill>;
     'Option<PermissionLatest>': Option<PermissionLatest>;
@@ -760,6 +766,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<Registration>': Option<Registration>;
     'Option<RegistrationJudgement>': Option<RegistrationJudgement>;
     'Option<RelayChainBlockNumber>': Option<RelayChainBlockNumber>;
+    'Option<RelayChainHash>': Option<RelayChainHash>;
     'Option<RelayedFrom>': Option<RelayedFrom>;
     'Option<RelayTo>': Option<RelayTo>;
     'Option<Releases>': Option<Releases>;
@@ -789,6 +796,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<ScheduleTaskIndex>': Option<ScheduleTaskIndex>;
     'Option<ScheduleTo212>': Option<ScheduleTo212>;
     'Option<ScheduleTo258>': Option<ScheduleTo258>;
+    'Option<ScheduleTo264>': Option<ScheduleTo264>;
     'Option<Scheduling>': Option<Scheduling>;
     'Option<Seal>': Option<Seal>;
     'Option<SealV0>': Option<SealV0>;
@@ -1325,6 +1333,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<HomaUnlockChunk>': Vec<HomaUnlockChunk>;
     'Vec<HostConfiguration>': Vec<HostConfiguration>;
     'Vec<HostFnWeights>': Vec<HostFnWeights>;
+    'Vec<HostFnWeightsTo264>': Vec<HostFnWeightsTo264>;
     'Vec<HrmpChannel>': Vec<HrmpChannel>;
     'Vec<HrmpChannelId>': Vec<HrmpChannelId>;
     'Vec<HrmpOpenChannelRequest>': Vec<HrmpOpenChannelRequest>;
@@ -1381,6 +1390,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<LeasePeriodOf>': Vec<LeasePeriodOf>;
     'Vec<Ledger>': Vec<Ledger>;
     'Vec<Limits>': Vec<Limits>;
+    'Vec<LimitsTo264>': Vec<LimitsTo264>;
     'Vec<LiquidationStrategy>': Vec<LiquidationStrategy>;
     'Vec<LocalValidationData>': Vec<LocalValidationData>;
     'Vec<LockIdentifier>': Vec<LockIdentifier>;
@@ -1397,6 +1407,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<MemberCount>': Vec<MemberCount>;
     'Vec<MembershipProof>': Vec<MembershipProof>;
     'Vec<MessageIngestionType>': Vec<MessageIngestionType>;
+    'Vec<MessageQueueChain>': Vec<MessageQueueChain>;
     'Vec<MessagingStateSnapshot>': Vec<MessagingStateSnapshot>;
     'Vec<MessagingStateSnapshotEgressEntry>': Vec<MessagingStateSnapshotEgressEntry>;
     'Vec<MetadataAll>': Vec<MetadataAll>;
@@ -1473,10 +1484,12 @@ declare module '@polkadot/types/types/registry' {
     'Vec<PalletsOrigin>': Vec<PalletsOrigin>;
     'Vec<PalletVersion>': Vec<PalletVersion>;
     'Vec<ParachainDispatchOrigin>': Vec<ParachainDispatchOrigin>;
+    'Vec<ParachainInherentData>': Vec<ParachainInherentData>;
     'Vec<ParachainProposal>': Vec<ParachainProposal>;
     'Vec<ParaGenesisArgs>': Vec<ParaGenesisArgs>;
     'Vec<ParaId>': Vec<ParaId>;
     'Vec<ParaInfo>': Vec<ParaInfo>;
+    'Vec<ParaLifecycle>': Vec<ParaLifecycle>;
     'Vec<Params>': Vec<Params>;
     'Vec<ParaPastCodeMeta>': Vec<ParaPastCodeMeta>;
     'Vec<ParaScheduling>': Vec<ParaScheduling>;
@@ -1494,8 +1507,9 @@ declare module '@polkadot/types/types/registry' {
     'Vec<PendingResume>': Vec<PendingResume>;
     'Vec<Perbill>': Vec<Perbill>;
     'Vec<Percent>': Vec<Percent>;
-    'Vec<PerDispatchClass>': Vec<PerDispatchClass>;
     'Vec<PerDispatchClassU32>': Vec<PerDispatchClassU32>;
+    'Vec<PerDispatchClassWeight>': Vec<PerDispatchClassWeight>;
+    'Vec<PerDispatchClassWeightsPerClass>': Vec<PerDispatchClassWeightsPerClass>;
     'Vec<Period>': Vec<Period>;
     'Vec<Permill>': Vec<Permill>;
     'Vec<PermissionLatest>': Vec<PermissionLatest>;
@@ -1568,6 +1582,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<Registration>': Vec<Registration>;
     'Vec<RegistrationJudgement>': Vec<RegistrationJudgement>;
     'Vec<RelayChainBlockNumber>': Vec<RelayChainBlockNumber>;
+    'Vec<RelayChainHash>': Vec<RelayChainHash>;
     'Vec<RelayedFrom>': Vec<RelayedFrom>;
     'Vec<RelayTo>': Vec<RelayTo>;
     'Vec<Releases>': Vec<Releases>;
@@ -1597,6 +1612,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<ScheduleTaskIndex>': Vec<ScheduleTaskIndex>;
     'Vec<ScheduleTo212>': Vec<ScheduleTo212>;
     'Vec<ScheduleTo258>': Vec<ScheduleTo258>;
+    'Vec<ScheduleTo264>': Vec<ScheduleTo264>;
     'Vec<Scheduling>': Vec<Scheduling>;
     'Vec<Seal>': Vec<Seal>;
     'Vec<SealV0>': Vec<SealV0>;
@@ -2133,6 +2149,7 @@ declare module '@polkadot/types/types/registry' {
     HomaUnlockChunk: HomaUnlockChunk;
     HostConfiguration: HostConfiguration;
     HostFnWeights: HostFnWeights;
+    HostFnWeightsTo264: HostFnWeightsTo264;
     HrmpChannel: HrmpChannel;
     HrmpChannelId: HrmpChannelId;
     HrmpOpenChannelRequest: HrmpOpenChannelRequest;
@@ -2189,6 +2206,7 @@ declare module '@polkadot/types/types/registry' {
     LeasePeriodOf: LeasePeriodOf;
     Ledger: Ledger;
     Limits: Limits;
+    LimitsTo264: LimitsTo264;
     LiquidationStrategy: LiquidationStrategy;
     LocalValidationData: LocalValidationData;
     LockIdentifier: LockIdentifier;
@@ -2205,6 +2223,7 @@ declare module '@polkadot/types/types/registry' {
     MemberCount: MemberCount;
     MembershipProof: MembershipProof;
     MessageIngestionType: MessageIngestionType;
+    MessageQueueChain: MessageQueueChain;
     MessagingStateSnapshot: MessagingStateSnapshot;
     MessagingStateSnapshotEgressEntry: MessagingStateSnapshotEgressEntry;
     MetadataAll: MetadataAll;
@@ -2281,10 +2300,12 @@ declare module '@polkadot/types/types/registry' {
     PalletsOrigin: PalletsOrigin;
     PalletVersion: PalletVersion;
     ParachainDispatchOrigin: ParachainDispatchOrigin;
+    ParachainInherentData: ParachainInherentData;
     ParachainProposal: ParachainProposal;
     ParaGenesisArgs: ParaGenesisArgs;
     ParaId: ParaId;
     ParaInfo: ParaInfo;
+    ParaLifecycle: ParaLifecycle;
     Params: Params;
     ParaPastCodeMeta: ParaPastCodeMeta;
     ParaScheduling: ParaScheduling;
@@ -2302,8 +2323,9 @@ declare module '@polkadot/types/types/registry' {
     PendingResume: PendingResume;
     Perbill: Perbill;
     Percent: Percent;
-    PerDispatchClass: PerDispatchClass;
     PerDispatchClassU32: PerDispatchClassU32;
+    PerDispatchClassWeight: PerDispatchClassWeight;
+    PerDispatchClassWeightsPerClass: PerDispatchClassWeightsPerClass;
     Period: Period;
     Permill: Permill;
     PermissionLatest: PermissionLatest;
@@ -2376,6 +2398,7 @@ declare module '@polkadot/types/types/registry' {
     Registration: Registration;
     RegistrationJudgement: RegistrationJudgement;
     RelayChainBlockNumber: RelayChainBlockNumber;
+    RelayChainHash: RelayChainHash;
     RelayedFrom: RelayedFrom;
     RelayTo: RelayTo;
     Releases: Releases;
@@ -2405,6 +2428,7 @@ declare module '@polkadot/types/types/registry' {
     ScheduleTaskIndex: ScheduleTaskIndex;
     ScheduleTo212: ScheduleTo212;
     ScheduleTo258: ScheduleTo258;
+    ScheduleTo264: ScheduleTo264;
     Scheduling: Scheduling;
     Seal: Seal;
     SealV0: SealV0;
