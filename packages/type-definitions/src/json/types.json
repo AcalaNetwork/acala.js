@@ -226,14 +226,22 @@
     "AuctionId": "u32",
     "AuctionIdOf": "AuctionId",
     "TokenSymbol": {
-        "_enum": [
-            "ACA",
-            "AUSD",
-            "DOT",
-            "XBTC",
-            "LDOT",
-            "RENBTC"
-        ]
+        "_enum": {
+            "ACA": 0,
+            "AUSD": 1,
+            "DOT": 2,
+            "LDOT": 3,
+            "XBTC": 4,
+            "RENBTC": 5,
+            "POLKABTC": 6,
+            "PLM": 7,
+            "PHA": 8,
+            "KAR": 128,
+            "KUSD": 129,
+            "KSM": 130,
+            "LKSM": 131,
+            "SDN": 135
+        }
     },
     "CurrencyId": {
         "_enum": {
