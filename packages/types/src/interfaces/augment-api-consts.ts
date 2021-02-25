@@ -114,6 +114,10 @@ declare module '@polkadot/api/types/consts' {
        * The DEX's module id, keep all assets in DEX.
        **/
       moduleId: ModuleId & AugmentedConst<ApiType>;
+      /**
+       * The limit for length of trading path
+       **/
+      tradingPathLimit: u32 & AugmentedConst<ApiType>;
     };
     emergencyShutdown: {
       [key: string]: Codec;
@@ -132,7 +136,9 @@ declare module '@polkadot/api/types/consts' {
     nomineesElection: {
       [key: string]: Codec;
       bondingDuration: EraIndex & AugmentedConst<ApiType>;
+      maxUnlockingChunks: u32 & AugmentedConst<ApiType>;
       minBondThreshold: Balance & AugmentedConst<ApiType>;
+      nominateesCount: u32 & AugmentedConst<ApiType>;
     };
     polkadotBridge: {
       [key: string]: Codec;
