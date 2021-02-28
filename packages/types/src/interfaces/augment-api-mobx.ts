@@ -13,7 +13,7 @@ import type { ClassId, ClassInfoOf, TokenId, TokenInfoOf } from '@acala-network/
 import type { BondingLedger } from '@acala-network/types/interfaces/nomineesElection';
 import type { AirDropCurrencyId, AuctionId, CurrencyId, TradingPair } from '@acala-network/types/interfaces/primitives';
 import type { DestAddress, PublicKey } from '@acala-network/types/interfaces/renvmBridge';
-import type { AccountId, AccountIndex, Balance, BalanceOf, BlockNumber, H256, Hash, KeyTypeId, Moment, OpaqueCall, OracleKey, Perbill, Releases, ValidatorId } from '@acala-network/types/interfaces/runtime';
+import type { AccountId, AccountIndex, Balance, BalanceOf, BlockNumber, H256, Hash, KeyTypeId, Moment, OpaqueCall, OracleKey, Perbill, Releases, Slot, ValidatorId } from '@acala-network/types/interfaces/runtime';
 import type { Ledger, Params, PolkadotAccountId, SubAccountStatus } from '@acala-network/types/interfaces/stakingPool';
 import type { ExchangeRate, Rate } from '@acala-network/types/interfaces/support';
 import type { GraduallyUpdate } from '@open-web3/orml-types/interfaces/graduallyUpdates';
@@ -26,7 +26,6 @@ import type { BabeAuthorityWeight, MaybeRandomness, NextConfigDescriptor, Random
 import type { AccountData, BalanceLock } from '@polkadot/types/interfaces/balances';
 import type { ProposalIndex, Votes } from '@polkadot/types/interfaces/collective';
 import type { AuthorityId } from '@polkadot/types/interfaces/consensus';
-import type { CodeHash, ContractInfo, DeletedContract, PrefabWasmModule, Schedule } from '@polkadot/types/interfaces/contracts';
 import type { Proposal } from '@polkadot/types/interfaces/democracy';
 import type { EcdsaSignature } from '@polkadot/types/interfaces/extrinsics';
 import type { SetId, StoredPendingChange, StoredState } from '@polkadot/types/interfaces/grandpa';
@@ -34,7 +33,7 @@ import type { ProxyAnnouncement, ProxyDefinition } from '@polkadot/types/interfa
 import type { ActiveRecovery, RecoveryConfig } from '@polkadot/types/interfaces/recovery';
 import type { Scheduled, TaskAddress } from '@polkadot/types/interfaces/scheduler';
 import type { Keys, SessionIndex } from '@polkadot/types/interfaces/session';
-import type { ActiveEraInfo, ElectionResult, ElectionScore, ElectionStatus, EraIndex, EraRewardPoints, Exposure, Forcing, Nominations, RewardDestination, SlashingSpans, SpanIndex, SpanRecord, StakingLedger, UnappliedSlash, ValidatorPrefs } from '@polkadot/types/interfaces/staking';
+import type { ActiveEraInfo, ElectionResult, ElectionScore, ElectionStatus, EraIndex, EraRewardPoints, Exposure, Forcing, Nominations, RewardDestination, SeatHolder, SlashingSpans, SpanIndex, SpanRecord, StakingLedger, UnappliedSlash, ValidatorPrefs, Voter } from '@polkadot/types/interfaces/staking';
 import type { AccountInfo, ConsumedWeight, DigestOf, EventIndex, EventRecord, LastRuntimeUpgradeInfo, Phase } from '@polkadot/types/interfaces/system';
 import type { Bounty, BountyIndex, OpenTip } from '@polkadot/types/interfaces/treasury';
 import type { Multiplier } from '@polkadot/types/interfaces/txpayment';
@@ -149,7 +148,7 @@ export interface StorageType extends BaseStorageType {
     /**
      * Current slot number.
      **/
-    currentSlot: u64 | null;
+    currentSlot: Slot | null;
     /**
      * Current epoch index.
      **/
@@ -158,7 +157,7 @@ export interface StorageType extends BaseStorageType {
      * The slot at which the first epoch actually started. This is 0
      * until the first block of the chain.
      **/
-    genesisSlot: u64 | null;
+    genesisSlot: Slot | null;
     /**
      * Temporary value (cleared at block finalization) which is `Some`
      * if per-block initialization has already been called for current block.
@@ -217,7 +216,7 @@ export interface StorageType extends BaseStorageType {
   balances: {    /**
      * The balance of an account.
      * 
-     * NOTE: This is only used in the case that this module is used to store balances.
+     * NOTE: This is only used in the case that this pallet is used to store balances.
      **/
     account: StorageMap<AccountId | string, AccountData>;
     /**
@@ -300,36 +299,6 @@ export interface StorageType extends BaseStorageType {
      **/
     debitPool: Balance | null;
   };
-  contracts: {    /**
-     * The subtrie counter.
-     **/
-    accountCounter: u64 | null;
-    /**
-     * A mapping between an original code hash and instrumented wasm code, ready for execution.
-     **/
-    codeStorage: StorageMap<CodeHash | string, Option<PrefabWasmModule>>;
-    /**
-     * The code associated with a given account.
-     * 
-     * TWOX-NOTE: SAFE since `AccountId` is a secure hash.
-     **/
-    contractInfoOf: StorageMap<AccountId | string, Option<ContractInfo>>;
-    /**
-     * Current cost schedule for contracts.
-     **/
-    currentSchedule: Schedule | null;
-    /**
-     * Evicted contracts that await child trie deletion.
-     * 
-     * Child trie deletion is a heavy operation depending on the amount of storage items
-     * stored in said trie. Therefore this operation is performed lazily in `on_initialize`.
-     **/
-    deletionQueue: Vec<DeletedContract> | null;
-    /**
-     * A mapping from an original code hash to the original code, untouched by instrumentation.
-     **/
-    pristineCode: StorageMap<CodeHash | string, Option<Bytes>>;
-  };
   dex: {    /**
      * Liquidity pool for TradingPair.
      **/
@@ -344,28 +313,37 @@ export interface StorageType extends BaseStorageType {
     tradingPairStatuses: StorageMap<TradingPair, TradingPairStatus>;
   };
   electionsPhragmen: {    /**
-     * The present candidate list. Sorted based on account-id. A current member or runner-up
-     * can never enter this vector and is always implicitly assumed to be a candidate.
+     * The present candidate list. A current member or runner-up can never enter this vector
+     * and is always implicitly assumed to be a candidate.
+     * 
+     * Second element is the deposit.
+     * 
+     * Invariant: Always sorted based on account id.
      **/
-    candidates: Vec<AccountId> | null;
+    candidates: Vec<ITuple<[AccountId, BalanceOf]>> | null;
     /**
      * The total number of vote rounds that have happened, excluding the upcoming one.
      **/
     electionRounds: u32 | null;
     /**
-     * The current elected membership. Sorted based on account id.
+     * The current elected members.
+     * 
+     * Invariant: Always sorted based on account id.
      **/
-    members: Vec<ITuple<[AccountId, BalanceOf]>> | null;
+    members: Vec<SeatHolder> | null;
     /**
-     * The current runners_up. Sorted based on low to high merit (worse to best).
+     * The current reserved runners-up.
+     * 
+     * Invariant: Always sorted based on rank (worse to best). Upon removal of a member, the
+     * last (i.e. _best_) runner-up will be replaced.
      **/
-    runnersUp: Vec<ITuple<[AccountId, BalanceOf]>> | null;
+    runnersUp: Vec<SeatHolder> | null;
     /**
      * Votes and locked stake of a particular voter.
      * 
-     * TWOX-NOTE: SAFE as `AccountId` is a crypto hash
+     * TWOX-NOTE: SAFE as `AccountId` is a crypto hash.
      **/
-    voting: StorageMap<AccountId | string, ITuple<[BalanceOf, Vec<AccountId>]>>;
+    voting: StorageMap<AccountId | string, Voter>;
   };
   emergencyShutdown: {    /**
      * Open final redemption flag
@@ -376,7 +354,10 @@ export interface StorageType extends BaseStorageType {
      **/
     isShutdown: bool | null;
   };
-  evm: {    accounts: StorageMap<EvmAddress | string, Option<AccountInfo>>;
+  evm: {    /**
+     * Accounts info.
+     **/
+    accounts: StorageMap<EvmAddress | string, Option<AccountInfo>>;
     accountStorages: StorageDoubleMap<EvmAddress | string, H256 | string, H256>;
     codeInfos: StorageMap<H256 | string, Option<CodeInfo>>;
     codes: StorageMap<H256 | string, Bytes>;
@@ -925,7 +906,7 @@ export interface StorageType extends BaseStorageType {
      * True if network has been upgraded to this version.
      * Storage version of the pallet.
      * 
-     * This is set to v3.0.0 for new networks.
+     * This is set to v5.0.0 for new networks.
      **/
     storageVersion: Releases | null;
     /**
@@ -1046,6 +1027,11 @@ export interface StorageType extends BaseStorageType {
      **/
     parentHash: Hash | null;
     /**
+     * True if we have upgraded so that AccountInfo contains two types of `RefCount`. False
+     * (default) if not.
+     **/
+    upgradedToDualRefCount: bool | null;
+    /**
      * True if we have upgraded so that `type RefCount` is `u32`. False (default) if not.
      **/
     upgradedToU32RefCount: bool | null;
@@ -1124,7 +1110,8 @@ export interface StorageType extends BaseStorageType {
      **/
     totalIssuance: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Balance>;
   };
-  transactionPayment: {    nextFeeMultiplier: Multiplier | null;
+  transactionPayment: {    defaultFeeCurrencyId: StorageMap<AccountId | string, Option<CurrencyId>>;
+    nextFeeMultiplier: Multiplier | null;
   };
   vesting: {    /**
      * Vesting schedules of an account.
