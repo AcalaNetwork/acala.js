@@ -43,6 +43,7 @@ __metadata:
   resolution: "@acala-network/sdk-core@workspace:packages/sdk-core"
   dependencies:
     "@acala-network/api": ^0.6.2-16
+    "@acala-network/type-definitions": ^0.6.2-16
     "@polkadot/api": ^3.10.3-2
     "@types/events": ^3.0.0
     "@types/lodash": ^4.14.161

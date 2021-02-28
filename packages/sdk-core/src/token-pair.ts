@@ -1,4 +1,5 @@
 import { Token, sortTokens } from '@acala-network/sdk-core/token';
+import { assert } from '@polkadot/util';
 
 // class for store token pair
 export class TokenPair {
@@ -7,7 +8,7 @@ export class TokenPair {
   private origin: [Token, Token];
 
   constructor(token1: Token, token2: Token) {
-    if (token1.isEqual(token2)) throw new Error("can't create token pair by equal tokens.");
+    assert(!token1.isEqual(token2), "can't create token pair by equal tokens.");
 
     const sorted = sortTokens(token1, token2);
 

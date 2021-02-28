@@ -1,12 +1,12 @@
-import { getPresetToken, TokenPair } from '@acala-network/sdk-core';
+import { Token, TokenPair } from '@acala-network/sdk-core';
 import { TradeGraph } from './trade-graph';
 
 describe('trade graph', () => {
-  const aca = getPresetToken('ACA');
-  const ausd = getPresetToken('AUSD');
-  const dot = getPresetToken('DOT');
-  const xbtc = getPresetToken('XBTC');
-  const renbtc = getPresetToken('RENBTC');
+  const aca = new Token({ name: 'ACA', symbol: 'ACA', chain: 'acala', amount: 1, precision: 18 });
+  const ausd = new Token({ name: 'AUSD', symbol: 'AUSD', chain: 'acala', amount: 1, precision: 16 });
+  const dot = new Token({ name: 'DOT', symbol: 'DOT', chain: 'acala', amount: 1, precision: 16 });
+  const xbtc = new Token({ name: 'XBTC', symbol: 'XBTC', chain: 'acala', amount: 1, precision: 16 });
+  const renbtc = new Token({ name: 'RENBTC', symbol: 'RENBTC', chain: 'acala', amount: 1, precision: 16 });
 
   test('create trade graph', () => {
     const tradeGraph = new TradeGraph([
@@ -32,13 +32,13 @@ describe('trade graph', () => {
       new TokenPair(dot, ausd)
     ]);
 
-    const _dot = getPresetToken('DOT');
+    const _dot = new Token({ name: 'DOT', symbol: 'DOT', chain: 'acala', amount: 1, precision: 16 });
 
     const dot2renbtc = tradeGraph.getPathes(_dot, renbtc);
 
-    expect(dot2renbtc[0]).toEqual([dot, aca, renbtc]);
-    expect(dot2renbtc[1]).toEqual([dot, renbtc]);
-    expect(dot2renbtc[2]).toEqual([dot, ausd, aca, renbtc]);
+    expect(dot2renbtc[0]).toEqual([_dot, aca, renbtc]);
+    expect(dot2renbtc[1]).toEqual([_dot, renbtc]);
+    expect(dot2renbtc[2]).toEqual([_dot, ausd, aca, renbtc]);
 
     const aca2ausd = tradeGraph.getPathes(aca, ausd);
 
