@@ -1,7 +1,10 @@
-import { FixedPointNumber } from './fixed-point-number';
-import { CHAIN } from './type';
 import { ApiPromise, ApiRx } from '@polkadot/api';
 import { CurrencyId } from '@acala-network/types/interfaces';
+import { assert } from '@polkadot/util';
+import primitivesConfig from '@acala-network/type-definitions/primitives';
+
+import { FixedPointNumber } from './fixed-point-number';
+import { CHAIN } from './type';
 
 export interface TokenConfig {
   chain?: CHAIN; // which chain the token is in
@@ -10,68 +13,6 @@ export interface TokenConfig {
   precision?: number; // the precision of the token
   amount?: number | string | FixedPointNumber; // the amount of the token
 }
-
-// preset token type
-export type PresetToken = 'ACA' | 'AUSD' | 'DOT' | 'XBTC' | 'LDOT' | 'RENBTC' | 'KSM';
-
-// common tokens config in acala network and polkadot
-export const presetTokensConfig: Record<CHAIN, Record<PresetToken, TokenConfig>> = {
-  acala: {
-    ACA: {
-      chain: 'acala',
-      name: 'ACA',
-      symbol: 'ACA',
-      precision: 18
-    },
-    AUSD: {
-      chain: 'acala',
-      name: 'AUSD',
-      symbol: 'aUSD',
-      precision: 18
-    },
-    DOT: {
-      chain: 'acala',
-      name: 'DOT',
-      symbol: 'DOT',
-      precision: 18
-    },
-    RENBTC: {
-      chain: 'acala',
-      name: 'RENBTC',
-      symbol: 'renBTC',
-      precision: 18
-    },
-    LDOT: {
-      chain: 'acala',
-      name: 'LDOT',
-      symbol: 'LDOT',
-      precision: 18
-    },
-    XBTC: {
-      chain: 'acala',
-      name: 'XBTC',
-      symbol: 'XBTC',
-      precision: 18
-    }
-  } as Record<PresetToken, TokenConfig>,
-  polkadot: {
-    DOT: {
-      chain: 'polkadot',
-      name: 'DOT',
-      symbol: 'DOT',
-      precision: 10
-    }
-  } as Record<PresetToken, TokenConfig>,
-  kurara: {} as Record<PresetToken, TokenConfig>,
-  kusama: {
-    KSM: {
-      chain: 'kusama',
-      name: 'KSM',
-      symbol: 'KSM',
-      precision: 12
-    }
-  } as Record<PresetToken, TokenConfig>
-};
 
 export const TokenAmount = FixedPointNumber;
 
@@ -82,6 +23,17 @@ export class Token {
   readonly symbol!: string;
   readonly precision!: number;
   public amount!: FixedPointNumber;
+
+  static fromCurrencyId(currency: CurrencyId): Token {
+    assert(currency.isToken, 'Token.fromCurrencyId should receive the currency of token');
+
+    return new Token({
+      name: currency.asToken.toString(),
+      symbol: currency.asToken.toString(),
+      precision: 18,
+      amount: FixedPointNumber.ZERO
+    });
+  }
 
   constructor(config: TokenConfig) {
     this.name = config.name;
@@ -118,6 +70,10 @@ export class Token {
     return this.name;
   }
 
+  public toCurrencyId(api: ApiRx | ApiPromise): CurrencyId {
+    return api.createType('CurrencyId', this.toChainData());
+  }
+
   public clone(newConfig?: Partial<TokenConfig>): Token {
     return new Token({
       name: newConfig?.name || this.name || '',
@@ -129,43 +85,10 @@ export class Token {
   }
 }
 
-function convert(config: Record<CHAIN, Record<string, TokenConfig>>): Record<CHAIN, Record<string, Token>> {
-  return Object.keys(config).reduce((prev, chain) => {
-    prev[chain as CHAIN] = Object.keys(config[chain as CHAIN]).reduce((prev, name) => {
-      prev[name] = new Token(config[chain as CHAIN][name]);
-
-      return prev;
-    }, {} as Record<string, Token>);
-
-    return prev;
-  }, {} as Record<CHAIN, Record<string, Token>>);
-}
-
-export const PRESET_TOKENS = convert(presetTokensConfig);
-
-export function getPresetToken(name: PresetToken, chain: CHAIN = 'acala'): Token {
-  return PRESET_TOKENS[chain][name];
-}
-
-const TOKEN_SORT: Record<string, number> = {
-  ACA: 0,
-  AUSD: 1,
-  DOT: 2,
-  XBTC: 3,
-  LDOT: 4,
-  RENBTC: 5
-};
+const TOKEN_SORT: Record<string, number> = primitivesConfig.types.TokenSymbol._enum;
 
 export function sortTokens(token1: Token, token2: Token, ...other: Token[]): Token[] {
   const result = [token1, token2, ...other];
 
   return result.sort((a, b) => TOKEN_SORT[a.name] - TOKEN_SORT[b.name]);
-}
-
-export function token2CurrencyId(api: ApiPromise | ApiRx, token: Token): CurrencyId {
-  return api.createType('CurrencyId', token.toChainData());
-}
-
-export function currencyId2Token(token: CurrencyId): Token {
-  return getPresetToken(token.asToken.toString() as PresetToken);
 }
