@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/types",
-  "version": "0.6.2-15",
+  "version": "0.6.2-16",
   "description": "Polkadot.js type definations for Acala Network",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
@@ -15,7 +15,7 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
-    "@acala-network/type-definitions": "^0.6.2-15",
+    "@acala-network/type-definitions": "^0.6.2-16",
     "@babel/runtime": "^7.10.2",
     "@open-web3/api-mobx": "^0.8.2-9",
     "@open-web3/orml-types": "^0.8.2-9",
