@@ -17,6 +17,7 @@ export default {
         POLKABTC: 6,
         PLM: 7,
         PHA: 8,
+        HDT: 9,
 
         KAR: 128,
         KUSD: 129,

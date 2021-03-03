@@ -56,7 +56,7 @@ export function loanType(
           globalStabilityFee: globalStabilityFee,
           maximumTotalDebitValue: collateralParams.maximumTotalDebitValue,
           minimumDebitValue: constants.minimumDebitValue,
-          expectedBlockTime: constants.expectedBlockTime
+          expectedBlockTime: constants?.expectedBlockTime || 6000
         };
       })
     );
