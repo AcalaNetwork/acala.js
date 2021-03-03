@@ -1,5 +1,5 @@
-import { Observable, combineLatest } from '@polkadot/x-rxjs';
-import { map } from '@polkadot/x-rxjs/operators';
+import { Observable, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { ApiInterfaceRx } from '@polkadot/api/types';
 import { memo } from '@polkadot/api-derive/util';
@@ -19,7 +19,7 @@ function loanConstants(api: ApiInterfaceRx): DerivedLoanConstants {
     defaultDebitExchangeRate: api.consts.cdpEngine.defaultDebitExchangeRate as ExchangeRate,
     defaultLiquidationRatio: api.consts.cdpEngine.defaultLiquidationRatio as Ratio,
     defaultLiquidationPenalty: api.consts.cdpEngine.defaultLiquidationPenalty as Rate,
-    expectedBlockTime: api.consts.babe.expectedBlockTime
+    expectedBlockTime: api.consts?.babe?.expectedBlockTime || 6000
   };
 }
 
@@ -56,7 +56,7 @@ export function loanType(
           globalStabilityFee: globalStabilityFee,
           maximumTotalDebitValue: collateralParams.maximumTotalDebitValue,
           minimumDebitValue: constants.minimumDebitValue,
-          expectedBlockTime: constants?.expectedBlockTime || 6000
+          expectedBlockTime: constants.expectedBlockTime
         };
       })
     );

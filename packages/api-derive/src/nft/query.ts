@@ -1,5 +1,5 @@
-import { Observable, of } from '@polkadot/x-rxjs';
-import { map, tap } from '@polkadot/x-rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { ApiInterfaceRx } from '@polkadot/api/types';
 import { Option } from '@polkadot/types';
 
