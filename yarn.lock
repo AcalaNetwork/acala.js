@@ -13,7 +13,6 @@ __metadata:
     "@babel/runtime": ^7.10.2
     "@open-web3/orml-types": ^0.8.2-11
     "@polkadot/api-derive": ^3.10.3-2
-    "@polkadot/x-rxjs": ^6.0.1-4
   languageName: unknown
   linkType: soft
 
@@ -1435,7 +1434,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.7, @babel/runtime@npm:^7.13.8, @babel/runtime@npm:^7.13.9, @babel/runtime@npm:^7.8.4":
+"@babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.7, @babel/runtime@npm:^7.13.8, @babel/runtime@npm:^7.8.4":
   version: 7.13.9
   resolution: "@babel/runtime@npm:7.13.9"
   dependencies:
@@ -2210,16 +2209,6 @@ __metadata:
     "@babel/runtime": ^7.13.8
     rxjs: ^6.6.6
   checksum: 4c5d2cf4b6ec8abd57fa14c909b226aeec8289c96e0a24c447d4c9fa565321be0c711f31417a567ede509f18bda1d42522cb0efd94549bd50f06541b63b6971d
-  languageName: node
-  linkType: hard
-
-"@polkadot/x-rxjs@npm:^6.0.1-4":
-  version: 6.0.1-4
-  resolution: "@polkadot/x-rxjs@npm:6.0.1-4"
-  dependencies:
-    "@babel/runtime": ^7.13.9
-    rxjs: ^6.6.6
-  checksum: f859d4234f6392f429ecc51485ea03da4b9eb9d647ae0aeb3f3044ebe2b5aa7d008d77134dea11ee2dec186e1b22de60f1b05dcffc5b11fd567300cfbcde69d4
   languageName: node
   linkType: hard
 
