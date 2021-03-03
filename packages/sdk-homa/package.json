@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk-homa",
-  "version": "0.6.2-19",
+  "version": "0.6.2-20",
   "description": "the homa sub module in acala network sdk",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
@@ -15,7 +15,7 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
-    "@acala-network/sdk-core": "^0.6.2-19",
+    "@acala-network/sdk-core": "^0.6.2-20",
     "lodash": "^4.17.20"
   },
   "devDependencies": {
