@@ -69,6 +69,7 @@ export interface TokenSymbol extends Enum {
   readonly isPolkabtc: boolean;
   readonly isPlm: boolean;
   readonly isPha: boolean;
+  readonly isHdt: boolean;
   readonly isKar: boolean;
   readonly isKusd: boolean;
   readonly isKsm: boolean;
