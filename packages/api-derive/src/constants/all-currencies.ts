@@ -1,9 +1,9 @@
 import { ApiInterfaceRx } from '@polkadot/api/types';
 import { memo } from '@polkadot/api-derive/util';
-import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { CurrencyId } from '@acala-network/types/interfaces';
+import { Observable, of } from '@polkadot/x-rxjs';
+import { switchMap } from '@polkadot/x-rxjs/operators';
 import { Vec } from '@polkadot/types';
+import { CurrencyId } from '@acala-network/types/interfaces';
 
 function getNativeCurrencyId(api: ApiInterfaceRx): Observable<CurrencyId> {
   return api.rpc.system.properties().pipe(

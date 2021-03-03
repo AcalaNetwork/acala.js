@@ -68,6 +68,16 @@
         "totalWithdrawnRewards": "Compact<Balance>"
     },
     "Share": "u128",
+    "ChainId": {
+        "_enum": {
+            "RelayChain": "Null",
+            "ParaChain": "ParaId"
+        }
+    },
+    "XCurrencyId": {
+        "chainId": "ChainId",
+        "currencyId": "Vec<u8>"
+    },
     "OracleValue": "Price",
     "PalletBalanceOf": "Balance",
     "CollateralAuctionItem": {
