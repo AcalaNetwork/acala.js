@@ -4,7 +4,10 @@ const typesBundleTypes = [
     minmax: [600, 699] as any,
     types: {
       Address: 'LookupSource',
-      LookupSource: 'IndicesLookupSource'
+      LookupSource: 'IndicesLookupSource',
+      TokenSymbol: {
+        _enum: ['ACA', 'AUSD', 'DOT', 'XBTC', 'LDOT', 'RENBTC']
+      }
     }
   },
   {
