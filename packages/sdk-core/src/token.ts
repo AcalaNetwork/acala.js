@@ -3,51 +3,41 @@ import { CurrencyId } from '@acala-network/types/interfaces';
 import { assert } from '@polkadot/util';
 import primitivesConfig from '@acala-network/type-definitions/primitives';
 
-import { FixedPointNumber } from './fixed-point-number';
+import { tokenConfig } from './token-config';
 import { CHAIN } from './type';
 
-export interface TokenConfig {
+export interface TokenParams {
   chain?: CHAIN; // which chain the token is in
   name: string; // The name of the token
   symbol?: string; // short name of the token
-  precision?: number; // the precision of the token
-  amount?: number | string | FixedPointNumber; // the amount of the token
+  decimal?: number; // the decimal of the token
 }
 
-export const TokenAmount = FixedPointNumber;
-
 export class Token {
-  readonly chain!: CHAIN;
   // keep all properties about token readonly
+  readonly chain!: CHAIN;
   readonly name!: string;
   readonly symbol!: string;
-  readonly precision!: number;
-  public amount!: FixedPointNumber;
+  readonly decimal!: number;
 
   static fromCurrencyId(currency: CurrencyId): Token {
     assert(currency.isToken, 'Token.fromCurrencyId should receive the currency of token');
 
+    const symbol = currency.asToken.toString();
+
     return new Token({
-      name: currency.asToken.toString(),
-      symbol: currency.asToken.toString(),
-      precision: 18,
-      amount: FixedPointNumber.ZERO
+      chain: tokenConfig.getChain(symbol),
+      name: tokenConfig.getName(symbol),
+      symbol,
+      decimal: tokenConfig.getDecimal(symbol)
     });
   }
 
-  constructor(config: TokenConfig) {
+  constructor(config: TokenParams) {
     this.name = config.name;
     this.symbol = config.symbol || config.name;
-    this.precision = config.precision || 18;
+    this.decimal = config.decimal || 18;
     this.chain = config.chain || 'acala';
-
-    if (config.amount) {
-      if (config.amount instanceof FixedPointNumber) {
-        this.amount = config.amount;
-      } else {
-        this.amount = new TokenAmount(config.amount || 0, this.precision);
-      }
-    }
   }
 
   /**
@@ -74,12 +64,11 @@ export class Token {
     return api.createType('CurrencyId', this.toChainData());
   }
 
-  public clone(newConfig?: Partial<TokenConfig>): Token {
+  public clone(newConfig?: Partial<TokenParams>): Token {
     return new Token({
       name: newConfig?.name || this.name || '',
       chain: newConfig?.chain || this.chain || '',
-      precision: newConfig?.precision || this.precision || 0,
-      amount: newConfig?.amount || this.amount || new FixedPointNumber(0),
+      decimal: newConfig?.decimal || this.decimal || 18,
       symbol: newConfig?.symbol || this.symbol || ''
     });
   }
