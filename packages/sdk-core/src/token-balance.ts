@@ -23,4 +23,8 @@ export class TokenBalance {
   get balance(): FixedPointNumber {
     return this._balance;
   }
+
+  public clone(): TokenBalance {
+    return new TokenBalance(this._token.clone(), this._balance.clone());
+  }
 }

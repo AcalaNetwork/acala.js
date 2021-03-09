@@ -1,33 +1,57 @@
 import { Token, sortTokens } from './token';
-import { FixedPointNumber } from './fixed-point-number';
 
 describe('token', () => {
-  const t1 = new Token({ name: 'T1', symbol: 'Token1', chain: 'acala', amount: 1, precision: 18 });
-  const t2 = new Token({ name: 'T2', symbol: 'Token1', chain: 'acala', amount: 1, precision: 16 });
+  const t1 = new Token({ name: 'Token1', symbol: 'T1', chain: 'acala', decimal: 18 });
 
-  test('token constructor', () => {
-    expect(t1.name).toEqual('T1');
-    expect(t1.symbol).toEqual('Token1');
+  test('token constructor should work', () => {
+    expect(t1.name).toEqual('Token1');
+    expect(t1.symbol).toEqual('T1');
     expect(t1.chain).toEqual('acala');
-    expect(t1.amount.toNumber()).toEqual(1);
-    expect(t1.precision).toEqual(18);
+    expect(t1.decimal).toEqual(18);
   });
 
-  test('token amount', () => {
-    t1.amount = t1.amount.plus(new FixedPointNumber(1, 18));
-    expect(t1.amount.toNumber()).toEqual(2);
+  test('clone tokens should work', () => {
+    const t2 = t1.clone();
 
-    t1.amount = t1.amount.plus(t2.amount);
-    expect(t1.amount.toNumber()).toEqual(3);
+    expect(t2.name).toEqual('Token1');
+    expect(t2.symbol).toEqual('T1');
+    expect(t2.chain).toEqual('acala');
+    expect(t2.decimal).toEqual(18);
   });
-});
 
-describe('sort tokens', () => {
-  const aca = new Token({ name: 'ACA', symbol: 'ACA', chain: 'acala', amount: 1, precision: 18 });
-  const xbtc = new Token({ name: 'XBTC', symbol: 'XBTC', chain: 'acala', amount: 1, precision: 16 });
-  const renbtc = new Token({ name: 'RENBTC', symbol: 'renBTC', chain: 'acala', amount: 1, precision: 16 });
+  test('fromCurrencyId set default token decimal should work', () => {
+    const mockACA = { asToken: { toString: () => 'ACA' }, isToken: true };
+    const mockAUSD = { asToken: { toString: () => 'AUSD' }, isToken: true };
+    const mockDOT = { asToken: { toString: () => 'DOT' }, isToken: true };
 
-  expect(sortTokens(aca, xbtc)).toEqual([aca, xbtc]);
-  expect(sortTokens(xbtc, aca)).toEqual([aca, xbtc]);
-  expect(sortTokens(xbtc, renbtc, aca)).toEqual([aca, xbtc, renbtc]);
+    expect(Token.fromCurrencyId(mockACA as any).decimal).toEqual(13);
+    expect(Token.fromCurrencyId(mockAUSD as any).decimal).toEqual(12);
+    expect(Token.fromCurrencyId(mockDOT as any).decimal).toEqual(10);
+  });
+
+  test('toChainData should work', () => {
+    expect(t1.toChainData()).toEqual({ Token: 'T1' });
+  });
+
+  test('isEqual should work', () => {
+    const t2 = t1.clone();
+    const t3 = new Token({ name: 'T3', symbol: 'T3', chain: 'acala' });
+
+    expect(t1.isEqual(t2)).toEqual(true);
+    expect(t1.isEqual(t3)).toEqual(false);
+  });
+
+  test('toString should work', () => {
+    expect(t1.toString()).toEqual('Token1');
+  });
+
+  test('sort tokens should work', () => {
+    const aca = new Token({ name: 'ACA', symbol: 'ACA', chain: 'acala', decimal: 18 });
+    const xbtc = new Token({ name: 'XBTC', symbol: 'XBTC', chain: 'acala', decimal: 16 });
+    const renbtc = new Token({ name: 'RENBTC', symbol: 'renBTC', chain: 'acala', decimal: 16 });
+
+    expect(sortTokens(aca, xbtc)).toEqual([aca, xbtc]);
+    expect(sortTokens(xbtc, aca)).toEqual([aca, xbtc]);
+    expect(sortTokens(xbtc, renbtc, aca)).toEqual([aca, xbtc, renbtc]);
+  });
 });

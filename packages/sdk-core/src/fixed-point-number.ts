@@ -323,6 +323,13 @@ export class FixedPointNumber {
   public isPositive = genFnFromBigNumber('isPositive', true).bind(this);
 
   /**
+   * @name clone
+   */
+  public clone(): FixedPointNumber {
+    return FixedPointNumber.fromInner(this.inner.toString(), this.precision);
+  }
+
+  /**
    * @name min
    */
   public min(...targets: FixedPointNumber[]): FixedPointNumber {

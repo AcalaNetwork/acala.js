@@ -1,10 +1,12 @@
 import { ApiPromise, ApiRx } from '@polkadot/api';
-import { CurrencyId } from '@acala-network/types/interfaces';
+import { CurrencyId, TokenSymbol } from '@acala-network/types/interfaces';
 import { assert } from '@polkadot/util';
 import primitivesConfig from '@acala-network/type-definitions/primitives';
 
 import { tokenConfig } from './token-config';
 import { CHAIN } from './type';
+
+const TOKEN_SORT: Record<string, number> = primitivesConfig.types.TokenSymbol._enum;
 
 export interface TokenParams {
   chain?: CHAIN; // which chain the token is in
@@ -33,6 +35,23 @@ export class Token {
     });
   }
 
+  static fromTokenSymbol(symbol: TokenSymbol): Token {
+    const _symbol = symbol.toString();
+
+    return new Token({
+      chain: tokenConfig.getChain(_symbol),
+      name: tokenConfig.getName(_symbol),
+      symbol: _symbol,
+      decimal: tokenConfig.getDecimal(_symbol)
+    });
+  }
+
+  static sort(...tokens: Token[]): Token[] {
+    const result = [...tokens];
+
+    return result.sort((a, b) => TOKEN_SORT[a.name] - TOKEN_SORT[b.name]);
+  }
+
   constructor(config: TokenParams) {
     this.name = config.name;
     this.symbol = config.symbol || config.name;
@@ -45,7 +64,7 @@ export class Token {
    * @description check if `token` equal current
    */
   public isEqual(token: Token): boolean {
-    return this.chain === token.chain && this.name === token.name;
+    return this.chain === token.chain && this.symbol === token.symbol;
   }
 
   public toString(): string {
@@ -53,11 +72,7 @@ export class Token {
   }
 
   public toChainData(): { Token: string } | string {
-    if (this.chain === 'acala') {
-      return { Token: this.name };
-    }
-
-    return this.name;
+    return { Token: this.symbol };
   }
 
   public toCurrencyId(api: ApiRx | ApiPromise): CurrencyId {
@@ -74,10 +89,40 @@ export class Token {
   }
 }
 
-const TOKEN_SORT: Record<string, number> = primitivesConfig.types.TokenSymbol._enum;
-
 export function sortTokens(token1: Token, token2: Token, ...other: Token[]): Token[] {
   const result = [token1, token2, ...other];
 
   return result.sort((a, b) => TOKEN_SORT[a.name] - TOKEN_SORT[b.name]);
+}
+
+export class TokenSet {
+  private _list: Token[];
+
+  constructor() {
+    this._list = [];
+  }
+
+  get values(): Token[] {
+    return this._list;
+  }
+
+  public add(target: Token): void {
+    const isExist = !!this._list.find((item) => item.isEqual(target));
+
+    if (!isExist) {
+      this._list.push(target);
+    }
+  }
+
+  public delete(target: Token): void {
+    const index = this._list.findIndex((item) => item.isEqual(target));
+
+    if (index !== -1) {
+      this._list.splice(index, 1);
+    }
+  }
+
+  public clear(): void {
+    this._list = [];
+  }
 }

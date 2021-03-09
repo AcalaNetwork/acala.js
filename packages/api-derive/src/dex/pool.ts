@@ -1,5 +1,6 @@
 import { ApiInterfaceRx } from '@polkadot/api/types';
 import { map } from 'rxjs/operators';
+import primitivesConfig from '@acala-network/type-definitions/primitives';
 import { Observable } from 'rxjs';
 
 import { CurrencyId, Balance } from '@acala-network/types/interfaces';
@@ -7,14 +8,7 @@ import { memo } from '@polkadot/api-derive/util';
 
 import { DerivedDexPool } from '../types/dex';
 
-const TOKEN_SORT: Record<string, number> = {
-  ACA: 0,
-  AUSD: 1,
-  DOT: 2,
-  XBTC: 3,
-  LDOT: 4,
-  RENBTC: 5
-};
+const TOKEN_SORT: Record<string, number> = primitivesConfig.types.TokenSymbol._enum;
 
 function sortTokens(token1: CurrencyId, token2: CurrencyId): CurrencyId[] {
   const result = [token1, token2];
