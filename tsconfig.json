@@ -39,12 +39,6 @@
       "@acala-network/sdk-core/*": [
         "packages/sdk-core/src/*"
       ],
-      "@acala-network/sdk-wallet": [
-        "packages/sdk-wallet/src"
-      ],
-      "@acala-network/sdk-wallet/*": [
-        "packages/sdk-wallet/src/*"
-      ],
       "@acala-network/sdk-swap": [
         "packages/sdk-swap/src"
       ],
