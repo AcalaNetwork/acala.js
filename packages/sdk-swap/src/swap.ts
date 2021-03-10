@@ -130,9 +130,9 @@ export class SwapRX {
     _path.push((undefined as any) as Token);
 
     return _path.reduce((acc, cur, current) => {
-      if (!cur) return acc;
+      if (!cur || !_path[current + 1]) return acc;
 
-      acc.push(new TokenPair(cur, path[current + 1]));
+      acc.push(new TokenPair(cur, _path[current + 1]));
 
       return acc;
     }, [] as TokenPair[]);
