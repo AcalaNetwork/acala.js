@@ -45,6 +45,12 @@
       "@acala-network/sdk-swap/*": [
         "packages/sdk-swap/src/*"
       ],
+      "@acala-network/sdk-loan": [
+        "packages/sdk-loan/src"
+      ],
+      "@acala-network/sdk-loan/*": [
+        "packages/sdk-loan/src/*"
+      ],
     },
     "skipLibCheck": true,
     "typeRoots": [
