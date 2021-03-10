@@ -8,6 +8,14 @@ import { ApiRx } from '@polkadot/api';
 interface FormattedPosition {
   collateral: FixedPointNumber;
   debit: FixedPointNumber;
+  debitAmount: FixedPointNumber;
+  collateralAmount: FixedPointNumber;
+  collateralRatio: FixedPointNumber;
+  requiredCollateral: FixedPointNumber;
+  stableFeeAPR: FixedPointNumber;
+  liquidationPrice: FixedPointNumber;
+  canGenerate: FixedPointNumber;
+  canPayBack: FixedPointNumber;
 }
 
 interface LoanParams {
@@ -76,6 +84,49 @@ export class LoanRx {
 
   get params(): Observable<LoanParams> {
     return this.loanParams$;
+  }
+
+  public updatePosition(
+    debitAmountChange: FixedPointNumber,
+    collateralChange: FixedPointNumber
+  ): Observable<FormattedPosition> {
+    return combineLatest([this.loanParams$, this.loanPosition$, this.price$]).pipe(
+      map(([params, position, price]) => {
+        const { debit, collateral } = position;
+        const { debitExchangeRate, requiredCollateralRatio, stableFee, expectedBlockTime, liquidationRatio } = params;
+
+        const _debit = FixedPointNumber.fromInner(debit.toString());
+
+        // apply change to collateral and debit
+        const _collateral = FixedPointNumber.fromInner(collateral.toString(), this.token.decimal).plus(
+          collateralChange
+        );
+        const debitAmount = _debit.times(debitExchangeRate).plus(debitAmountChange);
+
+        const collateralAmount = _collateral.times(price);
+        const requiredCollateral = this.getRequiredCollateral(debitAmount, requiredCollateralRatio, price);
+        const canGenerate = this.getCanGenerate(
+          collateralAmount,
+          debitAmount,
+          requiredCollateralRatio,
+          FixedPointNumber.ONE,
+          FixedPointNumber.ZERO
+        );
+
+        return {
+          collateral: _collateral,
+          debit: _debit,
+          debitAmount: debitAmount,
+          collateralAmount: collateralAmount,
+          collateralRatio: collateralAmount.div(debitAmount),
+          requiredCollateral,
+          stableFeeAPR: this.getStableFeeAPR(stableFee, expectedBlockTime),
+          liquidationPrice: this.getLiquidationPrice(_collateral, debitAmount, liquidationRatio),
+          canGenerate,
+          canPayBack: debitAmount
+        };
+      })
+    );
   }
 
   private getRequiredCollateral(
