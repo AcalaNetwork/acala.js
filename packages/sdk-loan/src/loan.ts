@@ -5,19 +5,6 @@ import { CurrencyId, Position } from '@acala-network/types/interfaces';
 import { DerivedLoanType } from '@acala-network/api-derive';
 import { ApiRx } from '@polkadot/api';
 
-interface FormattedPosition {
-  collateral: FixedPointNumber;
-  debit: FixedPointNumber;
-  debitAmount: FixedPointNumber;
-  collateralAmount: FixedPointNumber;
-  collateralRatio: FixedPointNumber;
-  requiredCollateral: FixedPointNumber;
-  stableFeeAPR: FixedPointNumber;
-  liquidationPrice: FixedPointNumber;
-  canGenerate: FixedPointNumber;
-  canPayBack: FixedPointNumber;
-}
-
 interface LoanParams {
   debitExchangeRate: FixedPointNumber;
   expectedBlockTime: number;
@@ -27,10 +14,25 @@ interface LoanParams {
   stableFee: FixedPointNumber;
 }
 
+export interface LoanPosition extends LoanParams {
+  collateral: FixedPointNumber;
+  debit: FixedPointNumber;
+  debitAmount: FixedPointNumber;
+  collateralAmount: FixedPointNumber;
+  collateralRatio: FixedPointNumber;
+  requiredCollateral: FixedPointNumber;
+  stableFeeAPR: FixedPointNumber;
+  liquidationPrice: FixedPointNumber;
+  liquidationRatio: FixedPointNumber;
+  canGenerate: FixedPointNumber;
+  canPayBack: FixedPointNumber;
+}
+
 export class LoanRx {
   private api: ApiRx;
   private currency: CurrencyId;
-  private token: Token;
+  private collateralToken: Token;
+  private stableCoinToken: Token;
   private address: string;
   private price$: Observable<FixedPointNumber>;
   private loanPosition$: Observable<Position>;
@@ -40,46 +42,16 @@ export class LoanRx {
     this.api = api;
     this.currency = currency;
     this.address = address;
-    this.token = Token.fromCurrencyId(currency);
+    this.collateralToken = Token.fromCurrencyId(currency);
+    this.stableCoinToken = Token.fromCurrencyId(api.consts.cdpEngine.getStableCurrencyId);
     this.price$ = price$;
 
     this.loanPosition$ = this.getLoanPosition();
     this.loanParams$ = this.getLoanParams();
   }
 
-  get position(): Observable<FormattedPosition> {
-    return combineLatest([this.loanParams$, this.loanPosition$, this.price$]).pipe(
-      map(([params, position, price]) => {
-        const { debit, collateral } = position;
-        const { debitExchangeRate, requiredCollateralRatio, stableFee, expectedBlockTime, liquidationRatio } = params;
-
-        const _debit = FixedPointNumber.fromInner(debit.toString());
-        const _collateral = FixedPointNumber.fromInner(collateral.toString(), this.token.decimal);
-        const collateralAmount = _collateral.times(price);
-        const debitAmount = _debit.times(debitExchangeRate);
-        const requiredCollateral = this.getRequiredCollateral(debitAmount, requiredCollateralRatio, price);
-        const canGenerate = this.getCanGenerate(
-          collateralAmount,
-          debitAmount,
-          requiredCollateralRatio,
-          FixedPointNumber.ONE,
-          FixedPointNumber.ZERO
-        );
-
-        return {
-          collateral: _collateral,
-          debit: _debit,
-          debitAmount: debitAmount,
-          collateralAmount: collateralAmount,
-          collateralRatio: collateralAmount.div(debitAmount),
-          requiredCollateral,
-          stableFeeAPR: this.getStableFeeAPR(stableFee, expectedBlockTime),
-          liquidationPrice: this.getLiquidationPrice(_collateral, debitAmount, liquidationRatio),
-          canGenerate,
-          canPayBack: debitAmount
-        };
-      })
-    );
+  get position(): Observable<LoanPosition> {
+    return this.updatePosition(FixedPointNumber.ZERO, FixedPointNumber.ZERO);
   }
 
   get params(): Observable<LoanParams> {
@@ -89,20 +61,19 @@ export class LoanRx {
   public updatePosition(
     debitAmountChange: FixedPointNumber,
     collateralChange: FixedPointNumber
-  ): Observable<FormattedPosition> {
+  ): Observable<LoanPosition> {
     return combineLatest([this.loanParams$, this.loanPosition$, this.price$]).pipe(
       map(([params, position, price]) => {
         const { debit, collateral } = position;
         const { debitExchangeRate, requiredCollateralRatio, stableFee, expectedBlockTime, liquidationRatio } = params;
 
-        const _debit = FixedPointNumber.fromInner(debit.toString());
+        const _debit = FixedPointNumber.fromInner(debit.toString(), this.stableCoinToken.decimal);
 
         // apply change to collateral and debit
-        const _collateral = FixedPointNumber.fromInner(collateral.toString(), this.token.decimal).plus(
+        const _collateral = FixedPointNumber.fromInner(collateral.toString(), this.collateralToken.decimal).plus(
           collateralChange
         );
         const debitAmount = _debit.times(debitExchangeRate).plus(debitAmountChange);
-
         const collateralAmount = _collateral.times(price);
         const requiredCollateral = this.getRequiredCollateral(debitAmount, requiredCollateralRatio, price);
         const canGenerate = this.getCanGenerate(
@@ -123,7 +94,8 @@ export class LoanRx {
           stableFeeAPR: this.getStableFeeAPR(stableFee, expectedBlockTime),
           liquidationPrice: this.getLiquidationPrice(_collateral, debitAmount, liquidationRatio),
           canGenerate,
-          canPayBack: debitAmount
+          canPayBack: debitAmount,
+          ...params
         };
       })
     );
