@@ -1,158 +1,279 @@
-import { Balance } from '@acala-network/types/interfaces';
-import { Token, TokenPair } from '@acala-network/sdk-core';
+import { ApiRx } from '@polkadot/api';
+import { Observable, from } from 'rxjs';
+import { filter, switchMap, startWith, map } from 'rxjs/operators';
+import { Balance, TradingPairStatus } from '@acala-network/types/interfaces';
+import { eventMethodsFilter, mockEventRecord, Token, TokenBalance, TokenPair, TokenSet } from '@acala-network/sdk-core';
 import { FixedPointNumber } from '@acala-network/sdk-core/fixed-point-number';
+import { ITuple } from '@polkadot/types/types';
+import { assert } from '@polkadot/util';
 
 import { TradeGraph } from './trade-graph';
 import { getSupplyAmount, getTargetAmount, Fee, SwapTradeMode } from './help';
-import { TradeParameters } from './trade-parameters';
+import { SwapParameters } from './swap-parameters';
 
-interface SwapTradeConfig {
-  input: Token; // input token includes token amount
-  output: Token; // output token includes token amount
-  mode: SwapTradeMode; // trade mode
-  availableTokenPairs: TokenPair[]; // available trading token pairs
-  maxTradePathLength: number; // the max length of the trade path
-  fee: Fee; // the trade fee for liquidity provider
-  acceptSlippage: FixedPointNumber; // the slippage can accept
+interface LiquidityPool {
+  token1: TokenBalance;
+  token2: TokenBalance;
 }
 
-export class SwapTrade {
-  public input: Token; // input token and token amount
-  public output: Token; // out token and token amount
-  public mode: SwapTradeMode; // trade mode
-  public availableTokenPairs: TokenPair[]; // available trading token pairs
-  public maxTradePathLength!: number; // the max length for the trade path
-  public fee: Fee; // the trade fee for liquidity provider
-  public acceptSlippage: FixedPointNumber; // the slippage can accept
-  private tradePaths: Token[][];
+interface SwapResult {
+  midPrice: FixedPointNumber;
+  priceImpact: FixedPointNumber;
+  path: Token[];
+  input: TokenBalance;
+  output: TokenBalance;
+}
 
-  constructor(config: SwapTradeConfig) {
-    this.input = config.input;
-    this.output = config.output;
-    this.mode = config.mode;
-    this.availableTokenPairs = config.availableTokenPairs;
-    this.maxTradePathLength = config.maxTradePathLength;
-    this.fee = config.fee;
-    this.acceptSlippage = config.acceptSlippage;
-    this.tradePaths = this.getTradePaths();
+export class SwapRX {
+  private api: ApiRx;
+  private enableTradingPairs$: Observable<TokenPair[]>;
+  private config: {
+    tradingPathLimit: number;
+    fee: Fee;
+  };
+
+  constructor(api: ApiRx) {
+    this.api = api;
+
+    this.config = {
+      tradingPathLimit: parseInt(api?.consts?.dex?.tradingPathLimit?.toString() || '3'),
+      fee: this.getExchangeFee()
+    };
+
+    this.enableTradingPairs$ = this.subscribeTradingPair();
   }
 
-  /**
-   * @name getTradePaths
-   * @description get all possible trade path, filter by this.maxTradePathLength
-   */
-  public getTradePaths(): Token[][] {
-    const availableTokenPairs = this.availableTokenPairs;
-    const tradeGraph = new TradeGraph(availableTokenPairs);
-
-    return tradeGraph.getPathes(this.input, this.output).filter((item) => item.length <= this.maxTradePathLength);
+  get tradingPathLimit(): number {
+    return this.config.tradingPathLimit;
   }
 
-  /**
-   * @name getUsedTokenPairs
-   * @description extract token pairs from trade path
-   */
-  static getUsedTokenPairs(paths: Token[][]): TokenPair[] {
-    const result: TokenPair[] = [];
+  get enableTradingPairs(): Observable<TokenPair[]> {
+    return this.enableTradingPairs$;
+  }
 
-    for (const path of paths) {
-      for (let i = 0; i < path.length - 1; i++) {
-        const pair = new TokenPair(path[i], path[i + 1]);
+  get availableTokens(): Observable<TokenSet> {
+    return this.enableTradingPairs$.pipe(
+      map((tokenPairs) => {
+        const temp = new TokenSet();
 
-        // insert union token pair into result
-        const tryIndex = result.findIndex((item) => item.isEqual(pair));
+        tokenPairs.forEach((tokenPair) => {
+          const [token1, token2] = tokenPair.getPair();
 
-        if (tryIndex === -1) {
-          result.push(new TokenPair(path[i], path[i + 1]));
-        }
-      }
+          temp.add(token1);
+          temp.add(token2);
+        });
+
+        return temp;
+      })
+    );
+  }
+
+  get exchangeFee(): Fee {
+    return this.config.fee;
+  }
+
+  private getExchangeFee() {
+    const exchangeFee = this.api.consts.dex.getExchangeFee;
+
+    return {
+      denominator: new FixedPointNumber(exchangeFee[1].toString()),
+      numerator: new FixedPointNumber(exchangeFee[0].toString())
+    };
+  }
+
+  private subscribeTradingPair(filterFn?: (status: TradingPairStatus) => boolean) {
+    return this.api.query.system.events().pipe(
+      startWith(mockEventRecord('', 'EnableTradingPair')),
+      switchMap((events) => from(events)),
+      filter(eventMethodsFilter(['EnableTradingPair', 'ProvisioningToEnabled', 'DisableTradingPair'])),
+      switchMap(() => {
+        return this.api.query.dex.tradingPairStatuses.entries().pipe(
+          map((result) => {
+            const _filterFn = filterFn || ((status: TradingPairStatus) => status.isEnabled);
+
+            return result
+              .filter((item) => _filterFn(item[1]))
+              .map((item) => TokenPair.fromCurrencies(item[0].args[0][0], item[0].args[0][1]));
+          })
+        );
+      })
+    );
+  }
+
+  private getTradePathes(input: Token, output: Token): Observable<Token[][]> {
+    return this.enableTradingPairs.pipe(
+      map((pairs) => {
+        const tradeGraph = new TradeGraph(pairs);
+
+        return tradeGraph
+          .getPathes(input, output)
+          .filter((path) => {
+            let flag = true;
+            const tokenPairs = this.getTokenPairsFromPath(path);
+
+            tokenPairs.forEach((pair) => {
+              const [token1, token2] = pair.getPair();
+
+              flag = flag && this.checkTradingPairIsEnabled(token1, token2, pairs);
+            });
+
+            return flag;
+          })
+          .filter((path) => path.length <= this.config.tradingPathLimit);
+      })
+    );
+  }
+
+  private getTokenPairsFromPath(path: Token[]) {
+    const _path = path.slice();
+    // push undefined as tail
+    _path.push((undefined as any) as Token);
+
+    return _path.reduce((acc, cur, current) => {
+      if (!cur) return acc;
+
+      acc.push(new TokenPair(cur, path[current + 1]));
+
+      return acc;
+    }, [] as TokenPair[]);
+  }
+
+  private liquidityPoolsByPaths$(paths: Token[][]): Observable<LiquidityPool[]> {
+    const usedTokenPairs = paths
+      .reduce((acc: TokenPair[], path: Token[]) => {
+        acc = acc.concat(this.getTokenPairsFromPath(path));
+
+        return acc;
+      }, [])
+      .reduce((acc, cur) => {
+        const isExist = acc.find((item) => item.isEqual(cur));
+
+        if (isExist) return acc;
+
+        acc.push(cur);
+
+        return acc;
+      }, [] as TokenPair[]);
+
+    return this.api
+      .queryMulti<ITuple<[Balance, Balance]>[]>(
+        usedTokenPairs.map((item) => [this.api.query.dex.liquidityPool, item.toTradingPair(this.api)])
+      )
+      .pipe(
+        map((data: ITuple<[Balance, Balance]>[]) => {
+          return usedTokenPairs.map((item, index) => {
+            const liquidity = data[index];
+            const pair = item.getPair();
+
+            return {
+              token1: new TokenBalance(pair[0], FixedPointNumber.fromInner(liquidity[0].toString())),
+              token2: new TokenBalance(pair[1], FixedPointNumber.fromInner(liquidity[1].toString()))
+            };
+          });
+        })
+      );
+  }
+
+  private checkTradingPairIsEnabled(currency1: Token, currency2: Token, tradingPairs: TokenPair[]) {
+    const temp = new TokenPair(currency1, currency2);
+
+    return !!tradingPairs.find((item) => item.isEqual(temp));
+  }
+
+  private formatLiquidityWithOrder(liquidity: LiquidityPool, token1: Token) {
+    if (liquidity.token1.token.isEqual(token1)) {
+      return [liquidity.token1, liquidity.token2];
     }
 
-    return result;
+    return [liquidity.token2, liquidity.token1];
   }
 
-  /**
-   * @name getTradeTokenPairsByPaths
-   * @description get all token pairs from path
-   */
-  public getTradeTokenPairsByPaths(): TokenPair[] {
-    return SwapTrade.getUsedTokenPairs(this.tradePaths);
-  }
-
-  private getPairWithOrder(pair: TokenPair, order: [Token, Token]): [Token, Token] {
-    const _pair = pair.getPair();
-
-    if (_pair[0].isEqual(order[0]) && _pair[1].isEqual(order[1])) {
-      return _pair;
-    }
-
-    return _pair.reverse() as [Token, Token];
-  }
-
-  private getTradeParametersByPath(path: Token[], pairs: TokenPair[]): TradeParameters {
-    // create the default trade result
-    const result: TradeParameters = new TradeParameters({
-      input: this.input,
-      output: this.output,
-      path: path,
-      priceImpact: new FixedPointNumber(0),
-      midPrice: new FixedPointNumber(0)
-    });
-
+  private getOutputAmountWithExactInput(
+    input: TokenBalance,
+    output: TokenBalance,
+    path: Token[],
+    liquidityPools: LiquidityPool[]
+  ) {
+    const result = { input, output, path };
     const routeTemp: { input: FixedPointNumber; output: FixedPointNumber }[] = [];
 
-    if (this.mode === 'EXACT_INPUT') {
-      for (let i = 0; i < path.length - 1; i++) {
-        const temp = new TokenPair(path[i], path[i + 1]);
-        const pair = pairs.find((item) => item.isEqual(temp));
+    for (let i = 0; i < path.length - 1; i++) {
+      const pair = new TokenPair(path[i], path[i + 1]);
+      const [token1, token2] = pair.getPair();
+      const pool = liquidityPools.find(
+        (item) => item.token1.token.isEqual(token1) && item.token2.token.isEqual(token2)
+      );
 
-        if (!pair) throw new Error('no trade pair found in getTradeParameter');
+      assert(pool, `the liquidity pool isn't exist`);
 
-        const [supplyToken, targetToken] = this.getPairWithOrder(pair, [path[i], path[i + 1]]);
+      const [supply, target] = this.formatLiquidityWithOrder(pool, path[i]);
 
-        const outputAmount = getTargetAmount(
-          supplyToken.amount,
-          targetToken.amount,
-          i === 0 ? result.input.amount : result.output.amount,
-          this.fee
-        );
+      const outputAmount = getTargetAmount(
+        supply.balance,
+        target.balance,
+        i === 0 ? result.input.balance : result.output.balance,
+        this.config.fee
+      );
 
-        routeTemp[i] = {
-          input: i === 0 ? result.input.amount : routeTemp[i - 1].output,
-          output: outputAmount
-        };
+      routeTemp[i] = {
+        input: i === 0 ? result.input.balance : routeTemp[i - 1].output,
+        output: outputAmount
+      };
 
-        result.output.amount = outputAmount;
-      }
-    } else if (this.mode === 'EXACT_OUTPUT') {
-      for (let i = path.length - 1; i > 0; i--) {
-        const temp = new TokenPair(path[i], path[i - 1]);
-        const pair = pairs.find((item) => item.isEqual(temp));
-
-        if (!pair) throw new Error('no trade pair found in getTradeParameter');
-
-        const [supplyToken, targetToken] = this.getPairWithOrder(pair, [path[i - 1], path[i]]);
-
-        const inputAmount = getSupplyAmount(
-          supplyToken.amount,
-          targetToken.amount,
-          i === path.length - 1 ? result.output.amount : result.input.amount,
-          this.fee
-        );
-
-        routeTemp[i - 1] = {
-          input: inputAmount,
-          output: i === path.length - 1 ? result.output.amount : routeTemp[i].input
-        };
-
-        result.input.amount = inputAmount;
-      }
+      result.output = new TokenBalance(output.token, outputAmount);
     }
 
-    result.midPrice = this.getPrices(routeTemp);
-    result.priceImpact = this.getPriceImpact(result.midPrice, result.input.amount, result.output.amount);
+    const midPrice = this.getPrices(routeTemp);
 
-    return result;
+    return {
+      ...result,
+      midPrice,
+      priceImpact: this.getPriceImpact(midPrice, result.input.balance, result.output.balance)
+    };
+  }
+
+  private getInputAmountWithExactOutput(
+    input: TokenBalance,
+    output: TokenBalance,
+    path: Token[],
+    liquidityPools: LiquidityPool[]
+  ) {
+    const result = { input, output, path };
+    const routeTemp: { input: FixedPointNumber; output: FixedPointNumber }[] = [];
+
+    for (let i = path.length - 1; i > 0; i--) {
+      const pair = new TokenPair(path[i], path[i - 1]);
+      const [token1, token2] = pair.getPair();
+      const pool = liquidityPools.find(
+        (item) => item.token1.token.isEqual(token1) && item.token2.token.isEqual(token2)
+      );
+
+      assert(pool, `the liquidity pool isn't exist`);
+
+      const [supply, target] = this.formatLiquidityWithOrder(pool, path[i - 1]);
+
+      const inputAmount = getSupplyAmount(
+        supply.balance,
+        target.balance,
+        i === path.length - 1 ? result.output.balance : result.input.balance,
+        this.config.fee
+      );
+
+      routeTemp[i - 1] = {
+        input: inputAmount,
+        output: i === path.length - 1 ? result.output.balance : routeTemp[i].input
+      };
+
+      result.input = new TokenBalance(input.token, inputAmount);
+    }
+
+    const midPrice = this.getPrices(routeTemp);
+
+    return {
+      ...result,
+      midPrice,
+      priceImpact: this.getPriceImpact(midPrice, result.input.balance, result.output.balance)
+    };
   }
 
   private getPrices(route: { input: FixedPointNumber; output: FixedPointNumber }[]): FixedPointNumber {
@@ -177,65 +298,44 @@ export class SwapTrade {
     return temp.minus(outputAmount).div(temp);
   }
 
-  /**
-   * @name convertLiquidityPoolsToTokenPairs
-   * @description help function to convert liquidity pool data which from chain to token pairs
-   */
-  static convertLiquidityPoolsToTokenPairs(tokenPairs: TokenPair[], pools: [Balance, Balance][]): TokenPair[] {
-    return tokenPairs.map((item, index) => {
-      const tokens = item.getPair();
-      return new TokenPair(
-        tokens[0].clone({ amount: FixedPointNumber.fromInner(pools[index][0].toString()) }),
-        tokens[1].clone({ amount: FixedPointNumber.fromInner(pools[index][1].toString()) })
-      );
-    });
-  }
+  public swap(input: TokenBalance, output: TokenBalance, mode: SwapTradeMode): Observable<SwapParameters> {
+    const _input = input.clone();
+    const _output = output.clone();
 
-  /**
-   * @name getTradeParameters
-   * @description get the parameter about this swap trade
-   */
-  public getTradeParameters(liquidityPools: TokenPair[]): TradeParameters {
-    const tradePaths = this.getTradePaths();
+    return this.getTradePathes(_input.token, _output.token).pipe(
+      switchMap((paths: Token[][]) => {
+        return this.liquidityPoolsByPaths$(paths).pipe(
+          map((liquidityPool) => {
+            const swapResult = paths.map(
+              (path): SwapResult => {
+                if (mode === 'EXACT_INPUT') {
+                  return this.getOutputAmountWithExactInput(input, output, path, liquidityPool);
+                } else {
+                  return this.getInputAmountWithExactOutput(input, output, path, liquidityPool);
+                }
+              }
+            );
 
-    if (tradePaths.length === 0) throw new Error('no trade path found');
+            if (mode === 'EXACT_INPUT') {
+              const temp = swapResult.reduce((acc, cur) => {
+                if (acc.output.balance.isGreaterThanOrEqualTo(cur.output.balance)) return acc;
 
-    const tradeResults = tradePaths.map((path) => this.getTradeParametersByPath(path, liquidityPools));
+                return cur;
+              }, swapResult[0]);
 
-    // find the best trade result
-    const result = ((): TradeParameters => {
-      switch (this.mode) {
-        case 'EXACT_INPUT': {
-          return tradeResults.reduce((acc, cur) => {
-            if (acc.output.amount.isGreaterThanOrEqualTo(cur.output.amount)) return acc;
+              return new SwapParameters(temp);
+            } else {
+              const temp = swapResult.reduce((acc, cur) => {
+                if (acc.input.balance.isLessOrEqualTo(cur.input.balance)) return acc;
 
-            return cur;
-          }, tradeResults[0]);
-        }
-        case 'EXACT_OUTPUT': {
-          return tradeResults.reduce((acc, cur) => {
-            if (acc.input.amount.isLessOrEqualTo(cur.input.amount)) return acc;
+                return cur;
+              }, swapResult[0]);
 
-            return cur;
-          }, tradeResults[0]);
-        }
-      }
-    })();
-
-    // adjust slippage
-    switch (this.mode) {
-      case 'EXACT_INPUT': {
-        result.output.amount = result.output.amount.times(FixedPointNumber.ONE.minus(this.acceptSlippage));
-
-        break;
-      }
-      case 'EXACT_OUTPUT': {
-        result.input.amount = result.input.amount.times(FixedPointNumber.ONE.plus(this.acceptSlippage));
-
-        break;
-      }
-    }
-
-    return result;
+              return new SwapParameters(temp);
+            }
+          })
+        );
+      })
+    );
   }
 }

@@ -18,6 +18,7 @@
     "@acala-network/api": "^0.6.2-21",
     "@acala-network/type-definitions": "^0.6.2-21",
     "@polkadot/api": "^3.10.3-2",
+    "@polkadot/types": "^3.10.3-2",
     "@types/events": "^3.0.0",
     "bignumber.js": "^9.0.0",
     "events": "^3.2.0",

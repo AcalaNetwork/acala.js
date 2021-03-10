@@ -1,18 +1,18 @@
-import { Token, FixedPointNumber } from '@acala-network/sdk-core';
+import { Token, FixedPointNumber, TokenBalance } from '@acala-network/sdk-core';
 
 import { SwapTradeMode } from './help';
 
 interface Config {
-  input: Token;
-  output: Token;
+  input: TokenBalance;
+  output: TokenBalance;
   path: Token[];
   priceImpact: FixedPointNumber;
   midPrice: FixedPointNumber;
 }
 
-export class TradeParameters {
-  public input: Token;
-  public output: Token;
+export class SwapParameters {
+  public input: TokenBalance;
+  public output: TokenBalance;
   public path: Token[];
   public priceImpact: FixedPointNumber;
   public midPrice: FixedPointNumber;
@@ -30,15 +30,15 @@ export class TradeParameters {
       case 'EXACT_INPUT': {
         return [
           this.path.map((item) => item.toChainData()) as { Token: string }[],
-          this.input.amount.toChainData(),
-          this.output.amount.toChainData()
+          this.input.balance.toChainData(),
+          this.output.balance.toChainData()
         ];
       }
       case 'EXACT_OUTPUT': {
         return [
           this.path.map((item) => item.toChainData()) as { Token: string }[],
-          this.output.amount.toChainData(),
-          this.input.amount.toChainData()
+          this.output.balance.toChainData(),
+          this.input.balance.toChainData()
         ];
       }
     }
