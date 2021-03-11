@@ -1,11 +1,10 @@
 import { ApiRx } from '@polkadot/api';
 import { Observable, from } from 'rxjs';
-import { filter, switchMap, startWith, map } from 'rxjs/operators';
+import { filter, switchMap, startWith, map, shareReplay } from 'rxjs/operators';
 import { Balance, TradingPairStatus } from '@acala-network/types/interfaces';
 import { eventMethodsFilter, mockEventRecord, Token, TokenBalance, TokenPair, TokenSet } from '@acala-network/sdk-core';
 import { FixedPointNumber } from '@acala-network/sdk-core/fixed-point-number';
 import { ITuple } from '@polkadot/types/types';
-import { assert } from '@polkadot/util';
 
 import { TradeGraph } from './trade-graph';
 import { getSupplyAmount, getTargetAmount, Fee, SwapTradeMode } from './help';
@@ -94,7 +93,8 @@ export class SwapRX {
             return result
               .filter((item) => _filterFn(item[1]))
               .map((item) => TokenPair.fromCurrencies(item[0].args[0][0], item[0].args[0][1]));
-          })
+          }),
+          shareReplay(1)
         );
       })
     );
@@ -108,16 +108,16 @@ export class SwapRX {
         return tradeGraph
           .getPathes(input, output)
           .filter((path) => {
-            let flag = true;
             const tokenPairs = this.getTokenPairsFromPath(path);
 
-            tokenPairs.forEach((pair) => {
-              const [token1, token2] = pair.getPair();
+            for (const item of tokenPairs) {
+              const [token1, token2] = item.getPair();
+              const result = this.checkTradingPairIsEnabled(token1, token2, pairs);
 
-              flag = flag && this.checkTradingPairIsEnabled(token1, token2, pairs);
-            });
+              if (!result) return false;
+            }
 
-            return flag;
+            return true;
           })
           .filter((path) => path.length <= this.config.tradingPathLimit);
       })
@@ -204,7 +204,13 @@ export class SwapRX {
         (item) => item.token1.token.isEqual(token1) && item.token2.token.isEqual(token2)
       );
 
-      assert(pool, `the liquidity pool isn't exist`);
+      if (!pool) {
+        return {
+          ...result,
+          midPrice: FixedPointNumber.ZERO,
+          priceImpact: FixedPointNumber.ZERO
+        };
+      }
 
       const [supply, target] = this.formatLiquidityWithOrder(pool, path[i]);
 
@@ -248,7 +254,13 @@ export class SwapRX {
         (item) => item.token1.token.isEqual(token1) && item.token2.token.isEqual(token2)
       );
 
-      assert(pool, `the liquidity pool isn't exist`);
+      if (!pool) {
+        return {
+          ...result,
+          midPrice: FixedPointNumber.ZERO,
+          priceImpact: FixedPointNumber.ZERO
+        };
+      }
 
       const [supply, target] = this.formatLiquidityWithOrder(pool, path[i - 1]);
 
@@ -309,9 +321,9 @@ export class SwapRX {
             const swapResult = paths.map(
               (path): SwapResult => {
                 if (mode === 'EXACT_INPUT') {
-                  return this.getOutputAmountWithExactInput(input, output, path, liquidityPool);
+                  return this.getOutputAmountWithExactInput(_input, _output, path, liquidityPool);
                 } else {
-                  return this.getInputAmountWithExactOutput(input, output, path, liquidityPool);
+                  return this.getInputAmountWithExactOutput(_input, _output, path, liquidityPool);
                 }
               }
             );

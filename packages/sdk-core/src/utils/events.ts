@@ -27,5 +27,5 @@ export const eventFilter = (section: string, method: string) => {
 };
 
 export const mockEventRecord = (section?: string, method?: string): Vec<EventRecord> => {
-  return ([{ event: { event: { section, method } } }] as any) as Vec<EventRecord>;
+  return ([{ event: { section, method } }] as any) as Vec<EventRecord>;
 };
