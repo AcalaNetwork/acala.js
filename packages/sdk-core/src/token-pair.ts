@@ -2,6 +2,7 @@ import { Token } from '@acala-network/sdk-core/token';
 import { CurrencyId, TradingPair } from '@acala-network/types/interfaces';
 import { ApiPromise, ApiRx } from '@polkadot/api';
 import { assert } from '@polkadot/util';
+import { DexShare } from './dex-share';
 
 // class for store token pair
 export class TokenPair {
@@ -58,8 +59,8 @@ export class TokenPair {
     return [this.token1.toChainData(), this.token2.toChainData()];
   }
 
-  public toDexShare(api: ApiRx | ApiPromise): CurrencyId {
-    return api.createType('CurrencyId', { DexShare: [this.token1.symbol, this.token2.symbol] });
+  public toDexShare(): DexShare {
+    return DexShare.fromTokenPair(this);
   }
 
   public toTradingPair(api: ApiRx | ApiPromise): TradingPair {

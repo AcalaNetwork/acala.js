@@ -48,7 +48,7 @@ describe('token', () => {
   test('sort tokens should work', () => {
     const aca = new Token({ name: 'ACA', symbol: 'ACA', chain: 'acala', decimal: 18 });
     const xbtc = new Token({ name: 'XBTC', symbol: 'XBTC', chain: 'acala', decimal: 16 });
-    const renbtc = new Token({ name: 'RENBTC', symbol: 'renBTC', chain: 'acala', decimal: 16 });
+    const renbtc = new Token({ name: 'RENBTC', symbol: 'RENBTC', chain: 'acala', decimal: 16 });
 
     expect(sortTokens(aca, xbtc)).toEqual([aca, xbtc]);
     expect(sortTokens(xbtc, aca)).toEqual([aca, xbtc]);
