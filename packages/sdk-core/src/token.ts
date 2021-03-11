@@ -49,7 +49,7 @@ export class Token {
   static sort(...tokens: Token[]): Token[] {
     const result = [...tokens];
 
-    return result.sort((a, b) => TOKEN_SORT[a.name] - TOKEN_SORT[b.name]);
+    return result.sort((a, b) => TOKEN_SORT[a.symbol] - TOKEN_SORT[b.symbol]);
   }
 
   constructor(config: TokenParams) {
