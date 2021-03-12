@@ -1,2 +1,2 @@
 export * from './trade-graph';
-export * from './swap';
+export * from './swap-rx';

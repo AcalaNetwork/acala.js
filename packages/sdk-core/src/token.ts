@@ -84,9 +84,3 @@ export class Token extends BaseToken {
     });
   }
 }
-
-export function sortTokens(token1: Token, token2: Token, ...other: Token[]): Token[] {
-  const result = [token1, token2, ...other];
-
-  return result.sort((a, b) => TOKEN_SORT[a.symbol] - TOKEN_SORT[b.symbol]);
-}

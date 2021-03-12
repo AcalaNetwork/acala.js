@@ -1,5 +1,5 @@
-import { BaseToken } from './base-token';
 import { FixedPointNumber } from './fixed-point-number';
+import { BaseToken } from './base-token';
 import { Token } from './token';
 
 export class TokenBalance<T extends BaseToken = Token> {

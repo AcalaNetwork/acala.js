@@ -1,4 +1,4 @@
-import { Token, sortTokens } from './token';
+import { Token } from './token';
 
 describe('token', () => {
   const t1 = new Token({ name: 'Token1', symbol: 'T1', chain: 'acala', decimal: 18 });
@@ -50,8 +50,8 @@ describe('token', () => {
     const xbtc = new Token({ name: 'XBTC', symbol: 'XBTC', chain: 'acala', decimal: 16 });
     const renbtc = new Token({ name: 'RENBTC', symbol: 'RENBTC', chain: 'acala', decimal: 16 });
 
-    expect(sortTokens(aca, xbtc)).toEqual([aca, xbtc]);
-    expect(sortTokens(xbtc, aca)).toEqual([aca, xbtc]);
-    expect(sortTokens(xbtc, renbtc, aca)).toEqual([aca, xbtc, renbtc]);
+    expect(Token.sort(aca, xbtc)).toEqual([aca, xbtc]);
+    expect(Token.sort(xbtc, aca)).toEqual([aca, xbtc]);
+    expect(Token.sort(xbtc, renbtc, aca)).toEqual([aca, xbtc, renbtc]);
   });
 });
