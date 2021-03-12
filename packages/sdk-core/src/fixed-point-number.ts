@@ -206,6 +206,14 @@ export class FixedPointNumber {
   }
 
   /**
+   * @name forceSetPrecision
+   * @description force change the precision
+   */
+  public forceSetPrecision(precision: number): void {
+    this.precision = precision;
+  }
+
+  /**
    * @name getPrecision
    * @description get the precision
    */

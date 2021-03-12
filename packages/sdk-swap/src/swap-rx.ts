@@ -11,8 +11,10 @@ import { getSupplyAmount, getTargetAmount, Fee, SwapTradeMode } from './help';
 import { SwapParameters } from './swap-parameters';
 
 interface LiquidityPool {
-  token1: TokenBalance;
-  token2: TokenBalance;
+  token1: Token;
+  token2: Token;
+  balance1: FixedPointNumber;
+  balance2: FixedPointNumber;
 }
 
 interface SwapResult {
@@ -166,8 +168,10 @@ export class SwapRX {
             const pair = item.getPair();
 
             return {
-              token1: new TokenBalance(pair[0], FixedPointNumber.fromInner(liquidity[0].toString())),
-              token2: new TokenBalance(pair[1], FixedPointNumber.fromInner(liquidity[1].toString()))
+              token1: pair[0],
+              token2: pair[1],
+              balance1: FixedPointNumber.fromInner(liquidity[0].toString()),
+              balance2: FixedPointNumber.fromInner(liquidity[1].toString())
             };
           });
         })
@@ -181,28 +185,34 @@ export class SwapRX {
   }
 
   private formatLiquidityWithOrder(liquidity: LiquidityPool, token1: Token) {
-    if (liquidity.token1.token.isEqual(token1)) {
-      return [liquidity.token1, liquidity.token2];
+    if (liquidity.token1.isEqual(token1)) {
+      return [liquidity.balance1, liquidity.balance2];
     }
 
-    return [liquidity.token2, liquidity.token1];
+    return [liquidity.balance2, liquidity.balance1];
   }
 
   private getOutputAmountWithExactInput(
-    input: TokenBalance,
-    output: TokenBalance,
+    inputToken: Token,
+    outputToken: Token,
+    inputAmount: FixedPointNumber,
+    outputAmount: FixedPointNumber,
     path: Token[],
     liquidityPools: LiquidityPool[]
   ) {
-    const result = { input, output, path };
+    const result = {
+      inputToken,
+      outputToken,
+      path,
+      inputAmount,
+      outputAmount
+    };
     const routeTemp: { input: FixedPointNumber; output: FixedPointNumber }[] = [];
 
     for (let i = 0; i < path.length - 1; i++) {
       const pair = new TokenPair(path[i], path[i + 1]);
       const [token1, token2] = pair.getPair();
-      const pool = liquidityPools.find(
-        (item) => item.token1.token.isEqual(token1) && item.token2.token.isEqual(token2)
-      );
+      const pool = liquidityPools.find((item) => item.token1.isEqual(token1) && item.token2.isEqual(token2));
 
       if (!pool) {
         return {
@@ -215,18 +225,18 @@ export class SwapRX {
       const [supply, target] = this.formatLiquidityWithOrder(pool, path[i]);
 
       const outputAmount = getTargetAmount(
-        supply.balance,
-        target.balance,
-        i === 0 ? result.input.balance : result.output.balance,
+        supply,
+        target,
+        i === 0 ? result.inputAmount : result.outputAmount,
         this.config.fee
       );
 
       routeTemp[i] = {
-        input: i === 0 ? result.input.balance : routeTemp[i - 1].output,
+        input: i === 0 ? result.inputAmount : routeTemp[i - 1].output,
         output: outputAmount
       };
 
-      result.output = new TokenBalance(output.token, outputAmount);
+      result.outputAmount = outputAmount;
     }
 
     const midPrice = this.getPrices(routeTemp);
@@ -234,25 +244,31 @@ export class SwapRX {
     return {
       ...result,
       midPrice,
-      priceImpact: this.getPriceImpact(midPrice, result.input.balance, result.output.balance)
+      priceImpact: this.getPriceImpact(midPrice, result.inputAmount, result.outputAmount)
     };
   }
 
   private getInputAmountWithExactOutput(
-    input: TokenBalance,
-    output: TokenBalance,
+    inputToken: Token,
+    outputToken: Token,
+    inputAmount: FixedPointNumber,
+    outputAmount: FixedPointNumber,
     path: Token[],
     liquidityPools: LiquidityPool[]
   ) {
-    const result = { input, output, path };
+    const result = {
+      inputToken,
+      outputToken,
+      path,
+      inputAmount,
+      outputAmount
+    };
     const routeTemp: { input: FixedPointNumber; output: FixedPointNumber }[] = [];
 
     for (let i = path.length - 1; i > 0; i--) {
       const pair = new TokenPair(path[i], path[i - 1]);
       const [token1, token2] = pair.getPair();
-      const pool = liquidityPools.find(
-        (item) => item.token1.token.isEqual(token1) && item.token2.token.isEqual(token2)
-      );
+      const pool = liquidityPools.find((item) => item.token1.isEqual(token1) && item.token2.isEqual(token2));
 
       if (!pool) {
         return {
@@ -265,18 +281,18 @@ export class SwapRX {
       const [supply, target] = this.formatLiquidityWithOrder(pool, path[i - 1]);
 
       const inputAmount = getSupplyAmount(
-        supply.balance,
-        target.balance,
-        i === path.length - 1 ? result.output.balance : result.input.balance,
+        supply,
+        target,
+        i === path.length - 1 ? result.outputAmount : result.inputAmount,
         this.config.fee
       );
 
       routeTemp[i - 1] = {
         input: inputAmount,
-        output: i === path.length - 1 ? result.output.balance : routeTemp[i].input
+        output: i === path.length - 1 ? result.outputAmount : routeTemp[i].input
       };
 
-      result.input = new TokenBalance(input.token, inputAmount);
+      result.inputAmount = inputAmount;
     }
 
     const midPrice = this.getPrices(routeTemp);
@@ -284,7 +300,7 @@ export class SwapRX {
     return {
       ...result,
       midPrice,
-      priceImpact: this.getPriceImpact(midPrice, result.input.balance, result.output.balance)
+      priceImpact: this.getPriceImpact(midPrice, result.inputAmount, result.outputAmount)
     };
   }
 
@@ -311,19 +327,66 @@ export class SwapRX {
   }
 
   public swap(input: TokenBalance, output: TokenBalance, mode: SwapTradeMode): Observable<SwapParameters> {
-    const _input = input.clone();
-    const _output = output.clone();
+    const inputToken = input.token;
+    const outputToken = output.token;
 
-    return this.getTradePathes(_input.token, _output.token).pipe(
+    const inputAmount = FixedPointNumber._fromBN(input.balance._getInner());
+    const outputAmount = FixedPointNumber._fromBN(output.balance._getInner());
+
+    return this.getTradePathes(inputToken, outputToken).pipe(
       switchMap((paths: Token[][]) => {
         return this.liquidityPoolsByPaths$(paths).pipe(
           map((liquidityPool) => {
             const swapResult = paths.map(
               (path): SwapResult => {
                 if (mode === 'EXACT_INPUT') {
-                  return this.getOutputAmountWithExactInput(_input, _output, path, liquidityPool);
+                  const {
+                    inputAmount: _inputAmount,
+                    inputToken: _inputToken,
+                    outputAmount: _outputAmount,
+                    outputToken: _outputToken,
+                    ...other
+                  } = this.getOutputAmountWithExactInput(
+                    inputToken,
+                    outputToken,
+                    inputAmount,
+                    outputAmount,
+                    path,
+                    liquidityPool
+                  );
+
+                  _inputAmount.forceSetPrecision(_inputToken.decimal);
+                  _outputAmount.forceSetPrecision(_outputToken.decimal);
+
+                  return {
+                    input: new TokenBalance(_inputToken, _inputAmount),
+                    output: new TokenBalance(_outputToken, _outputAmount),
+                    ...other
+                  };
                 } else {
-                  return this.getInputAmountWithExactOutput(_input, _output, path, liquidityPool);
+                  const {
+                    inputAmount: _inputAmount,
+                    inputToken: _inputToken,
+                    outputAmount: _outputAmount,
+                    outputToken: _outputToken,
+                    ...other
+                  } = this.getInputAmountWithExactOutput(
+                    inputToken,
+                    outputToken,
+                    inputAmount,
+                    outputAmount,
+                    path,
+                    liquidityPool
+                  );
+
+                  _inputAmount.forceSetPrecision(_inputToken.decimal);
+                  _outputAmount.forceSetPrecision(_outputToken.decimal);
+
+                  return {
+                    input: new TokenBalance(_inputToken, _inputAmount),
+                    output: new TokenBalance(_outputToken, _outputAmount),
+                    ...other
+                  };
                 }
               }
             );
