@@ -33,7 +33,7 @@ import type { ProxyAnnouncement, ProxyDefinition } from '@polkadot/types/interfa
 import type { ActiveRecovery, RecoveryConfig } from '@polkadot/types/interfaces/recovery';
 import type { Scheduled, TaskAddress } from '@polkadot/types/interfaces/scheduler';
 import type { Keys, SessionIndex } from '@polkadot/types/interfaces/session';
-import type { ActiveEraInfo, ElectionResult, ElectionScore, ElectionStatus, EraIndex, EraRewardPoints, Exposure, Forcing, Nominations, RewardDestination, SeatHolder, SlashingSpans, SpanIndex, SpanRecord, StakingLedger, UnappliedSlash, ValidatorPrefs, Voter } from '@polkadot/types/interfaces/staking';
+import type { ActiveEraInfo, ElectionPhase, ElectionResult, ElectionScore, ElectionStatus, EraIndex, EraRewardPoints, Exposure, Forcing, Nominations, ReadySolution, RewardDestination, RoundSnapshot, SeatHolder, SlashingSpans, SolutionOrSnapshotSize, SpanIndex, SpanRecord, StakingLedger, UnappliedSlash, ValidatorPrefs, Voter } from '@polkadot/types/interfaces/staking';
 import type { AccountInfo, ConsumedWeight, DigestOf, EventIndex, EventRecord, LastRuntimeUpgradeInfo, Phase } from '@polkadot/types/interfaces/system';
 import type { Bounty, BountyIndex, OpenTip } from '@polkadot/types/interfaces/treasury';
 import type { Multiplier } from '@polkadot/types/interfaces/txpayment';
@@ -311,6 +311,42 @@ export interface StorageType extends BaseStorageType {
      * Status for TradingPair.
      **/
     tradingPairStatuses: StorageMap<TradingPair, TradingPairStatus>;
+  };
+  electionProviderMultiPhase: {    /**
+     * Current phase.
+     **/
+    currentPhase: ElectionPhase | null;
+    /**
+     * Desired number of targets to elect for this round.
+     * 
+     * Only exists when [`Snapshot`] is present.
+     **/
+    desiredTargets: Option<u32> | null;
+    /**
+     * Current best solution, signed or unsigned, queued to be returned upon `elect`.
+     **/
+    queuedSolution: Option<ReadySolution> | null;
+    /**
+     * Internal counter for the number of rounds.
+     * 
+     * This is useful for de-duplication of transactions submitted to the pool, and general
+     * diagnostics of the pallet.
+     * 
+     * This is merely incremented once per every time that an upstream `elect` is called.
+     **/
+    round: u32 | null;
+    /**
+     * Snapshot data of the round.
+     * 
+     * This is created at the beginning of the signed phase and cleared upon calling `elect`.
+     **/
+    snapshot: Option<RoundSnapshot> | null;
+    /**
+     * The metadata of the [`RoundSnapshot`]
+     * 
+     * Only exists when [`Snapshot`] is present.
+     **/
+    snapshotMetadata: Option<SolutionOrSnapshotSize> | null;
   };
   electionsPhragmen: {    /**
      * The present candidate list. A current member or runner-up can never enter this vector
@@ -760,12 +796,20 @@ export interface StorageType extends BaseStorageType {
      **/
     currentEra: Option<EraIndex> | null;
     /**
+     * The last planned session scheduled by the session pallet.
+     * 
+     * This is basically in sync with the call to [`SessionManager::new_session`].
+     **/
+    currentPlannedSession: SessionIndex | null;
+    /**
      * The earliest era for which we have a pending, unapplied slash.
      **/
     earliestUnappliedSlash: Option<EraIndex> | null;
     /**
      * Flag to control the execution of the offchain election. When `Open(_)`, we accept
      * solutions to be submitted.
+     * 
+     * TWO_PHASE_NOTE: should be removed once we switch to multi-phase.
      **/
     eraElectionStatus: ElectionStatus | null;
     /**
@@ -845,6 +889,8 @@ export interface StorageType extends BaseStorageType {
     /**
      * True if the current **planned** session is final. Note that this does not take era
      * forcing into account.
+     * 
+     * TWO_PHASE_NOTE: should be removed once we switch to multi-phase.
      **/
     isCurrentSessionFinal: bool | null;
     /**
@@ -871,10 +917,14 @@ export interface StorageType extends BaseStorageType {
      * The next validator set. At the end of an era, if this is available (potentially from the
      * result of an offchain worker), it is immediately used. Otherwise, the on-chain election
      * is executed.
+     * 
+     * TWO_PHASE_NOTE: should be removed once we switch to multi-phase.
      **/
     queuedElected: Option<ElectionResult> | null;
     /**
      * The score of the current [`QueuedElected`].
+     * 
+     * TWO_PHASE_NOTE: should be removed once we switch to multi-phase.
      **/
     queuedScore: Option<ElectionScore> | null;
     /**
@@ -890,11 +940,15 @@ export interface StorageType extends BaseStorageType {
     /**
      * Snapshot of nominators at the beginning of the current election window. This should only
      * have a value when [`EraElectionStatus`] == `ElectionStatus::Open(_)`.
+     * 
+     * TWO_PHASE_NOTE: should be removed once we switch to multi-phase.
      **/
     snapshotNominators: Option<Vec<AccountId>> | null;
     /**
      * Snapshot of validators at the beginning of the current election window. This should only
      * have a value when [`EraElectionStatus`] == `ElectionStatus::Open(_)`.
+     * 
+     * TWO_PHASE_NOTE: should be removed once we switch to multi-phase.
      **/
     snapshotValidators: Option<Vec<AccountId>> | null;
     /**
@@ -1027,10 +1081,10 @@ export interface StorageType extends BaseStorageType {
      **/
     parentHash: Hash | null;
     /**
-     * True if we have upgraded so that AccountInfo contains two types of `RefCount`. False
+     * True if we have upgraded so that AccountInfo contains three types of `RefCount`. False
      * (default) if not.
      **/
-    upgradedToDualRefCount: bool | null;
+    upgradedToTripleRefCount: bool | null;
     /**
      * True if we have upgraded so that `type RefCount` is `u32`. False (default) if not.
      **/

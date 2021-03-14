@@ -1,5 +1,5 @@
 {
-  "version": "0.6.2-27",
+  "version": "0.7.0",
   "private": true,
   "engines": {
     "yarn": "^1.10.1"
@@ -26,7 +26,7 @@
     "@babel/register": "^7.10.1",
     "@babel/runtime": "^7.10.2",
     "@open-web3/dev-config": "^0.1.10",
-    "@open-web3/util": "^0.8.2-11",
+    "@open-web3/util": "^0.9.1",
     "@types/jest": "^25.2.3",
     "ts-node": "^8.6.1",
     "tsconfig-paths": "^3.9.0",
