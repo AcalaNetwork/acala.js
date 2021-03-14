@@ -17,7 +17,7 @@
   "dependencies": {
     "@acala-network/types": "^0.6.2-27",
     "@babel/runtime": "^7.10.2",
-    "@open-web3/orml-types": "^0.8.2-11",
-    "@polkadot/api-derive": "^3.10.3-2"
+    "@open-web3/orml-types": "^0.9.1",
+    "@polkadot/api-derive": "^4.0.3"
   }
 }
