@@ -5,7 +5,7 @@ import { CurrencyId, Position } from '@acala-network/types/interfaces';
 import { DerivedLoanType } from '@acala-network/api-derive';
 import { ApiRx } from '@polkadot/api';
 
-interface LoanParams {
+export interface LoanParams {
   debitExchangeRate: FixedPointNumber;
   expectedBlockTime: number;
   globalStableFee: FixedPointNumber;
@@ -26,7 +26,10 @@ export interface LoanPosition extends LoanParams {
   liquidationRatio: FixedPointNumber;
   canGenerate: FixedPointNumber;
   canPayBack: FixedPointNumber;
+  maxGenerate: FixedPointNumber;
 }
+
+const YEAR = 365 * 24 * 60 * 60; // second of one year
 
 export class LoanRx {
   private api: ApiRx;
@@ -65,7 +68,14 @@ export class LoanRx {
     return combineLatest([this.loanParams$, this.loanPosition$, this.price$]).pipe(
       map(([params, position, price]) => {
         const { debit, collateral } = position;
-        const { debitExchangeRate, requiredCollateralRatio, stableFee, expectedBlockTime, liquidationRatio } = params;
+        const {
+          debitExchangeRate,
+          requiredCollateralRatio,
+          stableFee,
+          expectedBlockTime,
+          liquidationRatio,
+          globalStableFee
+        } = params;
 
         const _debit = FixedPointNumber.fromInner(debit.toString(), this.stableCoinToken.decimal);
 
@@ -83,6 +93,7 @@ export class LoanRx {
           FixedPointNumber.ONE,
           FixedPointNumber.ZERO
         );
+        const maxGenerate = this.getMaxGenerate(collateralAmount, requiredCollateralRatio);
 
         return {
           collateral: _collateral,
@@ -91,14 +102,19 @@ export class LoanRx {
           collateralAmount: collateralAmount,
           collateralRatio: collateralAmount.div(debitAmount),
           requiredCollateral,
-          stableFeeAPR: this.getStableFeeAPR(stableFee, expectedBlockTime),
+          stableFeeAPR: this.getStableFeeAPR(stableFee.plus(globalStableFee), expectedBlockTime),
           liquidationPrice: this.getLiquidationPrice(_collateral, debitAmount, liquidationRatio),
           canGenerate,
           canPayBack: debitAmount,
+          maxGenerate,
           ...params
         };
       })
     );
+  }
+
+  private getMaxGenerate(collateralAmount: FixedPointNumber, requiredCollateralRatio: FixedPointNumber) {
+    return collateralAmount.div(requiredCollateralRatio);
   }
 
   private getRequiredCollateral(
@@ -107,6 +123,7 @@ export class LoanRx {
     price: FixedPointNumber
   ): FixedPointNumber {
     const result = debitAmount.times(requiredCollateralRatio).div(price);
+
     if (result.isLessThan(FixedPointNumber.ZERO) || !result.isFinaite()) {
       return FixedPointNumber.ZERO;
     }
@@ -115,8 +132,6 @@ export class LoanRx {
   }
 
   private getStableFeeAPR(stableFee: FixedPointNumber, blockTime: number): FixedPointNumber {
-    const YEAR = 365 * 24 * 60 * 60; // second of one year
-
     return new FixedPointNumber((1 + stableFee.toNumber(18, 3)) ** ((YEAR / blockTime) * 1000) - 1);
   }
 
