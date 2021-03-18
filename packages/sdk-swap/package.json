@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk-swap",
-  "version": "0.6.2-27",
+  "version": "0.7.1",
   "description": "the swap sub module in acala network sdk",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
@@ -15,9 +15,9 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
-    "@acala-network/sdk-core": "^0.6.2-26",
-    "@polkadot/api": "^3.10.3-2",
-    "@polkadot/types": "^3.10.3-2",
+    "@acala-network/sdk-core": "^0.7.1",
+    "@polkadot/api": "^4.0.3",
+    "@polkadot/types": "^4.0.3",
     "lodash": "^4.17.20"
   },
   "devDependencies": {

@@ -17,5 +17,6 @@ module.exports = Object.assign({}, config, {
     '<rootDir>/packages/type-definitions/build',
     '<rootDir>/packages/sdk-core/build',
     '<rootDir>/packages/sdk-swap/build'
-  ]
+  ],
+  transformIgnorePatterns: ['/node_modules/(?!@polkadot|@babel/runtime/helpers/esm/)']
 });
