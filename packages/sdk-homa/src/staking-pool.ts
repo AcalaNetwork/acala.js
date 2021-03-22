@@ -24,6 +24,7 @@ interface StakingPoolConfig {
   bondingDuration: number;
 
   currentEra: number;
+  decimal: number;
 }
 
 class StakingPoolLedger implements StakingPoolLedgerData {
@@ -33,10 +34,16 @@ class StakingPoolLedger implements StakingPoolLedgerData {
   public toUnbondNextEra: [FixedPointNumber, FixedPointNumber];
 
   constructor(data: StakingPoolLedgerData) {
-    this.bonded = data.bonded;
-    this.unbondingToFree = data.unbondingToFree;
-    this.freePool = data.freePool;
-    this.toUnbondNextEra = data.toUnbondNextEra;
+    this.bonded = data.bonded.clone();
+    this.unbondingToFree = data.unbondingToFree.clone();
+    this.freePool = data.freePool.clone();
+    this.toUnbondNextEra = [data.toUnbondNextEra[0].clone(), data.toUnbondNextEra[1].clone()];
+
+    this.bonded.forceSetPrecision(18);
+    this.unbondingToFree.forceSetPrecision(18);
+    this.freePool.forceSetPrecision(18);
+    this.toUnbondNextEra[0].forceSetPrecision(18);
+    this.toUnbondNextEra[1].forceSetPrecision(18);
   }
 
   public get total() {
@@ -70,7 +77,8 @@ class StakingPoolLedger implements StakingPoolLedgerData {
 
 export class StakingPool {
   public params: StakingPoolParams;
-  public ledger: StakingPoolLedger;
+  private ledger: StakingPoolLedger;
+  private decimal: number;
 
   public defaultExchangeRate!: FixedPointNumber;
   public liquidTotalIssuance!: FixedPointNumber;
@@ -80,11 +88,46 @@ export class StakingPool {
   constructor(config: StakingPoolConfig) {
     this.params = config.params;
     this.defaultExchangeRate = config.defaultExchangeRate;
-    this.liquidTotalIssuance = config.liquidTotalIssuance;
+    this.liquidTotalIssuance = config.liquidTotalIssuance.clone();
     this.bondingDuration = config.bondingDuration;
     this.currentEra = config.currentEra;
 
+    this.liquidTotalIssuance.forceSetPrecision(18);
+    this.decimal = config.decimal;
+
     this.ledger = new StakingPoolLedger(config.ledger);
+  }
+
+  public get total(): FixedPointNumber {
+    const result = this.ledger.total.clone();
+
+    result.setPrecision(this.decimal);
+
+    return result;
+  }
+
+  public get freePool(): FixedPointNumber {
+    const result = this.ledger.freePool.clone();
+
+    result.setPrecision(this.decimal);
+
+    return result;
+  }
+
+  public get totalBelongToLiquidHolders(): FixedPointNumber {
+    const result = this.ledger.totalBelongToLiquidHolders.clone();
+
+    result.setPrecision(this.decimal);
+
+    return result;
+  }
+
+  public get bondedBelongToLiquidHolders(): FixedPointNumber {
+    const result = this.ledger.bondedBelongToLiquidHolders.clone();
+
+    result.setPrecision(this.decimal);
+
+    return result;
   }
 
   /**
@@ -94,7 +137,15 @@ export class StakingPool {
   public getLiquidAmountInMint(amount: FixedPointNumber): FixedPointNumber {
     if (amount.isZero()) return FixedPointNumber.ZERO;
 
-    return this.liquidExchangeRate().reciprocal().times(amount);
+    const _amount = amount.clone();
+
+    _amount.forceSetPrecision(18);
+
+    const result = this.liquidExchangeRate().reciprocal().times(amount);
+
+    result.forceSetPrecision(amount.getPrecision());
+
+    return result;
   }
 
   /**
@@ -102,6 +153,11 @@ export class StakingPool {
    * @description get the staking currency amount with redeem by unbond
    */
   public getStakingAmountInRedeemByUnbond(amount: FixedPointNumber): { atEra: number; amount: FixedPointNumber } {
+    const precision = amount.getPrecision();
+
+    amount = amount.clone();
+    amount.forceSetPrecision(18);
+
     if (amount.isZero()) return { atEra: this.currentEra, amount: FixedPointNumber.ZERO };
 
     const liquidExchangeRate = this.liquidExchangeRate();
@@ -112,6 +168,8 @@ export class StakingPool {
       if (stakingAmountToUnbond.isGreaterThan(communalBondedStakingAmount)) {
         stakingAmountToUnbond = communalBondedStakingAmount;
       }
+
+      stakingAmountToUnbond.forceSetPrecision(precision);
 
       return {
         atEra: this.currentEra + 1 + this.bondingDuration,
@@ -126,22 +184,6 @@ export class StakingPool {
   }
 
   /**
-   * @name getMaxLiquidInputInRedeemByFreeUnbonded
-   */
-  public getMaxLiquidInputInRedeemByFreeUnbonded(): { staking: FixedPointNumber; liquid: FixedPointNumber } {
-    const liquidExchangeRate = this.liquidExchangeRate();
-    const params = this.params;
-    const availableFreePool = this.ledger.freePool
-      .minus(params.targetMinFreeUnbondedRatio.times(this.ledger.totalBelongToLiquidHolders))
-      .max(FixedPointNumber.ZERO);
-
-    return {
-      staking: availableFreePool,
-      liquid: availableFreePool.div(liquidExchangeRate)
-    };
-  }
-
-  /**
    * @name getStakingAmountInRedeemByFreeUnbonded
    * @description get staking amount with redeem by free unbonded
    */
@@ -152,6 +194,12 @@ export class StakingPool {
     fee: FixedPointNumber;
     received: FixedPointNumber;
   } {
+    const precision = amount.getPrecision();
+
+    amount = amount.clone();
+
+    amount.forceSetPrecision(18);
+
     if (amount.isZero()) {
       return {
         demand: FixedPointNumber.ZERO,
@@ -191,6 +239,9 @@ export class StakingPool {
 
       const receivedStakingAmount = demandStakingAmount.minus(feeInStaking);
 
+      feeInStaking.forceSetPrecision(precision);
+      receivedStakingAmount.forceSetPrecision(precision);
+
       return {
         demand: demandStakingAmount,
         fee: feeInStaking,
@@ -202,37 +253,6 @@ export class StakingPool {
       demand: FixedPointNumber.ZERO,
       fee: FixedPointNumber.ZERO,
       received: FixedPointNumber.ZERO
-    };
-  }
-
-  public getMaxLiquidInputInClaimUnbonding(
-    amount: FixedPointNumber,
-    targetEra: number,
-    unbondingState: {
-      unbonding: FixedPointNumber;
-      claimedUnbonding: FixedPointNumber;
-      initialClaimedUnbonding: FixedPointNumber;
-    }
-  ): { staking: FixedPointNumber; liquid: FixedPointNumber } {
-    const currentEra = this.currentEra;
-    const bondingDuration = this.bondingDuration;
-
-    if (!(targetEra > currentEra && targetEra <= currentEra + bondingDuration)) {
-      throw new Error('invalid era');
-    }
-
-    const liquidExchangeRate = this.liquidExchangeRate();
-    const stakingPoolParams = this.params;
-    const { unbonding, claimedUnbonding, initialClaimedUnbonding } = unbondingState;
-    const initialUnclaimed = unbonding.minus(initialClaimedUnbonding);
-    const unclaimed = unbonding.minus(claimedUnbonding);
-    const availableUnclaimedUnbonding = unclaimed.minus(
-      stakingPoolParams.targetMinFreeUnbondedRatio.times(initialUnclaimed)
-    );
-
-    return {
-      staking: availableUnclaimedUnbonding,
-      liquid: availableUnclaimedUnbonding.div(liquidExchangeRate)
     };
   }
 
@@ -250,6 +270,15 @@ export class StakingPool {
     received: FixedPointNumber;
     fee: FixedPointNumber;
   } {
+    const precision = amount.getPrecision();
+
+    amount = amount.clone();
+
+    amount.forceSetPrecision(18);
+    unbondingState.unbonding.forceSetPrecision(18);
+    unbondingState.claimedUnbonding.forceSetPrecision(18);
+    unbondingState.initialClaimedUnbonding.forceSetPrecision(18);
+
     if (amount.isZero()) {
       return {
         received: FixedPointNumber.ZERO,
@@ -302,6 +331,10 @@ export class StakingPool {
         ) || FixedPointNumber.ZERO;
 
       const claimedStakingAmount = demandStakingAmount.minus(feeInStaking);
+
+      feeInStaking.forceSetPrecision(precision);
+      demandStakingAmount.forceSetPrecision(precision);
+      claimedStakingAmount.forceSetPrecision(precision);
 
       return {
         received: claimedStakingAmount,
