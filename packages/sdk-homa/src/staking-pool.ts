@@ -101,7 +101,7 @@ export class StakingPool {
   public get total(): FixedPointNumber {
     const result = this.ledger.total.clone();
 
-    result.setPrecision(this.decimal);
+    result.forceSetPrecision(this.decimal);
 
     return result;
   }
@@ -109,7 +109,7 @@ export class StakingPool {
   public get freePool(): FixedPointNumber {
     const result = this.ledger.freePool.clone();
 
-    result.setPrecision(this.decimal);
+    result.forceSetPrecision(this.decimal);
 
     return result;
   }
@@ -117,7 +117,7 @@ export class StakingPool {
   public get totalBelongToLiquidHolders(): FixedPointNumber {
     const result = this.ledger.totalBelongToLiquidHolders.clone();
 
-    result.setPrecision(this.decimal);
+    result.forceSetPrecision(this.decimal);
 
     return result;
   }
@@ -125,7 +125,15 @@ export class StakingPool {
   public get bondedBelongToLiquidHolders(): FixedPointNumber {
     const result = this.ledger.bondedBelongToLiquidHolders.clone();
 
-    result.setPrecision(this.decimal);
+    result.forceSetPrecision(this.decimal);
+
+    return result;
+  }
+
+  public get unbondingToFree(): FixedPointNumber {
+    const result = this.ledger.unbondingToFree.clone();
+
+    result.forceSetPrecision(this.decimal);
 
     return result;
   }
