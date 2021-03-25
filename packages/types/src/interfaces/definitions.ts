@@ -4,6 +4,7 @@ export { default as cdpEngine } from './cdpEngine/definitions';
 export { default as dex } from './dex/definitions';
 export { default as evm } from './evm/definitions';
 export { default as homa } from './homa/definitions';
+export { default as homaValidatorList } from './homaValidatorList/definitions';
 export { default as incentives } from './incentives/definitions';
 export { default as loans } from './loans/definitions';
 export { default as nft } from './nft/definitions';

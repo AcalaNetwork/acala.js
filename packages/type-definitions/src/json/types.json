@@ -180,6 +180,15 @@
             "WaitForUnbonding": "Null"
         }
     },
+    "RelaychainAccountId": "AccountId",
+    "SlashInfo": {
+        "validator": "RelaychainAccountId",
+        "relaychainTokenAmount": "Balance"
+    },
+    "ValidatorBacking": {
+        "totalInsurance": "Balance",
+        "isFrozen": "Boolean"
+    },
     "PoolId": {
         "_enum": {
             "Loans": "CurrencyId",
