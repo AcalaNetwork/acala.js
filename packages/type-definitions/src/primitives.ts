@@ -26,8 +26,9 @@ export default {
         // Reserve for XBTC = 132
         // Reserve for RENBTC = 133
         // Reserve for POLKABTC = 134
-        SDN: 135
+        SDN: 135,
         // Reserve for PHA = 136
+        KILT: 138
       }
     },
     CurrencyId: {

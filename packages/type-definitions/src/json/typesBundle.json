@@ -1185,7 +1185,8 @@
                                 "KUSD": 129,
                                 "KSM": 130,
                                 "LKSM": 131,
-                                "SDN": 135
+                                "SDN": 135,
+                                "KILT": 138
                             }
                         },
                         "CurrencyId": {
@@ -2524,7 +2525,8 @@
                                 "KUSD": 129,
                                 "KSM": 130,
                                 "LKSM": 131,
-                                "SDN": 135
+                                "SDN": 135,
+                                "KILT": 138
                             }
                         },
                         "CurrencyId": {
