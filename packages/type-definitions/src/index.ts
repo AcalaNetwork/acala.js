@@ -7,6 +7,7 @@ import cdpEngine from './cdpEngine';
 import dex from './dex';
 import evm from './evm';
 import homa from './homa';
+import homaValidatorList from './homa-validator-list';
 import incentives from './incentives';
 import loans from './loans';
 import nft from './nft';
@@ -95,6 +96,7 @@ const acalaDefs = {
   dex,
   evm,
   homa,
+  homaValidatorList,
   incentives,
   loans,
   nft,

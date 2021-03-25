@@ -61,6 +61,7 @@ const metadata = filterModules(
     'EmergencyShutdown',
     'Evm',
     'Homa',
+    'HomaValidatorList',
     'HomaTreasury',
     'Honzon',
     'Loans',

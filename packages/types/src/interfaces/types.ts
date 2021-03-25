@@ -7,6 +7,7 @@ export * from './cdpEngine/types';
 export * from './dex/types';
 export * from './evm/types';
 export * from './homa/types';
+export * from './homaValidatorList/types';
 export * from './incentives/types';
 export * from './loans/types';
 export * from './nft/types';

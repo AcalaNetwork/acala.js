@@ -8,6 +8,7 @@ import type { ChangeBalance, ChangeOptionRate, ChangeOptionRatio, LiquidationStr
 import type { BalanceRequest, BalanceWrapper, TradingPairProvisionParameters, TradingPairStatus } from '@acala-network/types/interfaces/dex';
 import type { CallRequest, CodeInfo, EvmAccountInfo, EvmAddress, EvmContractInfo } from '@acala-network/types/interfaces/evm';
 import type { RedeemStrategy } from '@acala-network/types/interfaces/homa';
+import type { RelaychainAccountId, SlashInfo, ValidatorBacking } from '@acala-network/types/interfaces/homaValidatorList';
 import type { PoolId } from '@acala-network/types/interfaces/incentives';
 import type { Position } from '@acala-network/types/interfaces/loans';
 import type { CID, ClassData, ClassId, ClassIdOf, ClassInfoOf, Properties, TokenData, TokenId, TokenIdOf, TokenInfoOf } from '@acala-network/types/interfaces/nft';
@@ -780,6 +781,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<RegistrarInfo>': Option<RegistrarInfo>;
     'Option<Registration>': Option<Registration>;
     'Option<RegistrationJudgement>': Option<RegistrationJudgement>;
+    'Option<RelaychainAccountId>': Option<RelaychainAccountId>;
     'Option<RelayChainBlockNumber>': Option<RelayChainBlockNumber>;
     'Option<RelayChainHash>': Option<RelayChainHash>;
     'Option<RelayedFrom>': Option<RelayedFrom>;
@@ -850,6 +852,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<SiTypeDefTuple>': Option<SiTypeDefTuple>;
     'Option<SiTypeDefVariant>': Option<SiTypeDefVariant>;
     'Option<SiVariant>': Option<SiVariant>;
+    'Option<SlashInfo>': Option<SlashInfo>;
     'Option<SlashingSpans>': Option<SlashingSpans>;
     'Option<SlashingSpansTo204>': Option<SlashingSpansTo204>;
     'Option<SlashJournalEntry>': Option<SlashJournalEntry>;
@@ -961,6 +964,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<ValidationData>': Option<ValidationData>;
     'Option<ValidationDataType>': Option<ValidationDataType>;
     'Option<ValidationFunctionParams>': Option<ValidationFunctionParams>;
+    'Option<ValidatorBacking>': Option<ValidatorBacking>;
     'Option<ValidatorCount>': Option<ValidatorCount>;
     'Option<ValidatorId>': Option<ValidatorId>;
     'Option<ValidatorIdOf>': Option<ValidatorIdOf>;
@@ -1611,6 +1615,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<RegistrarInfo>': Vec<RegistrarInfo>;
     'Vec<Registration>': Vec<Registration>;
     'Vec<RegistrationJudgement>': Vec<RegistrationJudgement>;
+    'Vec<RelaychainAccountId>': Vec<RelaychainAccountId>;
     'Vec<RelayChainBlockNumber>': Vec<RelayChainBlockNumber>;
     'Vec<RelayChainHash>': Vec<RelayChainHash>;
     'Vec<RelayedFrom>': Vec<RelayedFrom>;
@@ -1681,6 +1686,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<SiTypeDefTuple>': Vec<SiTypeDefTuple>;
     'Vec<SiTypeDefVariant>': Vec<SiTypeDefVariant>;
     'Vec<SiVariant>': Vec<SiVariant>;
+    'Vec<SlashInfo>': Vec<SlashInfo>;
     'Vec<SlashingSpans>': Vec<SlashingSpans>;
     'Vec<SlashingSpansTo204>': Vec<SlashingSpansTo204>;
     'Vec<SlashJournalEntry>': Vec<SlashJournalEntry>;
@@ -1792,6 +1798,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<ValidationData>': Vec<ValidationData>;
     'Vec<ValidationDataType>': Vec<ValidationDataType>;
     'Vec<ValidationFunctionParams>': Vec<ValidationFunctionParams>;
+    'Vec<ValidatorBacking>': Vec<ValidatorBacking>;
     'Vec<ValidatorCount>': Vec<ValidatorCount>;
     'Vec<ValidatorId>': Vec<ValidatorId>;
     'Vec<ValidatorIdOf>': Vec<ValidatorIdOf>;
@@ -2442,6 +2449,7 @@ declare module '@polkadot/types/types/registry' {
     RegistrarInfo: RegistrarInfo;
     Registration: Registration;
     RegistrationJudgement: RegistrationJudgement;
+    RelaychainAccountId: RelaychainAccountId;
     RelayChainBlockNumber: RelayChainBlockNumber;
     RelayChainHash: RelayChainHash;
     RelayedFrom: RelayedFrom;
@@ -2512,6 +2520,7 @@ declare module '@polkadot/types/types/registry' {
     SiTypeDefTuple: SiTypeDefTuple;
     SiTypeDefVariant: SiTypeDefVariant;
     SiVariant: SiVariant;
+    SlashInfo: SlashInfo;
     SlashingSpans: SlashingSpans;
     SlashingSpansTo204: SlashingSpansTo204;
     SlashJournalEntry: SlashJournalEntry;
@@ -2623,6 +2632,7 @@ declare module '@polkadot/types/types/registry' {
     ValidationData: ValidationData;
     ValidationDataType: ValidationDataType;
     ValidationFunctionParams: ValidationFunctionParams;
+    ValidatorBacking: ValidatorBacking;
     ValidatorCount: ValidatorCount;
     ValidatorId: ValidatorId;
     ValidatorIdOf: ValidatorIdOf;
