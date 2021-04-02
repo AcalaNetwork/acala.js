@@ -9,6 +9,11 @@ export default {
     ValidatorBacking: {
       totalInsurance: 'Balance',
       isFrozen: 'Boolean'
+    },
+    Guarantee: {
+      total: 'Balance',
+      bonded: 'Balance',
+      unbonding: 'Option<(Balance, BlockNumber)>'
     }
   }
 };

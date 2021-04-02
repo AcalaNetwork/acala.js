@@ -8,7 +8,7 @@ import type { ChangeBalance, ChangeOptionRate, ChangeOptionRatio, LiquidationStr
 import type { BalanceRequest, BalanceWrapper, TradingPairProvisionParameters, TradingPairStatus } from '@acala-network/types/interfaces/dex';
 import type { CallRequest, CodeInfo, EvmAccountInfo, EvmAddress, EvmContractInfo } from '@acala-network/types/interfaces/evm';
 import type { RedeemStrategy } from '@acala-network/types/interfaces/homa';
-import type { RelaychainAccountId, SlashInfo, ValidatorBacking } from '@acala-network/types/interfaces/homaValidatorList';
+import type { Guarantee, RelaychainAccountId, SlashInfo, ValidatorBacking } from '@acala-network/types/interfaces/homaValidatorList';
 import type { PoolId } from '@acala-network/types/interfaces/incentives';
 import type { Position } from '@acala-network/types/interfaces/loans';
 import type { CID, ClassData, ClassId, ClassIdOf, ClassInfoOf, Properties, TokenData, TokenId, TokenIdOf, TokenInfoOf } from '@acala-network/types/interfaces/nft';
@@ -515,6 +515,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<GrandpaEquivocationValue>': Option<GrandpaEquivocationValue>;
     'Option<GrandpaPrevote>': Option<GrandpaPrevote>;
     'Option<GroupIndex>': Option<GroupIndex>;
+    'Option<Guarantee>': Option<Guarantee>;
     'Option<H1024>': Option<H1024>;
     'Option<H128>': Option<H128>;
     'Option<H160>': Option<H160>;
@@ -1349,6 +1350,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<GrandpaEquivocationValue>': Vec<GrandpaEquivocationValue>;
     'Vec<GrandpaPrevote>': Vec<GrandpaPrevote>;
     'Vec<GroupIndex>': Vec<GroupIndex>;
+    'Vec<Guarantee>': Vec<Guarantee>;
     'Vec<H1024>': Vec<H1024>;
     'Vec<H128>': Vec<H128>;
     'Vec<H160>': Vec<H160>;
@@ -2183,6 +2185,7 @@ declare module '@polkadot/types/types/registry' {
     GrandpaEquivocationValue: GrandpaEquivocationValue;
     GrandpaPrevote: GrandpaPrevote;
     GroupIndex: GroupIndex;
+    Guarantee: Guarantee;
     H1024: H1024;
     H128: H128;
     H160: H160;
