@@ -18,6 +18,7 @@ export default {
         PLM: 7,
         PHA: 8,
         HDT: 9,
+        BCG: 11,
 
         KAR: 128,
         KUSD: 129,
@@ -29,6 +30,7 @@ export default {
         SDN: 135,
         // Reserve for PHA = 136
         KILT: 138
+        // Reserve for BCG = 139
       }
     },
     CurrencyId: {

@@ -189,6 +189,11 @@
         "totalInsurance": "Balance",
         "isFrozen": "Boolean"
     },
+    "Guarantee": {
+        "total": "Balance",
+        "bonded": "Balance",
+        "unbonding": "Option<(Balance, BlockNumber)>"
+    },
     "PoolId": {
         "_enum": {
             "Loans": "CurrencyId",
@@ -256,6 +261,7 @@
             "PLM": 7,
             "PHA": 8,
             "HDT": 9,
+            "BCG": 11,
             "KAR": 128,
             "KUSD": 129,
             "KSM": 130,
