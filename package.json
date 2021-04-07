@@ -8,7 +8,9 @@
     "packages/*"
   ],
   "resolutions": {
-    "typescript": "3.8.3"
+    "typescript": "3.8.3",
+    "@polkadot/api": "^4.2.2-4",
+    "@polkadot/types": "^4.2.2-4"
   },
   "scripts": {
     "build": "yarn build:interfaces && polkadot-dev-build-ts",
