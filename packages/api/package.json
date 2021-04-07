@@ -18,8 +18,8 @@
     "@acala-network/api-derive": "^0.7.2-5",
     "@acala-network/types": "^0.7.2-5",
     "@babel/runtime": "^7.10.2",
-    "@open-web3/orml-api-derive": "^0.9.1",
-    "@polkadot/api": "^4.0.3",
-    "@polkadot/rpc-core": "^4.0.3"
+    "@open-web3/orml-api-derive": "^0.9.2-0",
+    "@polkadot/api": "^4.2.2-4",
+    "@polkadot/rpc-core": "^4.2.2-4"
   }
 }

@@ -8,6 +8,7 @@
     "target": "es2019",
     "module": "CommonJS",
     "baseUrl": ".",
+    "resolveJsonModule": true,
     "paths": {
       "@acala-network/api": [
         "packages/api/src"
