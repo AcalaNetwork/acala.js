@@ -710,12 +710,12 @@ export interface StorageType extends BaseStorageType {
   rewards: {    /**
      * Stores reward pool info.
      **/
-    pools: StorageMap<PoolId | { Loans: any } | { DexIncentive: any } | { DexSaving: any } | { Homa: any } | string, PoolInfo>;
+    pools: StorageMap<PoolId | { LoansIncentive: any } | { DexIncentive: any } | { DexSaving: any } | { HomaIncentive: any } | { HomaValidatorAllowance: any } | string, PoolInfo>;
     /**
      * Record share amount and withdrawn reward amount for specific `AccountId`
      * under `PoolId`.
      **/
-    shareAndWithdrawnReward: StorageDoubleMap<PoolId | { Loans: any } | { DexIncentive: any } | { DexSaving: any } | { Homa: any } | string, AccountId | string, ITuple<[Share, Balance]>>;
+    shareAndWithdrawnReward: StorageDoubleMap<PoolId | { LoansIncentive: any } | { DexIncentive: any } | { DexSaving: any } | { HomaIncentive: any } | { HomaValidatorAllowance: any } | string, AccountId | string, ITuple<[Share, Balance]>>;
   };
   scheduler: {    /**
      * Items to be executed, indexed by the block number that they should be executed on.

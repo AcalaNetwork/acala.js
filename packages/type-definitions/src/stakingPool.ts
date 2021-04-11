@@ -30,6 +30,9 @@ export default {
       unbondingToFreeAdjustment: 'Ratio',
       baseFeeRate: 'Rate'
     },
+    Phase: {
+      _enum: ['Started', 'RelaychainUpdated', 'LedgerUpdated', 'Finished']
+    },
     Ledger: {
       bonded: 'Balance',
       unbondingToFree: 'Balance',
