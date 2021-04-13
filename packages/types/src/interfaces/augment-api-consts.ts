@@ -100,6 +100,13 @@ declare module '@polkadot/api/types/consts' {
        **/
       moduleId: ModuleId & AugmentedConst<ApiType>;
     };
+    currencies: {
+      [key: string]: Codec;
+      /**
+       * The native currency id
+       **/
+      getNativeCurrencyId: CurrencyId & AugmentedConst<ApiType>;
+    };
     dex: {
       [key: string]: Codec;
       /**

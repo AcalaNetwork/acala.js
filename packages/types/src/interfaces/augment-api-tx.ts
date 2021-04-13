@@ -10,6 +10,7 @@ import type { Balance, BalanceOf, BlockNumber, Call, LookupSource } from '@acala
 import type { ChangeRate, ChangeRatio, PolkadotAccountId } from '@acala-network/types/interfaces/stakingPool';
 import type { Rate } from '@acala-network/types/interfaces/support';
 import type { Extrinsic } from '@polkadot/types/interfaces/extrinsics';
+import type { EraIndex } from '@polkadot/types/interfaces/staking';
 import type { ApiTypes, SubmittableExtrinsic } from '@polkadot/api/types';
 
 declare module '@polkadot/api/types/submittable' {
@@ -287,7 +288,7 @@ declare module '@polkadot/api/types/submittable' {
       setMockRewardRate: AugmentedSubmittable<(accountIndex: u32 | AnyNumber | Uint8Array, rewardRate: Rate | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, Rate]>;
       simualteReceiveFromSubAccount: AugmentedSubmittable<(accountIndex: u32 | AnyNumber | Uint8Array, to: LookupSource | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, LookupSource, Balance]>;
       simulateBondExtra: AugmentedSubmittable<(accountIndex: u32 | AnyNumber | Uint8Array, amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, Balance]>;
-      simulatePayoutNominator: AugmentedSubmittable<(accountIndex: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32]>;
+      simulatePayoutStakers: AugmentedSubmittable<(accountIndex: u32 | AnyNumber | Uint8Array, era: EraIndex | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, EraIndex]>;
       simulateRebond: AugmentedSubmittable<(accountIndex: u32 | AnyNumber | Uint8Array, amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, Balance]>;
       simulateSlashSubAccount: AugmentedSubmittable<(accountIndex: u32 | AnyNumber | Uint8Array, amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, Balance]>;
       simulateTransferToSubAccount: AugmentedSubmittable<(accountIndex: u32 | AnyNumber | Uint8Array, amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, Balance]>;

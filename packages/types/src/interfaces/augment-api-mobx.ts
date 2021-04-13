@@ -7,6 +7,7 @@ import type { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from
 import type { RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
 import type { TradingPairStatus } from '@acala-network/types/interfaces/dex';
 import type { CodeInfo, EvmAddress } from '@acala-network/types/interfaces/evm';
+import type { Guarantee, RelaychainAccountId, ValidatorBacking } from '@acala-network/types/interfaces/homaValidatorList';
 import type { PoolId } from '@acala-network/types/interfaces/incentives';
 import type { Position } from '@acala-network/types/interfaces/loans';
 import type { ClassId, ClassInfoOf, TokenId, TokenInfoOf } from '@acala-network/types/interfaces/nft';
@@ -22,7 +23,7 @@ import type { PoolInfo, Share } from '@open-web3/orml-types/interfaces/rewards';
 import type { AuctionInfo, Price } from '@open-web3/orml-types/interfaces/traits';
 import type { VestingScheduleOf } from '@open-web3/orml-types/interfaces/vesting';
 import type { UncleEntryItem } from '@polkadot/types/interfaces/authorship';
-import type { BabeAuthorityWeight, MaybeRandomness, NextConfigDescriptor, Randomness } from '@polkadot/types/interfaces/babe';
+import type { BabeAuthorityWeight, BabeEpochConfiguration, MaybeRandomness, NextConfigDescriptor, Randomness } from '@polkadot/types/interfaces/babe';
 import type { AccountData, BalanceLock } from '@polkadot/types/interfaces/balances';
 import type { ProposalIndex, Votes } from '@polkadot/types/interfaces/collective';
 import type { AuthorityId } from '@polkadot/types/interfaces/consensus';
@@ -33,7 +34,7 @@ import type { ProxyAnnouncement, ProxyDefinition } from '@polkadot/types/interfa
 import type { ActiveRecovery, RecoveryConfig } from '@polkadot/types/interfaces/recovery';
 import type { Scheduled, TaskAddress } from '@polkadot/types/interfaces/scheduler';
 import type { Keys, SessionIndex } from '@polkadot/types/interfaces/session';
-import type { ActiveEraInfo, ElectionPhase, ElectionResult, ElectionScore, ElectionStatus, EraIndex, EraRewardPoints, Exposure, Forcing, Nominations, ReadySolution, RewardDestination, RoundSnapshot, SeatHolder, SlashingSpans, SolutionOrSnapshotSize, SpanIndex, SpanRecord, StakingLedger, UnappliedSlash, ValidatorPrefs, Voter } from '@polkadot/types/interfaces/staking';
+import type { ActiveEraInfo, ElectionPhase, EraIndex, EraRewardPoints, Exposure, Forcing, Nominations, ReadySolution, RewardDestination, RoundSnapshot, SeatHolder, SlashingSpans, SolutionOrSnapshotSize, SpanIndex, SpanRecord, StakingLedger, UnappliedSlash, ValidatorPrefs, Voter } from '@polkadot/types/interfaces/staking';
 import type { AccountInfo, ConsumedWeight, DigestOf, EventIndex, EventRecord, LastRuntimeUpgradeInfo, Phase } from '@polkadot/types/interfaces/system';
 import type { Bounty, BountyIndex, OpenTip } from '@polkadot/types/interfaces/treasury';
 import type { Multiplier } from '@polkadot/types/interfaces/txpayment';
@@ -54,7 +55,6 @@ export interface StorageType extends BaseStorageType {
      * value).
      **/
     members: OrderedSet | null;
-    nonces: StorageMap<AccountId | string, Option<u32>>;
     /**
      * Raw values for each oracle operators
      **/
@@ -150,9 +150,21 @@ export interface StorageType extends BaseStorageType {
      **/
     currentSlot: Slot | null;
     /**
+     * The configuration for the current epoch. Should never be `None` as it is initialized in genesis.
+     **/
+    epochConfig: Option<BabeEpochConfiguration> | null;
+    /**
      * Current epoch index.
      **/
     epochIndex: u64 | null;
+    /**
+     * The block numbers when the last and current epoch have started, respectively `N-1` and
+     * `N`.
+     * NOTE: We track this is in order to annotate the block number when a given pool of
+     * entropy was fixed (i.e. it was known to chain observers). Since epochs are defined in
+     * slots, which may be skipped, the block numbers may not line up with the slot numbers.
+     **/
+    epochStart: ITuple<[BlockNumber, BlockNumber]> | null;
     /**
      * The slot at which the first epoch actually started. This is 0
      * until the first block of the chain.
@@ -176,13 +188,18 @@ export interface StorageType extends BaseStorageType {
      **/
     nextAuthorities: Vec<ITuple<[AuthorityId, BabeAuthorityWeight]>> | null;
     /**
-     * Next epoch configuration, if changed.
+     * The configuration for the next epoch, `None` if the config will not change
+     * (you can fallback to `EpochConfig` instead in that case).
      **/
-    nextEpochConfig: Option<NextConfigDescriptor> | null;
+    nextEpochConfig: Option<BabeEpochConfiguration> | null;
     /**
      * Next epoch randomness.
      **/
     nextRandomness: Randomness | null;
+    /**
+     * Pending epoch configuration change that will be applied when the next epoch is enacted.
+     **/
+    pendingEpochConfigChange: Option<NextConfigDescriptor> | null;
     /**
      * The epoch randomness for the *current* epoch.
      * 
@@ -248,7 +265,6 @@ export interface StorageType extends BaseStorageType {
      * value).
      **/
     members: OrderedSet | null;
-    nonces: StorageMap<AccountId | string, Option<u32>>;
     /**
      * Raw values for each oracle operators
      **/
@@ -515,6 +531,10 @@ export interface StorageType extends BaseStorageType {
      **/
     prime: Option<AccountId> | null;
   };
+  homaValidatorListModule: {    guarantees: StorageDoubleMap<RelaychainAccountId | string, AccountId | string, Option<Guarantee>>;
+    totalLockedByGuarantor: StorageMap<AccountId | string, Option<Balance>>;
+    validatorBackings: StorageMap<RelaychainAccountId | string, Option<ValidatorBacking>>;
+  };
   honzon: {    /**
      * The authorization relationship map from
      * Authorizer -> (CollateralType, Authorizee) -> Authorized
@@ -556,23 +576,13 @@ export interface StorageType extends BaseStorageType {
     prime: Option<AccountId> | null;
   };
   incentives: {    /**
-     * Mapping from dex liquidity currency type to its loans incentive reward
-     * amount per period
+     * Mapping from pool to its fixed reward rate per period.
      **/
-    dexIncentiveRewards: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Balance>;
+    dexSavingRewardRate: StorageMap<PoolId | { LoansIncentive: any } | { DexIncentive: any } | { HomaIncentive: any } | { DexSaving: any } | { HomaValidatorAllowance: any } | string, Rate>;
     /**
-     * Mapping from dex liquidity currency type to its saving rate
+     * Mapping from pool to its fixed reward amount per period.
      **/
-    dexSavingRates: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Rate>;
-    /**
-     * Homa incentive reward amount
-     **/
-    homaIncentiveReward: Balance | null;
-    /**
-     * Mapping from collateral currency type to its loans incentive reward
-     * amount per period
-     **/
-    loansIncentiveRewards: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Balance>;
+    incentiveRewardAmount: StorageMap<PoolId | { LoansIncentive: any } | { DexIncentive: any } | { HomaIncentive: any } | { DexSaving: any } | { HomaValidatorAllowance: any } | string, Balance>;
   };
   indices: {    /**
      * The lookup from index to account.
@@ -710,12 +720,12 @@ export interface StorageType extends BaseStorageType {
   rewards: {    /**
      * Stores reward pool info.
      **/
-    pools: StorageMap<PoolId | { LoansIncentive: any } | { DexIncentive: any } | { DexSaving: any } | { HomaIncentive: any } | { HomaValidatorAllowance: any } | string, PoolInfo>;
+    pools: StorageMap<PoolId | { LoansIncentive: any } | { DexIncentive: any } | { HomaIncentive: any } | { DexSaving: any } | { HomaValidatorAllowance: any } | string, PoolInfo>;
     /**
      * Record share amount and withdrawn reward amount for specific `AccountId`
      * under `PoolId`.
      **/
-    shareAndWithdrawnReward: StorageDoubleMap<PoolId | { LoansIncentive: any } | { DexIncentive: any } | { DexSaving: any } | { HomaIncentive: any } | { HomaValidatorAllowance: any } | string, AccountId | string, ITuple<[Share, Balance]>>;
+    shareAndWithdrawnReward: StorageDoubleMap<PoolId | { LoansIncentive: any } | { DexIncentive: any } | { HomaIncentive: any } | { DexSaving: any } | { HomaValidatorAllowance: any } | string, AccountId | string, ITuple<[Share, Balance]>>;
   };
   scheduler: {    /**
      * Items to be executed, indexed by the block number that they should be executed on.
@@ -806,13 +816,6 @@ export interface StorageType extends BaseStorageType {
      **/
     earliestUnappliedSlash: Option<EraIndex> | null;
     /**
-     * Flag to control the execution of the offchain election. When `Open(_)`, we accept
-     * solutions to be submitted.
-     * 
-     * TWO_PHASE_NOTE: should be removed once we switch to multi-phase.
-     **/
-    eraElectionStatus: ElectionStatus | null;
-    /**
      * Rewards for the last `HISTORY_DEPTH` eras.
      * If reward hasn't been set or has been removed then 0 reward is returned.
      **/
@@ -887,13 +890,6 @@ export interface StorageType extends BaseStorageType {
      **/
     invulnerables: Vec<AccountId> | null;
     /**
-     * True if the current **planned** session is final. Note that this does not take era
-     * forcing into account.
-     * 
-     * TWO_PHASE_NOTE: should be removed once we switch to multi-phase.
-     **/
-    isCurrentSessionFinal: bool | null;
-    /**
      * Map from all (unlocked) "controller" accounts to the info regarding the staking.
      **/
     ledger: StorageMap<AccountId | string, Option<StakingLedger>>;
@@ -914,20 +910,6 @@ export interface StorageType extends BaseStorageType {
      **/
     payee: StorageMap<AccountId | string, RewardDestination>;
     /**
-     * The next validator set. At the end of an era, if this is available (potentially from the
-     * result of an offchain worker), it is immediately used. Otherwise, the on-chain election
-     * is executed.
-     * 
-     * TWO_PHASE_NOTE: should be removed once we switch to multi-phase.
-     **/
-    queuedElected: Option<ElectionResult> | null;
-    /**
-     * The score of the current [`QueuedElected`].
-     * 
-     * TWO_PHASE_NOTE: should be removed once we switch to multi-phase.
-     **/
-    queuedScore: Option<ElectionScore> | null;
-    /**
      * Slashing spans for stash accounts.
      **/
     slashingSpans: StorageMap<AccountId | string, Option<SlashingSpans>>;
@@ -938,20 +920,6 @@ export interface StorageType extends BaseStorageType {
      **/
     slashRewardFraction: Perbill | null;
     /**
-     * Snapshot of nominators at the beginning of the current election window. This should only
-     * have a value when [`EraElectionStatus`] == `ElectionStatus::Open(_)`.
-     * 
-     * TWO_PHASE_NOTE: should be removed once we switch to multi-phase.
-     **/
-    snapshotNominators: Option<Vec<AccountId>> | null;
-    /**
-     * Snapshot of validators at the beginning of the current election window. This should only
-     * have a value when [`EraElectionStatus`] == `ElectionStatus::Open(_)`.
-     * 
-     * TWO_PHASE_NOTE: should be removed once we switch to multi-phase.
-     **/
-    snapshotValidators: Option<Vec<AccountId>> | null;
-    /**
      * Records information about the maximum slash of a stash within a slashing span,
      * as well as how much reward has been paid out.
      **/
@@ -960,7 +928,7 @@ export interface StorageType extends BaseStorageType {
      * True if network has been upgraded to this version.
      * Storage version of the pallet.
      * 
-     * This is set to v5.0.0 for new networks.
+     * This is set to v6.0.0 for new networks.
      **/
     storageVersion: Releases | null;
     /**
@@ -990,6 +958,10 @@ export interface StorageType extends BaseStorageType {
      * AccountId => Unbond
      **/
     nextEraUnbonds: StorageMap<AccountId | string, Balance>;
+    /**
+     * The rebalance phase of current era.
+     **/
+    rebalancePhase: Phase | null;
     /**
      * The ledger of staking pool.
      **/
