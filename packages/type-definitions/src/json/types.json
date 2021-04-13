@@ -150,6 +150,11 @@
             "Enabled": "Null"
         }
     },
+    "EstimateResourcesResponse": {
+        "gas": "u256",
+        "storage": "i32",
+        "weightFee": "u256"
+    },
     "EvmAccountInfo": {
         "nonce": "Index",
         "contractInfo": "Option<EvmContractInfo>",

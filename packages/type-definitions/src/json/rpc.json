@@ -100,12 +100,16 @@
             "method": "call",
             "section": "evm"
         },
-        "estimateGas": {
-            "description": "eth estimateGas",
+        "estimateResources": {
+            "description": "eth estimateResources",
             "params": [
                 {
-                    "name": "data",
-                    "type": "CallRequest"
+                    "name": "from",
+                    "type": "H160"
+                },
+                {
+                    "name": "unsignedExtrinsic",
+                    "type": "Bytes"
                 },
                 {
                     "name": "at",
@@ -114,10 +118,10 @@
                     "isOptional": true
                 }
             ],
-            "type": "u128",
+            "type": "EstimateResourcesResponse",
             "isSubscription": false,
-            "jsonrpc": "evm_estimateGas",
-            "method": "estimateGas",
+            "jsonrpc": "evm_estimateResources",
+            "method": "estimateResources",
             "section": "evm"
         }
     },

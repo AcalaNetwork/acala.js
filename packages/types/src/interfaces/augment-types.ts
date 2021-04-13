@@ -6,7 +6,7 @@ import type { PalletBalanceOf } from '@acala-network/types/interfaces/accounts';
 import type { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@acala-network/types/interfaces/auctionManager';
 import type { ChangeBalance, ChangeOptionRate, ChangeOptionRatio, LiquidationStrategy, OptionRate, OptionRatio, RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
 import type { BalanceRequest, BalanceWrapper, TradingPairProvisionParameters, TradingPairStatus } from '@acala-network/types/interfaces/dex';
-import type { CallRequest, CodeInfo, EvmAccountInfo, EvmAddress, EvmContractInfo } from '@acala-network/types/interfaces/evm';
+import type { CallRequest, CodeInfo, EstimateResourcesResponse, EvmAccountInfo, EvmAddress, EvmContractInfo } from '@acala-network/types/interfaces/evm';
 import type { RedeemStrategy } from '@acala-network/types/interfaces/homa';
 import type { Guarantee, RelaychainAccountId, SlashInfo, ValidatorBacking } from '@acala-network/types/interfaces/homaValidatorList';
 import type { PoolId } from '@acala-network/types/interfaces/incentives';
@@ -421,6 +421,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<ErrorMetadataV11>': Option<ErrorMetadataV11>;
     'Option<ErrorMetadataV12>': Option<ErrorMetadataV12>;
     'Option<ErrorMetadataV9>': Option<ErrorMetadataV9>;
+    'Option<EstimateResourcesResponse>': Option<EstimateResourcesResponse>;
     'Option<EthAccount>': Option<EthAccount>;
     'Option<EthBlock>': Option<EthBlock>;
     'Option<EthBloom>': Option<EthBloom>;
@@ -1265,6 +1266,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<ErrorMetadataV11>': Vec<ErrorMetadataV11>;
     'Vec<ErrorMetadataV12>': Vec<ErrorMetadataV12>;
     'Vec<ErrorMetadataV9>': Vec<ErrorMetadataV9>;
+    'Vec<EstimateResourcesResponse>': Vec<EstimateResourcesResponse>;
     'Vec<EthAccount>': Vec<EthAccount>;
     'Vec<EthBlock>': Vec<EthBlock>;
     'Vec<EthBloom>': Vec<EthBloom>;
@@ -2109,6 +2111,7 @@ declare module '@polkadot/types/types/registry' {
     ErrorMetadataV11: ErrorMetadataV11;
     ErrorMetadataV12: ErrorMetadataV12;
     ErrorMetadataV9: ErrorMetadataV9;
+    EstimateResourcesResponse: EstimateResourcesResponse;
     EthAccount: EthAccount;
     EthBlock: EthBlock;
     EthBloom: EthBloom;

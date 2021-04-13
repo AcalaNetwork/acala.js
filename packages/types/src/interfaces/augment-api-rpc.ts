@@ -2,10 +2,10 @@
 /* eslint-disable */
 
 import type { Metadata } from '@polkadot/metadata';
-import type { Bytes, HashMap, Json, Null, Option, Raw, StorageKey, Text, U256, U64, Vec, bool, u128, u32, u64 } from '@polkadot/types';
+import type { Bytes, HashMap, Json, Null, Option, Raw, StorageKey, Text, U256, U64, Vec, bool, u32, u64 } from '@polkadot/types';
 import type { AnyNumber, Codec, IExtrinsic, ITuple, Observable } from '@polkadot/types/types';
 import type { BalanceRequest, BalanceWrapper } from '@acala-network/types/interfaces/dex';
-import type { CallRequest } from '@acala-network/types/interfaces/evm';
+import type { CallRequest, EstimateResourcesResponse } from '@acala-network/types/interfaces/evm';
 import type { CurrencyId } from '@acala-network/types/interfaces/primitives';
 import type { AccountId, BlockNumber, H160, H256, H64, Hash, Header, Index, Justification, KeyValue, OracleKey, SignedBlock, StorageData } from '@acala-network/types/interfaces/runtime';
 import type { BalanceInfo } from '@acala-network/types/interfaces/stakingPool';
@@ -324,9 +324,9 @@ declare module '@polkadot/rpc-core/types.jsonrpc' {
        **/
       call: AugmentedRpc<(data: CallRequest | { from?: any; to?: any; gasLimit?: any; storageLimit?: any; value?: any; data?: any } | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Observable<Raw>>;
       /**
-       * eth estimateGas
+       * eth estimateResources
        **/
-      estimateGas: AugmentedRpc<(data: CallRequest | { from?: any; to?: any; gasLimit?: any; storageLimit?: any; value?: any; data?: any } | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Observable<u128>>;
+      estimateResources: AugmentedRpc<(from: H160 | string | Uint8Array, unsignedExtrinsic: Bytes | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Observable<EstimateResourcesResponse>>;
     };
     grandpa: {
       /**

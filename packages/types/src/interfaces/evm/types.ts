@@ -1,7 +1,7 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { Bytes, Option, Struct, U128, bool, u32 } from '@polkadot/types';
+import type { Bytes, Option, Struct, U128, bool, i32, u256, u32 } from '@polkadot/types';
 import type { Balance, H160, H256, Index } from '@acala-network/types/interfaces/runtime';
 
 /** @name CallRequest */
@@ -18,6 +18,13 @@ export interface CallRequest extends Struct {
 export interface CodeInfo extends Struct {
   readonly codeSize: u32;
   readonly refCount: u32;
+}
+
+/** @name EstimateResourcesResponse */
+export interface EstimateResourcesResponse extends Struct {
+  readonly gas: u256;
+  readonly storage: i32;
+  readonly weightFee: u256;
 }
 
 /** @name EvmAccountInfo */
