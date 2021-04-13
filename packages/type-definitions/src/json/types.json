@@ -316,7 +316,7 @@
         "unbondingToFreeAdjustment": "Ratio",
         "baseFeeRate": "Rate"
     },
-    "Phase": {
+    "StakingPoolPhase": {
         "_enum": [
             "Started",
             "RelaychainUpdated",
