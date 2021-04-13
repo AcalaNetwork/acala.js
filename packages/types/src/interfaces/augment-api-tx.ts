@@ -5,6 +5,7 @@ import type { Compact, Vec, bool, u32 } from '@polkadot/types';
 import type { AnyNumber } from '@polkadot/types/types';
 import type { ChangeBalance, ChangeOptionRate, ChangeOptionRatio } from '@acala-network/types/interfaces/cdpEngine';
 import type { RedeemStrategy } from '@acala-network/types/interfaces/homa';
+import type { RelaychainAccountId, SlashInfo } from '@acala-network/types/interfaces/homaValidatorList';
 import type { AirDropCurrencyId, Amount, AmountOf, AuctionId, CurrencyId, CurrencyIdOf } from '@acala-network/types/interfaces/primitives';
 import type { Balance, BalanceOf, BlockNumber, Call, LookupSource } from '@acala-network/types/interfaces/runtime';
 import type { ChangeRate, ChangeRatio, PolkadotAccountId } from '@acala-network/types/interfaces/stakingPool';
@@ -228,6 +229,16 @@ declare module '@polkadot/api/types/submittable' {
        * Get back those DOT that have been unbonded.
        **/
       withdrawRedemption: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
+    };
+    homaValidatorListModule: {
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
+      bond: AugmentedSubmittable<(validator: RelaychainAccountId | string | Uint8Array, amount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [RelaychainAccountId, Compact<Balance>]>;
+      freeze: AugmentedSubmittable<(validators: Vec<RelaychainAccountId> | (RelaychainAccountId | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<RelaychainAccountId>]>;
+      rebond: AugmentedSubmittable<(validator: RelaychainAccountId | string | Uint8Array, amount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [RelaychainAccountId, Compact<Balance>]>;
+      slash: AugmentedSubmittable<(slashes: Vec<SlashInfo> | (SlashInfo | { validator?: any; relaychainTokenAmount?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<SlashInfo>]>;
+      thaw: AugmentedSubmittable<(validators: Vec<RelaychainAccountId> | (RelaychainAccountId | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<RelaychainAccountId>]>;
+      unbond: AugmentedSubmittable<(validator: RelaychainAccountId | string | Uint8Array, amount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [RelaychainAccountId, Compact<Balance>]>;
+      withdrawUnbonded: AugmentedSubmittable<(validator: RelaychainAccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [RelaychainAccountId]>;
     };
     honzon: {
       [key: string]: SubmittableExtrinsicFunction<ApiType>;

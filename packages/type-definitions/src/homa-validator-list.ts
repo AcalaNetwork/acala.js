@@ -8,7 +8,7 @@ export default {
     },
     ValidatorBacking: {
       totalInsurance: 'Balance',
-      isFrozen: 'Boolean'
+      isFrozen: 'bool'
     },
     Guarantee: {
       total: 'Balance',

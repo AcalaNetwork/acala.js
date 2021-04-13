@@ -133,6 +133,12 @@ declare module '@polkadot/api/types/consts' {
        **/
       collateralCurrencyIds: Vec<CurrencyId> & AugmentedConst<ApiType>;
     };
+    homaValidatorListModule: {
+      [key: string]: Codec;
+      bondingDuration: BlockNumber & AugmentedConst<ApiType>;
+      minBondAmount: Balance & AugmentedConst<ApiType>;
+      validatorInsuranceThreshold: Balance & AugmentedConst<ApiType>;
+    };
     loans: {
       [key: string]: Codec;
       /**

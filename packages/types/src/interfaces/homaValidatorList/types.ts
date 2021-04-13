@@ -1,7 +1,7 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { Option, Struct } from '@polkadot/types';
+import type { Option, Struct, bool } from '@polkadot/types';
 import type { ITuple } from '@polkadot/types/types';
 import type { AccountId, Balance, BlockNumber } from '@acala-network/types/interfaces/runtime';
 
@@ -24,7 +24,7 @@ export interface SlashInfo extends Struct {
 /** @name ValidatorBacking */
 export interface ValidatorBacking extends Struct {
   readonly totalInsurance: Balance;
-  readonly isFrozen: Boolean;
+  readonly isFrozen: bool;
 }
 
 export type PHANTOM_HOMAVALIDATORLIST = 'homaValidatorList';
