@@ -15,6 +15,7 @@ import type { ExchangeRate, Rate } from '@acala-network/types/interfaces/support
 import type { AuctionInfo, Price } from '@open-web3/orml-types/interfaces/traits';
 import type { AccountData, BalanceLock } from '@polkadot/types/interfaces/balances';
 import type { EraIndex } from '@polkadot/types/interfaces/staking';
+import type { Phase } from '@polkadot/types/interfaces/system';
 import type { ApiTypes } from '@polkadot/api/types';
 
 declare module '@polkadot/api/types/storage' {
@@ -178,6 +179,10 @@ declare module '@polkadot/api/types/storage' {
        * AccountId => Unbond
        **/
       nextEraUnbonds: AugmentedQuery<ApiType, (arg: AccountId | string | Uint8Array) => Observable<Balance>, [AccountId]> & QueryableStorageEntry<ApiType, [AccountId]>;
+      /**
+       * The rebalance phase of current era.
+       **/
+      rebalancePhase: AugmentedQuery<ApiType, () => Observable<Phase>, []> & QueryableStorageEntry<ApiType, []>;
       /**
        * The ledger of staking pool.
        **/

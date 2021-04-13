@@ -11,9 +11,9 @@ export interface PoolId extends Enum {
   readonly asLoansIncentive: CurrencyId;
   readonly isDexIncentive: boolean;
   readonly asDexIncentive: CurrencyId;
+  readonly isHomaIncentive: boolean;
   readonly isDexSaving: boolean;
   readonly asDexSaving: CurrencyId;
-  readonly isHomaIncentive: boolean;
   readonly isHomaValidatorAllowance: boolean;
   readonly asHomaValidatorAllowance: AccountId;
 }
