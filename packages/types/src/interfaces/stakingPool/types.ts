@@ -43,19 +43,19 @@ export interface Params extends Struct {
   readonly baseFeeRate: Rate;
 }
 
-/** @name Phase */
-export interface Phase extends Enum {
-  readonly isStarted: boolean;
-  readonly isRelaychainUpdated: boolean;
-  readonly isLedgerUpdated: boolean;
-  readonly isFinished: boolean;
-}
-
 /** @name PolkadotAccountId */
 export interface PolkadotAccountId extends AccountId {}
 
 /** @name PolkadotAccountIdOf */
 export interface PolkadotAccountIdOf extends PolkadotAccountId {}
+
+/** @name StakingPoolPhase */
+export interface StakingPoolPhase extends Enum {
+  readonly isStarted: boolean;
+  readonly isRelaychainUpdated: boolean;
+  readonly isLedgerUpdated: boolean;
+  readonly isFinished: boolean;
+}
 
 /** @name SubAccountStatus */
 export interface SubAccountStatus extends Struct {

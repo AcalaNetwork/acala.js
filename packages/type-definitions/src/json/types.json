@@ -192,7 +192,7 @@
     },
     "ValidatorBacking": {
         "totalInsurance": "Balance",
-        "isFrozen": "Boolean"
+        "isFrozen": "bool"
     },
     "Guarantee": {
         "total": "Balance",
@@ -316,7 +316,7 @@
         "unbondingToFreeAdjustment": "Ratio",
         "baseFeeRate": "Rate"
     },
-    "Phase": {
+    "StakingPoolPhase": {
         "_enum": [
             "Started",
             "RelaychainUpdated",

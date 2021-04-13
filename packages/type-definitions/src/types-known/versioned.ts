@@ -26,6 +26,19 @@ const typesBundleTypes = [
       Address: 'GenericMultiAddress',
       LookupSource: 'GenericMultiAddress'
     }
+  },
+  {
+    minmax: [600, 722] as any,
+    types: {
+      PoolId: {
+        _enum: {
+          Loans: 'CurrencyId',
+          DexIncentive: 'CurrencyId',
+          DexSaving: 'CurrencyId',
+          Homa: 'Null'
+        }
+      }
+    }
   }
 ];
 

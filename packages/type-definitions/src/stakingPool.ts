@@ -30,7 +30,7 @@ export default {
       unbondingToFreeAdjustment: 'Ratio',
       baseFeeRate: 'Rate'
     },
-    Phase: {
+    StakingPoolPhase: {
       _enum: ['Started', 'RelaychainUpdated', 'LedgerUpdated', 'Finished']
     },
     Ledger: {
@@ -56,5 +56,10 @@ export default {
     },
     PolkadotAccountId: 'AccountId',
     PolkadotAccountIdOf: 'PolkadotAccountId'
+  },
+  typesAlias: {
+    stakingPool: {
+      Phase: 'StakingPoolPhase'
+    }
   }
 };

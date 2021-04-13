@@ -6,6 +6,7 @@ import type { AnyNumber, ITuple, Observable } from '@polkadot/types/types';
 import type { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@acala-network/types/interfaces/auctionManager';
 import type { RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
 import type { TradingPairStatus } from '@acala-network/types/interfaces/dex';
+import type { Guarantee, RelaychainAccountId, ValidatorBacking } from '@acala-network/types/interfaces/homaValidatorList';
 import type { Position } from '@acala-network/types/interfaces/loans';
 import type { BondingLedger } from '@acala-network/types/interfaces/nomineesElection';
 import type { AirDropCurrencyId, AuctionId, CurrencyId, TradingPair } from '@acala-network/types/interfaces/primitives';
@@ -124,6 +125,12 @@ declare module '@polkadot/api/types/storage' {
        * Emergency shutdown flag
        **/
       isShutdown: AugmentedQuery<ApiType, () => Observable<bool>, []> & QueryableStorageEntry<ApiType, []>;
+    };
+    homaValidatorListModule: {
+      [key: string]: QueryableStorageEntry<ApiType>;
+      guarantees: AugmentedQueryDoubleMap<ApiType, (key1: RelaychainAccountId | string | Uint8Array, key2: AccountId | string | Uint8Array) => Observable<Option<Guarantee>>, [RelaychainAccountId, AccountId]> & QueryableStorageEntry<ApiType, [RelaychainAccountId, AccountId]>;
+      totalLockedByGuarantor: AugmentedQuery<ApiType, (arg: AccountId | string | Uint8Array) => Observable<Option<Balance>>, [AccountId]> & QueryableStorageEntry<ApiType, [AccountId]>;
+      validatorBackings: AugmentedQuery<ApiType, (arg: RelaychainAccountId | string | Uint8Array) => Observable<Option<ValidatorBacking>>, [RelaychainAccountId]> & QueryableStorageEntry<ApiType, [RelaychainAccountId]>;
     };
     honzon: {
       [key: string]: QueryableStorageEntry<ApiType>;

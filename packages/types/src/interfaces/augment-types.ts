@@ -16,7 +16,7 @@ import type { BondingLedger, HomaUnlockChunk } from '@acala-network/types/interf
 import type { AirDropCurrencyId, Amount, AmountOf, AuctionId, AuctionIdOf, AuthoritysOriginId, CurrencyId, CurrencyIdOf, NFTBalance, TokenSymbol, TradingPair } from '@acala-network/types/interfaces/primitives';
 import type { DestAddress, PublicKey } from '@acala-network/types/interfaces/renvmBridge';
 import type { AccountId, AccountIdOf, AccountIndex, Address, AsOriginId, AssetId, Balance, BalanceOf, Block, BlockNumber, Call, CallHash, CallHashOf, ChangesTrieConfiguration, CodecHash, Consensus, ConsensusEngineId, Digest, DigestItem, EncodedJustification, ExtrinsicsWeight, Fixed128, Fixed64, FixedI128, FixedI64, FixedU128, FixedU64, H1024, H128, H160, H2048, H256, H512, H64, Hash, Header, I32F32, Index, IndicesLookupSource, Justification, Justifications, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, ModuleId, Moment, MultiAddress, MultiSigner, OpaqueCall, OracleKey, OracleValue, Origin, OriginCaller, PalletVersion, PalletsOrigin, Pays, PerU16, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, Releases, RuntimeDbWeight, Seal, SealV0, SignedBlock, SignedBlockWithJustification, SignedBlockWithJustifications, Slot, StorageData, StorageProof, TransactionPriority, U32F32, ValidatorId, ValidatorIdOf, Weight, WeightMultiplier } from '@acala-network/types/interfaces/runtime';
-import type { BalanceInfo, ChangeRate, ChangeRatio, Ledger, Params, PolkadotAccountId, PolkadotAccountIdOf, SubAccountStatus } from '@acala-network/types/interfaces/stakingPool';
+import type { BalanceInfo, ChangeRate, ChangeRatio, Ledger, Params, PolkadotAccountId, PolkadotAccountIdOf, StakingPoolPhase, SubAccountStatus } from '@acala-network/types/interfaces/stakingPool';
 import type { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
 import type { CallOf, DelayedOrigin, DispatchTime, ScheduleTaskIndex } from '@open-web3/orml-types/interfaces/authority';
 import type { GraduallyUpdate, StorageKeyBytes, StorageValue, StorageValueBytes } from '@open-web3/orml-types/interfaces/graduallyUpdates';
@@ -882,6 +882,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<StakingLedger>': Option<StakingLedger>;
     'Option<StakingLedgerTo223>': Option<StakingLedgerTo223>;
     'Option<StakingLedgerTo240>': Option<StakingLedgerTo240>;
+    'Option<StakingPoolPhase>': Option<StakingPoolPhase>;
     'Option<Statement>': Option<Statement>;
     'Option<StatementKind>': Option<StatementKind>;
     'Option<StorageChangeSet>': Option<StorageChangeSet>;
@@ -1727,6 +1728,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<StakingLedger>': Vec<StakingLedger>;
     'Vec<StakingLedgerTo223>': Vec<StakingLedgerTo223>;
     'Vec<StakingLedgerTo240>': Vec<StakingLedgerTo240>;
+    'Vec<StakingPoolPhase>': Vec<StakingPoolPhase>;
     'Vec<Statement>': Vec<Statement>;
     'Vec<StatementKind>': Vec<StatementKind>;
     'Vec<StorageChangeSet>': Vec<StorageChangeSet>;
@@ -2572,6 +2574,7 @@ declare module '@polkadot/types/types/registry' {
     StakingLedger: StakingLedger;
     StakingLedgerTo223: StakingLedgerTo223;
     StakingLedgerTo240: StakingLedgerTo240;
+    StakingPoolPhase: StakingPoolPhase;
     Statement: Statement;
     StatementKind: StatementKind;
     StorageChangeSet: StorageChangeSet;
