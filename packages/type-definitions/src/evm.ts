@@ -16,12 +16,16 @@ export default {
       ],
       type: 'Raw'
     },
-    estimateGas: {
-      description: 'eth estimateGas',
+    estimateResources: {
+      description: 'eth estimateResources',
       params: [
         {
-          name: 'data',
-          type: 'CallRequest'
+          name: 'from',
+          type: 'H160'
+        },
+        {
+          name: 'unsignedExtrinsic',
+          type: 'Bytes'
         },
         {
           name: 'at',
@@ -30,7 +34,7 @@ export default {
           isOptional: true
         }
       ],
-      type: 'u128'
+      type: 'EstimateResourcesResponse'
     }
   },
   typesAlias: {
@@ -40,6 +44,14 @@ export default {
     }
   },
   types: {
+    EstimateResourcesResponse: {
+      /// Used gas
+      gas: 'u256',
+      /// Used storage
+      storage: 'i32',
+      /// Adjusted weight fee
+      weightFee: 'u256'
+    },
     EvmAccountInfo: {
       nonce: 'Index',
       contractInfo: 'Option<EvmContractInfo>',
