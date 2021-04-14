@@ -2,12 +2,12 @@ export default {
   rpc: {},
   types: {
     HomaUnlockChunk: {
-      value: 'Compact<Balance>',
-      era: 'Compact<EraIndex>'
+      value: 'Balance',
+      era: 'EraIndex'
     },
     BondingLedger: {
-      total: 'Compact<Balance>',
-      active: 'Compact<Balance>',
+      total: 'Balance',
+      active: 'Balance',
       unlocking: 'Vec<UnlockChunk>'
     }
   },
