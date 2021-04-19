@@ -1,25 +1,30 @@
 import { ApiPromise } from '@polkadot/api';
-import { BehaviorSubject, Observable, from } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { memoize } from '@polkadot/util';
+import { Memoized } from '@polkadot/util/types';
+import { BehaviorSubject, Observable, from, of } from 'rxjs';
+import { switchMap, map, shareReplay, withLatestFrom } from 'rxjs/operators';
 import { Balance } from '@acala-network/types/interfaces';
-import { eventMethodsFilter, Token, TokenBalance, TokenPair, TokenSet } from '@acala-network/sdk-core';
+import { eventMethodsFilter, Token, TokenPair, TokenSet } from '@acala-network/sdk-core';
 import { FixedPointNumber } from '@acala-network/sdk-core/fixed-point-number';
 import { ITuple } from '@polkadot/types/types';
 
 import { SwapTradeMode } from './help';
 import { SwapParameters } from './swap-parameters';
-import { LiquidityPool, SwapResult } from './types';
+import { LiquidityPool } from './types';
 import { SwapBase } from './swap-base';
 
 export class SwapPromise extends SwapBase<ApiPromise> {
   private tradingPairSubject: BehaviorSubject<TokenPair[]>;
+  private swapper: Memoized<(inputToken: Token, outputToken: Token) => Observable<[LiquidityPool[], Token[][]]>>;
+
   constructor(api: ApiPromise) {
     const tradingPairSubject = new BehaviorSubject<TokenPair[]>([]);
 
     super(api, tradingPairSubject);
 
     this.tradingPairSubject = tradingPairSubject;
-    this._subscribeTradingPair();
+    this.swapper = this.getSwapper();
+    this._getTradingPairs();
   }
 
   get availableTokens(): Observable<TokenSet> {
@@ -43,7 +48,7 @@ export class SwapPromise extends SwapBase<ApiPromise> {
     return this.enableTradingPairs$.toPromise();
   }
 
-  private liquidityPoolsByPaths$(paths: Token[][]): Observable<LiquidityPool[]> {
+  private getLiquidityPoolsByPath(paths: Token[][]): Observable<LiquidityPool[]> {
     const usedTokenPairs = paths
       .reduce((acc: TokenPair[], path: Token[]) => {
         acc = acc.concat(this.getTokenPairsFromPath(path));
@@ -81,7 +86,7 @@ export class SwapPromise extends SwapBase<ApiPromise> {
     );
   }
 
-  private _subscribeTradingPair() {
+  private _getTradingPairs() {
     const inner = async () => {
       const result = await this.api.query.dex.tradingPairStatuses.entries();
 
@@ -103,78 +108,49 @@ export class SwapPromise extends SwapBase<ApiPromise> {
     });
   }
 
-  protected subscribeTradingPair(): Observable<TokenPair[]> {
+  protected getTradingPairs(): Observable<TokenPair[]> {
     return this.tradingPairSubject;
   }
 
+  private getSwapper() {
+    return memoize((inputToken: Token, outputToken: Token) => {
+      return this.getTradePathes(inputToken, outputToken).pipe(
+        switchMap((paths) => this.getLiquidityPoolsByPath(paths).pipe(withLatestFrom(of(paths)))),
+        shareReplay(1)
+      );
+    });
+  }
+
   public swap(
-    input: TokenBalance,
-    output: TokenBalance,
+    path: [Token, Token],
+    input: FixedPointNumber,
     mode: SwapTradeMode,
     callback: (parameters: SwapParameters) => void
   ): void {
-    const inputToken = input.token;
-    const outputToken = output.token;
+    const inputToken = path[0];
+    const outputToken = path[1];
 
-    const inputAmount = FixedPointNumber._fromBN(input.balance._getInner());
-    const outputAmount = FixedPointNumber._fromBN(output.balance._getInner());
+    // clear input amount's precision information
+    const _input = FixedPointNumber._fromBN(input._getInner());
 
-    this.getTradePathes(inputToken, outputToken)
+    const inputAmount = mode === 'EXACT_INPUT' ? _input : FixedPointNumber.ZERO;
+    const outputAmount = mode === 'EXACT_OUTPUT' ? _input : FixedPointNumber.ZERO;
+
+    const swapper = this.swapper(inputToken, outputToken);
+
+    swapper
       .pipe(
-        switchMap((paths: Token[][]) => {
-          return this.liquidityPoolsByPaths$(paths).pipe(
-            map((liquidityPool) => {
-              const swapResult = paths.map(
-                (path): SwapResult => {
-                  if (mode === 'EXACT_INPUT') {
-                    return this.transformToSwapResult(
-                      this.getOutputAmountWithExactInput(
-                        inputToken,
-                        outputToken,
-                        inputAmount,
-                        outputAmount,
-                        path,
-                        liquidityPool
-                      )
-                    );
-                  } else {
-                    return this.transformToSwapResult(
-                      this.getInputAmountWithExactOutput(
-                        inputToken,
-                        outputToken,
-                        inputAmount,
-                        outputAmount,
-                        path,
-                        liquidityPool
-                      )
-                    );
-                  }
-                }
-              );
+        map(([liquidityPool, paths]) => {
+          const result = this.getBestSwapResult(mode, paths, liquidityPool, [
+            inputToken,
+            outputToken,
+            inputAmount,
+            outputAmount
+          ]);
 
-              if (mode === 'EXACT_INPUT') {
-                const temp = swapResult.reduce((acc, cur) => {
-                  if (acc.output.balance.isGreaterThanOrEqualTo(cur.output.balance)) return acc;
-
-                  return cur;
-                }, swapResult[0]);
-
-                if (temp) {
-                  callback(new SwapParameters(temp));
-                }
-              } else {
-                const temp = swapResult.reduce((acc, cur) => {
-                  if (acc.input.balance.isLessOrEqualTo(cur.input.balance)) return acc;
-
-                  return cur;
-                }, swapResult[0]);
-
-                if (temp) {
-                  callback(new SwapParameters(temp));
-                }
-              }
-            })
-          );
+          if (result) {
+            callback(result);
+          }
         })
       )
       .subscribe();

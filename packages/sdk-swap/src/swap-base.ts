@@ -4,11 +4,12 @@ import { map } from 'rxjs/operators';
 import { Token, TokenBalance, TokenPair } from '@acala-network/sdk-core';
 import { FixedPointNumber } from '@acala-network/sdk-core/fixed-point-number';
 
-import { getSupplyAmount, getTargetAmount, Fee } from './help';
+import { getSupplyAmount, getTargetAmount, Fee, SwapTradeMode } from './help';
 import { LiquidityPool, SwapResult } from './types';
 import { TradeGraph } from './trade-graph';
+import { SwapParameters } from './swap-parameters';
 
-interface SwapResultSplitedToken {
+interface MiddleResult {
   inputToken: Token;
   outputToken: Token;
   inputAmount: FixedPointNumber;
@@ -34,7 +35,7 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
       fee: this.getExchangeFee()
     };
 
-    this.enableTradingPairs$ = enableTradingPairs$ || this.subscribeTradingPair();
+    this.enableTradingPairs$ = enableTradingPairs$ || this.getTradingPairs();
   }
 
   public get tradingPathLimit(): number {
@@ -58,7 +59,7 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
     };
   }
 
-  protected abstract subscribeTradingPair(): Observable<TokenPair[]>;
+  protected abstract getTradingPairs(): Observable<TokenPair[]>;
 
   protected getTokenPairsFromPath(path: Token[]): TokenPair[] {
     const _path = path.slice();
@@ -119,7 +120,7 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
     outputAmount: FixedPointNumber,
     path: Token[],
     liquidityPools: LiquidityPool[]
-  ): SwapResultSplitedToken {
+  ): SwapResult {
     const result = {
       inputToken,
       outputToken,
@@ -135,11 +136,11 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
       const pool = liquidityPools.find((item) => item.token1.isEqual(token1) && item.token2.isEqual(token2));
 
       if (!pool) {
-        return {
+        return this.transformToSwapResult({
           ...result,
           midPrice: FixedPointNumber.ZERO,
           priceImpact: FixedPointNumber.ZERO
-        };
+        });
       }
 
       const [supply, target] = this.formatLiquidityWithOrder(pool, path[i]);
@@ -161,11 +162,11 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
 
     const midPrice = this.getPrices(routeTemp);
 
-    return {
+    return this.transformToSwapResult({
       ...result,
       midPrice,
       priceImpact: this.getPriceImpact(midPrice, result.inputAmount, result.outputAmount)
-    };
+    });
   }
 
   protected getInputAmountWithExactOutput(
@@ -175,7 +176,7 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
     outputAmount: FixedPointNumber,
     path: Token[],
     liquidityPools: LiquidityPool[]
-  ): SwapResultSplitedToken {
+  ): SwapResult {
     const result = {
       inputToken,
       outputToken,
@@ -191,11 +192,11 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
       const pool = liquidityPools.find((item) => item.token1.isEqual(token1) && item.token2.isEqual(token2));
 
       if (!pool) {
-        return {
+        return this.transformToSwapResult({
           ...result,
           midPrice: FixedPointNumber.ZERO,
           priceImpact: FixedPointNumber.ZERO
-        };
+        });
       }
 
       const [supply, target] = this.formatLiquidityWithOrder(pool, path[i - 1]);
@@ -217,11 +218,11 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
 
     const midPrice = this.getPrices(routeTemp);
 
-    return {
+    return this.transformToSwapResult({
       ...result,
       midPrice,
       priceImpact: this.getPriceImpact(midPrice, result.inputAmount, result.outputAmount)
-    };
+    });
   }
 
   protected getPrices(route: { input: FixedPointNumber; output: FixedPointNumber }[]): FixedPointNumber {
@@ -246,7 +247,7 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
     return temp.minus(outputAmount).div(temp);
   }
 
-  protected transformToSwapResult(result: SwapResultSplitedToken): SwapResult {
+  protected transformToSwapResult(result: MiddleResult): SwapResult {
     const { inputAmount, inputToken, outputAmount, outputToken, ...others } = result;
 
     inputAmount.forceSetPrecision(inputToken.decimal);
@@ -257,5 +258,39 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
       output: new TokenBalance(outputToken, outputAmount),
       ...others
     };
+  }
+
+  protected getBestSwapResult(
+    mode: SwapTradeMode,
+    paths: Token[][],
+    liquidityPools: LiquidityPool[],
+    baseParams: [Token, Token, FixedPointNumber, FixedPointNumber]
+  ): SwapParameters {
+    const swapResult = paths.map(
+      (path): SwapResult => {
+        const params = [...baseParams, path, liquidityPools] as [
+          Token,
+          Token,
+          FixedPointNumber,
+          FixedPointNumber,
+          Token[],
+          LiquidityPool[]
+        ];
+
+        return mode === 'EXACT_INPUT'
+          ? this.getOutputAmountWithExactInput(...params)
+          : this.getInputAmountWithExactOutput(...params);
+      }
+    );
+
+    const temp = swapResult.reduce((acc, cur) => {
+      if (mode === 'EXACT_INPUT' && acc.output.balance.isGreaterThanOrEqualTo(cur.output.balance)) return acc;
+
+      if (mode === 'EXACT_OUTPUT' && acc.input.balance.isLessOrEqualTo(cur.input.balance)) return acc;
+
+      return cur;
+    }, swapResult[0]);
+
+    return new SwapParameters({ mode, ...temp });
   }
 }

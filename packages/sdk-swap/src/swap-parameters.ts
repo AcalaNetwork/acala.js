@@ -8,6 +8,7 @@ interface Config {
   path: Token[];
   priceImpact: FixedPointNumber;
   midPrice: FixedPointNumber;
+  mode: SwapTradeMode;
 }
 
 export class SwapParameters {
@@ -16,6 +17,7 @@ export class SwapParameters {
   public path: Token[];
   public priceImpact: FixedPointNumber;
   public midPrice: FixedPointNumber;
+  public mode: SwapTradeMode;
 
   constructor(config: Config) {
     this.input = config.input;
@@ -23,10 +25,11 @@ export class SwapParameters {
     this.path = config.path;
     this.priceImpact = config.priceImpact;
     this.midPrice = config.midPrice;
+    this.mode = config.mode;
   }
 
-  public toChainData(mode: SwapTradeMode): [{ Token: string }[], string, string] {
-    switch (mode) {
+  public toChainData(): [{ Token: string }[], string, string] {
+    switch (this.mode) {
       case 'EXACT_INPUT': {
         return [
           this.path.map((item) => item.toChainData()) as { Token: string }[],
