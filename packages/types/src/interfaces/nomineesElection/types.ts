@@ -3,13 +3,13 @@
 
 import type { Struct, Vec } from '@polkadot/types';
 import type { AccountId, Balance } from '@acala-network/types/interfaces/runtime';
-import type { EraIndex, UnlockChunk } from '@polkadot/types/interfaces/staking';
+import type { EraIndex } from '@polkadot/types/interfaces/staking';
 
 /** @name BondingLedger */
 export interface BondingLedger extends Struct {
   readonly total: Balance;
   readonly active: Balance;
-  readonly unlocking: Vec<UnlockChunk>;
+  readonly unlocking: Vec<HomaUnlockChunk>;
 }
 
 /** @name HomaUnlockChunk */
