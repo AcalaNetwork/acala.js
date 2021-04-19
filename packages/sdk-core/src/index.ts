@@ -4,4 +4,4 @@ export * from './dex-share';
 export * from './token-balance';
 export * from './token-pair';
 export * from './token-set';
-export * from './utils';
+export * from './events';

@@ -9,7 +9,7 @@ export default {
     BondingLedger: {
       total: 'Balance',
       active: 'Balance',
-      unlocking: 'Vec<UnlockChunk>'
+      unlocking: 'Vec<HomaUnlockChunk>'
     }
   },
   typesAlias: {
