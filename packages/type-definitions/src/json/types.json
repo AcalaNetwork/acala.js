@@ -150,6 +150,12 @@
             "Enabled": "Null"
         }
     },
+    "Erc20Info": {
+        "address": "EvmAddress",
+        "name": "Vec<u8>",
+        "symbol": "Vec<u8>",
+        "decimals": "u8"
+    },
     "EstimateResourcesResponse": {
         "gas": "u256",
         "storage": "i32",

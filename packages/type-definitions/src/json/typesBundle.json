@@ -312,6 +312,12 @@
                                 "Enabled": "Null"
                             }
                         },
+                        "Erc20Info": {
+                            "address": "EvmAddress",
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8"
+                        },
                         "EstimateResourcesResponse": {
                             "gas": "u256",
                             "storage": "i32",
@@ -729,6 +735,12 @@
                                 "Enabled": "Null"
                             }
                         },
+                        "Erc20Info": {
+                            "address": "EvmAddress",
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8"
+                        },
                         "EstimateResourcesResponse": {
                             "gas": "u256",
                             "storage": "i32",
@@ -1145,6 +1157,12 @@
                                 "Provisioning": "TradingPairProvisionParameters",
                                 "Enabled": "Null"
                             }
+                        },
+                        "Erc20Info": {
+                            "address": "EvmAddress",
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8"
                         },
                         "EstimateResourcesResponse": {
                             "gas": "u256",
@@ -1573,6 +1591,12 @@
                                 "Provisioning": "TradingPairProvisionParameters",
                                 "Enabled": "Null"
                             }
+                        },
+                        "Erc20Info": {
+                            "address": "EvmAddress",
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8"
                         },
                         "EstimateResourcesResponse": {
                             "gas": "u256",
@@ -2172,6 +2196,12 @@
                                 "Enabled": "Null"
                             }
                         },
+                        "Erc20Info": {
+                            "address": "EvmAddress",
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8"
+                        },
                         "EstimateResourcesResponse": {
                             "gas": "u256",
                             "storage": "i32",
@@ -2589,6 +2619,12 @@
                                 "Enabled": "Null"
                             }
                         },
+                        "Erc20Info": {
+                            "address": "EvmAddress",
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8"
+                        },
                         "EstimateResourcesResponse": {
                             "gas": "u256",
                             "storage": "i32",
@@ -3005,6 +3041,12 @@
                                 "Provisioning": "TradingPairProvisionParameters",
                                 "Enabled": "Null"
                             }
+                        },
+                        "Erc20Info": {
+                            "address": "EvmAddress",
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8"
                         },
                         "EstimateResourcesResponse": {
                             "gas": "u256",
@@ -3433,6 +3475,12 @@
                                 "Provisioning": "TradingPairProvisionParameters",
                                 "Enabled": "Null"
                             }
+                        },
+                        "Erc20Info": {
+                            "address": "EvmAddress",
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8"
                         },
                         "EstimateResourcesResponse": {
                             "gas": "u256",

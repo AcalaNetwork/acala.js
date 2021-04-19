@@ -6,7 +6,7 @@ import type { PalletBalanceOf } from '@acala-network/types/interfaces/accounts';
 import type { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@acala-network/types/interfaces/auctionManager';
 import type { ChangeBalance, ChangeOptionRate, ChangeOptionRatio, LiquidationStrategy, OptionRate, OptionRatio, RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
 import type { BalanceRequest, BalanceWrapper, TradingPairProvisionParameters, TradingPairStatus } from '@acala-network/types/interfaces/dex';
-import type { CallRequest, CodeInfo, EstimateResourcesResponse, EvmAccountInfo, EvmAddress, EvmContractInfo } from '@acala-network/types/interfaces/evm';
+import type { CallRequest, CodeInfo, Erc20Info, EstimateResourcesResponse, EvmAccountInfo, EvmAddress, EvmContractInfo } from '@acala-network/types/interfaces/evm';
 import type { RedeemStrategy } from '@acala-network/types/interfaces/homa';
 import type { Guarantee, RelaychainAccountId, SlashInfo, ValidatorBacking } from '@acala-network/types/interfaces/homaValidatorList';
 import type { PoolId } from '@acala-network/types/interfaces/incentives';
@@ -416,6 +416,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<EraPoints>': Option<EraPoints>;
     'Option<EraRewardPoints>': Option<EraRewardPoints>;
     'Option<EraRewards>': Option<EraRewards>;
+    'Option<Erc20Info>': Option<Erc20Info>;
     'Option<ErrorMetadataLatest>': Option<ErrorMetadataLatest>;
     'Option<ErrorMetadataV10>': Option<ErrorMetadataV10>;
     'Option<ErrorMetadataV11>': Option<ErrorMetadataV11>;
@@ -1263,6 +1264,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<EraPoints>': Vec<EraPoints>;
     'Vec<EraRewardPoints>': Vec<EraRewardPoints>;
     'Vec<EraRewards>': Vec<EraRewards>;
+    'Vec<Erc20Info>': Vec<Erc20Info>;
     'Vec<ErrorMetadataLatest>': Vec<ErrorMetadataLatest>;
     'Vec<ErrorMetadataV10>': Vec<ErrorMetadataV10>;
     'Vec<ErrorMetadataV11>': Vec<ErrorMetadataV11>;
@@ -2110,6 +2112,7 @@ declare module '@polkadot/types/types/registry' {
     EraPoints: EraPoints;
     EraRewardPoints: EraRewardPoints;
     EraRewards: EraRewards;
+    Erc20Info: Erc20Info;
     ErrorMetadataLatest: ErrorMetadataLatest;
     ErrorMetadataV10: ErrorMetadataV10;
     ErrorMetadataV11: ErrorMetadataV11;
