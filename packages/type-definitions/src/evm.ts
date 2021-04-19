@@ -44,6 +44,12 @@ export default {
     }
   },
   types: {
+    Erc20Info: {
+      address: 'EvmAddress',
+      name: 'Vec<u8>',
+      symbol: 'Vec<u8>',
+      decimals: 'u8'
+    },
     EstimateResourcesResponse: {
       /// Used gas
       gas: 'u256',
