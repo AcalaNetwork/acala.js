@@ -404,6 +404,7 @@
                                 "Burnable": 2
                             }
                         },
+                        "NomineeId": "AccountId",
                         "HomaUnlockChunk": {
                             "value": "Balance",
                             "era": "EraIndex"
@@ -820,6 +821,7 @@
                                 "Burnable": 2
                             }
                         },
+                        "NomineeId": "AccountId",
                         "HomaUnlockChunk": {
                             "value": "Balance",
                             "era": "EraIndex"
@@ -1236,6 +1238,7 @@
                                 "Burnable": 2
                             }
                         },
+                        "NomineeId": "AccountId",
                         "HomaUnlockChunk": {
                             "value": "Balance",
                             "era": "EraIndex"
@@ -1662,6 +1665,7 @@
                                 "Burnable": 2
                             }
                         },
+                        "NomineeId": "AccountId",
                         "HomaUnlockChunk": {
                             "value": "Balance",
                             "era": "EraIndex"
@@ -2260,6 +2264,7 @@
                                 "Burnable": 2
                             }
                         },
+                        "NomineeId": "AccountId",
                         "HomaUnlockChunk": {
                             "value": "Balance",
                             "era": "EraIndex"
@@ -2676,6 +2681,7 @@
                                 "Burnable": 2
                             }
                         },
+                        "NomineeId": "AccountId",
                         "HomaUnlockChunk": {
                             "value": "Balance",
                             "era": "EraIndex"
@@ -3092,6 +3098,7 @@
                                 "Burnable": 2
                             }
                         },
+                        "NomineeId": "AccountId",
                         "HomaUnlockChunk": {
                             "value": "Balance",
                             "era": "EraIndex"
@@ -3518,6 +3525,7 @@
                                 "Burnable": 2
                             }
                         },
+                        "NomineeId": "AccountId",
                         "HomaUnlockChunk": {
                             "value": "Balance",
                             "era": "EraIndex"

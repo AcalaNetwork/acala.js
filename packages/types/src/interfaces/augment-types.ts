@@ -12,7 +12,7 @@ import type { Guarantee, RelaychainAccountId, SlashInfo, ValidatorBacking } from
 import type { PoolId } from '@acala-network/types/interfaces/incentives';
 import type { Position } from '@acala-network/types/interfaces/loans';
 import type { CID, ClassData, ClassId, ClassIdOf, ClassInfoOf, Properties, TokenData, TokenId, TokenIdOf, TokenInfoOf } from '@acala-network/types/interfaces/nft';
-import type { BondingLedger, HomaUnlockChunk } from '@acala-network/types/interfaces/nomineesElection';
+import type { BondingLedger, HomaUnlockChunk, NomineeId } from '@acala-network/types/interfaces/nomineesElection';
 import type { AirDropCurrencyId, Amount, AmountOf, AuctionId, AuctionIdOf, AuthoritysOriginId, CurrencyId, CurrencyIdOf, NFTBalance, TokenSymbol, TradingPair } from '@acala-network/types/interfaces/primitives';
 import type { DestAddress, PublicKey } from '@acala-network/types/interfaces/renvmBridge';
 import type { AccountId, AccountIdOf, AccountIndex, Address, AsOriginId, AssetId, Balance, BalanceOf, Block, BlockNumber, Call, CallHash, CallHashOf, ChangesTrieConfiguration, CodecHash, Consensus, ConsensusEngineId, Digest, DigestItem, EncodedJustification, ExtrinsicsWeight, Fixed128, Fixed64, FixedI128, FixedI64, FixedU128, FixedU64, H1024, H128, H160, H2048, H256, H512, H64, Hash, Header, I32F32, Index, IndicesLookupSource, Justification, Justifications, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, ModuleId, Moment, MultiAddress, MultiSigner, OpaqueCall, OracleKey, OracleValue, Origin, OriginCaller, PalletVersion, PalletsOrigin, Pays, PerU16, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, Releases, RuntimeDbWeight, Seal, SealV0, SignedBlock, SignedBlockWithJustification, SignedBlockWithJustifications, Slot, StorageData, StorageProof, TransactionPriority, U32F32, ValidatorId, ValidatorIdOf, Weight, WeightMultiplier } from '@acala-network/types/interfaces/runtime';
@@ -659,6 +659,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<Nominations>': Option<Nominations>;
     'Option<NominatorIndex>': Option<NominatorIndex>;
     'Option<NominatorIndexCompact>': Option<NominatorIndexCompact>;
+    'Option<NomineeId>': Option<NomineeId>;
     'Option<NotConnectedPeer>': Option<NotConnectedPeer>;
     'Option<Null>': Option<Null>;
     'Option<OffchainAccuracy>': Option<OffchainAccuracy>;
@@ -1505,6 +1506,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<Nominations>': Vec<Nominations>;
     'Vec<NominatorIndex>': Vec<NominatorIndex>;
     'Vec<NominatorIndexCompact>': Vec<NominatorIndexCompact>;
+    'Vec<NomineeId>': Vec<NomineeId>;
     'Vec<NotConnectedPeer>': Vec<NotConnectedPeer>;
     'Vec<Null>': Vec<Null>;
     'Vec<OffchainAccuracy>': Vec<OffchainAccuracy>;
@@ -2351,6 +2353,7 @@ declare module '@polkadot/types/types/registry' {
     Nominations: Nominations;
     NominatorIndex: NominatorIndex;
     NominatorIndexCompact: NominatorIndexCompact;
+    NomineeId: NomineeId;
     NotConnectedPeer: NotConnectedPeer;
     Null: Null;
     OffchainAccuracy: OffchainAccuracy;

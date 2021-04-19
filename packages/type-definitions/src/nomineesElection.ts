@@ -1,6 +1,7 @@
 export default {
   rpc: {},
   types: {
+    NomineeId: 'AccountId',
     HomaUnlockChunk: {
       value: 'Balance',
       era: 'EraIndex'

@@ -2,7 +2,7 @@
 /* eslint-disable */
 
 import type { Struct, Vec } from '@polkadot/types';
-import type { Balance } from '@acala-network/types/interfaces/runtime';
+import type { AccountId, Balance } from '@acala-network/types/interfaces/runtime';
 import type { EraIndex, UnlockChunk } from '@polkadot/types/interfaces/staking';
 
 /** @name BondingLedger */
@@ -17,5 +17,8 @@ export interface HomaUnlockChunk extends Struct {
   readonly value: Balance;
   readonly era: EraIndex;
 }
+
+/** @name NomineeId */
+export interface NomineeId extends AccountId {}
 
 export type PHANTOM_NOMINEESELECTION = 'nomineesElection';
