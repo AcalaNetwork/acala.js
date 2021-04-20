@@ -1,6 +1,6 @@
 import { Token, FixedPointNumber, TokenBalance } from '@acala-network/sdk-core';
 
-import { SwapTradeMode } from './help';
+import { SwapTradeMode } from './types';
 
 interface Config {
   input: TokenBalance;
