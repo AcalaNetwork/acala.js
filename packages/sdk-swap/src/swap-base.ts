@@ -1,14 +1,15 @@
 import { ApiPromise, ApiRx } from '@polkadot/api';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Token, TokenBalance, TokenPair } from '@acala-network/sdk-core';
-import { FixedPointNumber } from '@acala-network/sdk-core/fixed-point-number';
+import { Observable } from '@polkadot/x-rxjs';
+import { map } from '@polkadot/x-rxjs/operators';
+import { Token, TokenBalance, TokenPair, FixedPointNumber } from '@acala-network/sdk-core';
 
-import { getSupplyAmount, getTargetAmount } from './help';
+import { getSupplyAmount, getTargetAmount } from './utils';
 import { LiquidityPool, SwapResult, Fee, SwapTradeMode, MiddleResult } from './types';
 import { TradeGraph } from './trade-graph';
 import { SwapParameters } from './swap-parameters';
-import { NoLiquidityPoolError } from './errors';
+import { NoLiquidityPoolError, InsufficientLiquidityError, AmountTooSmall } from './errors';
+
+const MINIMUM_AMOUNT = 1;
 
 export abstract class SwapBase<T extends ApiPromise | ApiRx> {
   protected api: T;
@@ -133,6 +134,10 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
         this._config.fee
       );
 
+      if (outputAmount.isZero()) throw new InsufficientLiquidityError();
+
+      if (outputAmount._getInner().toNumber() < MINIMUM_AMOUNT) throw new AmountTooSmall();
+
       result.outputAmount = outputAmount;
     }
 
@@ -176,6 +181,10 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
         i === path.length - 1 ? result.outputAmount : result.inputAmount,
         this._config.fee
       );
+
+      if (inputAmount.isZero()) throw new InsufficientLiquidityError();
+
+      if (outputAmount._getInner().toNumber() < MINIMUM_AMOUNT) throw new AmountTooSmall();
 
       result.inputAmount = inputAmount;
     }

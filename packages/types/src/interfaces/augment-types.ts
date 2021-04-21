@@ -13,7 +13,7 @@ import type { PoolId } from '@acala-network/types/interfaces/incentives';
 import type { Position } from '@acala-network/types/interfaces/loans';
 import type { CID, ClassData, ClassId, ClassIdOf, ClassInfoOf, Properties, TokenData, TokenId, TokenIdOf, TokenInfoOf } from '@acala-network/types/interfaces/nft';
 import type { BondingLedger, HomaUnlockChunk, NomineeId } from '@acala-network/types/interfaces/nomineesElection';
-import type { AirDropCurrencyId, Amount, AmountOf, AuctionId, AuctionIdOf, AuthoritysOriginId, CurrencyId, CurrencyIdOf, NFTBalance, TokenSymbol, TradingPair } from '@acala-network/types/interfaces/primitives';
+import type { AirDropCurrencyId, Amount, AmountOf, AuctionId, AuctionIdOf, AuthoritysOriginId, CurrencyId, CurrencyIdOf, DexShare, NFTBalance, PalletId, TokenSymbol, TradingPair } from '@acala-network/types/interfaces/primitives';
 import type { DestAddress, PublicKey } from '@acala-network/types/interfaces/renvmBridge';
 import type { AccountId, AccountIdOf, AccountIndex, Address, AsOriginId, AssetId, Balance, BalanceOf, Block, BlockNumber, Call, CallHash, CallHashOf, ChangesTrieConfiguration, CodecHash, Consensus, ConsensusEngineId, Digest, DigestItem, EncodedJustification, ExtrinsicsWeight, Fixed128, Fixed64, FixedI128, FixedI64, FixedU128, FixedU64, H1024, H128, H160, H2048, H256, H512, H64, Hash, Header, I32F32, Index, IndicesLookupSource, Justification, Justifications, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, ModuleId, Moment, MultiAddress, MultiSigner, OpaqueCall, OracleKey, OracleValue, Origin, OriginCaller, PalletVersion, PalletsOrigin, Pays, PerU16, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, Releases, RuntimeDbWeight, Seal, SealV0, SignedBlock, SignedBlockWithJustification, SignedBlockWithJustifications, Slot, StorageData, StorageProof, TransactionPriority, U32F32, ValidatorId, ValidatorIdOf, Weight, WeightMultiplier } from '@acala-network/types/interfaces/runtime';
 import type { BalanceInfo, ChangeRate, ChangeRatio, Ledger, Params, PolkadotAccountId, PolkadotAccountIdOf, StakingPoolPhase, SubAccountStatus } from '@acala-network/types/interfaces/stakingPool';
@@ -377,6 +377,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<DepositAsset>': Option<DepositAsset>;
     'Option<DepositReserveAsset>': Option<DepositReserveAsset>;
     'Option<DestAddress>': Option<DestAddress>;
+    'Option<DexShare>': Option<DexShare>;
     'Option<Digest>': Option<Digest>;
     'Option<DigestItem>': Option<DigestItem>;
     'Option<DigestOf>': Option<DigestOf>;
@@ -691,6 +692,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<OutboundHrmpMessage>': Option<OutboundHrmpMessage>;
     'Option<Owner>': Option<Owner>;
     'Option<PalletBalanceOf>': Option<PalletBalanceOf>;
+    'Option<PalletId>': Option<PalletId>;
     'Option<PalletsOrigin>': Option<PalletsOrigin>;
     'Option<PalletVersion>': Option<PalletVersion>;
     'Option<ParachainDispatchOrigin>': Option<ParachainDispatchOrigin>;
@@ -1225,6 +1227,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<DepositAsset>': Vec<DepositAsset>;
     'Vec<DepositReserveAsset>': Vec<DepositReserveAsset>;
     'Vec<DestAddress>': Vec<DestAddress>;
+    'Vec<DexShare>': Vec<DexShare>;
     'Vec<Digest>': Vec<Digest>;
     'Vec<DigestItem>': Vec<DigestItem>;
     'Vec<DigestOf>': Vec<DigestOf>;
@@ -1539,6 +1542,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<OutboundHrmpMessage>': Vec<OutboundHrmpMessage>;
     'Vec<Owner>': Vec<Owner>;
     'Vec<PalletBalanceOf>': Vec<PalletBalanceOf>;
+    'Vec<PalletId>': Vec<PalletId>;
     'Vec<PalletsOrigin>': Vec<PalletsOrigin>;
     'Vec<PalletVersion>': Vec<PalletVersion>;
     'Vec<ParachainDispatchOrigin>': Vec<ParachainDispatchOrigin>;
@@ -2073,6 +2077,7 @@ declare module '@polkadot/types/types/registry' {
     DepositAsset: DepositAsset;
     DepositReserveAsset: DepositReserveAsset;
     DestAddress: DestAddress;
+    DexShare: DexShare;
     Digest: Digest;
     DigestItem: DigestItem;
     DigestOf: DigestOf;
@@ -2387,6 +2392,7 @@ declare module '@polkadot/types/types/registry' {
     OutboundHrmpMessage: OutboundHrmpMessage;
     Owner: Owner;
     PalletBalanceOf: PalletBalanceOf;
+    PalletId: PalletId;
     PalletsOrigin: PalletsOrigin;
     PalletVersion: PalletVersion;
     ParachainDispatchOrigin: ParachainDispatchOrigin;

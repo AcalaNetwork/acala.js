@@ -1,14 +1,15 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-import type { Compact, Vec, bool, u32 } from '@polkadot/types';
+import type { Compact, Option, Vec, bool, u32 } from '@polkadot/types';
 import type { AnyNumber } from '@polkadot/types/types';
 import type { ChangeBalance, ChangeOptionRate, ChangeOptionRatio } from '@acala-network/types/interfaces/cdpEngine';
 import type { RedeemStrategy } from '@acala-network/types/interfaces/homa';
 import type { RelaychainAccountId, SlashInfo } from '@acala-network/types/interfaces/homaValidatorList';
+import type { NomineeId } from '@acala-network/types/interfaces/nomineesElection';
 import type { AirDropCurrencyId, Amount, AmountOf, AuctionId, CurrencyId, CurrencyIdOf } from '@acala-network/types/interfaces/primitives';
 import type { Balance, BalanceOf, BlockNumber, Call, LookupSource } from '@acala-network/types/interfaces/runtime';
-import type { ChangeRate, ChangeRatio, PolkadotAccountId } from '@acala-network/types/interfaces/stakingPool';
+import type { ChangeRate, ChangeRatio } from '@acala-network/types/interfaces/stakingPool';
 import type { Rate } from '@acala-network/types/interfaces/support';
 import type { Extrinsic } from '@polkadot/types/interfaces/extrinsics';
 import type { EraIndex } from '@polkadot/types/interfaces/staking';
@@ -58,8 +59,8 @@ declare module '@polkadot/api/types/submittable' {
        * The dispatch origin of this call must be `UpdateOrigin`.
        * 
        * - `currency_id`: collateral type.
-       * - `stability_fee`: extra stability fee rate, `None` means do not
-       * update, `Some(None)` means update it to `None`.
+       * - `interest_rate_per_sec`: extra interest rate per sec, `None` means
+       * do not update, `Some(None)` means update it to `None`.
        * - `liquidation_ratio`: liquidation ratio, `None` means do not
        * update, `Some(None)` means update it to `None`.
        * - `liquidation_penalty`: liquidation penalty, `None` means do not
@@ -68,15 +69,15 @@ declare module '@polkadot/api/types/submittable' {
        * means do not update, `Some(None)` means update it to `None`.
        * - `maximum_total_debit_value`: maximum total debit value.
        **/
-      setCollateralParams: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, stabilityFee: ChangeOptionRate | { NoChange: any } | { NewValue: any } | string | Uint8Array, liquidationRatio: ChangeOptionRatio | { NoChange: any } | { NewValue: any } | string | Uint8Array, liquidationPenalty: ChangeOptionRate | { NoChange: any } | { NewValue: any } | string | Uint8Array, requiredCollateralRatio: ChangeOptionRatio | { NoChange: any } | { NewValue: any } | string | Uint8Array, maximumTotalDebitValue: ChangeBalance | { NoChange: any } | { NewValue: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, ChangeOptionRate, ChangeOptionRatio, ChangeOptionRate, ChangeOptionRatio, ChangeBalance]>;
+      setCollateralParams: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, interestRatePerSec: ChangeOptionRate | { NoChange: any } | { NewValue: any } | string | Uint8Array, liquidationRatio: ChangeOptionRatio | { NoChange: any } | { NewValue: any } | string | Uint8Array, liquidationPenalty: ChangeOptionRate | { NoChange: any } | { NewValue: any } | string | Uint8Array, requiredCollateralRatio: ChangeOptionRatio | { NoChange: any } | { NewValue: any } | string | Uint8Array, maximumTotalDebitValue: ChangeBalance | { NoChange: any } | { NewValue: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, ChangeOptionRate, ChangeOptionRatio, ChangeOptionRate, ChangeOptionRatio, ChangeBalance]>;
       /**
        * Update global parameters related to risk management of CDP
        * 
        * The dispatch origin of this call must be `UpdateOrigin`.
        * 
-       * - `global_stability_fee`: global stability fee rate.
+       * - `global_interest_rate_per_sec`: global interest rate per sec.
        **/
-      setGlobalParams: AugmentedSubmittable<(globalStabilityFee: Rate | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Rate]>;
+      setGlobalParams: AugmentedSubmittable<(globalInterestRatePerSec: Rate | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Rate]>;
       /**
        * Settle CDP has debit after system shutdown
        * 
@@ -90,8 +91,7 @@ declare module '@polkadot/api/types/submittable' {
     cdpTreasury: {
       [key: string]: SubmittableExtrinsicFunction<ApiType>;
       auctionCollateral: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, amount: Balance | AnyNumber | Uint8Array, target: Balance | AnyNumber | Uint8Array, splited: bool | boolean | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, Balance, Balance, bool]>;
-      auctionDebit: AugmentedSubmittable<(debitAmount: Balance | AnyNumber | Uint8Array, initialPrice: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Balance, Balance]>;
-      auctionSurplus: AugmentedSubmittable<(amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Balance]>;
+      extractSurplusToTreasury: AugmentedSubmittable<(amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Balance]>;
       /**
        * Update parameters related to collateral auction under specific
        * collateral type
@@ -99,9 +99,9 @@ declare module '@polkadot/api/types/submittable' {
        * The dispatch origin of this call must be `UpdateOrigin`.
        * 
        * - `currency_id`: collateral type
-       * - `surplus_buffer_size`: collateral auction maximum size
+       * - `amount`: expected size of per lot collateral auction
        **/
-      setCollateralAuctionMaximumSize: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, size: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, Balance]>;
+      setExpectedCollateralAuctionSize: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, size: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, Balance]>;
     };
     currencies: {
       [key: string]: SubmittableExtrinsicFunction<ApiType>;
@@ -263,6 +263,7 @@ declare module '@polkadot/api/types/submittable' {
        * - `to`: authorizee account
        **/
       authorize: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, to: LookupSource | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, LookupSource]>;
+      closeLoanHasDebitByDex: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, maybePath: Option<Vec> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, Option<Vec>]>;
       /**
        * Transfer the whole CDP of `from` under `currency_id` to caller's CDP
        * under the same `currency_id`, caller must have the authorization of
@@ -288,7 +289,7 @@ declare module '@polkadot/api/types/submittable' {
       [key: string]: SubmittableExtrinsicFunction<ApiType>;
       bond: AugmentedSubmittable<(amount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Compact<Balance>]>;
       chill: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
-      nominate: AugmentedSubmittable<(targets: Vec<PolkadotAccountId> | (PolkadotAccountId | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<PolkadotAccountId>]>;
+      nominate: AugmentedSubmittable<(targets: Vec<NomineeId> | (NomineeId | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<NomineeId>]>;
       rebond: AugmentedSubmittable<(amount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Compact<Balance>]>;
       unbond: AugmentedSubmittable<(amount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Compact<Balance>]>;
       withdrawUnbonded: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
