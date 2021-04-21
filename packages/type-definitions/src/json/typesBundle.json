@@ -434,10 +434,16 @@
                                 "RENBTC"
                             ]
                         },
+                        "DexShare": {
+                            "_enum": {
+                                "Token": "TokenSymbol",
+                                "Erc20": "EvmAddress"
+                            }
+                        },
                         "CurrencyId": {
                             "_enum": {
                                 "Token": "TokenSymbol",
-                                "DEXShare": "(TokenSymbol, TokenSymbol)",
+                                "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress"
                             }
                         },
@@ -459,6 +465,7 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "NFTBalance": "u128",
+                        "PalletId": "LockIdentifier",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "SubAccountStatus": {
@@ -857,10 +864,16 @@
                                 "RENBTC"
                             ]
                         },
+                        "DexShare": {
+                            "_enum": {
+                                "Token": "TokenSymbol",
+                                "Erc20": "EvmAddress"
+                            }
+                        },
                         "CurrencyId": {
                             "_enum": {
                                 "Token": "TokenSymbol",
-                                "DEXShare": "(TokenSymbol, TokenSymbol)",
+                                "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress"
                             }
                         },
@@ -882,6 +895,7 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "NFTBalance": "u128",
+                        "PalletId": "LockIdentifier",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "SubAccountStatus": {
@@ -1276,25 +1290,23 @@
                                 "AUSD": 1,
                                 "DOT": 2,
                                 "LDOT": 3,
-                                "XBTC": 4,
-                                "RENBTC": 5,
-                                "POLKABTC": 6,
-                                "PLM": 7,
-                                "PHA": 8,
-                                "HDT": 9,
-                                "BCG": 11,
+                                "RENBTC": 4,
                                 "KAR": 128,
                                 "KUSD": 129,
                                 "KSM": 130,
-                                "LKSM": 131,
-                                "SDN": 135,
-                                "KILT": 138
+                                "LKSM": 131
+                            }
+                        },
+                        "DexShare": {
+                            "_enum": {
+                                "Token": "TokenSymbol",
+                                "Erc20": "EvmAddress"
                             }
                         },
                         "CurrencyId": {
                             "_enum": {
                                 "Token": "TokenSymbol",
-                                "DEXShare": "(TokenSymbol, TokenSymbol)",
+                                "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress"
                             }
                         },
@@ -1316,6 +1328,7 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "NFTBalance": "u128",
+                        "PalletId": "LockIdentifier",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "SubAccountStatus": {
@@ -1709,25 +1722,23 @@
                                 "AUSD": 1,
                                 "DOT": 2,
                                 "LDOT": 3,
-                                "XBTC": 4,
-                                "RENBTC": 5,
-                                "POLKABTC": 6,
-                                "PLM": 7,
-                                "PHA": 8,
-                                "HDT": 9,
-                                "BCG": 11,
+                                "RENBTC": 4,
                                 "KAR": 128,
                                 "KUSD": 129,
                                 "KSM": 130,
-                                "LKSM": 131,
-                                "SDN": 135,
-                                "KILT": 138
+                                "LKSM": 131
+                            }
+                        },
+                        "DexShare": {
+                            "_enum": {
+                                "Token": "TokenSymbol",
+                                "Erc20": "EvmAddress"
                             }
                         },
                         "CurrencyId": {
                             "_enum": {
                                 "Token": "TokenSymbol",
-                                "DEXShare": "(TokenSymbol, TokenSymbol)",
+                                "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress"
                             }
                         },
@@ -1749,6 +1760,7 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "NFTBalance": "u128",
+                        "PalletId": "LockIdentifier",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "SubAccountStatus": {
@@ -2318,10 +2330,16 @@
                                 "RENBTC"
                             ]
                         },
+                        "DexShare": {
+                            "_enum": {
+                                "Token": "TokenSymbol",
+                                "Erc20": "EvmAddress"
+                            }
+                        },
                         "CurrencyId": {
                             "_enum": {
                                 "Token": "TokenSymbol",
-                                "DEXShare": "(TokenSymbol, TokenSymbol)",
+                                "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress"
                             }
                         },
@@ -2343,6 +2361,7 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "NFTBalance": "u128",
+                        "PalletId": "LockIdentifier",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "SubAccountStatus": {
@@ -2741,10 +2760,16 @@
                                 "RENBTC"
                             ]
                         },
+                        "DexShare": {
+                            "_enum": {
+                                "Token": "TokenSymbol",
+                                "Erc20": "EvmAddress"
+                            }
+                        },
                         "CurrencyId": {
                             "_enum": {
                                 "Token": "TokenSymbol",
-                                "DEXShare": "(TokenSymbol, TokenSymbol)",
+                                "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress"
                             }
                         },
@@ -2766,6 +2791,7 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "NFTBalance": "u128",
+                        "PalletId": "LockIdentifier",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "SubAccountStatus": {
@@ -3160,25 +3186,23 @@
                                 "AUSD": 1,
                                 "DOT": 2,
                                 "LDOT": 3,
-                                "XBTC": 4,
-                                "RENBTC": 5,
-                                "POLKABTC": 6,
-                                "PLM": 7,
-                                "PHA": 8,
-                                "HDT": 9,
-                                "BCG": 11,
+                                "RENBTC": 4,
                                 "KAR": 128,
                                 "KUSD": 129,
                                 "KSM": 130,
-                                "LKSM": 131,
-                                "SDN": 135,
-                                "KILT": 138
+                                "LKSM": 131
+                            }
+                        },
+                        "DexShare": {
+                            "_enum": {
+                                "Token": "TokenSymbol",
+                                "Erc20": "EvmAddress"
                             }
                         },
                         "CurrencyId": {
                             "_enum": {
                                 "Token": "TokenSymbol",
-                                "DEXShare": "(TokenSymbol, TokenSymbol)",
+                                "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress"
                             }
                         },
@@ -3200,6 +3224,7 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "NFTBalance": "u128",
+                        "PalletId": "LockIdentifier",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "SubAccountStatus": {
@@ -3593,25 +3618,23 @@
                                 "AUSD": 1,
                                 "DOT": 2,
                                 "LDOT": 3,
-                                "XBTC": 4,
-                                "RENBTC": 5,
-                                "POLKABTC": 6,
-                                "PLM": 7,
-                                "PHA": 8,
-                                "HDT": 9,
-                                "BCG": 11,
+                                "RENBTC": 4,
                                 "KAR": 128,
                                 "KUSD": 129,
                                 "KSM": 130,
-                                "LKSM": 131,
-                                "SDN": 135,
-                                "KILT": 138
+                                "LKSM": 131
+                            }
+                        },
+                        "DexShare": {
+                            "_enum": {
+                                "Token": "TokenSymbol",
+                                "Erc20": "EvmAddress"
                             }
                         },
                         "CurrencyId": {
                             "_enum": {
                                 "Token": "TokenSymbol",
-                                "DEXShare": "(TokenSymbol, TokenSymbol)",
+                                "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress"
                             }
                         },
@@ -3633,6 +3656,7 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "NFTBalance": "u128",
+                        "PalletId": "LockIdentifier",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "SubAccountStatus": {

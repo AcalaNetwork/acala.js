@@ -1,17 +1,17 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-import type { Option, Vec, bool, u32 } from '@polkadot/types';
+import type { Option, Vec, bool, u32, u64 } from '@polkadot/types';
 import type { AnyNumber, ITuple, Observable } from '@polkadot/types/types';
-import type { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@acala-network/types/interfaces/auctionManager';
+import type { CollateralAuctionItem } from '@acala-network/types/interfaces/auctionManager';
 import type { RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
 import type { TradingPairStatus } from '@acala-network/types/interfaces/dex';
 import type { Guarantee, RelaychainAccountId, ValidatorBacking } from '@acala-network/types/interfaces/homaValidatorList';
 import type { Position } from '@acala-network/types/interfaces/loans';
-import type { BondingLedger } from '@acala-network/types/interfaces/nomineesElection';
+import type { BondingLedger, NomineeId } from '@acala-network/types/interfaces/nomineesElection';
 import type { AirDropCurrencyId, AuctionId, CurrencyId, TradingPair } from '@acala-network/types/interfaces/primitives';
 import type { AccountId, Balance, BlockNumber } from '@acala-network/types/interfaces/runtime';
-import type { Ledger, Params, PolkadotAccountId, SubAccountStatus } from '@acala-network/types/interfaces/stakingPool';
+import type { Ledger, Params, SubAccountStatus } from '@acala-network/types/interfaces/stakingPool';
 import type { ExchangeRate, Rate } from '@acala-network/types/interfaces/support';
 import type { AuctionInfo, Price } from '@open-web3/orml-types/interfaces/traits';
 import type { AccountData, BalanceLock } from '@polkadot/types/interfaces/balances';
@@ -47,26 +47,10 @@ declare module '@polkadot/api/types/storage' {
        **/
       collateralAuctions: AugmentedQuery<ApiType, (arg: AuctionId | AnyNumber | Uint8Array) => Observable<Option<CollateralAuctionItem>>, [AuctionId]> & QueryableStorageEntry<ApiType, [AuctionId]>;
       /**
-       * Mapping from auction id to debit auction info
-       **/
-      debitAuctions: AugmentedQuery<ApiType, (arg: AuctionId | AnyNumber | Uint8Array) => Observable<Option<DebitAuctionItem>>, [AuctionId]> & QueryableStorageEntry<ApiType, [AuctionId]>;
-      /**
-       * Mapping from auction id to surplus auction info
-       **/
-      surplusAuctions: AugmentedQuery<ApiType, (arg: AuctionId | AnyNumber | Uint8Array) => Observable<Option<SurplusAuctionItem>>, [AuctionId]> & QueryableStorageEntry<ApiType, [AuctionId]>;
-      /**
        * Record of the total collateral amount of all active collateral auctions
        * under specific collateral type CollateralType -> TotalAmount
        **/
       totalCollateralInAuction: AugmentedQuery<ApiType, (arg: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array) => Observable<Balance>, [CurrencyId]> & QueryableStorageEntry<ApiType, [CurrencyId]>;
-      /**
-       * Record of total fix amount of all active debit auctions
-       **/
-      totalDebitInAuction: AugmentedQuery<ApiType, () => Observable<Balance>, []> & QueryableStorageEntry<ApiType, []>;
-      /**
-       * Record of total surplus amount of all active surplus auctions
-       **/
-      totalSurplusInAuction: AugmentedQuery<ApiType, () => Observable<Balance>, []> & QueryableStorageEntry<ApiType, []>;
       /**
        * Record of total target sales of all active collateral auctions
        **/
@@ -84,21 +68,26 @@ declare module '@polkadot/api/types/storage' {
        **/
       debitExchangeRate: AugmentedQuery<ApiType, (arg: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array) => Observable<Option<ExchangeRate>>, [CurrencyId]> & QueryableStorageEntry<ApiType, [CurrencyId]>;
       /**
-       * Global stability fee rate for all types of collateral
+       * Global interest rate per sec for all types of collateral
        **/
-      globalStabilityFee: AugmentedQuery<ApiType, () => Observable<Rate>, []> & QueryableStorageEntry<ApiType, []>;
+      globalInterestRatePerSec: AugmentedQuery<ApiType, () => Observable<Rate>, []> & QueryableStorageEntry<ApiType, []>;
+      /**
+       * Timestamp in seconds of the last interest accumulation
+       **/
+      lastAccumulationSecs: AugmentedQuery<ApiType, () => Observable<u64>, []> & QueryableStorageEntry<ApiType, []>;
     };
     cdpTreasury: {
       [key: string]: QueryableStorageEntry<ApiType>;
-      /**
-       * The maximum amount of collateral amount for sale per collateral auction
-       **/
-      collateralAuctionMaximumSize: AugmentedQuery<ApiType, (arg: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array) => Observable<Balance>, [CurrencyId]> & QueryableStorageEntry<ApiType, [CurrencyId]>;
       /**
        * Current total debit value of system. It's not same as debit in CDP
        * engine, it is the bad debt of the system.
        **/
       debitPool: AugmentedQuery<ApiType, () => Observable<Balance>, []> & QueryableStorageEntry<ApiType, []>;
+      /**
+       * The expected amount size for per lot collateral auction of specific
+       * collateral type.
+       **/
+      expectedCollateralAuctionSize: AugmentedQuery<ApiType, (arg: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array) => Observable<Balance>, [CurrencyId]> & QueryableStorageEntry<ApiType, [CurrencyId]>;
     };
     dex: {
       [key: string]: QueryableStorageEntry<ApiType>;
@@ -157,9 +146,9 @@ declare module '@polkadot/api/types/storage' {
       [key: string]: QueryableStorageEntry<ApiType>;
       currentEra: AugmentedQuery<ApiType, () => Observable<EraIndex>, []> & QueryableStorageEntry<ApiType, []>;
       ledger: AugmentedQuery<ApiType, (arg: AccountId | string | Uint8Array) => Observable<BondingLedger>, [AccountId]> & QueryableStorageEntry<ApiType, [AccountId]>;
-      nominations: AugmentedQuery<ApiType, (arg: AccountId | string | Uint8Array) => Observable<Vec<PolkadotAccountId>>, [AccountId]> & QueryableStorageEntry<ApiType, [AccountId]>;
-      nominees: AugmentedQuery<ApiType, () => Observable<Vec<PolkadotAccountId>>, []> & QueryableStorageEntry<ApiType, []>;
-      votes: AugmentedQuery<ApiType, (arg: PolkadotAccountId | string | Uint8Array) => Observable<Balance>, [PolkadotAccountId]> & QueryableStorageEntry<ApiType, [PolkadotAccountId]>;
+      nominations: AugmentedQuery<ApiType, (arg: AccountId | string | Uint8Array) => Observable<Vec<NomineeId>>, [AccountId]> & QueryableStorageEntry<ApiType, [AccountId]>;
+      nominees: AugmentedQuery<ApiType, () => Observable<Vec<NomineeId>>, []> & QueryableStorageEntry<ApiType, []>;
+      votes: AugmentedQuery<ApiType, (arg: NomineeId | string | Uint8Array) => Observable<Balance>, [NomineeId]> & QueryableStorageEntry<ApiType, [NomineeId]>;
     };
     polkadotBridge: {
       [key: string]: QueryableStorageEntry<ApiType>;

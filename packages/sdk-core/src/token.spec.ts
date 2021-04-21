@@ -45,13 +45,13 @@ describe('token', () => {
     expect(t1.toString()).toEqual('Token1');
   });
 
-  test('sort tokens should work', () => {
-    const aca = new Token({ name: 'ACA', symbol: 'ACA', chain: 'acala', decimal: 18 });
-    const xbtc = new Token({ name: 'XBTC', symbol: 'XBTC', chain: 'acala', decimal: 16 });
-    const renbtc = new Token({ name: 'RENBTC', symbol: 'RENBTC', chain: 'acala', decimal: 16 });
+  // test('sort tokens should work', () => {
+  //   const aca = new Token({ name: 'ACA', symbol: 'ACA', chain: 'acala', decimal: 18 });
+  //   const xbtc = new Token({ name: 'XBTC', symbol: 'XBTC', chain: 'acala', decimal: 16 });
+  //   const renbtc = new Token({ name: 'RENBTC', symbol: 'RENBTC', chain: 'acala', decimal: 16 });
 
-    expect(Token.sort(aca, xbtc)).toEqual([aca, xbtc]);
-    expect(Token.sort(xbtc, aca)).toEqual([aca, xbtc]);
-    expect(Token.sort(xbtc, renbtc, aca)).toEqual([aca, xbtc, renbtc]);
-  });
+  //   expect(Token.sort(aca, xbtc)).toEqual([aca, xbtc]);
+  //   expect(Token.sort(xbtc, aca)).toEqual([aca, xbtc]);
+  //   expect(Token.sort(xbtc, renbtc, aca)).toEqual([aca, xbtc, renbtc]);
+  // });
 });

@@ -3,8 +3,8 @@
 
 import type { Vec, u32 } from '@polkadot/types';
 import type { Codec, ITuple } from '@polkadot/types/types';
-import type { CurrencyId } from '@acala-network/types/interfaces/primitives';
-import type { Balance, BlockNumber, ModuleId, TransactionPriority } from '@acala-network/types/interfaces/runtime';
+import type { CurrencyId, PalletId } from '@acala-network/types/interfaces/primitives';
+import type { AccountId, Balance, BlockNumber, TransactionPriority } from '@acala-network/types/interfaces/runtime';
 import type { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
 import type { Price } from '@open-web3/orml-types/interfaces/traits';
 import type { EraIndex } from '@polkadot/types/interfaces/staking';
@@ -23,10 +23,6 @@ declare module '@polkadot/api/types/consts' {
        * The extended time for the auction to end after each successful bid
        **/
       auctionTimeToClose: BlockNumber & AugmentedConst<ApiType>;
-      /**
-       * The native currency id
-       **/
-      getNativeCurrencyId: CurrencyId & AugmentedConst<ApiType>;
       /**
        * The stable currency id
        **/
@@ -98,7 +94,8 @@ declare module '@polkadot/api/types/consts' {
        * The CDP treasury's module id, keep surplus and collateral assets
        * from liquidation.
        **/
-      moduleId: ModuleId & AugmentedConst<ApiType>;
+      palletId: PalletId & AugmentedConst<ApiType>;
+      treasuryAccount: AccountId & AugmentedConst<ApiType>;
     };
     currencies: {
       [key: string]: Codec;
@@ -120,7 +117,7 @@ declare module '@polkadot/api/types/consts' {
       /**
        * The DEX's module id, keep all assets in DEX.
        **/
-      moduleId: ModuleId & AugmentedConst<ApiType>;
+      palletId: PalletId & AugmentedConst<ApiType>;
       /**
        * The limit for length of trading path
        **/
@@ -144,7 +141,7 @@ declare module '@polkadot/api/types/consts' {
       /**
        * The loan's module id, keep all collaterals of CDPs.
        **/
-      moduleId: ModuleId & AugmentedConst<ApiType>;
+      palletId: PalletId & AugmentedConst<ApiType>;
     };
     nomineesElection: {
       [key: string]: Codec;
@@ -191,7 +188,7 @@ declare module '@polkadot/api/types/consts' {
        * The staking pool's module id, keep all staking currency belong to
        * Homa protocol.
        **/
-      moduleId: ModuleId & AugmentedConst<ApiType>;
+      palletId: PalletId & AugmentedConst<ApiType>;
       /**
        * The sub account indexs of parachain to vault assets of Homa protocol
        * in Polkadot.
