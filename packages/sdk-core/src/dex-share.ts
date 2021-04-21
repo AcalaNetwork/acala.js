@@ -14,8 +14,8 @@ export class DexShare extends BaseToken {
     assert(currency.isDexShare, 'DexShare.fromCurrencyId should receive the currency of dex share');
 
     const [currency1, currency2] = currency.asDexShare;
-    const token1 = Token.fromTokenSymbol(currency1);
-    const token2 = Token.fromTokenSymbol(currency2);
+    const token1 = Token.fromTokenSymbol(currency1.asToken);
+    const token2 = Token.fromTokenSymbol(currency2.asToken);
 
     return new DexShare(token1, token2);
   }

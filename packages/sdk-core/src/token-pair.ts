@@ -15,7 +15,7 @@ export class TokenPair {
 
     const [currency1, currency2] = currency.asDexShare;
 
-    return new TokenPair(Token.fromTokenSymbol(currency1), Token.fromTokenSymbol(currency2));
+    return new TokenPair(Token.fromTokenSymbol(currency1.asToken), Token.fromTokenSymbol(currency2.asToken));
   }
 
   static fromCurrencies(currency1: CurrencyId, currency2: CurrencyId): TokenPair {

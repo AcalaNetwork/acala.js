@@ -4,6 +4,7 @@
 import type { Enum, i128, u128, u32 } from '@polkadot/types';
 import type { ITuple } from '@polkadot/types/types';
 import type { EvmAddress } from '@acala-network/types/interfaces/evm';
+import type { LockIdentifier } from '@acala-network/types/interfaces/runtime';
 
 /** @name AirDropCurrencyId */
 export interface AirDropCurrencyId extends Enum {
@@ -37,7 +38,7 @@ export interface CurrencyId extends Enum {
   readonly isToken: boolean;
   readonly asToken: TokenSymbol;
   readonly isDexShare: boolean;
-  readonly asDexShare: ITuple<[TokenSymbol, TokenSymbol]>;
+  readonly asDexShare: ITuple<[DexShare, DexShare]>;
   readonly isErc20: boolean;
   readonly asErc20: EvmAddress;
 }
@@ -52,8 +53,19 @@ export interface DataProviderId extends Enum {
   readonly isBand: boolean;
 }
 
+/** @name DexShare */
+export interface DexShare extends Enum {
+  readonly isToken: boolean;
+  readonly asToken: TokenSymbol;
+  readonly isErc20: boolean;
+  readonly asErc20: EvmAddress;
+}
+
 /** @name NFTBalance */
 export interface NFTBalance extends u128 {}
+
+/** @name PalletId */
+export interface PalletId extends LockIdentifier {}
 
 /** @name Share */
 export interface Share extends u128 {}
@@ -64,19 +76,11 @@ export interface TokenSymbol extends Enum {
   readonly isAusd: boolean;
   readonly isDot: boolean;
   readonly isLdot: boolean;
-  readonly isXbtc: boolean;
   readonly isRenbtc: boolean;
-  readonly isPolkabtc: boolean;
-  readonly isPlm: boolean;
-  readonly isPha: boolean;
-  readonly isHdt: boolean;
-  readonly isBcg: boolean;
   readonly isKar: boolean;
   readonly isKusd: boolean;
   readonly isKsm: boolean;
   readonly isLksm: boolean;
-  readonly isSdn: boolean;
-  readonly isKilt: boolean;
 }
 
 /** @name TradingPair */
