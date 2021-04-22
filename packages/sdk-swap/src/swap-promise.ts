@@ -8,9 +8,8 @@ import { eventMethodsFilter, Token, TokenPair, TokenSet } from '@acala-network/s
 import { FixedPointNumber } from '@acala-network/sdk-core/fixed-point-number';
 import { ITuple } from '@polkadot/types/types';
 
-import { SwapTradeMode } from './help';
 import { SwapParameters } from './swap-parameters';
-import { LiquidityPool } from './types';
+import { LiquidityPool, SwapTradeMode } from './types';
 import { SwapBase } from './swap-base';
 
 export class SwapPromise extends SwapBase<ApiPromise> {

@@ -1,11 +1,5 @@
-import { FixedPointNumber } from '@acala-network/sdk-core/fixed-point-number';
-
-export type SwapTradeMode = 'EXACT_INPUT' | 'EXACT_OUTPUT';
-
-export interface Fee {
-  numerator: FixedPointNumber;
-  denominator: FixedPointNumber;
-}
+import { FixedPointNumber } from '@acala-network/sdk-core';
+import { Fee } from './types';
 
 // get how much target amount will be got fro specific supply amount and price impact
 export function getTargetAmount(
@@ -37,7 +31,10 @@ export function getSupplyAmount(
   const { numerator: feeNumerator, denominator: feeDenominator } = exchangeFee;
 
   const numerator = supplyPool.times(targetAmount).times(feeDenominator);
-  const denominator = targetPool.minus(targetAmount).times(feeDenominator.minus(feeNumerator));
+  const denominator = targetPool
+    .minus(targetAmount)
+    .times(feeDenominator.minus(feeNumerator))
+    .max(FixedPointNumber.ZERO);
 
   if (denominator.isZero()) return FixedPointNumber.ZERO;
 

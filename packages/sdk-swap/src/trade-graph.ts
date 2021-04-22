@@ -19,7 +19,7 @@ export class TradeGraph {
     return this.adj[token.toString()];
   }
 
-  public getPathes(start: Token, end: Token): Token[][] {
+  public getPathes(start: Token, end: Token, lengthLimit?: number): Token[][] {
     const result: Token[][] = [];
     const path: Token[] = [start];
     const searchList: Token[][] = [(this.adj[start.name] || []).slice()];
@@ -55,6 +55,8 @@ export class TradeGraph {
       }
     }
 
-    return result;
+    return result.filter((item) =>
+      lengthLimit && typeof lengthLimit === 'number' ? item.length <= lengthLimit : true
+    );
   }
 }

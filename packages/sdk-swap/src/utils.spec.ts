@@ -1,4 +1,4 @@
-import { getSupplyAmount, getTargetAmount } from './help';
+import { getSupplyAmount, getTargetAmount } from './utils';
 import { FixedPointNumber } from '@acala-network/sdk-core';
 
 describe('test getSupplyAmount, getTargetAmount', () => {
