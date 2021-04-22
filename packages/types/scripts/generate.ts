@@ -1,3 +1,6 @@
+/* eslint-disable */
+// @ts-nocheck
+
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
 import { Metadata } from '@polkadot/metadata';
 import { TypeRegistry } from '@polkadot/types/create';
@@ -5,12 +8,12 @@ import { generateInterfaceTypes } from '@polkadot/typegen/generate/interfaceRegi
 import { generateTsDef } from '@polkadot/typegen/generate/tsDef';
 import {
   generateDefaultConsts,
-  generateDefaultQuery
-  // generateDefaultTx
-  // generateDefaultRpc
+  generateDefaultQuery,
+  generateDefaultTx,
+  generateDefaultRpc
 } from '@polkadot/typegen/generate';
 import { registerDefinitions } from '@polkadot/typegen/util';
-// import generateMobx from '@open-web3/api-mobx/scripts/mobx';
+import generateMobx from '@open-web3/api-mobx/scripts/mobx';
 import metaHex from '../src/metadata/static-latest';
 
 import * as defaultDefinations from '@polkadot/types/interfaces/definitions';
@@ -33,6 +36,10 @@ function filterModules(names: string[], defs: any): string {
 
   filtered.metadata.v12.modules = filtered.metadata.v12.modules.filter(({ name }: any) => names.includes(name));
 
+  // FIXME: manual repair the type of `honzon-close_loan_has_debit_by_dex call` args
+  const honzon = filtered.metadata.v12.modules.find(({ name }) => name === 'Honzon')
+
+  honzon.calls[1].args[1].type = 'Option<Vec<CurrencyId>>';
   return new Metadata(registry, filtered).toHex();
 }
 
@@ -82,7 +89,7 @@ generateTsDef(definations, 'packages/types/src/interfaces', '@acala-network/type
 generateInterfaceTypes(definations, 'packages/types/src/interfaces/augment-types.ts');
 generateDefaultConsts('packages/types/src/interfaces/augment-api-consts.ts', metadata, definations);
 
-// generateDefaultTx('packages/types/src/interfaces/augment-api-tx.ts', metadata, definations);
+generateDefaultTx('packages/types/src/interfaces/augment-api-tx.ts', metadata, definations);
 generateDefaultQuery('packages/types/src/interfaces/augment-api-query.ts', metadata, definations);
-// generateDefaultRpc('packages/types/src/interfaces/augment-api-rpc.ts', definations);
-// generateMobx('packages/types/src/interfaces/augment-api-mobx.ts', metaHex, definations);
+generateDefaultRpc('packages/types/src/interfaces/augment-api-rpc.ts', definations);
+generateMobx('packages/types/src/interfaces/augment-api-mobx.ts', metaHex, definations);

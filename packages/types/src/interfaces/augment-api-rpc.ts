@@ -13,6 +13,7 @@ import type { ExchangeRate } from '@acala-network/types/interfaces/support';
 import type { RpcDataProviderId, TimestampedValue } from '@open-web3/orml-types/interfaces/oracle';
 import type { ExtrinsicOrHash, ExtrinsicStatus } from '@polkadot/types/interfaces/author';
 import type { EpochAuthorship } from '@polkadot/types/interfaces/babe';
+import type { BeefySignedCommitment } from '@polkadot/types/interfaces/beefy';
 import type { BlockHash } from '@polkadot/types/interfaces/chain';
 import type { PrefixedStorageKey } from '@polkadot/types/interfaces/childstate';
 import type { AuthorityId } from '@polkadot/types/interfaces/consensus';
@@ -69,6 +70,12 @@ declare module '@polkadot/rpc-core/types.jsonrpc' {
        * Returns data about which slots (primary or secondary) can be claimed in the current epoch with the keys in the keystore
        **/
       epochAuthorship: AugmentedRpc<() => Observable<HashMap<AuthorityId, EpochAuthorship>>>;
+    };
+    beefy: {
+      /**
+       * Returns the block most recently finalized by BEEFY, alongside side its justification.
+       **/
+      subscribeJustifications: AugmentedRpc<() => Observable<BeefySignedCommitment>>;
     };
     chain: {
       /**
