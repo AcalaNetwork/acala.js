@@ -4,7 +4,7 @@ import fs from 'fs';
 import { w3cwebsocket as WebSocket } from 'websocket';
 
 const main = (): void => {
-  const endpoint = 'ws://localhost:9904';
+  const endpoint = 'ws://localhost:9944';
   console.log('Connecting to ', endpoint);
   const ws = new WebSocket(endpoint);
   ws.onopen = (): void => {

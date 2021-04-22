@@ -38,5 +38,5 @@ export function getSupplyAmount(
 
   if (denominator.isZero()) return FixedPointNumber.ZERO;
 
-  return FixedPointNumber.fromInner(numerator.div(denominator)._getInner().toNumber() + 1);
+  return FixedPointNumber.fromInner(numerator.div(denominator)._getInner().toNumber() + 1, numerator.getPrecision());
 }
