@@ -127,6 +127,10 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
 
       const [supply, target] = this.sortLiquidityPoolWithTokenOrder(pool, path[i]);
 
+      if (supply.isZero()) throw new InsufficientLiquidityError();
+
+      if (target.isZero()) throw new InsufficientLiquidityError();
+
       const outputAmount = getTargetAmount(
         supply,
         target,
@@ -134,9 +138,11 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
         this._config.fee
       );
 
-      if (outputAmount.isZero()) throw new InsufficientLiquidityError();
+      if (inputAmount._getInner().toNumber() < MINIMUM_AMOUNT) throw new AmountTooSmall();
 
       if (outputAmount._getInner().toNumber() < MINIMUM_AMOUNT) throw new AmountTooSmall();
+
+      if (outputAmount.isZero()) throw new InsufficientLiquidityError();
 
       result.outputAmount = outputAmount;
     }
@@ -175,6 +181,10 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
 
       const [supply, target] = this.sortLiquidityPoolWithTokenOrder(pool, path[i - 1]);
 
+      if (supply.isZero()) throw new InsufficientLiquidityError();
+
+      if (target.isZero()) throw new InsufficientLiquidityError();
+
       const inputAmount = getSupplyAmount(
         supply,
         target,
@@ -182,9 +192,11 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
         this._config.fee
       );
 
-      if (inputAmount.isZero()) throw new InsufficientLiquidityError();
-
       if (outputAmount._getInner().toNumber() < MINIMUM_AMOUNT) throw new AmountTooSmall();
+
+      if (inputAmount._getInner().toNumber() < MINIMUM_AMOUNT) throw new AmountTooSmall();
+
+      if (inputAmount.isZero()) throw new InsufficientLiquidityError();
 
       result.inputAmount = inputAmount;
     }

@@ -3,19 +3,19 @@
 
 import type { Bytes, Option, U8aFixed, Vec, bool, u32, u64 } from '@polkadot/types';
 import type { AnyNumber, ITuple } from '@polkadot/types/types';
-import type { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@acala-network/types/interfaces/auctionManager';
+import type { CollateralAuctionItem } from '@acala-network/types/interfaces/auctionManager';
 import type { RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
 import type { TradingPairStatus } from '@acala-network/types/interfaces/dex';
-import type { CodeInfo, EvmAddress } from '@acala-network/types/interfaces/evm';
+import type { CodeInfo, Erc20Info, EvmAddress } from '@acala-network/types/interfaces/evm';
 import type { Guarantee, RelaychainAccountId, ValidatorBacking } from '@acala-network/types/interfaces/homaValidatorList';
 import type { PoolId } from '@acala-network/types/interfaces/incentives';
 import type { Position } from '@acala-network/types/interfaces/loans';
 import type { ClassId, ClassInfoOf, TokenId, TokenInfoOf } from '@acala-network/types/interfaces/nft';
-import type { BondingLedger } from '@acala-network/types/interfaces/nomineesElection';
+import type { BondingLedger, NomineeId } from '@acala-network/types/interfaces/nomineesElection';
 import type { AirDropCurrencyId, AuctionId, CurrencyId, TradingPair } from '@acala-network/types/interfaces/primitives';
 import type { DestAddress, PublicKey } from '@acala-network/types/interfaces/renvmBridge';
 import type { AccountId, AccountIndex, Balance, BalanceOf, BlockNumber, H256, Hash, KeyTypeId, Moment, OpaqueCall, OracleKey, Perbill, Releases, Slot, ValidatorId } from '@acala-network/types/interfaces/runtime';
-import type { Ledger, Params, PolkadotAccountId, SubAccountStatus } from '@acala-network/types/interfaces/stakingPool';
+import type { Ledger, Params, SubAccountStatus } from '@acala-network/types/interfaces/stakingPool';
 import type { ExchangeRate, Rate } from '@acala-network/types/interfaces/support';
 import type { GraduallyUpdate } from '@open-web3/orml-types/interfaces/graduallyUpdates';
 import type { OrderedSet, TimestampedValueOf } from '@open-web3/orml-types/interfaces/oracle';
@@ -94,31 +94,21 @@ export interface StorageType extends BaseStorageType {
   };
   auctionManager: {    /**
      * Mapping from auction id to collateral auction info
+     * 
+     * CollateralAuctions: map AuctionId => Option<CollateralAuctionItem>
      **/
     collateralAuctions: StorageMap<AuctionId | AnyNumber, Option<CollateralAuctionItem>>;
     /**
-     * Mapping from auction id to debit auction info
-     **/
-    debitAuctions: StorageMap<AuctionId | AnyNumber, Option<DebitAuctionItem>>;
-    /**
-     * Mapping from auction id to surplus auction info
-     **/
-    surplusAuctions: StorageMap<AuctionId | AnyNumber, Option<SurplusAuctionItem>>;
-    /**
      * Record of the total collateral amount of all active collateral auctions
      * under specific collateral type CollateralType -> TotalAmount
+     * 
+     * TotalCollateralInAuction: map CurrencyId => Balance
      **/
     totalCollateralInAuction: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Balance>;
     /**
-     * Record of total fix amount of all active debit auctions
-     **/
-    totalDebitInAuction: Balance | null;
-    /**
-     * Record of total surplus amount of all active surplus auctions
-     **/
-    totalSurplusInAuction: Balance | null;
-    /**
      * Record of total target sales of all active collateral auctions
+     * 
+     * TotalTargetInAuction: Balance
      **/
     totalTargetInAuction: Balance | null;
   };
@@ -293,38 +283,62 @@ export interface StorageType extends BaseStorageType {
   };
   cdpEngine: {    /**
      * Mapping from collateral type to its risk management params
+     * 
+     * CollateralParams: CurrencyId => RiskManagementParams
      **/
     collateralParams: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, RiskManagementParams>;
     /**
      * Mapping from collateral type to its exchange rate of debit units and
      * debit value
+     * 
+     * DebitExchangeRate: CurrencyId => Option<ExchangeRate>
      **/
     debitExchangeRate: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Option<ExchangeRate>>;
     /**
-     * Global stability fee rate for all types of collateral
+     * Global interest rate per sec for all types of collateral
+     * 
+     * GlobalInterestRatePerSec: Rate
      **/
-    globalStabilityFee: Rate | null;
+    globalInterestRatePerSec: Rate | null;
+    /**
+     * Timestamp in seconds of the last interest accumulation
+     * 
+     * LastAccumulationSecs: u64
+     **/
+    lastAccumulationSecs: u64 | null;
   };
   cdpTreasury: {    /**
-     * The maximum amount of collateral amount for sale per collateral auction
-     **/
-    collateralAuctionMaximumSize: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Balance>;
-    /**
      * Current total debit value of system. It's not same as debit in CDP
      * engine, it is the bad debt of the system.
+     * 
+     * DebitPool: Balance
      **/
     debitPool: Balance | null;
+    /**
+     * The expected amount size for per lot collateral auction of specific
+     * collateral type.
+     * 
+     * ExpectedCollateralAuctionSize: map CurrencyId => Balance
+     **/
+    expectedCollateralAuctionSize: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Balance>;
   };
   dex: {    /**
      * Liquidity pool for TradingPair.
+     * 
+     * LiquidityPool: map TradingPair => (Balance, Balance)
      **/
     liquidityPool: StorageMap<TradingPair, ITuple<[Balance, Balance]>>;
     /**
      * Provision of TradingPair by AccountId.
+     * 
+     * ProvisioningPool: double_map TradingPair, AccountId => (Balance,
+     * Balance)
      **/
     provisioningPool: StorageDoubleMap<TradingPair, AccountId | string, ITuple<[Balance, Balance]>>;
     /**
      * Status for TradingPair.
+     * 
+     * TradingPairStatuses: map TradingPair => TradingPairStatus
      **/
     tradingPairStatuses: StorageMap<TradingPair, TradingPairStatus>;
   };
@@ -399,31 +413,77 @@ export interface StorageType extends BaseStorageType {
   };
   emergencyShutdown: {    /**
      * Open final redemption flag
+     * 
+     * CanRefund: bool
      **/
     canRefund: bool | null;
     /**
      * Emergency shutdown flag
+     * 
+     * IsShutdown: bool
      **/
     isShutdown: bool | null;
   };
   evm: {    /**
-     * Accounts info.
+     * The EVM accounts info.
+     * 
+     * Accounts: map EvmAddress => Option<AccountInfo<T>>
      **/
     accounts: StorageMap<EvmAddress | string, Option<AccountInfo>>;
+    /**
+     * The storages for EVM contracts.
+     * 
+     * AccountStorages: double_map EvmAddress, H256 => H256
+     **/
     accountStorages: StorageDoubleMap<EvmAddress | string, H256 | string, H256>;
+    /**
+     * The code info for EVM contracts.
+     * Key is Keccak256 hash of code.
+     * 
+     * CodeInfos: H256 => Option<CodeInfo>
+     **/
     codeInfos: StorageMap<H256 | string, Option<CodeInfo>>;
+    /**
+     * The code for EVM contracts.
+     * Key is Keccak256 hash of code.
+     * 
+     * Codes: H256 => Vec<u8>
+     **/
     codes: StorageMap<H256 | string, Bytes>;
     /**
-     * Extrinsics origin for the current tx.
+     * Extrinsics origin for the current transaction.
+     * 
+     * ExtrinsicOrigin: Option<AccountId>
      **/
     extrinsicOrigin: Option<AccountId> | null;
     /**
      * Next available system contract address.
+     * 
+     * NetworkContractIndex: u64
      **/
     networkContractIndex: u64 | null;
   };
-  evmAccounts: {    accounts: StorageMap<EvmAddress | string, Option<AccountId>>;
+  evmAccounts: {    /**
+     * The Substrate Account for EvmAddresses
+     * 
+     * Accounts: map EvmAddress => Option<AccountId>
+     **/
+    accounts: StorageMap<EvmAddress | string, Option<AccountId>>;
+    /**
+     * The EvmAddress for Substrate Accounts
+     * 
+     * EvmAddresses: map AccountId => Option<EvmAddress>
+     **/
     evmAddresses: StorageMap<AccountId | string, Option<EvmAddress>>;
+  };
+  evmManager: {    /**
+     * Mapping between u32 and Erc20 address.
+     * Erc20 address is 20 byte, take the first 4 non-zero bytes, if it is less
+     * than 4, add 0 to the left.
+     * 
+     * map u32 => Option<Erc20Info>
+     **/
+    currencyIdMap: StorageMap<u32 | AnyNumber, Option<Erc20Info>>;
   };
   generalCouncil: {    /**
      * The current members of the collective. This is stored sorted (just by value).
@@ -531,15 +591,32 @@ export interface StorageType extends BaseStorageType {
      **/
     prime: Option<AccountId> | null;
   };
-  homaValidatorListModule: {    guarantees: StorageDoubleMap<RelaychainAccountId | string, AccountId | string, Option<Guarantee>>;
+  homaValidatorListModule: {    /**
+     * The slash guarantee deposits for relaychain validators.
+     * 
+     * Guarantees: double_map RelaychainAccountId, AccountId => Option<Guarantee>
+     **/
+    guarantees: StorageDoubleMap<RelaychainAccountId | string, AccountId | string, Option<Guarantee>>;
+    /**
+     * Total deposits for users.
+     * 
+     * TotalLockedByGuarantor: map AccountId => Option<Balance>
+     **/
     totalLockedByGuarantor: StorageMap<AccountId | string, Option<Balance>>;
+    /**
+     * Total deposit for validators.
+     * 
+     * ValidatorBackings: map RelaychainAccountId => Option<ValidatorBacking>
+     **/
     validatorBackings: StorageMap<RelaychainAccountId | string, Option<ValidatorBacking>>;
   };
   honzon: {    /**
      * The authorization relationship map from
      * Authorizer -> (CollateralType, Authorizee) -> Authorized
+     * 
+     * Authorization: double_map AccountId, (CurrencyId, T::AccountId) => Option<()>
      **/
-    authorization: StorageDoubleMap<AccountId | string, ITuple<[CurrencyId, AccountId]> | [CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, AccountId | string], bool>;
+    authorization: StorageDoubleMap<AccountId | string, ITuple<[CurrencyId, AccountId]> | [CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, AccountId | string], Option<ITuple<[]>>>;
   };
   honzonCouncil: {    /**
      * The current members of the collective. This is stored sorted (just by value).
@@ -577,10 +654,14 @@ export interface StorageType extends BaseStorageType {
   };
   incentives: {    /**
      * Mapping from pool to its fixed reward rate per period.
+     * 
+     * DexSavingRewardRate: map PoolId => Rate
      **/
     dexSavingRewardRate: StorageMap<PoolId | { LoansIncentive: any } | { DexIncentive: any } | { HomaIncentive: any } | { DexSaving: any } | { HomaValidatorAllowance: any } | string, Rate>;
     /**
      * Mapping from pool to its fixed reward amount per period.
+     * 
+     * IncentiveRewardAmount: map PoolId => Balance
      **/
     incentiveRewardAmount: StorageMap<PoolId | { LoansIncentive: any } | { DexIncentive: any } | { HomaIncentive: any } | { DexSaving: any } | { HomaValidatorAllowance: any } | string, Balance>;
   };
@@ -592,11 +673,15 @@ export interface StorageType extends BaseStorageType {
   loans: {    /**
      * The collateralized debit positions, map from
      * Owner -> CollateralType -> Position
+     * 
+     * Positions: double_map CurrencyId, AccountId => Position
      **/
     positions: StorageDoubleMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, AccountId | string, Position>;
     /**
      * The total collateralized debit positions, map from
      * CollateralType -> Position
+     * 
+     * TotalPositions: CurrencyId => Position
      **/
     totalPositions: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Position>;
   };
@@ -606,11 +691,36 @@ export interface StorageType extends BaseStorageType {
      **/
     multisigs: StorageDoubleMap<AccountId | string, U8aFixed | string, Option<Multisig>>;
   };
-  nomineesElection: {    currentEra: EraIndex | null;
+  nomineesElection: {    /**
+     * Current era index.
+     * 
+     * CurrentEra: EraIndex
+     **/
+    currentEra: EraIndex | null;
+    /**
+     * The nomination bonding ledger.
+     * 
+     * Ledger: map => AccountId, BondingLedger
+     **/
     ledger: StorageMap<AccountId | string, BondingLedger>;
-    nominations: StorageMap<AccountId | string, Vec<PolkadotAccountId>>;
-    nominees: Vec<PolkadotAccountId> | null;
-    votes: StorageMap<PolkadotAccountId | string, Balance>;
+    /**
+     * The nominations for nominators.
+     * 
+     * Nominations: map AccountId => Vec<NomineeId>
+     **/
+    nominations: StorageMap<AccountId | string, Vec<NomineeId>>;
+    /**
+     * The elected nominees.
+     * 
+     * Nominees: Vec<NomineeId>
+     **/
+    nominees: Vec<NomineeId> | null;
+    /**
+     * The total voting value for nominees.
+     * 
+     * Votes: map NomineeId => Balance
+     **/
+    votes: StorageMap<NomineeId | string, Balance>;
   };
   operatorMembershipAcala: {    /**
      * The current membership, stored as an ordered Vec.
@@ -662,6 +772,8 @@ export interface StorageType extends BaseStorageType {
   };
   prices: {    /**
      * Mapping from currency id to it's locked price
+     * 
+     * map CurrencyId => Option<Price>
      **/
     lockedPrice: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Option<Price>>;
   };
@@ -950,35 +1062,49 @@ export interface StorageType extends BaseStorageType {
     validatorSlashInEra: StorageDoubleMap<EraIndex | AnyNumber, AccountId | string, Option<ITuple<[Perbill, BalanceOf]>>>;
   };
   stakingPool: {    /**
-     * Current era index of Polkadot.
+     * Current era index on Relaychain.
+     * 
+     * CurrentEra: EraIndex
      **/
     currentEra: EraIndex | null;
     /**
      * Unbond on next era beginning by AccountId.
      * AccountId => Unbond
+     * 
+     * NextEraUnbonds: AccountId => Balance
      **/
     nextEraUnbonds: StorageMap<AccountId | string, Balance>;
     /**
      * The rebalance phase of current era.
+     * 
+     * RebalancePhase: Phase
      **/
     rebalancePhase: Phase | null;
     /**
      * The ledger of staking pool.
+     * 
+     * StakingPoolLedger: Ledger
      **/
     stakingPoolLedger: Ledger | null;
     /**
      * The params of staking pool.
+     * 
+     * StakingPoolParams: Params
      **/
     stakingPoolParams: Params | null;
     /**
      * The records of unbonding.
      * ExpiredEraIndex => (TotalUnbounding, ClaimedUnbonding,
      * InitialClaimedUnbonding)
+     * 
+     * Unbonding: map EraIndex => (Balance, Balance, Balance)
      **/
     unbonding: StorageMap<EraIndex | AnyNumber, ITuple<[Balance, Balance, Balance]>>;
     /**
      * The records of unbonding by AccountId.
      * AccountId, ExpiredEraIndex => Unbounding
+     * 
+     * Unbondings: double_map AccountId, EraIndex => Balance
      **/
     unbondings: StorageDoubleMap<AccountId | string, EraIndex | AnyNumber, Balance>;
   };
@@ -1136,7 +1262,17 @@ export interface StorageType extends BaseStorageType {
      **/
     totalIssuance: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Balance>;
   };
-  transactionPayment: {    defaultFeeCurrencyId: StorageMap<AccountId | string, Option<CurrencyId>>;
+  transactionPayment: {    /**
+     * The default fee currency for accounts.
+     * 
+     * DefaultFeeCurrencyId: AccountId => Option<CurrencyId>
+     **/
+    defaultFeeCurrencyId: StorageMap<AccountId | string, Option<CurrencyId>>;
+    /**
+     * The next fee multiplier.
+     * 
+     * NextFeeMultiplier: Multiplier
+     **/
     nextFeeMultiplier: Multiplier | null;
   };
   vesting: {    /**

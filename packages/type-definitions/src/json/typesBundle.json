@@ -465,7 +465,6 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "NFTBalance": "u128",
-                        "PalletId": "LockIdentifier",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "SubAccountStatus": {
@@ -895,7 +894,6 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "NFTBalance": "u128",
-                        "PalletId": "LockIdentifier",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "SubAccountStatus": {
@@ -1017,7 +1015,7 @@
                 },
                 {
                     "minmax": [
-                        720,
+                        719,
                         729
                     ],
                     "types": {
@@ -1336,7 +1334,6 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "NFTBalance": "u128",
-                        "PalletId": "LockIdentifier",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "SubAccountStatus": {
@@ -1451,9 +1448,7 @@
                                 "Sudo": "Null",
                                 "TransactionPayment": "Null"
                             }
-                        },
-                        "Address": "GenericMultiAddress",
-                        "LookupSource": "GenericMultiAddress"
+                        }
                     }
                 },
                 {
@@ -1769,7 +1764,6 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "NFTBalance": "u128",
-                        "PalletId": "LockIdentifier",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "SubAccountStatus": {
@@ -2201,7 +2195,6 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "NFTBalance": "u128",
-                        "PalletId": "LockIdentifier",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "SubAccountStatus": {
@@ -2802,7 +2795,6 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "NFTBalance": "u128",
-                        "PalletId": "LockIdentifier",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "SubAccountStatus": {
@@ -3232,7 +3224,6 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "NFTBalance": "u128",
-                        "PalletId": "LockIdentifier",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "SubAccountStatus": {
@@ -3354,7 +3345,7 @@
                 },
                 {
                     "minmax": [
-                        720,
+                        719,
                         729
                     ],
                     "types": {
@@ -3673,7 +3664,6 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "NFTBalance": "u128",
-                        "PalletId": "LockIdentifier",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "SubAccountStatus": {
@@ -3788,9 +3778,7 @@
                                 "Sudo": "Null",
                                 "TransactionPayment": "Null"
                             }
-                        },
-                        "Address": "GenericMultiAddress",
-                        "LookupSource": "GenericMultiAddress"
+                        }
                     }
                 },
                 {
@@ -4106,7 +4094,6 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "NFTBalance": "u128",
-                        "PalletId": "LockIdentifier",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "SubAccountStatus": {
@@ -4538,7 +4525,6 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "NFTBalance": "u128",
-                        "PalletId": "LockIdentifier",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "SubAccountStatus": {

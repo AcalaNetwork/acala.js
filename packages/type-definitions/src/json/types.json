@@ -306,7 +306,6 @@
     },
     "TradingPair": "(CurrencyId,  CurrencyId)",
     "NFTBalance": "u128",
-    "PalletId": "LockIdentifier",
     "OracleKey": "CurrencyId",
     "AsOriginId": "AuthoritysOriginId",
     "SubAccountStatus": {

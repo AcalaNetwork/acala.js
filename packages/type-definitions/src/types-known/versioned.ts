@@ -21,10 +21,8 @@ const typesBundleTypes = [
     }
   },
   {
-    minmax: [720, 729] as any,
+    minmax: [719, 729] as any,
     types: {
-      Address: 'GenericMultiAddress',
-      LookupSource: 'GenericMultiAddress',
       TokenSymbol: {
         _enum: {
           ACA: 0,
@@ -38,18 +36,12 @@ const typesBundleTypes = [
           PHA: 8,
           HDT: 9,
           BCG: 11,
-
           KAR: 128,
           KUSD: 129,
           KSM: 130,
           LKSM: 131,
-          // Reserve for XBTC = 132
-          // Reserve for RENBTC = 133
-          // Reserve for POLKABTC = 134
           SDN: 135,
-          // Reserve for PHA = 136
           KILT: 138
-          // Reserve for BCG = 139
         }
       },
       CurrencyId: {

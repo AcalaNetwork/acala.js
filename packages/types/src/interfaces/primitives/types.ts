@@ -4,7 +4,6 @@
 import type { Enum, i128, u128, u32 } from '@polkadot/types';
 import type { ITuple } from '@polkadot/types/types';
 import type { EvmAddress } from '@acala-network/types/interfaces/evm';
-import type { LockIdentifier } from '@acala-network/types/interfaces/runtime';
 
 /** @name AirDropCurrencyId */
 export interface AirDropCurrencyId extends Enum {
@@ -63,9 +62,6 @@ export interface DexShare extends Enum {
 
 /** @name NFTBalance */
 export interface NFTBalance extends u128 {}
-
-/** @name PalletId */
-export interface PalletId extends LockIdentifier {}
 
 /** @name Share */
 export interface Share extends u128 {}

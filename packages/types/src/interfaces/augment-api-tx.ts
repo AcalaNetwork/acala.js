@@ -59,14 +59,14 @@ declare module '@polkadot/api/types/submittable' {
        * The dispatch origin of this call must be `UpdateOrigin`.
        * 
        * - `currency_id`: collateral type.
-       * - `interest_rate_per_sec`: extra interest rate per sec, `None` means
-       * do not update, `Some(None)` means update it to `None`.
-       * - `liquidation_ratio`: liquidation ratio, `None` means do not
-       * update, `Some(None)` means update it to `None`.
-       * - `liquidation_penalty`: liquidation penalty, `None` means do not
-       * update, `Some(None)` means update it to `None`.
-       * - `required_collateral_ratio`: required collateral ratio, `None`
-       * means do not update, `Some(None)` means update it to `None`.
+       * - `interest_rate_per_sec`: extra interest rate per sec, `None` means do not update,
+       * `Some(None)` means update it to `None`.
+       * - `liquidation_ratio`: liquidation ratio, `None` means do not update, `Some(None)` means
+       * update it to `None`.
+       * - `liquidation_penalty`: liquidation penalty, `None` means do not update, `Some(None)`
+       * means update it to `None`.
+       * - `required_collateral_ratio`: required collateral ratio, `None` means do not update,
+       * `Some(None)` means update it to `None`.
        * - `maximum_total_debit_value`: maximum total debit value.
        **/
       setCollateralParams: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, interestRatePerSec: ChangeOptionRate | { NoChange: any } | { NewValue: any } | string | Uint8Array, liquidationRatio: ChangeOptionRatio | { NoChange: any } | { NewValue: any } | string | Uint8Array, liquidationPenalty: ChangeOptionRate | { NoChange: any } | { NewValue: any } | string | Uint8Array, requiredCollateralRatio: ChangeOptionRatio | { NoChange: any } | { NewValue: any } | string | Uint8Array, maximumTotalDebitValue: ChangeBalance | { NoChange: any } | { NewValue: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, ChangeOptionRate, ChangeOptionRatio, ChangeOptionRate, ChangeOptionRatio, ChangeBalance]>;
@@ -131,21 +131,19 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Add liquidity to Enabled trading pair, or add provision to
        * Provisioning trading pair.
-       * - Add liquidity success will issue shares in current price which
-       * decided by the liquidity scale. Shares are temporarily not
+       * - Add liquidity success will issue shares in current price which decided by the
+       * liquidity scale. Shares are temporarily not
        * allowed to transfer and trade, it represents the proportion of
        * assets in liquidity pool.
-       * - Add provision success will record the provision, issue shares to
-       * caller in the initial price when trading pair convert to Enabled.
+       * - Add provision success will record the provision, issue shares to caller in the initial
+       * price when trading pair convert to Enabled.
        * 
        * - `currency_id_a`: currency id A.
        * - `currency_id_b`: currency id B.
-       * - `max_amount_a`: maximum currency A amount allowed to inject to
-       * liquidity pool.
-       * - `max_amount_b`: maximum currency A amount allowed to inject to
-       * liquidity pool.
-       * - `deposit_increment_share`: this flag indicates whether to deposit
-       * added lp shares to obtain incentives
+       * - `max_amount_a`: maximum currency A amount allowed to inject to liquidity pool.
+       * - `max_amount_b`: maximum currency A amount allowed to inject to liquidity pool.
+       * - `deposit_increment_share`: this flag indicates whether to deposit added lp shares to
+       * obtain incentives
        **/
       addLiquidity: AugmentedSubmittable<(currencyIdA: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, currencyIdB: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, maxAmountA: Compact<Balance> | AnyNumber | Uint8Array, maxAmountB: Compact<Balance> | AnyNumber | Uint8Array, depositIncrementShare: bool | boolean | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, CurrencyId, Compact<Balance>, Compact<Balance>, bool]>;
       disableTradingPair: AugmentedSubmittable<(currencyIdA: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, currencyIdB: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, CurrencyId]>;
@@ -167,8 +165,7 @@ declare module '@polkadot/api/types/submittable' {
        * - `currency_id_a`: currency id A.
        * - `currency_id_b`: currency id B.
        * - `remove_share`: liquidity amount to remove.
-       * - `by_withdraw`: this flag indicates whether to withdraw share which
-       * is on incentives.
+       * - `by_withdraw`: this flag indicates whether to withdraw share which is on incentives.
        **/
       removeLiquidity: AugmentedSubmittable<(currencyIdA: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, currencyIdB: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, removeShare: Compact<Balance> | AnyNumber | Uint8Array, byWithdraw: bool | boolean | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, CurrencyId, Compact<Balance>, bool]>;
       /**
@@ -184,7 +181,7 @@ declare module '@polkadot/api/types/submittable' {
        * 
        * - `path`: trading path.
        * - `target_amount`: exact target amount.
-       * - `max_supply_amount`: acceptable maxmum supply amount.
+       * - `max_supply_amount`: acceptable maximum supply amount.
        **/
       swapWithExactTarget: AugmentedSubmittable<(path: Vec<CurrencyId> | (CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array)[], targetAmount: Compact<Balance> | AnyNumber | Uint8Array, maxSupplyAmount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Vec<CurrencyId>, Compact<Balance>, Compact<Balance>]>;
     };
@@ -247,13 +244,11 @@ declare module '@polkadot/api/types/submittable' {
        * `collateral_adjustment` and `debit_adjustment`
        * 
        * - `currency_id`: collateral currency id.
-       * - `collateral_adjustment`: signed amount, positive means to deposit
-       * collateral currency into CDP, negative means withdraw collateral
-       * currency from CDP.
-       * - `debit_adjustment`: signed amount, positive means to issue some
-       * amount of stablecoin to caller according to the debit adjustment,
-       * negative means caller will payback some amount of stablecoin to
-       * CDP according to to the debit adjustment.
+       * - `collateral_adjustment`: signed amount, positive means to deposit collateral currency
+       * into CDP, negative means withdraw collateral currency from CDP.
+       * - `debit_adjustment`: signed amount, positive means to issue some amount of stablecoin
+       * to caller according to the debit adjustment, negative means caller will payback some
+       * amount of stablecoin to CDP according to to the debit adjustment.
        **/
       adjustLoan: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, collateralAdjustment: Amount | AnyNumber | Uint8Array, debitAdjustment: Amount | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, Amount, Amount]>;
       /**
@@ -263,7 +258,7 @@ declare module '@polkadot/api/types/submittable' {
        * - `to`: authorizee account
        **/
       authorize: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, to: LookupSource | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, LookupSource]>;
-      closeLoanHasDebitByDex: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, maybePath: Option<Vec> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, Option<Vec>]>;
+      closeLoanHasDebitByDex: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string | Uint8Array, maybePath: Option<Vec<CurrencyId>> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, Option<Vec<CurrencyId>>]>;
       /**
        * Transfer the whole CDP of `from` under `currency_id` to caller's CDP
        * under the same `currency_id`, caller must have the authorization of
