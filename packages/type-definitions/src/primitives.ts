@@ -45,7 +45,6 @@ export default {
       _enum: ['Aggregated', 'Acala', 'Band']
     },
     TradingPair: '(CurrencyId,  CurrencyId)',
-    NFTBalance: 'u128',
-    PalletId: 'LockIdentifier'
+    NFTBalance: 'u128'
   }
 };

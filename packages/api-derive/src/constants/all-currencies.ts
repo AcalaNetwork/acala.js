@@ -1,7 +1,7 @@
 import { ApiInterfaceRx } from '@polkadot/api/types';
 import { memo } from '@polkadot/api-derive/util';
-import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable, of } from '@polkadot/x-rxjs';
+import { switchMap } from '@polkadot/x-rxjs/operators';
 import { Vec } from '@polkadot/types';
 import { CurrencyId } from '@acala-network/types/interfaces';
 

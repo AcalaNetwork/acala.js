@@ -3,8 +3,8 @@
 
 import type { Vec, u32 } from '@polkadot/types';
 import type { Codec, ITuple } from '@polkadot/types/types';
-import type { CurrencyId, PalletId } from '@acala-network/types/interfaces/primitives';
-import type { AccountId, Balance, BlockNumber, TransactionPriority } from '@acala-network/types/interfaces/runtime';
+import type { CurrencyId } from '@acala-network/types/interfaces/primitives';
+import type { AccountId, Balance, BlockNumber, PalletId, TransactionPriority } from '@acala-network/types/interfaces/runtime';
 import type { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
 import type { Price } from '@open-web3/orml-types/interfaces/traits';
 import type { EraIndex } from '@polkadot/types/interfaces/staking';

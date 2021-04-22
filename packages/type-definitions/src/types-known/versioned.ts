@@ -21,6 +21,39 @@ const typesBundleTypes = [
     }
   },
   {
+    minmax: [719, 729] as any,
+    types: {
+      TokenSymbol: {
+        _enum: {
+          ACA: 0,
+          AUSD: 1,
+          DOT: 2,
+          LDOT: 3,
+          XBTC: 4,
+          RENBTC: 5,
+          POLKABTC: 6,
+          PLM: 7,
+          PHA: 8,
+          HDT: 9,
+          BCG: 11,
+          KAR: 128,
+          KUSD: 129,
+          KSM: 130,
+          LKSM: 131,
+          SDN: 135,
+          KILT: 138
+        }
+      },
+      CurrencyId: {
+        _enum: {
+          Token: 'TokenSymbol',
+          DEXShare: '(TokenSymbol, TokenSymbol)',
+          ERC20: 'EvmAddress'
+        }
+      }
+    }
+  },
+  {
     minmax: [720, undefined] as any,
     types: {
       Address: 'GenericMultiAddress',

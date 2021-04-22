@@ -1,5 +1,5 @@
-import { Observable, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, combineLatest } from '@polkadot/x-rxjs';
+import { map } from '@polkadot/x-rxjs/operators';
 import { FixedPointNumber, Token } from '@acala-network/sdk-core';
 import { CurrencyId, Position } from '@acala-network/types/interfaces';
 import { DerivedLoanType } from '@acala-network/api-derive';

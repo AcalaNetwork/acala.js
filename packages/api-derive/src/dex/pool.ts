@@ -1,7 +1,7 @@
 import { ApiInterfaceRx } from '@polkadot/api/types';
-import { map } from 'rxjs/operators';
+import { map } from '@polkadot/x-rxjs/operators';
 import primitivesConfig from '@acala-network/type-definitions/primitives';
-import { Observable } from 'rxjs';
+import { Observable } from '@polkadot/x-rxjs';
 
 import { CurrencyId, Balance } from '@acala-network/types/interfaces';
 import { memo } from '@polkadot/api-derive/util';

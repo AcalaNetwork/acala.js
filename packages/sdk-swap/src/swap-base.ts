@@ -1,6 +1,6 @@
 import { ApiPromise, ApiRx } from '@polkadot/api';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable } from '@polkadot/x-rxjs';
+import { map } from '@polkadot/x-rxjs/operators';
 import { Token, TokenBalance, TokenPair } from '@acala-network/sdk-core';
 import { FixedPointNumber } from '@acala-network/sdk-core/fixed-point-number';
 
