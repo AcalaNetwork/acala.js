@@ -1,23 +1,16 @@
 import { FixedPointNumber } from './fixed-point-number';
-import { BaseToken } from './base-token';
 import { Token } from './token';
 
-export class TokenBalance<T extends BaseToken = Token> {
-  private _token: T;
+export class TokenBalance {
+  private _token: Token;
   private _balance: FixedPointNumber;
 
-  constructor(token: T, balance?: FixedPointNumber) {
+  constructor(token: Token, balance?: FixedPointNumber) {
     this._token = token;
-
-    if (balance) {
-      balance.setPrecision(token.decimal);
-      this._balance = balance;
-    } else {
-      this._balance = new FixedPointNumber(0, token.decimal);
-    }
+    this._balance = balance || FixedPointNumber.ZERO;
   }
 
-  get token(): T {
+  get token(): Token {
     return this._token;
   }
 
@@ -25,7 +18,7 @@ export class TokenBalance<T extends BaseToken = Token> {
     return this._balance;
   }
 
-  public clone(): TokenBalance<T> {
-    return new TokenBalance(this._token.clone() as T, this._balance.clone());
+  public clone(): TokenBalance {
+    return new TokenBalance(this._token.clone(), this._balance.clone());
   }
 }

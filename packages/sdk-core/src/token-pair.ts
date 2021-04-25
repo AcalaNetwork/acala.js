@@ -1,8 +1,7 @@
 import { Token } from '@acala-network/sdk-core/token';
 import { CurrencyId, TradingPair } from '@acala-network/types/interfaces';
-import { ApiPromise, ApiRx } from '@polkadot/api';
 import { assert } from '@polkadot/util';
-import { DexShare } from './dex-share';
+import { AnyApi } from './type';
 
 // class for store token pair
 export class TokenPair {
@@ -11,17 +10,17 @@ export class TokenPair {
   private origin: [Token, Token];
 
   static fromCurrencyId(currency: CurrencyId): TokenPair {
-    assert(currency.isDexShare, 'TokenPair.fromCurrencyId should receive the currency of DexShare');
+    assert(currency.isDexShare, 'TokenPair.fromCurrencyId should receive CurrencyId which is DexShare');
 
     const [currency1, currency2] = currency.asDexShare;
 
-    return new TokenPair(Token.fromTokenSymbol(currency1.asToken), Token.fromTokenSymbol(currency2.asToken));
+    return new TokenPair(Token.fromTokenSymbol(currency1 as any), Token.fromTokenSymbol(currency2 as any));
   }
 
   static fromCurrencies(currency1: CurrencyId, currency2: CurrencyId): TokenPair {
     assert(
       currency1.isToken && currency2.isToken,
-      'TokenPair.fromCurrenciesArray should receive the currency of Token'
+      'TokenPair.fromCurrenciesArray should receive CurrencyId which is TokenSymbol'
     );
 
     return new TokenPair(Token.fromCurrencyId(currency1), Token.fromCurrencyId(currency2));
@@ -36,10 +35,10 @@ export class TokenPair {
   constructor(token1: Token, token2: Token) {
     assert(!token1.isEqual(token2), "can't create token pair by equal tokens.");
 
-    const sorted = Token.sort(token1, token2);
+    const [_token1, _token2] = Token.sort(token1, token2);
 
-    this.token1 = sorted[0];
-    this.token2 = sorted[1];
+    this.token1 = _token1;
+    this.token2 = _token2;
     this.origin = [token1, token2];
   }
 
@@ -55,15 +54,11 @@ export class TokenPair {
     return pair.token1.isEqual(this.token1) && pair.token2.isEqual(this.token2);
   }
 
-  public toChainData(): [string | { Token: string }, string | { Token: string }] {
-    return [this.token1.toChainData(), this.token2.toChainData()];
+  public toChainData(): [{ Token: string }, { Token: string }] {
+    return [this.token1.toChainData() as { Token: string }, this.token2.toChainData() as { Token: string }];
   }
 
-  public toDexShare(): DexShare {
-    return DexShare.fromTokenPair(this);
-  }
-
-  public toTradingPair(api: ApiRx | ApiPromise): TradingPair {
+  public toTradingPair(api: AnyApi): TradingPair {
     return api.createType('TradingPair', this.toChainData());
   }
 }
