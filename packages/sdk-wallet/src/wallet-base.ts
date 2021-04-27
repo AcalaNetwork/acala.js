@@ -1,8 +1,6 @@
-import { FixedPointNumber, Token, TokenBalance } from '@acala-network/sdk-core';
-import { ObOrPromiseResult } from '@acala-network/sdk-core/type';
-import { CurrencyId } from '@acala-network/types/interfaces';
+import { Token, TokenBalance } from '@acala-network/sdk-core';
+import { MaybeAccount, MaybeCurrency, ObOrPromiseResult } from '@acala-network/sdk-core';
 import { ApiRx, ApiPromise } from '@polkadot/api';
-import { Sender, SendOptions } from './types';
 
 export abstract class WalletBase<T extends ApiRx | ApiPromise> {
   protected api: T;
@@ -23,7 +21,7 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
    * @name getToken
    * @description get the currency
    */
-  abstract getToken(currency: string | CurrencyId | Token): Token;
+  abstract getToken(currency: MaybeCurrency): Token | undefined;
 
   // get balance
 
@@ -31,17 +29,5 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
    * @name getBalance
    * @description get the balance of the currency
    */
-  abstract getBalance(currency: string | CurrencyId | Token): ObOrPromiseResult<T, TokenBalance>;
-
-  /**
-   * @name getMaxSafeTransferAmount
-   * @description get the max transfer amount, for the native currency, This method will reserve a portion of the amount to ensure the success of the transaction.
-   */
-  abstract getMaxSafeTransferAmount(currency: string | CurrencyId | Token): ObOrPromiseResult<T, FixedPointNumber>;
-
-  /**
-   * @name createSender
-   * @description create a sender instance
-   */
-  abstract createSender(opts: SendOptions): ObOrPromiseResult<T, Sender<T>>;
+  abstract queryBalance(account: MaybeAccount, currency: MaybeCurrency): ObOrPromiseResult<T, TokenBalance>;
 }

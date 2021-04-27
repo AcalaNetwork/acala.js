@@ -2,7 +2,7 @@ import { CurrencyId, TokenSymbol, DexShare } from '@acala-network/types/interfac
 import primitivesConfig from '@acala-network/type-definitions/primitives';
 import { assert } from '@polkadot/util';
 
-import { AnyApi } from './type';
+import { AnyApi } from './types';
 
 const TOKEN_SORT: Record<string, number> = primitivesConfig.types.TokenSymbol._enum;
 
@@ -28,10 +28,12 @@ export class Token {
     this.isERC20 = options?.isERC20 || false;
   }
 
-  static fromCurrencyId(currency: CurrencyId, decimal?: number): Token {
+  static fromCurrencyId(currency: CurrencyId, decimal?: number | number[]): Token {
+    const _decimal = Array.isArray(decimal) ? decimal.sort()[0] : decimal;
+
     if (currency.isDexShare) {
       return new Token(`${currency.asDexShare[0].toString()}-${currency.asDexShare[1].toString()}`, {
-        decimal,
+        decimal: _decimal,
         isDexShare: true,
         isTokenSymbol: false,
         isERC20: false
@@ -40,7 +42,7 @@ export class Token {
 
     if (currency.isToken) {
       return new Token(`${currency.asToken.toString()}`, {
-        decimal,
+        decimal: _decimal,
         isDexShare: false,
         isTokenSymbol: true,
         isERC20: false
@@ -49,7 +51,7 @@ export class Token {
 
     if (currency.isErc20) {
       return new Token(`${currency.asErc20.toString()}`, {
-        decimal,
+        decimal: _decimal,
         isDexShare: false,
         isTokenSymbol: false,
         isERC20: true

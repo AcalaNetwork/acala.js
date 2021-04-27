@@ -1,7 +1,7 @@
 import { Token } from '@acala-network/sdk-core/token';
 import { CurrencyId, TradingPair } from '@acala-network/types/interfaces';
 import { assert } from '@polkadot/util';
-import { AnyApi } from './type';
+import { AnyApi } from './types';
 
 // class for store token pair
 export class TokenPair {

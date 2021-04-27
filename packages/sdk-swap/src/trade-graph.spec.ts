@@ -2,11 +2,11 @@ import { Token, TokenPair } from '@acala-network/sdk-core';
 import { TradeGraph } from './trade-graph';
 
 describe('trade graph', () => {
-  const aca = new Token({ name: 'ACA', symbol: 'ACA', chain: 'acala', decimal: 18 });
-  const ausd = new Token({ name: 'AUSD', symbol: 'AUSD', chain: 'acala', decimal: 16 });
-  const dot = new Token({ name: 'DOT', symbol: 'DOT', chain: 'acala', decimal: 16 });
-  const xbtc = new Token({ name: 'XBTC', symbol: 'XBTC', chain: 'acala', decimal: 16 });
-  const renbtc = new Token({ name: 'RENBTC', symbol: 'RENBTC', chain: 'acala', decimal: 16 });
+  const aca = new Token('ACA');
+  const ausd = new Token('AUSD');
+  const dot = new Token('DOT');
+  const xbtc = new Token('XBTC');
+  const renbtc = new Token('RENBTC');
 
   test('create trade graph', () => {
     const tradeGraph = new TradeGraph([
@@ -32,7 +32,7 @@ describe('trade graph', () => {
       new TokenPair(dot, ausd)
     ]);
 
-    const _dot = new Token({ name: 'DOT', symbol: 'DOT', chain: 'acala', decimal: 16 });
+    const _dot = new Token('DOT');
 
     const dot2renbtc = tradeGraph.getPathes(_dot, renbtc);
 
