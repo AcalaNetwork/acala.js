@@ -45,8 +45,19 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
   abstract getPrice(currency: MaybeCurrency): ObOrPromiseResult<T, PriceData>;
 
   /**
+   * @name getPriceFrom
+   * @description get the price
+   */
+  abstract getPriceFrom(currency: MaybeCurrency, source: 'dex' | 'oracle'): ObOrPromiseResult<T, PriceData>;
+
+  /**
    * @name getOraclePrice
    * @description get the oracle feed price
    */
   abstract getOraclePrice(): ObOrPromiseResult<T, PriceDataWithTimestamp[]>;
+
+  /**
+   * @name subscribeOracleFeeds
+   */
+  abstract subscribeOracleFeed(provider: string): ObOrPromiseResult<T, PriceDataWithTimestamp[]>;
 }

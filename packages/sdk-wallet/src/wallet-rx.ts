@@ -35,12 +35,12 @@ export class WalletRx extends WalletBase<ApiRx> {
     this.oracleFeed$ = new BehaviorSubject<PriceDataWithTimestamp[]>([]);
 
     this.init().subscribe(() => {
-      this.subscribeOracleFeed();
+      this.subscrineInnerOracleFeed();
     });
   }
 
-  public get isReady(): Observable<boolean> {
-    return this.isReady$;
+  public get isReady(): boolean {
+    return this.isReady$.getValue();
   }
 
   public init(): Observable<boolean> {
@@ -88,8 +88,19 @@ export class WalletRx extends WalletBase<ApiRx> {
     );
   }
 
+  public getPriceFrom(currency: MaybeCurrency, source: 'dex' | 'oracle'): Observable<PriceData> {
+    return this.isReady$.pipe(
+      filter((isReady) => isReady),
+      switchMap(() => this._getPrice(currency, source))
+    );
+  }
+
   public getOraclePrice(): Observable<PriceDataWithTimestamp[]> {
     return this.oracleFeed$;
+  }
+
+  public subscribeOracleFeed(provider: string): Observable<PriceDataWithTimestamp[]> {
+    return this._subscribeOracleFeed(provider);
   }
 
   private checkIfKarura(name: string) {
@@ -148,7 +159,7 @@ export class WalletRx extends WalletBase<ApiRx> {
   );
 
   private _getPrice = memoize(
-    (currency: MaybeCurrency): Observable<PriceData> => {
+    (currency: MaybeCurrency, source?: 'dex' | 'oracle'): Observable<PriceData> => {
       const currencyName = focusToCurrencyIdName(currency);
 
       if (currencyName === 'AUSD' || currencyName === 'KUSD') {
@@ -160,7 +171,11 @@ export class WalletRx extends WalletBase<ApiRx> {
         });
       }
 
-      if (ORACLE_FEEDS_TOKEN.includes(currencyName)) {
+      if (source === 'dex') {
+        return this.getPriceFromDex(currency);
+      }
+
+      if (source === 'oracle' ? true : ORACLE_FEEDS_TOKEN.includes(currencyName)) {
         return this.oracleFeed$.pipe(
           map(
             (data): PriceData => {
@@ -179,36 +194,38 @@ export class WalletRx extends WalletBase<ApiRx> {
     }
   );
 
-  // subscribe oracle feed
-  private subscribeOracleFeed = memoize((oracleProvider = 'Aggregated') => {
-    return eventsFilterRx(this.api, [{ section: 'oracle', method: 'NewFeedData' }], true)
-      .pipe(
-        switchMap(() => {
-          /* eslint-disable-next-line */
-          return ((this.api.rpc as any).oracle.getAllValues(oracleProvider) as Observable<[[OracleKey, TimestampedValue]]>);
-        })
-      )
-      .subscribe({
-        next: (result) => {
-          this.oracleFeed$.next(
-            result.map((item) => {
-              const token =
-                this.tokenMap.get(item[0].asToken.toString()) || Token.fromTokenName(item[0].asToken.toString());
-              const price = FixedPointNumber.fromInner(
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                (item[1]?.value as any)?.value.toString() || '0'
-              );
+  private subscrineInnerOracleFeed() {
+    this._subscribeOracleFeed().subscribe({
+      next: (result) => {
+        this.oracleFeed$.next(result);
+      }
+    });
+  }
 
-              return {
-                token,
-                price,
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                timestamp: new Date((item[1]?.value as any)?.timestamp.toNumber())
-              };
-            })
+  private _subscribeOracleFeed = memoize((oracleProvider = 'Aggregated') => {
+    return eventsFilterRx(this.api, [{ section: 'oracle', method: 'NewFeedData' }], true).pipe(
+      switchMap(() => {
+        /* eslint-disable-next-line */
+          return ((this.api.rpc as any).oracle.getAllValues(oracleProvider) as Observable<[[OracleKey, TimestampedValue]]>);
+      }),
+      map((result) => {
+        return result.map((item) => {
+          const token =
+            this.tokenMap.get(item[0].asToken.toString()) || Token.fromTokenName(item[0].asToken.toString());
+          const price = FixedPointNumber.fromInner(
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            (item[1]?.value as any)?.value.toString() || '0'
           );
-        }
-      });
+
+          return {
+            token,
+            price,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            timestamp: new Date((item[1]?.value as any)?.timestamp.toNumber())
+          };
+        });
+      })
+    );
   });
 
   private getPriceFromDex = memoize(
@@ -244,7 +261,7 @@ export class WalletRx extends WalletBase<ApiRx> {
     (account: MaybeAccount, currency: MaybeCurrency): Observable<TokenBalance> => {
       const currencyId = focusToCurrencyId(this.api, currency);
 
-      return this.isReady.pipe(
+      return this.isReady$.pipe(
         takeWhile((isReady) => isReady),
         switchMap(() => {
           /* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */

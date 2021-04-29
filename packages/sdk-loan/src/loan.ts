@@ -1,9 +1,12 @@
 import { Observable, combineLatest } from '@polkadot/x-rxjs';
 import { map } from '@polkadot/x-rxjs/operators';
-import { FixedPointNumber, Token } from '@acala-network/sdk-core';
+import { assert } from '@polkadot/util';
+import { FixedPointNumber, focusToCurrencyId, MaybeCurrency, Token } from '@acala-network/sdk-core';
 import { CurrencyId, Position } from '@acala-network/types/interfaces';
 import { DerivedLoanType } from '@acala-network/api-derive';
 import { ApiRx } from '@polkadot/api';
+import { WalletRx } from '@acala-network/sdk-wallet';
+import { memoize } from 'lodash';
 
 export interface LoanParams {
   debitExchangeRate: FixedPointNumber;
@@ -37,17 +40,23 @@ export class LoanRx {
   private collateralToken: Token;
   private stableCoinToken: Token;
   private address: string;
-  private price$: Observable<FixedPointNumber>;
+  private wallet: WalletRx;
   private loanPosition$: Observable<Position>;
   private loanParams$: Observable<LoanParams>;
 
-  constructor(api: ApiRx, currency: CurrencyId, address: string, price$: Observable<FixedPointNumber>) {
+  constructor(api: ApiRx, currency: MaybeCurrency, address: string, wallet: WalletRx) {
+    const collateralToken = wallet.getToken(currency);
+    const stableCoinToken = wallet.getToken(api.consts.cdpEngine.getStableCurrencyId);
+
+    assert(collateralToken && stableCoinToken, `init the loan sdk failed, can't find useable token in currency chain`);
+    assert(wallet.isReady, 'the wallet sdk should be ready');
+
     this.api = api;
-    this.currency = currency;
+    this.currency = focusToCurrencyId(api, currency);
     this.address = address;
-    this.collateralToken = Token.fromCurrencyId(currency);
-    this.stableCoinToken = Token.fromCurrencyId(api.consts.cdpEngine.getStableCurrencyId);
-    this.price$ = price$;
+    this.collateralToken = collateralToken;
+    this.stableCoinToken = stableCoinToken;
+    this.wallet = wallet;
 
     this.loanPosition$ = this.getLoanPosition();
     this.loanParams$ = this.getLoanParams();
@@ -65,53 +74,59 @@ export class LoanRx {
     debitAmountChange: FixedPointNumber,
     collateralChange: FixedPointNumber
   ): Observable<LoanPosition> {
-    return combineLatest([this.loanParams$, this.loanPosition$, this.price$]).pipe(
-      map(([params, position, price]) => {
-        const { debit, collateral } = position;
-        const {
-          debitExchangeRate,
-          requiredCollateralRatio,
-          stableFee,
-          expectedBlockTime,
-          liquidationRatio,
-          globalStableFee
-        } = params;
-
-        const _debit = FixedPointNumber.fromInner(debit.toString(), this.stableCoinToken.decimal);
-
-        // apply change to collateral and debit
-        const _collateral = FixedPointNumber.fromInner(collateral.toString(), this.collateralToken.decimal).plus(
-          collateralChange
-        );
-        const debitAmount = _debit.times(debitExchangeRate).plus(debitAmountChange);
-        const collateralAmount = _collateral.times(price);
-        const requiredCollateral = this.getRequiredCollateral(debitAmount, requiredCollateralRatio, price);
-        const canGenerate = this.getCanGenerate(
-          collateralAmount,
-          debitAmount,
-          requiredCollateralRatio,
-          FixedPointNumber.ONE,
-          FixedPointNumber.ZERO
-        );
-        const maxGenerate = this.getMaxGenerate(collateralAmount, requiredCollateralRatio);
-
-        return {
-          collateral: _collateral,
-          debit: _debit,
-          debitAmount: debitAmount,
-          collateralAmount: collateralAmount,
-          collateralRatio: collateralAmount.div(debitAmount),
-          requiredCollateral,
-          stableFeeAPR: this.getStableFeeAPR(stableFee.plus(globalStableFee), expectedBlockTime),
-          liquidationPrice: this.getLiquidationPrice(_collateral, debitAmount, liquidationRatio),
-          canGenerate,
-          canPayBack: debitAmount,
-          maxGenerate,
-          ...params
-        };
-      })
-    );
+    return this._updatePosition(debitAmountChange, collateralChange);
   }
+
+  private _updatePosition = memoize(
+    (debitAmountChange: FixedPointNumber, collateralChange: FixedPointNumber): Observable<LoanPosition> => {
+      return combineLatest([this.loanParams$, this.loanPosition$, this.wallet.getPrice(this.currency)]).pipe(
+        map(([params, position, price]) => {
+          const { debit, collateral } = position;
+          const {
+            debitExchangeRate,
+            requiredCollateralRatio,
+            stableFee,
+            expectedBlockTime,
+            liquidationRatio,
+            globalStableFee
+          } = params;
+
+          const _debit = FixedPointNumber.fromInner(debit.toString(), this.stableCoinToken.decimal);
+
+          // apply change to collateral and debit
+          const _collateral = FixedPointNumber.fromInner(collateral.toString(), this.collateralToken.decimal).plus(
+            collateralChange
+          );
+          const debitAmount = _debit.times(debitExchangeRate).plus(debitAmountChange);
+          const collateralAmount = _collateral.times(price.price);
+          const requiredCollateral = this.getRequiredCollateral(debitAmount, requiredCollateralRatio, price.price);
+          const canGenerate = this.getCanGenerate(
+            collateralAmount,
+            debitAmount,
+            requiredCollateralRatio,
+            FixedPointNumber.ONE,
+            FixedPointNumber.ZERO
+          );
+          const maxGenerate = this.getMaxGenerate(collateralAmount, requiredCollateralRatio);
+
+          return {
+            collateral: _collateral,
+            debit: _debit,
+            debitAmount: debitAmount,
+            collateralAmount: collateralAmount,
+            collateralRatio: collateralAmount.div(debitAmount),
+            requiredCollateral,
+            stableFeeAPR: this.getStableFeeAPR(stableFee.plus(globalStableFee), expectedBlockTime),
+            liquidationPrice: this.getLiquidationPrice(_collateral, debitAmount, liquidationRatio),
+            canGenerate,
+            canPayBack: debitAmount,
+            maxGenerate,
+            ...params
+          };
+        })
+      );
+    }
+  );
 
   private getMaxGenerate(collateralAmount: FixedPointNumber, requiredCollateralRatio: FixedPointNumber) {
     return collateralAmount.div(requiredCollateralRatio);
