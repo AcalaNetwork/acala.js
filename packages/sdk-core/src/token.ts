@@ -1,4 +1,4 @@
-import { CurrencyId, TokenSymbol, DexShare } from '@acala-network/types/interfaces';
+import { CurrencyId, TokenSymbol, DexShare, TradingPair } from '@acala-network/types/interfaces';
 import primitivesConfig from '@acala-network/type-definitions/primitives';
 import { assert } from '@polkadot/util';
 
@@ -29,7 +29,7 @@ export class Token {
   }
 
   static fromCurrencyId(currency: CurrencyId, decimal?: number | number[]): Token {
-    const _decimal = Array.isArray(decimal) ? decimal.sort()[0] : decimal;
+    const _decimal = Array.isArray(decimal) ? decimal.sort().reverse()[0] : decimal;
 
     if (currency.isDexShare) {
       return new Token(`${currency.asDexShare[0].toString()}-${currency.asDexShare[1].toString()}`, {
@@ -96,6 +96,16 @@ export class Token {
       return api.createType('CurrencyId', this.toChainData());
     } catch (e) {
       throw new Error(`can't convert to CurrencyId`);
+    }
+  }
+
+  public toTradingPair(api: AnyApi): TradingPair {
+    if (!this.isDexShare) throw new Error(`can't convert to TradingPair`);
+
+    try {
+      return api.createType('TradingPair', [this.name.split('-').map((i) => ({ token: i }))]);
+    } catch (e) {
+      throw new Error(`can't convert to TradingPair`);
     }
   }
 

@@ -1,18 +1,28 @@
 import { ApiRx } from '@polkadot/api';
 import { WalletBase } from './wallet-base';
-import { switchMap, shareReplay, map, takeWhile } from '@polkadot/x-rxjs/operators';
+import { switchMap, shareReplay, map, takeWhile, filter } from '@polkadot/x-rxjs/operators';
 import { assert, memoize } from '@polkadot/util';
 import { Observable, of, BehaviorSubject, combineLatest } from '@polkadot/x-rxjs';
 import { Balance, ChainProperties } from '@polkadot/types/interfaces';
-import { FixedPointNumber, Token, TokenBalance } from '@acala-network/sdk-core';
-import { CurrencyId, TokenSymbol } from '@acala-network/types/interfaces';
-import { focusToCurrencyId, focusToTokenSymbolCurrencyId } from '@acala-network/sdk-core/converter';
+import { TimestampedValue } from '@open-web3/orml-types/interfaces';
+import { eventsFilterRx, FixedPointNumber, Token, TokenBalance } from '@acala-network/sdk-core';
+import { CurrencyId, OracleKey, TokenSymbol } from '@acala-network/types/interfaces';
+import {
+  focusToCurrencyId,
+  focusToCurrencyIdName,
+  focusToTokenSymbolCurrencyId
+} from '@acala-network/sdk-core/converter';
 import { MaybeAccount, MaybeCurrency } from '@acala-network/sdk-core/types';
+import { PriceData, PriceDataWithTimestamp } from './types';
+import { DerivedDexPool } from '@acala-network/api-derive';
+
+const ORACLE_FEEDS_TOKEN = ['DOT', 'XBTC', 'RENBTC', 'POLKABTC'];
 
 export class WalletRx extends WalletBase<ApiRx> {
   private decimalMap: Map<string, number>;
   private currencyIdMap: Map<string, CurrencyId>;
   private tokenMap: Map<string, Token>;
+  private oracleFeed$: BehaviorSubject<PriceDataWithTimestamp[]>;
   private isReady$: BehaviorSubject<boolean>;
 
   constructor(api: ApiRx) {
@@ -22,7 +32,11 @@ export class WalletRx extends WalletBase<ApiRx> {
     this.currencyIdMap = new Map<string, CurrencyId>([]);
     this.tokenMap = new Map<string, Token>([]);
     this.isReady$ = new BehaviorSubject<boolean>(false);
-    this.init().subscribe();
+    this.oracleFeed$ = new BehaviorSubject<PriceDataWithTimestamp[]>([]);
+
+    this.init().subscribe(() => {
+      this.subscribeOracleFeed();
+    });
   }
 
   public get isReady(): Observable<boolean> {
@@ -46,17 +60,36 @@ export class WalletRx extends WalletBase<ApiRx> {
 
       return Token.fromCurrencyId(currencyId, [decimal1, decimal2]);
     }
+
     if (currencyId.isErc20) {
       return Token.fromCurrencyId(currencyId);
     }
 
-    const key = currencyId.asToken.toHex();
+    const key = currencyId.asToken.toString();
 
     return this.tokenMap.get(key);
   }
 
   public queryBalance(account: MaybeAccount, currency: MaybeCurrency): Observable<TokenBalance> {
     return this._queryBalance(account, currency);
+  }
+
+  public getPrices(currencies: MaybeCurrency[]): Observable<PriceData[]> {
+    return this.isReady$.pipe(
+      filter((isReady) => isReady),
+      switchMap(() => combineLatest(currencies.map((item) => this.getPrice(item))))
+    );
+  }
+
+  public getPrice(currency: MaybeCurrency): Observable<PriceData> {
+    return this.isReady$.pipe(
+      filter((isReady) => isReady),
+      switchMap(() => this._getPrice(currency))
+    );
+  }
+
+  public getOraclePrice(): Observable<PriceDataWithTimestamp[]> {
+    return this.oracleFeed$;
   }
 
   private checkIfKarura(name: string) {
@@ -108,6 +141,99 @@ export class WalletRx extends WalletBase<ApiRx> {
           }
 
           return of(true);
+        }),
+        shareReplay(1)
+      );
+    }
+  );
+
+  private _getPrice = memoize(
+    (currency: MaybeCurrency): Observable<PriceData> => {
+      const currencyName = focusToCurrencyIdName(currency);
+
+      if (currencyName === 'AUSD' || currencyName === 'KUSD') {
+        const usd = this.tokenMap.get('AUSD') || this.tokenMap.get('KUSD') || new Token('USD', { decimal: 18 });
+
+        return of({
+          token: usd,
+          price: new FixedPointNumber(1, usd.decimal)
+        });
+      }
+
+      if (ORACLE_FEEDS_TOKEN.includes(currencyName)) {
+        return this.oracleFeed$.pipe(
+          map(
+            (data): PriceData => {
+              const maybe = data.find((item) => item.token.name === currencyName);
+
+              return {
+                token: maybe?.token || new Token(currencyName),
+                price: maybe?.price || FixedPointNumber.ZERO
+              };
+            }
+          )
+        ) as Observable<PriceData>;
+      }
+
+      return this.getPriceFromDex(currency);
+    }
+  );
+
+  // subscribe oracle feed
+  private subscribeOracleFeed = memoize((oracleProvider = 'Aggregated') => {
+    return eventsFilterRx(this.api, [{ section: 'oracle', method: 'NewFeedData' }], true)
+      .pipe(
+        switchMap(() => {
+          /* eslint-disable-next-line */
+          return ((this.api.rpc as any).oracle.getAllValues(oracleProvider) as Observable<[[OracleKey, TimestampedValue]]>);
+        })
+      )
+      .subscribe({
+        next: (result) => {
+          this.oracleFeed$.next(
+            result.map((item) => {
+              const token =
+                this.tokenMap.get(item[0].asToken.toString()) || Token.fromTokenName(item[0].asToken.toString());
+              const price = FixedPointNumber.fromInner(
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                (item[1]?.value as any)?.value.toString() || '0'
+              );
+
+              return {
+                token,
+                price,
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                timestamp: new Date((item[1]?.value as any)?.timestamp.toNumber())
+              };
+            })
+          );
+        }
+      });
+  });
+
+  private getPriceFromDex = memoize(
+    (currency: MaybeCurrency): Observable<PriceData> => {
+      const target = this.tokenMap.get(focusToCurrencyIdName(currency));
+      const usd = this.tokenMap.get('AUSD') || this.tokenMap.get('KUSD');
+
+      if (!target || !usd)
+        return of({
+          token: Token.fromTokenName(focusToCurrencyIdName(currency)),
+          price: FixedPointNumber.ZERO
+        });
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      return ((this.api.derive as any).dex.pool(
+        target.toCurrencyId(this.api),
+        usd.toCurrencyId(this.api)
+      ) as Observable<DerivedDexPool>).pipe(
+        map((result) => {
+          return {
+            token: target,
+            price: FixedPointNumber.fromInner(result[1].toString(), usd.decimal).div(
+              FixedPointNumber.fromInner(result[0].toString(), target.decimal)
+            )
+          };
         }),
         shareReplay(1)
       );
