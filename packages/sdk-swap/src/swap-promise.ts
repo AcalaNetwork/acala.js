@@ -1,7 +1,6 @@
 import { ApiPromise } from '@polkadot/api';
 import { memoize } from '@polkadot/util';
-import { Memoized } from '@polkadot/util/types';
-import { BehaviorSubject, Observable, from, of } from '@polkadot/x-rxjs';
+import { Observable, from, of } from '@polkadot/x-rxjs';
 import { switchMap, map, shareReplay, withLatestFrom } from '@polkadot/x-rxjs/operators';
 import { Balance } from '@acala-network/types/interfaces';
 import { eventMethodsFilter, Token, TokenPair, TokenSet } from '@acala-network/sdk-core';
@@ -13,16 +12,9 @@ import { LiquidityPool, SwapTradeMode } from './types';
 import { SwapBase } from './swap-base';
 
 export class SwapPromise extends SwapBase<ApiPromise> {
-  private tradingPairSubject: BehaviorSubject<TokenPair[]>;
-  private swapper: Memoized<(inputToken: Token, outputToken: Token) => Observable<[LiquidityPool[], Token[][]]>>;
-
   constructor(api: ApiPromise) {
-    const tradingPairSubject = new BehaviorSubject<TokenPair[]>([]);
+    super(api);
 
-    super(api, tradingPairSubject);
-
-    this.tradingPairSubject = tradingPairSubject;
-    this.swapper = this.getSwapper();
     this._getTradingPairs();
   }
 
@@ -89,7 +81,7 @@ export class SwapPromise extends SwapBase<ApiPromise> {
     const inner = async () => {
       const result = await this.api.query.dex.tradingPairStatuses.entries();
 
-      this.tradingPairSubject.next(
+      this.enableTradingPairs$.next(
         result
           .filter(([, status]) => status.isEnabled)
           .map((item) => TokenPair.fromCurrencies(item[0].args[0][0], item[0].args[0][1]))
@@ -108,17 +100,15 @@ export class SwapPromise extends SwapBase<ApiPromise> {
   }
 
   protected getTradingPairs(): Observable<TokenPair[]> {
-    return this.tradingPairSubject;
+    return this.enableTradingPairs$;
   }
 
-  private getSwapper() {
-    return memoize((inputToken: Token, outputToken: Token) => {
-      return this.getTradePathes(inputToken, outputToken).pipe(
-        switchMap((paths) => this.getLiquidityPoolsByPath(paths).pipe(withLatestFrom(of(paths)))),
-        shareReplay(1)
-      );
-    });
-  }
+  private _swapper = memoize((inputToken: Token, outputToken: Token) => {
+    return this.getTradePathes(inputToken, outputToken).pipe(
+      switchMap((paths) => this.getLiquidityPoolsByPath(paths).pipe(withLatestFrom(of(paths)))),
+      shareReplay(1)
+    );
+  });
 
   public swap(
     path: [Token, Token],
@@ -135,7 +125,7 @@ export class SwapPromise extends SwapBase<ApiPromise> {
     const inputAmount = mode === 'EXACT_INPUT' ? _input : FixedPointNumber.ZERO;
     const outputAmount = mode === 'EXACT_OUTPUT' ? _input : FixedPointNumber.ZERO;
 
-    const swapper = this.swapper(inputToken, outputToken);
+    const swapper = this._swapper(inputToken, outputToken);
 
     swapper
       .pipe(

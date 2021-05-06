@@ -46,12 +46,6 @@
       "@acala-network/sdk-wallet/*": [
         "packages/sdk-wallet/src/*"
       ],
-      "@acala-network/sdk-price": [
-        "packages/sdk-price/src"
-      ],
-      "@acala-network/sdk-price/*": [
-        "packages/sdk-price/src/*"
-      ],
       "@acala-network/sdk-swap": [
         "packages/sdk-swap/src"
       ],

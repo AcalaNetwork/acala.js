@@ -40,7 +40,7 @@ describe('token', () => {
   });
 
   test('toString should work', () => {
-    expect(t1.toString()).toEqual('Token1');
+    expect(t1.toString()).toEqual('DOT');
   });
 
   test('sort tokens should work', () => {
