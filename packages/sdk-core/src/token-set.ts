@@ -1,18 +1,17 @@
-import { BaseToken } from './base-token';
 import { Token } from './token';
 
-export class TokenSet<T extends BaseToken = Token> {
-  private _list: T[];
+export class TokenSet {
+  private _list: Token[];
 
   constructor() {
     this._list = [];
   }
 
-  get values(): T[] {
+  public values(): Token[] {
     return this._list;
   }
 
-  public add(target: T): void {
+  public add(target: Token): void {
     const isExist = !!this._list.find((item) => item.isEqual(target));
 
     if (!isExist) {
@@ -20,7 +19,7 @@ export class TokenSet<T extends BaseToken = Token> {
     }
   }
 
-  public delete(target: T): void {
+  public delete(target: Token): void {
     const index = this._list.findIndex((item) => item.isEqual(target));
 
     if (index !== -1) {

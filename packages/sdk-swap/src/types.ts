@@ -23,6 +23,7 @@ export interface SwapResult {
   path: Token[];
   input: TokenBalance;
   output: TokenBalance;
+  exchangeFee: FixedPointNumber;
 }
 
 export type SwapTradeMode = 'EXACT_INPUT' | 'EXACT_OUTPUT';

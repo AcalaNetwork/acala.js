@@ -244,8 +244,6 @@ describe('fixed point number compare should worker', () => {
     const c1 = c.trunc();
     const c2 = c.frac();
 
-    console.log(c1.toString(), c2.toString());
-
     expect(c1.minus(c2).toString()).toEqual(c.toString());
     expect(c2.times(FixedPointNumber.TEN).toString()).toEqual(FixedPointNumber.FIVE.toString());
 

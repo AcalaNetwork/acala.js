@@ -1,5 +1,5 @@
 import { ApiPromise, ApiRx } from '@polkadot/api';
-import { Observable } from '@polkadot/x-rxjs';
+import { Observable, BehaviorSubject } from '@polkadot/x-rxjs';
 import { map } from '@polkadot/x-rxjs/operators';
 import { Token, TokenBalance, TokenPair, FixedPointNumber } from '@acala-network/sdk-core';
 
@@ -10,12 +10,21 @@ import { SwapParameters } from './swap-parameters';
 import { NoLiquidityPoolError, InsufficientLiquidityError, AmountTooSmall } from './errors';
 
 const MINIMUM_AMOUNT = 1;
+const ONE = FixedPointNumber.ONE;
+
+function computeExchangeFee(path: Token[], fee: FixedPointNumber) {
+  return ONE.minus(
+    path.slice(1).reduce((acc) => {
+      return acc.times(ONE.minus(fee));
+    }, ONE)
+  );
+}
 
 export abstract class SwapBase<T extends ApiPromise | ApiRx> {
   protected api: T;
 
   // subscribe the enable trading pairs
-  protected enableTradingPairs$: Observable<TokenPair[]>;
+  protected enableTradingPairs$: BehaviorSubject<TokenPair[]>;
 
   // the _config of dex module
   protected _config: {
@@ -23,15 +32,15 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
     fee: Fee;
   };
 
-  constructor(api: T, enableTradingPairs$?: Observable<TokenPair[]>) {
+  constructor(api: T) {
     this.api = api;
 
     this._config = {
       tradingPathLimit: this.getTradingPathLimit(),
-      fee: this.getExchangeFee()
+      fee: this.getBaseExchangeFee()
     };
 
-    this.enableTradingPairs$ = enableTradingPairs$ || this.getTradingPairs();
+    this.enableTradingPairs$ = new BehaviorSubject<TokenPair[]>([]);
   }
 
   protected abstract getTradingPairs(): Observable<TokenPair[]>;
@@ -44,7 +53,7 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
     return parseInt(this.api?.consts?.dex?.tradingPathLimit?.toString() || '3');
   }
 
-  private getExchangeFee() {
+  private getBaseExchangeFee() {
     const exchangeFee = this.api.consts.dex.getExchangeFee;
 
     return {
@@ -210,6 +219,10 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
     });
   }
 
+  protected getExchangeFee(path: Token[], input: FixedPointNumber, fee: Fee): FixedPointNumber {
+    return input.times(computeExchangeFee(path, fee.numerator.div(fee.denominator)));
+  }
+
   protected getMidPrice(path: Token[], pools: LiquidityPool[]): FixedPointNumber {
     const prices: FixedPointNumber[] = [];
 
@@ -241,7 +254,7 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
   }
 
   protected transformToSwapResult(result: MiddleResult): SwapResult {
-    const { inputAmount, inputToken, outputAmount, outputToken, ...others } = result;
+    const { inputAmount, inputToken, outputAmount, outputToken, path, ...others } = result;
 
     const _inputAmount = inputAmount.clone();
     const _outputAmount = outputAmount.clone();
@@ -250,8 +263,10 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
     _outputAmount.forceSetPrecision(outputToken.decimal);
 
     return {
+      exchangeFee: this.getExchangeFee(path, inputAmount, this.config.fee),
       input: new TokenBalance(inputToken, _inputAmount),
       output: new TokenBalance(outputToken, _outputAmount),
+      path,
       ...others
     };
   }

@@ -1,5 +1,8 @@
+import { ApiRx } from '@polkadot/api';
 import { Vec } from '@polkadot/types';
 import { EventRecord } from '@polkadot/types/interfaces';
+import { from, Observable } from '@polkadot/x-rxjs';
+import { startWith, filter, switchMap, shareReplay } from '@polkadot/x-rxjs/operators';
 
 export const eventMethodsFilter = (methods: string[]) => {
   return (event: EventRecord): boolean => {
@@ -17,15 +20,27 @@ export const eventSectionsFilter = (sections: string[]) => {
   };
 };
 
-export const eventFilter = (section: string, method: string) => {
+export const eventsFilter = (data: { section: string; method: string }[]) => {
   return (event: EventRecord): boolean => {
-    const _section = event?.event?.section;
-    const _method = event?.event?.method;
-
-    return _section === section && _method === method;
+    return data.reduce((acc, cur) => {
+      return acc || (cur.method === event.event.method && cur.section === event.event.section);
+    }, false as boolean);
   };
 };
 
 export const mockEventRecord = (section?: string, method?: string): Vec<EventRecord> => {
   return ([{ event: { section, method } }] as any) as Vec<EventRecord>;
+};
+
+export const eventsFilterRx = (
+  api: ApiRx,
+  configs: { section: string; method: string }[],
+  immediately: boolean
+): Observable<EventRecord> => {
+  return api.query.system.events().pipe(
+    startWith(immediately ? mockEventRecord(configs?.[0].section, configs?.[0].method) : undefined),
+    switchMap((events) => from(events || [])),
+    filter(eventsFilter(configs)),
+    shareReplay(1)
+  );
 };

@@ -1,6 +1,5 @@
 import { ApiRx } from '@polkadot/api';
 import { memoize } from '@polkadot/util';
-import { Memoized } from '@polkadot/util/types';
 import { Observable, from, of } from '@polkadot/x-rxjs';
 import { filter, switchMap, startWith, map, shareReplay, withLatestFrom } from '@polkadot/x-rxjs/operators';
 import { Balance, TradingPairStatus } from '@acala-network/types/interfaces';
@@ -13,12 +12,10 @@ import { LiquidityPool, SwapTradeMode } from './types';
 import { SwapBase } from './swap-base';
 
 export class SwapRx extends SwapBase<ApiRx> {
-  private swapper: Memoized<(inputToken: Token, outputToken: Token) => Observable<[LiquidityPool[], Token[][]]>>;
-
   constructor(api: ApiRx) {
     super(api);
 
-    this.swapper = this.getSwapper();
+    this.getTradingPairs().subscribe();
   }
 
   get enableTradingPairs(): Observable<TokenPair[]> {
@@ -94,13 +91,11 @@ export class SwapRx extends SwapBase<ApiRx> {
       );
   }
 
-  private getSwapper() {
-    return memoize((inputToken: Token, outputToken: Token) => {
-      return this.getTradePathes(inputToken, outputToken).pipe(
-        switchMap((paths) => this.getLiquidityPoolsByPath(paths).pipe(withLatestFrom(of(paths))))
-      );
-    });
-  }
+  private _swapper = memoize((inputToken: Token, outputToken: Token) => {
+    return this.getTradePathes(inputToken, outputToken).pipe(
+      switchMap((paths) => this.getLiquidityPoolsByPath(paths).pipe(withLatestFrom(of(paths))))
+    );
+  });
 
   public swap(path: [Token, Token], input: FixedPointNumber, mode: SwapTradeMode): Observable<SwapParameters> {
     const inputToken = path[0];
@@ -112,7 +107,7 @@ export class SwapRx extends SwapBase<ApiRx> {
     const inputAmount = mode === 'EXACT_INPUT' ? _input : FixedPointNumber.ZERO;
     const outputAmount = mode === 'EXACT_OUTPUT' ? _input : FixedPointNumber.ZERO;
 
-    const swapper = this.swapper(inputToken, outputToken);
+    const swapper = this._swapper(inputToken, outputToken);
 
     return swapper.pipe(
       map(([liquidityPool, paths]) => {
