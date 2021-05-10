@@ -516,6 +516,9 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
+                        "DepositNonce": "u64",
+                        "ResourceId": "[u8; 32]",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys2",
                         "PalletsOrigin": {
                             "_enum": {
@@ -945,6 +948,9 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
+                        "DepositNonce": "u64",
+                        "ResourceId": "[u8; 32]",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys2",
                         "PalletsOrigin": {
                             "_enum": {
@@ -1385,6 +1391,9 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
+                        "DepositNonce": "u64",
+                        "ResourceId": "[u8; 32]",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys2",
                         "PalletsOrigin": {
                             "_enum": {
@@ -1815,6 +1824,9 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
+                        "DepositNonce": "u64",
+                        "ResourceId": "[u8; 32]",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys2",
                         "PalletsOrigin": {
                             "_enum": {
@@ -2246,6 +2258,9 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
+                        "DepositNonce": "u64",
+                        "ResourceId": "[u8; 32]",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys2",
                         "PalletsOrigin": {
                             "_enum": {
@@ -2327,6 +2342,12 @@
                 },
                 "stakingPool": {
                     "Phase": "StakingPoolPhase"
+                },
+                "chainBridge": {
+                    "ChainId": "ChainBridgeChainId"
+                },
+                "chainSafeTransfer": {
+                    "ChainId": "ChainBridgeChainId"
                 }
             }
         },
@@ -2846,6 +2867,9 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
+                        "DepositNonce": "u64",
+                        "ResourceId": "[u8; 32]",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys2",
                         "PalletsOrigin": {
                             "_enum": {
@@ -3275,6 +3299,9 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
+                        "DepositNonce": "u64",
+                        "ResourceId": "[u8; 32]",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys2",
                         "PalletsOrigin": {
                             "_enum": {
@@ -3715,6 +3742,9 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
+                        "DepositNonce": "u64",
+                        "ResourceId": "[u8; 32]",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys2",
                         "PalletsOrigin": {
                             "_enum": {
@@ -4145,6 +4175,9 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
+                        "DepositNonce": "u64",
+                        "ResourceId": "[u8; 32]",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys2",
                         "PalletsOrigin": {
                             "_enum": {
@@ -4576,6 +4609,9 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
+                        "DepositNonce": "u64",
+                        "ResourceId": "[u8; 32]",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys2",
                         "PalletsOrigin": {
                             "_enum": {
@@ -4657,6 +4693,12 @@
                 },
                 "stakingPool": {
                     "Phase": "StakingPoolPhase"
+                },
+                "chainBridge": {
+                    "ChainId": "ChainBridgeChainId"
+                },
+                "chainSafeTransfer": {
+                    "ChainId": "ChainBridgeChainId"
                 }
             }
         }
