@@ -13,7 +13,9 @@ import loans from './loans';
 import nft from './nft';
 import nomineesElection from './nomineesElection';
 import primitives from './primitives';
+// ecosystem
 import renvmBridge from './renvmBridge';
+import { chainBridge, chainSafeTransfer } from './chainSafe';
 import runtime from './runtime';
 import { signedExtensions as acalaSignedExtensions } from './signedExtensions';
 import stakingPool from './stakingPool';
@@ -105,7 +107,11 @@ const acalaDefs = {
   runtime,
   stakingPool,
   support,
-  renvmBridge
+
+  // ecosystem
+  renvmBridge,
+  chainBridge,
+  chainSafeTransfer
 };
 
 export const types = {
