@@ -3,7 +3,6 @@ import {
   Rate,
   OptionRatio,
   OptionRate,
-  Moment,
   AccountId,
   Balance,
   ExchangeRate
@@ -14,12 +13,11 @@ export interface DerivedLoanConstants {
   defaultDebitExchangeRate: Rate;
   defaultLiquidationRatio: Rate;
   defaultLiquidationPenalty: Rate;
-  expectedBlockTime: Moment;
 }
 
 export interface CollateralParams {
   maximumTotalDebitValue: Balance;
-  stabilityFee: OptionRate;
+  interestRatePerSec: OptionRate;
   liquidationRatio: OptionRatio;
   liquidationPenalty: OptionRate;
   requiredCollateralRatio: OptionRatio;
@@ -30,8 +28,7 @@ export interface DerivedLoanType extends Omit<CollateralParams, 'liquidationRati
   debitExchangeRate: Rate;
   liquidationRatio: OptionRatio | ExchangeRate;
   liquidationPenalty: OptionRatio | Rate;
-  globalStabilityFee: Rate;
-  expectedBlockTime: Rate;
+  globalInterestRatePerSec: Rate;
 }
 
 export interface DerivedUserLoan {

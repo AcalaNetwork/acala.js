@@ -10,11 +10,10 @@ import { memoize } from 'lodash';
 
 export interface LoanParams {
   debitExchangeRate: FixedPointNumber;
-  expectedBlockTime: number;
-  globalStableFee: FixedPointNumber;
+  globalInterestRatePerSec: FixedPointNumber;
   liquidationRatio: FixedPointNumber;
   requiredCollateralRatio: FixedPointNumber;
-  stableFee: FixedPointNumber;
+  interestRatePerSec: FixedPointNumber;
 }
 
 export interface LoanPosition extends LoanParams {
@@ -29,6 +28,7 @@ export interface LoanPosition extends LoanParams {
   liquidationRatio: FixedPointNumber;
   canGenerate: FixedPointNumber;
   canPayBack: FixedPointNumber;
+  canWithdraw: FixedPointNumber;
   maxGenerate: FixedPointNumber;
 }
 
@@ -63,7 +63,7 @@ export class LoanRx {
   }
 
   get position(): Observable<LoanPosition> {
-    return this.updatePosition(FixedPointNumber.ZERO, FixedPointNumber.ZERO);
+    return this.getPositionWithChanged(FixedPointNumber.ZERO, FixedPointNumber.ZERO);
   }
 
   get params(): Observable<LoanParams> {
@@ -74,10 +74,13 @@ export class LoanRx {
     debitAmountChange: FixedPointNumber,
     collateralChange: FixedPointNumber
   ): Observable<LoanPosition> {
-    return this._updatePosition(debitAmountChange, collateralChange);
+    return this.getPositionWithChanged(debitAmountChange, collateralChange);
   }
 
-  private _updatePosition = memoize(
+  /**
+   * get the position information of the loan
+   */
+  private getPositionWithChanged = memoize(
     (debitAmountChange: FixedPointNumber, collateralChange: FixedPointNumber): Observable<LoanPosition> => {
       return combineLatest([this.loanParams$, this.loanPosition$, this.wallet.getPrice(this.currency)]).pipe(
         map(([params, position, price]) => {
@@ -85,12 +88,11 @@ export class LoanRx {
           const {
             debitExchangeRate,
             requiredCollateralRatio,
-            stableFee,
-            expectedBlockTime,
+            interestRatePerSec,
             liquidationRatio,
-            globalStableFee
+            globalInterestRatePerSec
           } = params;
-
+          // trade debit decimal with stable coin decimal
           const _debit = FixedPointNumber.fromInner(debit.toString(), this.stableCoinToken.decimal);
 
           // apply change to collateral and debit
@@ -99,7 +101,9 @@ export class LoanRx {
           );
           const debitAmount = _debit.times(debitExchangeRate).plus(debitAmountChange);
           const collateralAmount = _collateral.times(price.price);
+
           const requiredCollateral = this.getRequiredCollateral(debitAmount, requiredCollateralRatio, price.price);
+
           const canGenerate = this.getCanGenerate(
             collateralAmount,
             debitAmount,
@@ -107,6 +111,7 @@ export class LoanRx {
             FixedPointNumber.ONE,
             FixedPointNumber.ZERO
           );
+
           const maxGenerate = this.getMaxGenerate(collateralAmount, requiredCollateralRatio);
 
           return {
@@ -116,10 +121,11 @@ export class LoanRx {
             collateralAmount: collateralAmount,
             collateralRatio: collateralAmount.div(debitAmount),
             requiredCollateral,
-            stableFeeAPR: this.getStableFeeAPR(stableFee.plus(globalStableFee), expectedBlockTime),
+            stableFeeAPR: this.getStableFeeAPR(interestRatePerSec.plus(globalInterestRatePerSec)),
             liquidationPrice: this.getLiquidationPrice(_collateral, debitAmount, liquidationRatio),
             canGenerate,
             canPayBack: debitAmount,
+            canWithdraw: _collateral.minus(requiredCollateral).min(FixedPointNumber.ZERO),
             maxGenerate,
             ...params
           };
@@ -146,8 +152,8 @@ export class LoanRx {
     return result;
   }
 
-  private getStableFeeAPR(stableFee: FixedPointNumber, blockTime: number): FixedPointNumber {
-    return new FixedPointNumber((1 + stableFee.toNumber(18, 3)) ** ((YEAR / blockTime) * 1000) - 1);
+  private getStableFeeAPR(liquidationRatio: FixedPointNumber): FixedPointNumber {
+    return liquidationRatio.times(new FixedPointNumber(YEAR));
   }
 
   private getLiquidationPrice(
@@ -156,9 +162,11 @@ export class LoanRx {
     liquidationRatio: FixedPointNumber
   ): FixedPointNumber {
     const result = debitAmount.times(liquidationRatio).div(collateral);
+
     if (result.isLessThan(FixedPointNumber.ZERO) || result.isEqualTo(FixedPointNumber.ZERO) || !result.isFinaite()) {
       return new FixedPointNumber(NaN);
     }
+
     return result;
   }
 
@@ -179,9 +187,7 @@ export class LoanRx {
       .div(stableCoinPrice)
       .minus(slippage);
 
-    if (result.isLessThan(FixedPointNumber.ZERO) || !result.isFinaite()) {
-      return FixedPointNumber.ZERO;
-    }
+    if (result.isLessThan(FixedPointNumber.ZERO) || !result.isFinaite()) return FixedPointNumber.ZERO;
 
     return result;
   }
@@ -193,14 +199,10 @@ export class LoanRx {
         (params: DerivedLoanType): LoanParams => {
           return {
             debitExchangeRate: FixedPointNumber.fromInner(params.debitExchangeRate.toString()),
-            expectedBlockTime:
-              typeof params.expectedBlockTime === 'number'
-                ? params.expectedBlockTime
-                : params.expectedBlockTime?.toNumber(),
-            globalStableFee: FixedPointNumber.fromInner(params.globalStabilityFee.toString()),
+            globalInterestRatePerSec: FixedPointNumber.fromInner(params.globalInterestRatePerSec.toString()),
             liquidationRatio: FixedPointNumber.fromInner(params.liquidationRatio.toString()),
             requiredCollateralRatio: FixedPointNumber.fromInner(params.requiredCollateralRatio.toString()),
-            stableFee: FixedPointNumber.fromInner(params.stabilityFee.toString())
+            interestRatePerSec: FixedPointNumber.fromInner(params.interestRatePerSec.toString())
           };
         }
       )
