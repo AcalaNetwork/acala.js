@@ -18,7 +18,7 @@ function loanConstants(api: ApiInterfaceRx): DerivedLoanConstants {
     minimumDebitValue: api.consts.cdpEngine.minimumDebitValue as Balance,
     defaultDebitExchangeRate: api.consts.cdpEngine.defaultDebitExchangeRate as ExchangeRate,
     defaultLiquidationRatio: api.consts.cdpEngine.defaultLiquidationRatio as Ratio,
-    defaultLiquidationPenalty: api.consts.cdpEngine.defaultLiquidationPenalty as Rate,
+    defaultLiquidationPenalty: api.consts.cdpEngine.defaultLiquidationPenalty as Rate
   };
 }
 
