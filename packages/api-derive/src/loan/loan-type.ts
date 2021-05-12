@@ -19,7 +19,6 @@ function loanConstants(api: ApiInterfaceRx): DerivedLoanConstants {
     defaultDebitExchangeRate: api.consts.cdpEngine.defaultDebitExchangeRate as ExchangeRate,
     defaultLiquidationRatio: api.consts.cdpEngine.defaultLiquidationRatio as Ratio,
     defaultLiquidationPenalty: api.consts.cdpEngine.defaultLiquidationPenalty as Rate,
-    expectedBlockTime: api.consts?.babe?.expectedBlockTime || 6000
   };
 }
 
@@ -34,13 +33,13 @@ export function loanType(
 ): (currncy: CurrencyId | string) => Observable<DerivedLoanType> {
   return memo(instanceId, (currency: CurrencyId | string) => {
     return combineLatest([
-      api.query.cdpEngine.globalStabilityFee<Rate>(),
+      api.query.cdpEngine.globalInterestRatePerSec<Rate>(),
       api.query.cdpEngine.debitExchangeRate<Rate>(currency),
       api.query.cdpEngine.collateralParams<CollateralParams>(currency)
     ]).pipe(
       map((result) => {
         const constants = loanConstants(api);
-        const [globalStabilityFee, debitExchangeRate, collateralParams] = result;
+        const [globalInterestRatePerSec, debitExchangeRate, collateralParams] = result;
 
         return {
           currency,
@@ -52,11 +51,10 @@ export function loanType(
             ? constants.defaultLiquidationRatio
             : collateralParams.liquidationRatio,
           requiredCollateralRatio: collateralParams.requiredCollateralRatio,
-          stabilityFee: collateralParams.stabilityFee,
-          globalStabilityFee: globalStabilityFee,
+          interestRatePerSec: collateralParams.interestRatePerSec,
+          globalInterestRatePerSec: globalInterestRatePerSec,
           maximumTotalDebitValue: collateralParams.maximumTotalDebitValue,
-          minimumDebitValue: constants.minimumDebitValue,
-          expectedBlockTime: constants.expectedBlockTime
+          minimumDebitValue: constants.minimumDebitValue
         };
       })
     );
