@@ -9,6 +9,7 @@ interface Config {
   priceImpact: FixedPointNumber;
   midPrice: FixedPointNumber;
   mode: SwapTradeMode;
+  exchangeFee: FixedPointNumber;
 }
 
 export class SwapParameters {
@@ -18,6 +19,7 @@ export class SwapParameters {
   public priceImpact: FixedPointNumber;
   public midPrice: FixedPointNumber;
   public mode: SwapTradeMode;
+  public exchangeFee: FixedPointNumber;
 
   constructor(config: Config) {
     this.input = config.input;
@@ -26,6 +28,7 @@ export class SwapParameters {
     this.priceImpact = config.priceImpact;
     this.midPrice = config.midPrice;
     this.mode = config.mode;
+    this.exchangeFee = config.exchangeFee;
   }
 
   public toChainData(): [{ Token: string }[], string, string] {

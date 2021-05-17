@@ -138,7 +138,10 @@ export class Token {
     });
   }
 
-  public isEqual(target: Token): boolean {
+  public isEqual(target: Token, compair?: (token1: Token, token2: Token) => boolean): boolean {
+    if (compair) {
+      return compair(this, target);
+    }
     let temp = this.name === target.name;
 
     if (this.decimal || target.decimal) {

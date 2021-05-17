@@ -15,7 +15,7 @@ export class SwapRx extends SwapBase<ApiRx> {
   constructor(api: ApiRx) {
     super(api);
 
-    this.getTradingPairs().subscribe();
+    this.getTradingPairs().subscribe((data) => this.enableTradingPairs$.next(data));
   }
 
   get enableTradingPairs(): Observable<TokenPair[]> {
@@ -103,11 +103,23 @@ export class SwapRx extends SwapBase<ApiRx> {
 
     // clear input amount's precision information
     const _input = FixedPointNumber._fromBN(input._getInner());
+    const _inputToken = new Token(inputToken.name, {
+      isDexShare: inputToken.isDexShare,
+      isERC20: inputToken.isERC20,
+      isTokenSymbol: inputToken.isTokenSymbol,
+      decimal: 18
+    });
+    const _outputToken = new Token(outputToken.name, {
+      isDexShare: outputToken.isDexShare,
+      isERC20: outputToken.isERC20,
+      isTokenSymbol: outputToken.isTokenSymbol,
+      decimal: 18
+    });
 
     const inputAmount = mode === 'EXACT_INPUT' ? _input : FixedPointNumber.ZERO;
     const outputAmount = mode === 'EXACT_OUTPUT' ? _input : FixedPointNumber.ZERO;
 
-    const swapper = this._swapper(inputToken, outputToken);
+    const swapper = this._swapper(_inputToken, _outputToken);
 
     return swapper.pipe(
       map(([liquidityPool, paths]) => {
