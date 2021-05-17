@@ -219,8 +219,12 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
     });
   }
 
-  protected getExchangeFee(path: Token[], input: FixedPointNumber, fee: Fee): FixedPointNumber {
-    return input.times(computeExchangeFee(path, fee.numerator.div(fee.denominator)));
+  protected getExchangeFee(path: Token[], input: FixedPointNumber, fee: Fee, decimal: number): FixedPointNumber {
+    const data = input.times(computeExchangeFee(path, fee.numerator.div(fee.denominator)));
+
+    data.forceSetPrecision(decimal);
+
+    return data;
   }
 
   protected getMidPrice(path: Token[], pools: LiquidityPool[]): FixedPointNumber {
@@ -263,7 +267,7 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
     _outputAmount.forceSetPrecision(outputToken.decimal);
 
     return {
-      exchangeFee: this.getExchangeFee(path, inputAmount, this.config.fee),
+      exchangeFee: this.getExchangeFee(path, inputAmount, this.config.fee, inputToken.decimal),
       input: new TokenBalance(inputToken, _inputAmount),
       output: new TokenBalance(outputToken, _outputAmount),
       path,
