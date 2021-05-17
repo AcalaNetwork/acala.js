@@ -163,9 +163,14 @@ export class Token {
     return temp;
   }
 
-  public toChainData(): { Token: string } | { DexShare: [string, string] } | { ERC20: string } {
+  public toChainData(): { Token: string } | { DexShare: [{ Token: string }, { Token: string }] } | { ERC20: string } {
     if (this.isDexShare) {
-      return { DexShare: this.name.split('-').sort((i, j) => TOKEN_SORT[i] - TOKEN_SORT[j]) as [string, string] };
+      return {
+        DexShare: (this.name.split('-').sort((i, j) => TOKEN_SORT[i] - TOKEN_SORT[j]) as [
+          string,
+          string
+        ]).map((item) => ({ Token: item })) as [{ Token: string }, { Token: string }]
+      };
     }
 
     if (this.isERC20) {

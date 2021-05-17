@@ -20,7 +20,7 @@ export class ConvertToNameFailed extends Error {
   }
 }
 
-export const focusToTokenSymbolCurrencyId = (api: AnyApi, target: string | Token | CurrencyId): CurrencyId => {
+export const forcedToTokenSymbolCurrencyId = (api: AnyApi, target: string | Token | CurrencyId): CurrencyId => {
   try {
     if (typeof target === 'string') return api.createType('CurrencyId', { token: target as string });
 
@@ -34,9 +34,10 @@ export const focusToTokenSymbolCurrencyId = (api: AnyApi, target: string | Token
   }
 };
 
-export const focusToDexShareCurrencyId = (api: AnyApi, target: [string, string] | CurrencyId): CurrencyId => {
+export const forcedToDexShareCurrencyId = (api: AnyApi, target: [string, string] | CurrencyId): CurrencyId => {
   try {
-    if (Array.isArray(target)) return api.createType('CurrencyId', { dexShare: target });
+    if (Array.isArray(target))
+      return api.createType('CurrencyId', { dexShare: target.map((item) => ({ token: item })) });
 
     if (Reflect.has(target, 'asToken')) return target as CurrencyId;
 
@@ -46,17 +47,17 @@ export const focusToDexShareCurrencyId = (api: AnyApi, target: [string, string] 
   }
 };
 
-export const focusToCurrencyId = (api: AnyApi, currency: MaybeCurrency): CurrencyId => {
+export const forcedToCurrencyId = (api: AnyApi, currency: MaybeCurrency): CurrencyId => {
   let currencyId: CurrencyId | undefined;
 
   if (typeof currency === 'string') {
     // first handle string type
     currencyId = /-/.test(currency)
-      ? focusToDexShareCurrencyId(api, currency.split('-') as [string, string])
-      : focusToTokenSymbolCurrencyId(api, currency as string);
+      ? forcedToDexShareCurrencyId(api, currency.split('-') as [string, string])
+      : forcedToTokenSymbolCurrencyId(api, currency as string);
   } else if (Array.isArray(currency)) {
     // handle [string, string]
-    currencyId = focusToDexShareCurrencyId(api, currency as [string, string]);
+    currencyId = forcedToDexShareCurrencyId(api, currency as [string, string]);
   } else if (currency instanceof Token) {
     // handle token
     currencyId = currency.toCurrencyId(api);
@@ -72,7 +73,7 @@ export const focusToCurrencyId = (api: AnyApi, currency: MaybeCurrency): Currenc
   return currencyId as CurrencyId;
 };
 
-export const focusToCurrencyIdName = (target: MaybeCurrency): string => {
+export const forcedToCurrencyIdName = (target: MaybeCurrency): string => {
   if (typeof target === 'string') return target;
 
   if (Array.isArray(target)) return target.join('-');
@@ -83,7 +84,9 @@ export const focusToCurrencyIdName = (target: MaybeCurrency): string => {
     if ((target as CurrencyId).isToken) return target.asToken.toString();
 
     if ((target as CurrencyId).isDexShare)
-      return `${target.asDexShare[0].toString()}-${target.asDexShare[1].toString()}`;
+      return `${forcedToCurrencyIdName(target.asDexShare[0] as CurrencyId)}-${forcedToCurrencyIdName(
+        target.asDexShare[1] as CurrencyId
+      )}`;
 
     if ((target as CurrencyId).isErc20) return target.asErc20.toString();
   } catch (e) {

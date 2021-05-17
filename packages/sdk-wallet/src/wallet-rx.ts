@@ -8,9 +8,9 @@ import { TimestampedValue } from '@open-web3/orml-types/interfaces';
 import { eventsFilterRx, FixedPointNumber, Token, TokenBalance } from '@acala-network/sdk-core';
 import { CurrencyId, OracleKey, TokenSymbol } from '@acala-network/types/interfaces';
 import {
-  focusToCurrencyId,
-  focusToCurrencyIdName,
-  focusToTokenSymbolCurrencyId
+  forcedToCurrencyId,
+  forcedToCurrencyIdName,
+  forcedToTokenSymbolCurrencyId
 } from '@acala-network/sdk-core/converter';
 import { MaybeAccount, MaybeCurrency } from '@acala-network/sdk-core/types';
 import { PriceData, PriceDataWithTimestamp } from './types';
@@ -52,7 +52,7 @@ export class WalletRx extends WalletBase<ApiRx> {
   }
 
   public getToken(currency: MaybeCurrency): Token | undefined {
-    const currencyId = focusToCurrencyId(this.api, currency);
+    const currencyId = forcedToCurrencyId(this.api, currency);
 
     if (currencyId.isDexShare) {
       const decimal1 = this.decimalMap.get(currencyId.asDexShare[0].toString()) || 18;
@@ -136,7 +136,7 @@ export class WalletRx extends WalletBase<ApiRx> {
           try {
             tokenSymbol.forEach((item, index) => {
               const key = item.toString();
-              const currencyId = focusToTokenSymbolCurrencyId(this.api, key);
+              const currencyId = forcedToTokenSymbolCurrencyId(this.api, key);
               const decimal = tokenDecimals?.[index].toNumber() || defaultTokenDecimal;
 
               if (tokenList.find((i) => i === key)) {
@@ -160,7 +160,7 @@ export class WalletRx extends WalletBase<ApiRx> {
 
   private _getPrice = memoize(
     (currency: MaybeCurrency, source?: 'dex' | 'oracle'): Observable<PriceData> => {
-      const currencyName = focusToCurrencyIdName(currency);
+      const currencyName = forcedToCurrencyIdName(currency);
 
       if (currencyName === 'AUSD' || currencyName === 'KUSD') {
         const usd = this.tokenMap.get('AUSD') || this.tokenMap.get('KUSD') || new Token('USD', { decimal: 18 });
@@ -230,12 +230,12 @@ export class WalletRx extends WalletBase<ApiRx> {
 
   private getPriceFromDex = memoize(
     (currency: MaybeCurrency): Observable<PriceData> => {
-      const target = this.tokenMap.get(focusToCurrencyIdName(currency));
+      const target = this.tokenMap.get(forcedToCurrencyIdName(currency));
       const usd = this.tokenMap.get('AUSD') || this.tokenMap.get('KUSD');
 
       if (!target || !usd)
         return of({
-          token: Token.fromTokenName(focusToCurrencyIdName(currency)),
+          token: Token.fromTokenName(forcedToCurrencyIdName(currency)),
           price: FixedPointNumber.ZERO
         });
 
@@ -259,7 +259,7 @@ export class WalletRx extends WalletBase<ApiRx> {
 
   private _queryBalance = memoize(
     (account: MaybeAccount, currency: MaybeCurrency): Observable<TokenBalance> => {
-      const currencyId = focusToCurrencyId(this.api, currency);
+      const currencyId = forcedToCurrencyId(this.api, currency);
 
       return this.isReady$.pipe(
         takeWhile((isReady) => isReady),

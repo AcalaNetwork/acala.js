@@ -1,7 +1,7 @@
 import { Observable, combineLatest } from '@polkadot/x-rxjs';
 import { map } from '@polkadot/x-rxjs/operators';
 import { assert } from '@polkadot/util';
-import { FixedPointNumber, focusToCurrencyId, MaybeCurrency, Token } from '@acala-network/sdk-core';
+import { FixedPointNumber, forcedToCurrencyId, MaybeCurrency, Token } from '@acala-network/sdk-core';
 import { CurrencyId, Position } from '@acala-network/types/interfaces';
 import { DerivedLoanType } from '@acala-network/api-derive';
 import { ApiRx } from '@polkadot/api';
@@ -52,7 +52,7 @@ export class LoanRx {
     assert(wallet.isReady, 'the wallet sdk should be ready');
 
     this.api = api;
-    this.currency = focusToCurrencyId(api, currency);
+    this.currency = forcedToCurrencyId(api, currency);
     this.address = address;
     this.collateralToken = collateralToken;
     this.stableCoinToken = stableCoinToken;
