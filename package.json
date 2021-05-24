@@ -9,8 +9,8 @@
   ],
   "resolutions": {
     "typescript": "^4.2.4",
-    "@polkadot/api": "^4.6.3-7",
-    "@polkadot/types": "^4.6.3-7"
+    "@polkadot/api": "^4.10.2-1",
+    "@polkadot/types": "^4.10.2-1"
   },
   "scripts": {
     "build": "yarn build:interfaces && polkadot-dev-build-ts",
