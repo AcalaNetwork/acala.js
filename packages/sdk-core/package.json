@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk-core",
-  "version": "0.7.4-8",
+  "version": "0.7.4-9",
   "description": "the core of acala network sdk",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
@@ -15,8 +15,8 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
-    "@acala-network/api": "0.7.4-8",
-    "@acala-network/type-definitions": "0.7.4-8",
+    "@acala-network/api": "0.7.4-9",
+    "@acala-network/type-definitions": "0.7.4-9",
     "@polkadot/api": "^4.6.3-7",
     "@polkadot/types": "^4.6.3-7",
     "@types/events": "^3.0.0",
