@@ -1,7 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-const typesBundleTypes = [
+import type { OverrideVersionedType } from '@polkadot/types/types';
+
+const versioned: OverrideVersionedType[] = [
   {
-    minmax: [600, 699] as any,
+    minmax: [600, 699],
     types: {
       Address: 'LookupSource',
       LookupSource: 'IndicesLookupSource',
@@ -11,7 +12,7 @@ const typesBundleTypes = [
     }
   },
   {
-    minmax: [700, 719] as any,
+    minmax: [700, 719],
     types: {
       Address: 'GenericMultiAddress',
       LookupSource: 'GenericMultiAddress',
@@ -21,7 +22,7 @@ const typesBundleTypes = [
     }
   },
   {
-    minmax: [719, 729] as any,
+    minmax: [719, 729],
     types: {
       TokenSymbol: {
         _enum: {
@@ -54,14 +55,14 @@ const typesBundleTypes = [
     }
   },
   {
-    minmax: [720, undefined] as any,
+    minmax: [720, undefined],
     types: {
       Address: 'GenericMultiAddress',
       LookupSource: 'GenericMultiAddress'
     }
   },
   {
-    minmax: [600, 722] as any,
+    minmax: [600, 722],
     types: {
       PoolId: {
         _enum: {
@@ -75,4 +76,4 @@ const typesBundleTypes = [
   }
 ];
 
-export default typesBundleTypes;
+export default versioned;
