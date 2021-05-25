@@ -31,7 +31,8 @@ export default {
       _enum: {
         Token: 'TokenSymbol',
         DEXShare: '(DexShare, DexShare)',
-        ERC20: 'EvmAddress'
+        ERC20: 'EvmAddress',
+        ChainSafe: '[u8; 32]'
       }
     },
     CurrencyIdOf: 'CurrencyId',

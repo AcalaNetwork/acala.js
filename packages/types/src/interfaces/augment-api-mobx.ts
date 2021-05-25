@@ -49,7 +49,7 @@ export interface StorageType extends BaseStorageType {
     /**
      * True if Self::values(key) is up to date, otherwise the value is stale
      **/
-    isUpdated: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | string, bool>;
+    isUpdated: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string, bool>;
     /**
      * The current members of the collective. This is stored sorted (just by
      * value).
@@ -58,11 +58,11 @@ export interface StorageType extends BaseStorageType {
     /**
      * Raw values for each oracle operators
      **/
-    rawValues: StorageDoubleMap<AccountId | string, OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Option<TimestampedValueOf>>;
+    rawValues: StorageDoubleMap<AccountId | string, OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string, Option<TimestampedValueOf>>;
     /**
      * Combined value, may not be up to date
      **/
-    values: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Option<TimestampedValueOf>>;
+    values: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string, Option<TimestampedValueOf>>;
   };
   acalaTreasury: {    /**
      * Proposal indices that have been approved but not yet awarded.
@@ -104,7 +104,7 @@ export interface StorageType extends BaseStorageType {
      * 
      * TotalCollateralInAuction: map CurrencyId => Balance
      **/
-    totalCollateralInAuction: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Balance>;
+    totalCollateralInAuction: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string, Balance>;
     /**
      * Record of total target sales of all active collateral auctions
      * 
@@ -249,7 +249,7 @@ export interface StorageType extends BaseStorageType {
     /**
      * True if Self::values(key) is up to date, otherwise the value is stale
      **/
-    isUpdated: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | string, bool>;
+    isUpdated: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string, bool>;
     /**
      * The current members of the collective. This is stored sorted (just by
      * value).
@@ -258,11 +258,11 @@ export interface StorageType extends BaseStorageType {
     /**
      * Raw values for each oracle operators
      **/
-    rawValues: StorageDoubleMap<AccountId | string, OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Option<TimestampedValueOf>>;
+    rawValues: StorageDoubleMap<AccountId | string, OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string, Option<TimestampedValueOf>>;
     /**
      * Combined value, may not be up to date
      **/
-    values: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Option<TimestampedValueOf>>;
+    values: StorageMap<OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string, Option<TimestampedValueOf>>;
   };
   bounties: {    /**
      * Bounties that have been made.
@@ -286,14 +286,14 @@ export interface StorageType extends BaseStorageType {
      * 
      * CollateralParams: CurrencyId => RiskManagementParams
      **/
-    collateralParams: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, RiskManagementParams>;
+    collateralParams: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string, RiskManagementParams>;
     /**
      * Mapping from collateral type to its exchange rate of debit units and
      * debit value
      * 
      * DebitExchangeRate: CurrencyId => Option<ExchangeRate>
      **/
-    debitExchangeRate: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Option<ExchangeRate>>;
+    debitExchangeRate: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string, Option<ExchangeRate>>;
     /**
      * Global interest rate per sec for all types of collateral
      * 
@@ -320,7 +320,7 @@ export interface StorageType extends BaseStorageType {
      * 
      * ExpectedCollateralAuctionSize: map CurrencyId => Balance
      **/
-    expectedCollateralAuctionSize: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Balance>;
+    expectedCollateralAuctionSize: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string, Balance>;
   };
   dex: {    /**
      * Liquidity pool for TradingPair.
@@ -616,7 +616,7 @@ export interface StorageType extends BaseStorageType {
      * 
      * Authorization: double_map AccountId, (CurrencyId, T::AccountId) => Option<()>
      **/
-    authorization: StorageDoubleMap<AccountId | string, ITuple<[CurrencyId, AccountId]> | [CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, AccountId | string], Option<ITuple<[]>>>;
+    authorization: StorageDoubleMap<AccountId | string, ITuple<[CurrencyId, AccountId]> | [CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string, AccountId | string], Option<ITuple<[]>>>;
   };
   honzonCouncil: {    /**
      * The current members of the collective. This is stored sorted (just by value).
@@ -676,14 +676,14 @@ export interface StorageType extends BaseStorageType {
      * 
      * Positions: double_map CurrencyId, AccountId => Position
      **/
-    positions: StorageDoubleMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, AccountId | string, Position>;
+    positions: StorageDoubleMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string, AccountId | string, Position>;
     /**
      * The total collateralized debit positions, map from
      * CollateralType -> Position
      * 
      * TotalPositions: CurrencyId => Position
      **/
-    totalPositions: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Position>;
+    totalPositions: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string, Position>;
   };
   multisig: {    calls: StorageMap<U8aFixed | string, Option<ITuple<[OpaqueCall, AccountId, BalanceOf]>>>;
     /**
@@ -775,7 +775,7 @@ export interface StorageType extends BaseStorageType {
      * 
      * map CurrencyId => Option<Price>
      **/
-    lockedPrice: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Option<Price>>;
+    lockedPrice: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string, Option<Price>>;
   };
   proxy: {    /**
      * The announcements made by the proxy (key).
@@ -1251,16 +1251,16 @@ export interface StorageType extends BaseStorageType {
      * NOTE: This is only used in the case that this module is used to store
      * balances.
      **/
-    accounts: StorageDoubleMap<AccountId | string, CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, AccountData>;
+    accounts: StorageDoubleMap<AccountId | string, CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string, AccountData>;
     /**
      * Any liquidity locks of a token type under an account.
      * NOTE: Should only be accessed when setting, changing and freeing a lock.
      **/
-    locks: StorageDoubleMap<AccountId | string, CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Vec<BalanceLock>>;
+    locks: StorageDoubleMap<AccountId | string, CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string, Vec<BalanceLock>>;
     /**
      * The total issuance of a token type.
      **/
-    totalIssuance: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | string, Balance>;
+    totalIssuance: StorageMap<CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string, Balance>;
   };
   transactionPayment: {    /**
      * The default fee currency for accounts.

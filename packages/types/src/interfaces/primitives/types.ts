@@ -1,7 +1,7 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { Enum, i128, u128, u32 } from '@polkadot/types';
+import type { Enum, U8aFixed, i128, u128, u32 } from '@polkadot/types';
 import type { ITuple } from '@polkadot/types/types';
 import type { EvmAddress } from '@acala-network/types/interfaces/evm';
 
@@ -40,6 +40,8 @@ export interface CurrencyId extends Enum {
   readonly asDexShare: ITuple<[DexShare, DexShare]>;
   readonly isErc20: boolean;
   readonly asErc20: EvmAddress;
+  readonly isChainSafe: boolean;
+  readonly asChainSafe: U8aFixed;
 }
 
 /** @name CurrencyIdOf */
