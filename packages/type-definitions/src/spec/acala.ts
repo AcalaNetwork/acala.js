@@ -73,7 +73,7 @@ const versioned: OverrideVersionedType[] = [
         }
       }
     }
-  },
+  }
 ];
 
 export default versioned;
