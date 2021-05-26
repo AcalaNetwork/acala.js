@@ -22,6 +22,26 @@ const typesBundleTypes: OverrideVersionedType[] = [
     }
   },
   {
+    minmax: [720, undefined],
+    types: {
+      Address: 'GenericMultiAddress',
+      LookupSource: 'GenericMultiAddress'
+    }
+  },
+  {
+    minmax: [600, 722],
+    types: {
+      PoolId: {
+        _enum: {
+          Loans: 'CurrencyId',
+          DexIncentive: 'CurrencyId',
+          DexSaving: 'CurrencyId',
+          Homa: 'Null'
+        }
+      }
+    }
+  },
+  {
     minmax: [719, 729],
     types: {
       TokenSymbol: {
@@ -54,26 +74,6 @@ const typesBundleTypes: OverrideVersionedType[] = [
       }
     }
   },
-  {
-    minmax: [720, undefined],
-    types: {
-      Address: 'GenericMultiAddress',
-      LookupSource: 'GenericMultiAddress'
-    }
-  },
-  {
-    minmax: [600, 722],
-    types: {
-      PoolId: {
-        _enum: {
-          Loans: 'CurrencyId',
-          DexIncentive: 'CurrencyId',
-          DexSaving: 'CurrencyId',
-          Homa: 'Null'
-        }
-      }
-    }
-  }
 ];
 
 export default typesBundleTypes;

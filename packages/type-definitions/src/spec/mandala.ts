@@ -1,6 +1,6 @@
 import type { OverrideVersionedType } from '@polkadot/types/types';
 
-const versioned: OverrideVersionedType[] = [
+const typesBundleTypes: OverrideVersionedType[] = [
   {
     minmax: [600, 699],
     types: {
@@ -18,6 +18,26 @@ const versioned: OverrideVersionedType[] = [
       LookupSource: 'GenericMultiAddress',
       TokenSymbol: {
         _enum: ['ACA', 'AUSD', 'DOT', 'XBTC', 'LDOT', 'RENBTC']
+      }
+    }
+  },
+  {
+    minmax: [720, undefined],
+    types: {
+      Address: 'GenericMultiAddress',
+      LookupSource: 'GenericMultiAddress'
+    }
+  },
+  {
+    minmax: [600, 722],
+    types: {
+      PoolId: {
+        _enum: {
+          Loans: 'CurrencyId',
+          DexIncentive: 'CurrencyId',
+          DexSaving: 'CurrencyId',
+          Homa: 'Null'
+        }
       }
     }
   },
@@ -54,26 +74,6 @@ const versioned: OverrideVersionedType[] = [
       }
     }
   },
-  {
-    minmax: [720, undefined],
-    types: {
-      Address: 'GenericMultiAddress',
-      LookupSource: 'GenericMultiAddress'
-    }
-  },
-  {
-    minmax: [600, 722],
-    types: {
-      PoolId: {
-        _enum: {
-          Loans: 'CurrencyId',
-          DexIncentive: 'CurrencyId',
-          DexSaving: 'CurrencyId',
-          Homa: 'Null'
-        }
-      }
-    }
-  }
 ];
 
-export default versioned;
+export default typesBundleTypes;
