@@ -10,7 +10,7 @@ import type { CodeInfo, Erc20Info, EvmAddress } from '@acala-network/types/inter
 import type { Guarantee, RelaychainAccountId, ValidatorBacking } from '@acala-network/types/interfaces/homaValidatorList';
 import type { PoolId } from '@acala-network/types/interfaces/incentives';
 import type { Position } from '@acala-network/types/interfaces/loans';
-import type { ClassId, ClassInfoOf, TokenId, TokenInfoOf } from '@acala-network/types/interfaces/nft';
+import type { ClassInfoOf, TokenId, TokenInfoOf } from '@acala-network/types/interfaces/nft';
 import type { BondingLedger, NomineeId } from '@acala-network/types/interfaces/nomineesElection';
 import type { AirDropCurrencyId, AuctionId, CurrencyId, TradingPair } from '@acala-network/types/interfaces/primitives';
 import type { DestAddress, PublicKey } from '@acala-network/types/interfaces/renvmBridge';
@@ -38,6 +38,7 @@ import type { ActiveEraInfo, ElectionPhase, EraIndex, EraRewardPoints, Exposure,
 import type { AccountInfo, ConsumedWeight, DigestOf, EventIndex, EventRecord, LastRuntimeUpgradeInfo, Phase } from '@polkadot/types/interfaces/system';
 import type { Bounty, BountyIndex, OpenTip } from '@polkadot/types/interfaces/treasury';
 import type { Multiplier } from '@polkadot/types/interfaces/txpayment';
+import type { ClassId } from '@polkadot/types/interfaces/uniques';
 import type { Multisig } from '@polkadot/types/interfaces/utility';
 import type { BaseStorageType, StorageDoubleMap, StorageMap } from '@open-web3/api-mobx';
 

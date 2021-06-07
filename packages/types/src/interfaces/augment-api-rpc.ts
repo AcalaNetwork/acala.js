@@ -169,7 +169,7 @@ declare module '@polkadot/rpc-core/types.jsonrpc' {
        **/
       accounts: AugmentedRpc<() => Observable<Vec<H160>>>;
       /**
-       * Returns balance of the given account.
+       * Returns the blockNumber
        **/
       blockNumber: AugmentedRpc<() => Observable<U256>>;
       /**
@@ -387,11 +387,11 @@ declare module '@polkadot/rpc-core/types.jsonrpc' {
       /**
        * Retrieves all oracle values.
        **/
-      getAllValues: AugmentedRpc<(providerId: RpcDataProviderId | string, at?: BlockHash | string | Uint8Array) => Observable<Vec<ITuple<[OracleKey, Option<TimestampedValue>]>>>>;
+      getAllValues: AugmentedRpc<(providerId: RpcDataProviderId | string) => Observable<Vec<ITuple<[OracleKey, Option<TimestampedValue>]>>>>;
       /**
        * Retrieves the oracle value for a given key.
        **/
-      getValue: AugmentedRpc<(providerId: RpcDataProviderId | string, key: OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Observable<Option<TimestampedValue>>>;
+      getValue: AugmentedRpc<(providerId: RpcDataProviderId | string, key: OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string | Uint8Array) => Observable<Option<TimestampedValue>>>;
     };
     payment: {
       /**
