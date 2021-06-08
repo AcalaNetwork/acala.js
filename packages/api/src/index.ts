@@ -23,7 +23,6 @@ export const options = ({
   ...otherOptions
 }: ApiOptions = {}): ApiOptions => ({
   types: {
-    ...acalaTypes,
     ...types
   },
   rpc: {
@@ -48,6 +47,10 @@ export const options = ({
       },
       mandala: {
         ...acalaTypesBundle?.spec?.mandala,
+        ...typesBundle?.spec?.mandala
+      },
+      karura: {
+        ...acalaTypesBundle?.spec?.karura,
         ...typesBundle?.spec?.mandala
       }
     }
