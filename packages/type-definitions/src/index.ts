@@ -126,20 +126,6 @@ export const types = {
   ...additionalOverride
 };
 
-export const typesBundle = {
-  spec: {
-    mandala: {
-      types: mandalaVersioned
-    },
-    acala: {
-      types: acalaVersioned
-    },
-    karura: {
-      types: karuraVersioned
-    }
-  }
-};
-
 export const rpc = jsonrpcFromDefs(acalaDefs, { ...ormlRpc });
 export const typesAlias = typesAliasFromDefs(acalaDefs, { ...ormlAlias });
 
@@ -158,6 +144,14 @@ function getBundle(versioned: OverrideVersionedType[]) {
     alias: typesAlias
   };
 }
+
+export const typesBundle = {
+  spec: {
+    acala: getBundle(acalaVersioned),
+    mandala: getBundle(mandalaVersioned),
+    karura: getBundle(karuraVersioned)
+  }
+};
 
 // Type overrides have priority issues
 export const typesBundleForPolkadot = {

@@ -54,12 +54,6 @@ export interface ChangesTrieConfiguration extends Struct {
   readonly digestLevels: u32;
 }
 
-/** @name ChangesTrieSignal */
-export interface ChangesTrieSignal extends Enum {
-  readonly isNewConfiguration: boolean;
-  readonly asNewConfiguration: Option<ChangesTrieConfiguration>;
-}
-
 /** @name CodecHash */
 export interface CodecHash extends Hash {}
 
@@ -90,8 +84,6 @@ export interface DigestItem extends Enum {
   readonly asSeal: Seal;
   readonly isPreRuntime: boolean;
   readonly asPreRuntime: PreRuntime;
-  readonly isChangesTrieSignal: boolean;
-  readonly asChangesTrieSignal: ChangesTrieSignal;
 }
 
 /** @name EncodedJustification */
@@ -136,9 +128,6 @@ export interface H2048 extends U8aFixed {}
 /** @name H256 */
 export interface H256 extends U8aFixed {}
 
-/** @name H32 */
-export interface H32 extends U8aFixed {}
-
 /** @name H512 */
 export interface H512 extends U8aFixed {}
 
@@ -155,12 +144,6 @@ export interface Header extends Struct {
   readonly stateRoot: Hash;
   readonly extrinsicsRoot: Hash;
   readonly digest: Digest;
-}
-
-/** @name HeaderPartial */
-export interface HeaderPartial extends Struct {
-  readonly parentHash: Hash;
-  readonly number: BlockNumber;
 }
 
 /** @name I32F32 */
@@ -325,22 +308,8 @@ export interface StorageProof extends Struct {
   readonly trieNodes: Vec<Bytes>;
 }
 
-/** @name TransactionInfo */
-export interface TransactionInfo extends Struct {
-  readonly chunkRoot: H256;
-  readonly contentHash: H256;
-  readonly dataSize: u32;
-  readonly blockChunks: u32;
-}
-
 /** @name TransactionPriority */
 export interface TransactionPriority extends u64 {}
-
-/** @name TransactionStorageProof */
-export interface TransactionStorageProof extends Struct {
-  readonly chunk: Bytes;
-  readonly proof: Vec<Bytes>;
-}
 
 /** @name U32F32 */
 export interface U32F32 extends UInt {}
