@@ -23,7 +23,13 @@ export const eventSectionsFilter = (sections: string[]) => {
 export const eventsFilter = (data: { section: string; method: string }[]) => {
   return (event: EventRecord): boolean => {
     return data.reduce((acc, cur) => {
-      return acc || (cur.method === event.event.method && cur.section === event.event.section);
+      // eslint-disable-next-line prettier/prettier
+      const isSectionMatch = cur.section === '*' ? true : (cur.section === event.event.section);
+
+      // eslint-disable-next-line prettier/prettier
+      const isMethodMatch = cur.method === '*' ? true : (cur.method === event.event.method);
+
+      return acc || (isSectionMatch && isMethodMatch);
     }, false as boolean);
   };
 };

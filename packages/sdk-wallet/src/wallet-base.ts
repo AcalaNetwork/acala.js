@@ -10,8 +10,6 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
     this.api = api;
   }
 
-  abstract init(): ObOrPromiseResult<T, boolean>;
-
   /**
    * @name getAllTokens
    * @description get all available currencies
@@ -43,12 +41,6 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
    * @description get the price
    */
   abstract getPrice(currency: MaybeCurrency): ObOrPromiseResult<T, PriceData>;
-
-  /**
-   * @name getPriceFrom
-   * @description get the price
-   */
-  abstract getPriceFrom(currency: MaybeCurrency, source: 'dex' | 'oracle'): ObOrPromiseResult<T, PriceData>;
 
   /**
    * @name getOraclePrice
