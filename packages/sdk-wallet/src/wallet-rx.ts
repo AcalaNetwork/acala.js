@@ -6,11 +6,13 @@ import { Observable, of, BehaviorSubject, combineLatest } from '@polkadot/x-rxjs
 import { Balance, ChainProperties } from '@polkadot/types/interfaces';
 import { TimestampedValue } from '@open-web3/orml-types/interfaces';
 import { eventsFilterRx, FixedPointNumber, Token, TokenBalance } from '@acala-network/sdk-core';
-import { CurrencyId, OracleKey, TokenSymbol } from '@acala-network/types/interfaces';
+import { CurrencyId, OracleKey } from '@acala-network/types/interfaces';
 import {
-  forcedToCurrencyId,
-  forcedToCurrencyIdName,
-  forcedToTokenSymbolCurrencyId
+  forceToCurrencyId,
+  forceToCurrencyIdName,
+  forceToTokenSymbolCurrencyId,
+  getLPCurrenciesFormName,
+  isDexShare
 } from '@acala-network/sdk-core/converter';
 import { MaybeAccount, MaybeCurrency } from '@acala-network/sdk-core/types';
 import { PriceData, PriceDataWithTimestamp } from './types';
@@ -24,6 +26,7 @@ export class WalletRx extends WalletBase<ApiRx> {
   private tokenMap: Map<string, Token>;
   private oracleFeed$: BehaviorSubject<PriceDataWithTimestamp[]>;
   private isReady$: BehaviorSubject<boolean>;
+  private nativeToken!: string;
 
   constructor(api: ApiRx) {
     super(api);
@@ -34,8 +37,9 @@ export class WalletRx extends WalletBase<ApiRx> {
     this.isReady$ = new BehaviorSubject<boolean>(false);
     this.oracleFeed$ = new BehaviorSubject<PriceDataWithTimestamp[]>([]);
 
-    this.init().subscribe(() => {
-      this.subscrineInnerOracleFeed();
+    // auto init and subscrbe oracle feed
+    this._init().subscribe(() => {
+      this.subscribeInnerOracleFeed();
     });
   }
 
@@ -43,37 +47,43 @@ export class WalletRx extends WalletBase<ApiRx> {
     return this.isReady$.getValue();
   }
 
-  public init(): Observable<boolean> {
-    return this._init();
+  // subscribe the sdk ready status
+  public subscribteIsReady(): BehaviorSubject<boolean> {
+    return this.isReady$;
   }
 
+  // get all useable tokens from chain config.
   public getAllTokens(): Token[] {
     return Array.from(this.tokenMap.values());
   }
 
-  public getToken(currency: MaybeCurrency): Token | undefined {
-    const currencyId = forcedToCurrencyId(this.api, currency);
+  // get token object
+  public getToken(currency: MaybeCurrency): Token {
+    const currencyName = forceToCurrencyIdName(currency);
 
-    if (currencyId.isDexShare) {
-      const decimal1 = this.decimalMap.get(currencyId.asDexShare[0].toString()) || 18;
-      const decimal2 = this.decimalMap.get(currencyId.asDexShare[1].toString()) || 18;
+    if (isDexShare(currencyName)) {
+      const [token1, token2] = getLPCurrenciesFormName(currencyName);
 
-      return Token.fromCurrencyId(currencyId, [decimal1, decimal2]);
+      const decimal1 = this.decimalMap.get(token1) || 18;
+      const decimal2 = this.decimalMap.get(token2) || 18;
+
+      return Token.fromCurrencyId(forceToCurrencyId(this.api, currency), [decimal1, decimal2]);
     }
 
-    if (currencyId.isErc20) {
-      return Token.fromCurrencyId(currencyId);
-    }
-
-    const key = currencyId.asToken.toString();
-
-    return this.tokenMap.get(key);
+    return this.tokenMap.get(currencyName) || new Token('mock');
   }
 
+  // query balance
   public queryBalance(account: MaybeAccount, currency: MaybeCurrency): Observable<TokenBalance> {
     return this._queryBalance(account, currency);
   }
 
+  // query issuance
+  public queryIssuance(currency: MaybeCurrency): Observable<FixedPointNumber> {
+    return this._queryIssunace(currency);
+  }
+
+  // get prices of token array
   public getPrices(currencies: MaybeCurrency[]): Observable<PriceData[]> {
     return this.isReady$.pipe(
       filter((isReady) => isReady),
@@ -81,6 +91,7 @@ export class WalletRx extends WalletBase<ApiRx> {
     );
   }
 
+  // get price of one token
   public getPrice(currency: MaybeCurrency): Observable<PriceData> {
     return this.isReady$.pipe(
       filter((isReady) => isReady),
@@ -88,62 +99,36 @@ export class WalletRx extends WalletBase<ApiRx> {
     );
   }
 
-  public getPriceFrom(currency: MaybeCurrency, source: 'dex' | 'oracle'): Observable<PriceData> {
-    return this.isReady$.pipe(
-      filter((isReady) => isReady),
-      switchMap(() => this._getPrice(currency, source))
-    );
-  }
-
+  // subscribe oracle price
   public getOraclePrice(): Observable<PriceDataWithTimestamp[]> {
     return this.oracleFeed$;
   }
 
+  // subscribe oracle feed
   public subscribeOracleFeed(provider: string): Observable<PriceDataWithTimestamp[]> {
     return this._subscribeOracleFeed(provider);
   }
 
-  private checkIfKarura(name: string) {
-    return /karura/i.test(name);
-  }
-
-  private getTokenListByChain(isKarura: boolean) {
-    const karuraCurrencyIndex = 100;
-    const tokenSymbolType = this.api.registry.createType('TokenSymbol' as any) as TokenSymbol;
-
-    return tokenSymbolType.defKeys.filter((_value, index) => {
-      const indexes = tokenSymbolType.defIndexes;
-
-      if (isKarura) {
-        return indexes[index] >= karuraCurrencyIndex;
-      }
-
-      return indexes[index] < karuraCurrencyIndex;
-    });
-  }
-
   private _init = memoize(
     (): Observable<boolean> => {
-      return combineLatest([this.api.rpc.system.chain(), this.api.rpc.system.properties<ChainProperties>()]).pipe(
-        switchMap(([chainName, properties]) => {
-          const isKarura = this.checkIfKarura(chainName.toString());
+      return this.api.rpc.system.properties<ChainProperties>().pipe(
+        switchMap((properties) => {
           const tokenDecimals = properties.tokenDecimals.unwrapOrDefault();
           const tokenSymbol = properties.tokenSymbol.unwrapOrDefault();
-          const tokenList = this.getTokenListByChain(isKarura);
 
           const defaultTokenDecimal = tokenDecimals?.[0].toNumber() || 18;
+
+          this.nativeToken = tokenSymbol[0].toString();
 
           try {
             tokenSymbol.forEach((item, index) => {
               const key = item.toString();
-              const currencyId = forcedToTokenSymbolCurrencyId(this.api, key);
+              const currencyId = forceToTokenSymbolCurrencyId(this.api, key);
               const decimal = tokenDecimals?.[index].toNumber() || defaultTokenDecimal;
 
-              if (tokenList.find((i) => i === key)) {
-                this.decimalMap.set(key, tokenDecimals?.[index].toNumber() || defaultTokenDecimal);
-                this.currencyIdMap.set(key, currencyId);
-                this.tokenMap.set(key, Token.fromCurrencyId(currencyId, decimal));
-              }
+              this.decimalMap.set(key, tokenDecimals?.[index].toNumber() || defaultTokenDecimal);
+              this.currencyIdMap.set(key, currencyId);
+              this.tokenMap.set(key, Token.fromCurrencyId(currencyId, decimal));
             });
 
             this.isReady$.next(true);
@@ -158,12 +143,19 @@ export class WalletRx extends WalletBase<ApiRx> {
     }
   );
 
+  // query price info, support specify data source
   private _getPrice = memoize(
-    (currency: MaybeCurrency, source?: 'dex' | 'oracle'): Observable<PriceData> => {
-      const currencyName = forcedToCurrencyIdName(currency);
+    (currency: MaybeCurrency): Observable<PriceData> => {
+      const currencyName = forceToCurrencyIdName(currency);
 
+      // get dex share price
+      if (isDexShare(currencyName)) {
+        return this.getDexSharePrice(currencyName);
+      }
+
+      // get stable coin price
       if (currencyName === 'AUSD' || currencyName === 'KUSD') {
-        const usd = this.tokenMap.get('AUSD') || this.tokenMap.get('KUSD') || new Token('USD', { decimal: 18 });
+        const usd = this.tokenMap.get('AUSD') || this.tokenMap.get('KUSD') || new Token('USD', { decimal: 12 });
 
         return of({
           token: usd,
@@ -171,11 +163,8 @@ export class WalletRx extends WalletBase<ApiRx> {
         });
       }
 
-      if (source === 'dex') {
-        return this.getPriceFromDex(currency);
-      }
-
-      if (source === 'oracle' ? true : ORACLE_FEEDS_TOKEN.includes(currencyName)) {
+      // get price of ORACLE_FEEDS_TOKEN
+      if (ORACLE_FEEDS_TOKEN.includes(currencyName)) {
         return this.oracleFeed$.pipe(
           map(
             (data): PriceData => {
@@ -190,11 +179,13 @@ export class WalletRx extends WalletBase<ApiRx> {
         ) as Observable<PriceData>;
       }
 
+      // get price from dex default
       return this.getPriceFromDex(currency);
     }
   );
 
-  private subscrineInnerOracleFeed() {
+  // push oracle feeds data to oracleFeed$
+  private subscribeInnerOracleFeed() {
     this._subscribeOracleFeed().subscribe({
       next: (result) => {
         this.oracleFeed$.next(result);
@@ -202,8 +193,9 @@ export class WalletRx extends WalletBase<ApiRx> {
     });
   }
 
+  // subscribe oracle feed
   private _subscribeOracleFeed = memoize((oracleProvider = 'Aggregated') => {
-    return eventsFilterRx(this.api, [{ section: 'oracle', method: 'NewFeedData' }], true).pipe(
+    return eventsFilterRx(this.api, [{ section: '*', method: 'NewFeedData' }], true).pipe(
       switchMap(() => {
         /* eslint-disable-next-line */
           return ((this.api.rpc as any).oracle.getAllValues(oracleProvider) as Observable<[[OracleKey, TimestampedValue]]>);
@@ -228,14 +220,49 @@ export class WalletRx extends WalletBase<ApiRx> {
     );
   });
 
-  private getPriceFromDex = memoize(
+  public getDexSharePrice = memoize(
     (currency: MaybeCurrency): Observable<PriceData> => {
-      const target = this.tokenMap.get(forcedToCurrencyIdName(currency));
+      const [key1, key2] = getLPCurrenciesFormName(forceToCurrencyIdName(currency));
+      const dexShareCurrency = forceToCurrencyId(this.api, currency);
+      const currency1 = forceToCurrencyId(this.api, key1);
+      const currency2 = forceToCurrencyId(this.api, key2);
+      const token1 = this.getToken(key1);
+      const token2 = this.getToken(key2);
+      const dexShareToken = this.getToken(dexShareCurrency);
+
+      return combineLatest([
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        (this.api.derive as any).dex.pool(currency1, currency2) as Observable<DerivedDexPool>,
+        this.queryIssuance(dexShareToken),
+        this.getPrice(token1),
+        this.getPrice(token2)
+      ]).pipe(
+        map(([dex, totalIssuance, price1, price2]) => {
+          const currency1Amount = FixedPointNumber.fromInner(dex[0].toString(), token1.decimal);
+          const currency2Amount = FixedPointNumber.fromInner(dex[1].toString(), token2.decimal);
+
+          const currency1AmountOfOne = currency1Amount.div(totalIssuance);
+          const currency2AmountOfOne = currency2Amount.div(totalIssuance);
+          const price = currency1AmountOfOne.times(price1.price).plus(currency2AmountOfOne.times(price2.price));
+
+          return {
+            token: dexShareToken,
+            price
+          };
+        })
+      );
+    }
+  );
+
+  // query token price from dex
+  public getPriceFromDex = memoize(
+    (currency: MaybeCurrency): Observable<PriceData> => {
+      const target = this.tokenMap.get(forceToCurrencyIdName(currency));
       const usd = this.tokenMap.get('AUSD') || this.tokenMap.get('KUSD');
 
       if (!target || !usd)
         return of({
-          token: Token.fromTokenName(forcedToCurrencyIdName(currency)),
+          token: Token.fromTokenName(forceToCurrencyIdName(currency)),
           price: FixedPointNumber.ZERO
         });
 
@@ -257,9 +284,44 @@ export class WalletRx extends WalletBase<ApiRx> {
     }
   );
 
+  private _queryIssunace = memoize((currency: MaybeCurrency) => {
+    let currencyId: CurrencyId;
+    let currencyName: string;
+    let token: Token;
+
+    try {
+      currencyId = forceToCurrencyId(this.api, currency);
+      currencyName = forceToCurrencyIdName(currency);
+      token = this.getToken(currency);
+    } catch (e) {
+      return of(FixedPointNumber.ZERO);
+    }
+
+    return this.isReady$.pipe(
+      takeWhile((isReady) => isReady),
+      switchMap(() => {
+        if (currencyName === this.nativeToken) {
+          return this.api.query.balances.totalIssuance(currencyId) as Observable<Balance>;
+        }
+
+        return this.api.query.tokens.totalIssuance(currencyId) as Observable<Balance>;
+      }),
+      map((data) =>
+        !data ? new FixedPointNumber(0, token.decimal) : FixedPointNumber.fromInner(data.toString(), token.decimal)
+      )
+    );
+  });
+
+  // query account balance information
   private _queryBalance = memoize(
     (account: MaybeAccount, currency: MaybeCurrency): Observable<TokenBalance> => {
-      const currencyId = forcedToCurrencyId(this.api, currency);
+      let currencyId: CurrencyId;
+
+      try {
+        currencyId = forceToCurrencyId(this.api, currency);
+      } catch (e) {
+        return of(new TokenBalance(new Token('empty'), FixedPointNumber.ZERO));
+      }
 
       return this.isReady$.pipe(
         takeWhile((isReady) => isReady),
@@ -267,18 +329,17 @@ export class WalletRx extends WalletBase<ApiRx> {
           /* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */
           return ((this.api.derive as any).currencies.balance(account, currencyId) as Observable<Balance>).pipe(
             map((balance) => {
-              let token: Token | undefined;
+              let token = new Token('mock');
 
               if (currencyId?.isDexShare) {
-                const key1 = currencyId.asDexShare[0].toString();
-                const key2 = currencyId.asDexShare[1].toString();
+                const [token1, token2] = getLPCurrenciesFormName(forceToCurrencyIdName(currency));
 
                 token = Token.fromCurrencyId(currencyId, [
-                  this.decimalMap.get(key1) || 18,
-                  this.decimalMap.get(key2) || 18
+                  this.decimalMap.get(token1) || 18,
+                  this.decimalMap.get(token2) || 18
                 ]);
               } else if (currencyId?.isToken) {
-                const key = currencyId.asToken.toString();
+                const key = forceToCurrencyIdName(currencyId);
 
                 token = Token.fromCurrencyId(currencyId, this.decimalMap.get(key));
               } else if (currencyId?.isErc20) {

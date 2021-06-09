@@ -3,6 +3,7 @@ import primitivesConfig from '@acala-network/type-definitions/primitives';
 import { assert } from '@polkadot/util';
 
 import { AnyApi } from './types';
+import { createLPCurrencyName, forceToCurrencyIdName, getLPCurrenciesFormName } from './converter';
 
 const TOKEN_SORT: Record<string, number> = primitivesConfig.types.TokenSymbol._enum;
 
@@ -32,7 +33,7 @@ export class Token {
     const _decimal = Array.isArray(decimal) ? decimal.sort().reverse()[0] : decimal;
 
     if (currency.isDexShare) {
-      return new Token(`${currency.asDexShare[0].toString()}-${currency.asDexShare[1].toString()}`, {
+      return new Token(forceToCurrencyIdName(currency), {
         decimal: _decimal,
         isDexShare: true,
         isTokenSymbol: false,
@@ -41,7 +42,7 @@ export class Token {
     }
 
     if (currency.isToken) {
-      return new Token(`${currency.asToken.toString()}`, {
+      return new Token(forceToCurrencyIdName(currency), {
         decimal: _decimal,
         isDexShare: false,
         isTokenSymbol: true,
@@ -50,7 +51,7 @@ export class Token {
     }
 
     if (currency.isErc20) {
-      return new Token(`${currency.asErc20.toString()}`, {
+      return new Token(forceToCurrencyIdName(currency), {
         decimal: _decimal,
         isDexShare: false,
         isTokenSymbol: false,
@@ -77,7 +78,7 @@ export class Token {
   static fromTokens(token1: Token, token2: Token): Token {
     const decimal = token1.decimal > token2.decimal ? token1.decimal : token2.decimal;
 
-    return new Token(`${token1.name}-${token2.name}`, {
+    return new Token(createLPCurrencyName(token1.name, token2.name), {
       decimal,
       isDexShare: true,
       isTokenSymbol: false,
@@ -103,7 +104,7 @@ export class Token {
     if (!this.isDexShare) throw new Error(`can't convert to TradingPair`);
 
     try {
-      return api.createType('TradingPair', [this.name.split('-').map((i) => ({ token: i }))]);
+      return api.createType('TradingPair', [getLPCurrenciesFormName(this.name).map((i) => ({ token: i }))]);
     } catch (e) {
       throw new Error(`can't convert to TradingPair`);
     }
@@ -166,7 +167,7 @@ export class Token {
   public toChainData(): { Token: string } | { DexShare: [{ Token: string }, { Token: string }] } | { ERC20: string } {
     if (this.isDexShare) {
       return {
-        DexShare: (this.name.split('-').sort((i, j) => TOKEN_SORT[i] - TOKEN_SORT[j]) as [
+        DexShare: (getLPCurrenciesFormName(this.name).sort((i, j) => TOKEN_SORT[i] - TOKEN_SORT[j]) as [
           string,
           string
         ]).map((item) => ({ Token: item })) as [{ Token: string }, { Token: string }]
