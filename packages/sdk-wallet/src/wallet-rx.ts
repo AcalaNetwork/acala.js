@@ -1,12 +1,12 @@
 import { ApiRx } from '@polkadot/api';
-import { WalletBase } from './wallet-base';
-import { switchMap, shareReplay, map, takeWhile, filter } from '@polkadot/x-rxjs/operators';
+
+import { filter, map, shareReplay, switchMap, takeWhile } from '@polkadot/x-rxjs/operators';
 import { assert, memoize } from '@polkadot/util';
-import { Observable, of, BehaviorSubject, combineLatest } from '@polkadot/x-rxjs';
-import { Balance, ChainProperties } from '@polkadot/types/interfaces';
+import { BehaviorSubject, combineLatest, Observable, of } from '@polkadot/x-rxjs';
+import { ChainProperties } from '@polkadot/types/interfaces';
 import { TimestampedValue } from '@open-web3/orml-types/interfaces';
 import { eventsFilterRx, FixedPointNumber, Token, TokenBalance } from '@acala-network/sdk-core';
-import { CurrencyId, OracleKey } from '@acala-network/types/interfaces';
+import { Balance, CurrencyId, OracleKey } from '@acala-network/types/interfaces';
 import {
   forceToCurrencyId,
   forceToCurrencyIdName,
@@ -16,7 +16,9 @@ import {
 } from '@acala-network/sdk-core/converter';
 import { MaybeAccount, MaybeCurrency } from '@acala-network/sdk-core/types';
 import { PriceData, PriceDataWithTimestamp } from './types';
-import { DerivedDexPool } from '@acala-network/api-derive';
+import type { ITuple } from '@polkadot/types/types';
+import type { Option } from '@polkadot/types';
+import { WalletBase } from './wallet-base';
 
 const ORACLE_FEEDS_TOKEN = ['DOT', 'XBTC', 'RENBTC', 'POLKABTC'];
 
@@ -24,8 +26,8 @@ export class WalletRx extends WalletBase<ApiRx> {
   private decimalMap: Map<string, number>;
   private currencyIdMap: Map<string, CurrencyId>;
   private tokenMap: Map<string, Token>;
-  private oracleFeed$: BehaviorSubject<PriceDataWithTimestamp[]>;
-  private isReady$: BehaviorSubject<boolean>;
+  private readonly oracleFeed$: BehaviorSubject<PriceDataWithTimestamp[]>;
+  private readonly isReady$: BehaviorSubject<boolean>;
   private nativeToken!: string;
 
   constructor(api: ApiRx) {
@@ -37,76 +39,10 @@ export class WalletRx extends WalletBase<ApiRx> {
     this.isReady$ = new BehaviorSubject<boolean>(false);
     this.oracleFeed$ = new BehaviorSubject<PriceDataWithTimestamp[]>([]);
 
-    // auto init and subscrbe oracle feed
+    // auto init and subscribe oracle feed
     this._init().subscribe(() => {
       this.subscribeInnerOracleFeed();
     });
-  }
-
-  public get isReady(): boolean {
-    return this.isReady$.getValue();
-  }
-
-  // subscribe the sdk ready status
-  public subscribteIsReady(): BehaviorSubject<boolean> {
-    return this.isReady$;
-  }
-
-  // get all useable tokens from chain config.
-  public getAllTokens(): Token[] {
-    return Array.from(this.tokenMap.values());
-  }
-
-  // get token object
-  public getToken(currency: MaybeCurrency): Token {
-    const currencyName = forceToCurrencyIdName(currency);
-
-    if (isDexShare(currencyName)) {
-      const [token1, token2] = getLPCurrenciesFormName(currencyName);
-
-      const decimal1 = this.decimalMap.get(token1) || 18;
-      const decimal2 = this.decimalMap.get(token2) || 18;
-
-      return Token.fromCurrencyId(forceToCurrencyId(this.api, currency), [decimal1, decimal2]);
-    }
-
-    return this.tokenMap.get(currencyName) || new Token('mock');
-  }
-
-  // query balance
-  public queryBalance(account: MaybeAccount, currency: MaybeCurrency): Observable<TokenBalance> {
-    return this._queryBalance(account, currency);
-  }
-
-  // query issuance
-  public queryIssuance(currency: MaybeCurrency): Observable<FixedPointNumber> {
-    return this._queryIssunace(currency);
-  }
-
-  // get prices of token array
-  public getPrices(currencies: MaybeCurrency[]): Observable<PriceData[]> {
-    return this.isReady$.pipe(
-      filter((isReady) => isReady),
-      switchMap(() => combineLatest(currencies.map((item) => this.getPrice(item))))
-    );
-  }
-
-  // get price of one token
-  public getPrice(currency: MaybeCurrency): Observable<PriceData> {
-    return this.isReady$.pipe(
-      filter((isReady) => isReady),
-      switchMap(() => this._getPrice(currency))
-    );
-  }
-
-  // subscribe oracle price
-  public getOraclePrice(): Observable<PriceDataWithTimestamp[]> {
-    return this.oracleFeed$;
-  }
-
-  // subscribe oracle feed
-  public subscribeOracleFeed(provider: string): Observable<PriceDataWithTimestamp[]> {
-    return this._subscribeOracleFeed(provider);
   }
 
   private _init = memoize(
@@ -144,13 +80,19 @@ export class WalletRx extends WalletBase<ApiRx> {
   );
 
   // query price info, support specify data source
-  private _getPrice = memoize(
-    (currency: MaybeCurrency): Observable<PriceData> => {
+  private _queryPrice = memoize(
+    (currency: MaybeCurrency, at?: number): Observable<PriceData> => {
       const currencyName = forceToCurrencyIdName(currency);
+      const liquidCurrencyId = this.api.consts?.stakingPool?.liquidCurrencyId;
+
+      // get liquid currency price from staking pool exchange rate
+      if (liquidCurrencyId && forceToCurrencyIdName(currency) === forceToCurrencyIdName(liquidCurrencyId)) {
+        return this.queryLiquidPriceFromStakingPool(at);
+      }
 
       // get dex share price
       if (isDexShare(currencyName)) {
-        return this.getDexSharePrice(currencyName);
+        return this.queryDexSharePriceFormDex(currency, at);
       }
 
       // get stable coin price
@@ -165,40 +107,193 @@ export class WalletRx extends WalletBase<ApiRx> {
 
       // get price of ORACLE_FEEDS_TOKEN
       if (ORACLE_FEEDS_TOKEN.includes(currencyName)) {
-        return this.oracleFeed$.pipe(
-          map(
-            (data): PriceData => {
-              const maybe = data.find((item) => item.token.name === currencyName);
-
-              return {
-                token: maybe?.token || new Token(currencyName),
-                price: maybe?.price || FixedPointNumber.ZERO
-              };
-            }
-          )
-        ) as Observable<PriceData>;
+        return this.queryPriceFromOracle(currency, at);
       }
 
       // get price from dex default
-      return this.getPriceFromDex(currency);
+      return this.queryPriceFromDex(currency, at);
     }
   );
 
-  // push oracle feeds data to oracleFeed$
-  private subscribeInnerOracleFeed() {
-    this._subscribeOracleFeed().subscribe({
-      next: (result) => {
-        this.oracleFeed$.next(result);
-      }
-    });
-  }
+  public queryDexSharePriceFormDex = memoize(
+    (currency: MaybeCurrency, at?: number): Observable<PriceData> => {
+      const [key1, key2] = getLPCurrenciesFormName(forceToCurrencyIdName(currency));
+      const dexShareCurrency = forceToCurrencyId(this.api, currency);
+      const currency1 = forceToCurrencyId(this.api, key1);
+      const currency2 = forceToCurrencyId(this.api, key2);
+      const token1 = this.getToken(key1);
+      const token2 = this.getToken(key2);
+      const dexShareToken = this.getToken(dexShareCurrency);
 
-  // subscribe oracle feed
+      return combineLatest([
+        this.queryDexPool(currency1, currency2, at),
+        this.queryIssuance(dexShareToken, at),
+        this.queryPrice(token1, at),
+        this.queryPrice(token2, at)
+      ]).pipe(
+        map(([dex, totalIssuance, price1, price2]) => {
+          const currency1Amount = dex[0];
+          const currency2Amount = dex[1];
+
+          const currency1AmountOfOne = currency1Amount.div(totalIssuance);
+          const currency2AmountOfOne = currency2Amount.div(totalIssuance);
+          const price = currency1AmountOfOne.times(price1.price).plus(currency2AmountOfOne.times(price2.price));
+
+          return {
+            token: dexShareToken,
+            price
+          };
+        })
+      );
+    }
+  );
+
+  public queryPriceFromOracle = memoize((token: MaybeCurrency, at?: number) => {
+    return this.isReady$.pipe(
+      takeWhile((isReady) => isReady),
+      switchMap(() => {
+        if (!at) {
+          const currencyName = forceToCurrencyIdName(token);
+
+          return this.oracleFeed$.pipe(
+            map(
+              (data): PriceData => {
+                const maybe = data.find((item) => item.token.name === currencyName);
+
+                return {
+                  token: maybe?.token || new Token(currencyName),
+                  price: maybe?.price || FixedPointNumber.ZERO
+                };
+              }
+            )
+          ) as Observable<PriceData>;
+        }
+
+        return this.api.rpc.chain.getBlockHash(at).pipe(
+          switchMap((hash) => {
+            const currencyId = forceToCurrencyId(this.api, token);
+
+            return this.api.query.acalaOracle.values.at<Option<TimestampedValue>>(hash, currencyId).pipe(
+              map((data) => {
+                const token = this.getToken(currencyId);
+                const price = data.unwrapOrDefault().value;
+
+                return price.isEmpty
+                  ? { token, price: new FixedPointNumber(0) }
+                  : { token, price: FixedPointNumber.fromInner(price.toString()) };
+              })
+            );
+          })
+        );
+      })
+    );
+  });
+
+  public queryLiquidPriceFromStakingPool = memoize((at?: number) => {
+    const liquidCurrencyId = this.api.consts.stakingPool.liquidCurrencyId;
+    const stakingCurrencyId = this.api.consts.stakingPool.stakingCurrencyId;
+
+    const liquidToken = this.getToken(liquidCurrencyId);
+    const stakingToken = this.getToken(stakingCurrencyId);
+
+    return this.isReady$.pipe(
+      takeWhile((isReady) => isReady),
+      switchMap(() => this.getBlockHash(at)),
+      switchMap((hash) => {
+        return combineLatest([
+          this.queryPriceFromOracle(stakingToken, at),
+          this.api.query.stakingPool.stakingPoolLedger.at(hash),
+          this._queryIssuance(liquidToken, at)
+        ]);
+      }),
+      map(([stakingTokenPrice, ledger, liquidIssuance]) => {
+        const bonded = FixedPointNumber.fromInner(ledger.bonded.toString());
+        const freePool = FixedPointNumber.fromInner(ledger.freePool.toString());
+        const unbindingToFree = FixedPointNumber.fromInner(ledger.unbondingToFree.toString());
+        const toUnbindNextEra = FixedPointNumber.fromInner(
+          !ledger.toUnbondNextEra.isEmpty ? ledger.toUnbondNextEra[0].toString() : '0'
+        );
+
+        const totalStakingTokenBalance = bonded
+          .plus(freePool)
+          .plus(unbindingToFree)
+          .minus(toUnbindNextEra)
+          .max(FixedPointNumber.ZERO);
+
+        totalStakingTokenBalance.forceSetPrecision(stakingToken.decimal);
+
+        const ratio = liquidIssuance.isZero() ? FixedPointNumber.ZERO : totalStakingTokenBalance.div(liquidIssuance);
+
+        return {
+          token: liquidToken,
+          price: stakingTokenPrice.price.times(ratio)
+        };
+      })
+    );
+  });
+
+  public queryDexPool = memoize((token1: MaybeCurrency, token2: MaybeCurrency, at?: number) => {
+    const token1CurrencyId = forceToCurrencyId(this.api, token1);
+    const token2CurrencyId = forceToCurrencyId(this.api, token2);
+    const _token1 = Token.fromCurrencyId(token1CurrencyId);
+    const _token2 = Token.fromCurrencyId(token2CurrencyId);
+    const [sorted1, sorted2] = Token.sort(_token1, _token2);
+
+    return this.isReady$.pipe(
+      takeWhile((isReady) => isReady),
+      switchMap(() => this.getBlockHash(at)),
+      switchMap((hash) => {
+        return this.api.query.dex.liquidityPool
+          .at<ITuple<[Balance, Balance]>>(hash, [sorted1.toChainData(), sorted2.toChainData()])
+          .pipe(
+            map((pool: ITuple<[Balance, Balance]>) => {
+              const balance1 = pool[0];
+              const balance2 = pool[1];
+
+              const fixedPoint1 = FixedPointNumber.fromInner(balance1.toString(), this.getToken(sorted1).decimal);
+              const fixedPoint2 = FixedPointNumber.fromInner(balance2.toString(), this.getToken(sorted2).decimal);
+
+              if (forceToCurrencyIdName(sorted1) === forceToCurrencyIdName(token1)) {
+                return [fixedPoint1, fixedPoint2];
+              } else {
+                return [fixedPoint2, fixedPoint1];
+              }
+            })
+          );
+      })
+    );
+  });
+
+  public queryPriceFromDex = memoize(
+    (currency: MaybeCurrency, at?: number): Observable<PriceData> => {
+      const target = this.tokenMap.get(forceToCurrencyIdName(currency));
+      const usd = this.tokenMap.get('AUSD') || this.tokenMap.get('KUSD');
+
+      if (!target || !usd)
+        return of({
+          token: new Token(forceToCurrencyIdName(currency)),
+          price: FixedPointNumber.ZERO
+        });
+
+      return this.queryDexPool(target, usd, at).pipe(
+        map((result) => {
+          if (result[0].isZero() || result[1].isZero()) return { token: target, price: FixedPointNumber.ZERO };
+
+          return {
+            token: target,
+            price: result[1].div(result[0])
+          };
+        }),
+        shareReplay(1)
+      );
+    }
+  );
+
   private _subscribeOracleFeed = memoize((oracleProvider = 'Aggregated') => {
     return eventsFilterRx(this.api, [{ section: '*', method: 'NewFeedData' }], true).pipe(
       switchMap(() => {
         /* eslint-disable-next-line */
-          return ((this.api.rpc as any).oracle.getAllValues(oracleProvider) as Observable<[[OracleKey, TimestampedValue]]>);
+        return ((this.api.rpc as any).oracle.getAllValues(oracleProvider) as Observable<[[OracleKey, TimestampedValue]]>);
       }),
       map((result) => {
         return result.map((item) => {
@@ -220,71 +315,7 @@ export class WalletRx extends WalletBase<ApiRx> {
     );
   });
 
-  public getDexSharePrice = memoize(
-    (currency: MaybeCurrency): Observable<PriceData> => {
-      const [key1, key2] = getLPCurrenciesFormName(forceToCurrencyIdName(currency));
-      const dexShareCurrency = forceToCurrencyId(this.api, currency);
-      const currency1 = forceToCurrencyId(this.api, key1);
-      const currency2 = forceToCurrencyId(this.api, key2);
-      const token1 = this.getToken(key1);
-      const token2 = this.getToken(key2);
-      const dexShareToken = this.getToken(dexShareCurrency);
-
-      return combineLatest([
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        (this.api.derive as any).dex.pool(currency1, currency2) as Observable<DerivedDexPool>,
-        this.queryIssuance(dexShareToken),
-        this.getPrice(token1),
-        this.getPrice(token2)
-      ]).pipe(
-        map(([dex, totalIssuance, price1, price2]) => {
-          const currency1Amount = FixedPointNumber.fromInner(dex[0].toString(), token1.decimal);
-          const currency2Amount = FixedPointNumber.fromInner(dex[1].toString(), token2.decimal);
-
-          const currency1AmountOfOne = currency1Amount.div(totalIssuance);
-          const currency2AmountOfOne = currency2Amount.div(totalIssuance);
-          const price = currency1AmountOfOne.times(price1.price).plus(currency2AmountOfOne.times(price2.price));
-
-          return {
-            token: dexShareToken,
-            price
-          };
-        })
-      );
-    }
-  );
-
-  // query token price from dex
-  public getPriceFromDex = memoize(
-    (currency: MaybeCurrency): Observable<PriceData> => {
-      const target = this.tokenMap.get(forceToCurrencyIdName(currency));
-      const usd = this.tokenMap.get('AUSD') || this.tokenMap.get('KUSD');
-
-      if (!target || !usd)
-        return of({
-          token: Token.fromTokenName(forceToCurrencyIdName(currency)),
-          price: FixedPointNumber.ZERO
-        });
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      return ((this.api.derive as any).dex.pool(
-        target.toCurrencyId(this.api),
-        usd.toCurrencyId(this.api)
-      ) as Observable<DerivedDexPool>).pipe(
-        map((result) => {
-          return {
-            token: target,
-            price: FixedPointNumber.fromInner(result[1].toString(), usd.decimal).div(
-              FixedPointNumber.fromInner(result[0].toString(), target.decimal)
-            )
-          };
-        }),
-        shareReplay(1)
-      );
-    }
-  );
-
-  private _queryIssunace = memoize((currency: MaybeCurrency) => {
+  private _queryIssuance = memoize((currency: MaybeCurrency, at?: number) => {
     let currencyId: CurrencyId;
     let currencyName: string;
     let token: Token;
@@ -299,12 +330,13 @@ export class WalletRx extends WalletBase<ApiRx> {
 
     return this.isReady$.pipe(
       takeWhile((isReady) => isReady),
-      switchMap(() => {
+      switchMap(() => this.getBlockHash(at)),
+      switchMap((hash) => {
         if (currencyName === this.nativeToken) {
-          return this.api.query.balances.totalIssuance(currencyId) as Observable<Balance>;
+          return this.api.query.balances.totalIssuance.at(hash, currencyId) as Observable<Balance>;
         }
 
-        return this.api.query.tokens.totalIssuance(currencyId) as Observable<Balance>;
+        return this.api.query.tokens.totalIssuance.at(hash, currencyId) as Observable<Balance>;
       }),
       map((data) =>
         !data ? new FixedPointNumber(0, token.decimal) : FixedPointNumber.fromInner(data.toString(), token.decimal)
@@ -312,9 +344,8 @@ export class WalletRx extends WalletBase<ApiRx> {
     );
   });
 
-  // query account balance information
   private _queryBalance = memoize(
-    (account: MaybeAccount, currency: MaybeCurrency): Observable<TokenBalance> => {
+    (account: MaybeAccount, currency: MaybeCurrency, at?: number): Observable<TokenBalance> => {
       let currencyId: CurrencyId;
 
       try {
@@ -325,44 +356,107 @@ export class WalletRx extends WalletBase<ApiRx> {
 
       return this.isReady$.pipe(
         takeWhile((isReady) => isReady),
-        switchMap(() => {
-          /* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */
-          return ((this.api.derive as any).currencies.balance(account, currencyId) as Observable<Balance>).pipe(
-            map((balance) => {
-              let token = new Token('mock');
+        switchMap(() => this.getBlockHash(at)),
+        switchMap((hash) => {
+          const currencyName = forceToCurrencyIdName(currencyId);
 
-              if (currencyId?.isDexShare) {
-                const [token1, token2] = getLPCurrenciesFormName(forceToCurrencyIdName(currency));
+          if (currencyName === this.nativeToken) {
+            return this.api.query.system.account.at(hash, account).pipe(map((data) => data.data.free));
+          }
+          return this.api.query.tokens.accounts.at(hash, account, currencyId).pipe(map((data) => data.free));
+        }),
+        map((balance) => {
+          const token = this.getToken(currencyId);
+          const _balance = FixedPointNumber.fromInner(balance.toString(), token?.decimal);
 
-                token = Token.fromCurrencyId(currencyId, [
-                  this.decimalMap.get(token1) || 18,
-                  this.decimalMap.get(token2) || 18
-                ]);
-              } else if (currencyId?.isToken) {
-                const key = forceToCurrencyIdName(currencyId);
+          assert(token && _balance, `token or balance create failed in query balance`);
 
-                token = Token.fromCurrencyId(currencyId, this.decimalMap.get(key));
-              } else if (currencyId?.isErc20) {
-                console.warn(`doesn't support query ERC20 balance`);
-
-                token = new Token(currencyId.asErc20.toString(), {
-                  isERC20: true,
-                  isDexShare: false,
-                  isTokenSymbol: false,
-                  decimal: 18
-                });
-              }
-
-              const _balance = FixedPointNumber.fromInner(balance.toString(), token?.decimal);
-
-              assert(token && _balance, `token or balance create failed in query balance`);
-
-              return new TokenBalance(token, _balance);
-            }),
-            shareReplay(1)
-          );
-        })
+          return new TokenBalance(token, _balance);
+        }),
+        shareReplay(1)
       );
     }
   );
+
+  private getBlockHash(at?: number | string) {
+    if (at && typeof at === 'string') return of(at);
+
+    return of(at).pipe(
+      switchMap((at) => {
+        if (!at) return this.api.query.system.number();
+
+        return of(at);
+      }),
+      switchMap((at) => {
+        return this.api.rpc.chain.getBlockHash(at);
+      })
+    );
+  }
+
+  public get isReady(): boolean {
+    return this.isReady$.getValue();
+  }
+
+  public subscribeIsReady(): BehaviorSubject<boolean> {
+    return this.isReady$;
+  }
+
+  public getAllTokens(): Token[] {
+    return Array.from(this.tokenMap.values());
+  }
+
+  public getToken(currency: MaybeCurrency): Token {
+    const currencyName = forceToCurrencyIdName(currency);
+
+    if (isDexShare(currencyName)) {
+      const [token1, token2] = getLPCurrenciesFormName(currencyName);
+
+      const decimal1 = this.decimalMap.get(token1) || 18;
+      const decimal2 = this.decimalMap.get(token2) || 18;
+
+      return Token.fromCurrencyId(forceToCurrencyId(this.api, currency), [decimal1, decimal2]);
+    }
+
+    // FIXME: need handle erc20
+
+    return this.tokenMap.get(currencyName) || new Token('mock');
+  }
+
+  public queryBalance(account: MaybeAccount, currency: MaybeCurrency, at?: number): Observable<TokenBalance> {
+    return this._queryBalance(account, currency, at);
+  }
+
+  public queryIssuance(currency: MaybeCurrency, at?: number): Observable<FixedPointNumber> {
+    return this._queryIssuance(currency, at);
+  }
+
+  public queryPrices(currencies: MaybeCurrency[]): Observable<PriceData[]> {
+    return this.isReady$.pipe(
+      filter((isReady) => isReady),
+      switchMap(() => combineLatest(currencies.map((item) => this._queryPrice(item))))
+    );
+  }
+
+  public queryPrice(currency: MaybeCurrency, at?: number): Observable<PriceData> {
+    return this.isReady$.pipe(
+      filter((isReady) => isReady),
+      switchMap(() => this._queryPrice(currency, at))
+    );
+  }
+
+  public queryOraclePrice(): Observable<PriceDataWithTimestamp[]> {
+    return this.oracleFeed$;
+  }
+
+  public subscribeOracleFeed(provider: string): Observable<PriceDataWithTimestamp[]> {
+    return this._subscribeOracleFeed(provider);
+  }
+
+  private subscribeInnerOracleFeed() {
+    this._subscribeOracleFeed().subscribe({
+      next: (result) => {
+        this.oracleFeed$.next(result);
+      }
+    });
+  }
 }

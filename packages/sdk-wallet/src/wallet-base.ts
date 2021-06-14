@@ -6,7 +6,7 @@ import { PriceData, PriceDataWithTimestamp } from './types';
 export abstract class WalletBase<T extends ApiRx | ApiPromise> {
   protected api: T;
 
-  constructor(api: T) {
+  protected constructor(api: T) {
     this.api = api;
   }
 
@@ -20,7 +20,7 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
    * @name getToken
    * @description get the currency
    */
-  abstract getToken(currency: MaybeCurrency): Token | undefined;
+  abstract getToken(currency: MaybeCurrency): Token;
 
   // get balance
 
@@ -31,22 +31,22 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
   abstract queryBalance(account: MaybeAccount, currency: MaybeCurrency): ObOrPromiseResult<T, TokenBalance>;
 
   /**
-   * @name getPrices
+   * @name queryPrices
    * @description get prices of tokens
    */
-  abstract getPrices(tokens: MaybeCurrency[]): ObOrPromiseResult<T, PriceData[]>;
+  abstract queryPrices(tokens: MaybeCurrency[]): ObOrPromiseResult<T, PriceData[]>;
 
   /**
-   * @name getPrice
+   * @name queryPrice
    * @description get the price
    */
-  abstract getPrice(currency: MaybeCurrency): ObOrPromiseResult<T, PriceData>;
+  abstract queryPrice(currency: MaybeCurrency): ObOrPromiseResult<T, PriceData>;
 
   /**
-   * @name getOraclePrice
+   * @name queryOraclePrice
    * @description get the oracle feed price
    */
-  abstract getOraclePrice(): ObOrPromiseResult<T, PriceDataWithTimestamp[]>;
+  abstract queryOraclePrice(): ObOrPromiseResult<T, PriceDataWithTimestamp[]>;
 
   /**
    * @name subscribeOracleFeeds
