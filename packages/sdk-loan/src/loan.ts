@@ -36,13 +36,13 @@ const YEAR = 365 * 24 * 60 * 60; // second of one year
 
 export class LoanRx {
   private api: ApiRx;
-  private currency: CurrencyId;
+  private readonly currency: CurrencyId;
   private collateralToken: Token;
   private stableCoinToken: Token;
-  private address: string;
+  private readonly address: string;
   private wallet: WalletRx;
   private loanPosition$: Observable<Position>;
-  private loanParams$: Observable<LoanParams>;
+  private readonly loanParams$: Observable<LoanParams>;
 
   constructor(api: ApiRx, currency: MaybeCurrency, address: string, wallet: WalletRx) {
     const collateralToken = wallet.getToken(currency);
@@ -82,7 +82,7 @@ export class LoanRx {
    */
   private getPositionWithChanged = memoize(
     (debitAmountChange: FixedPointNumber, collateralChange: FixedPointNumber): Observable<LoanPosition> => {
-      return combineLatest([this.loanParams$, this.loanPosition$, this.wallet.getPrice(this.currency)]).pipe(
+      return combineLatest([this.loanParams$, this.loanPosition$, this.wallet.queryPrice(this.currency)]).pipe(
         map(([params, position, price]) => {
           const { debit, collateral } = position;
           const {
