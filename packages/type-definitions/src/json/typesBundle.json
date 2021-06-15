@@ -13,6 +13,12 @@
                             {
                                 "name": "key",
                                 "type": "OracleKey"
+                            },
+                            {
+                                "name": "at",
+                                "type": "BlockHash",
+                                "isHistoric": true,
+                                "isOptional": true
                             }
                         ],
                         "type": "Option<TimestampedValue>",
@@ -27,6 +33,12 @@
                             {
                                 "name": "providerId",
                                 "type": "RpcDataProviderId"
+                            },
+                            {
+                                "name": "at",
+                                "type": "BlockHash",
+                                "isHistoric": true,
+                                "isOptional": true
                             }
                         ],
                         "type": "Vec<(OracleKey, Option<TimestampedValue>)>",
@@ -173,6 +185,7 @@
                             "delay": "BlockNumber",
                             "origin": "PalletsOrigin"
                         },
+                        "AuthorityOrigin": "DelayedOrigin",
                         "StorageValue": "Vec<u8>",
                         "GraduallyUpdate": {
                             "key": "StorageKey",
@@ -230,16 +243,6 @@
                             "totalWithdrawnRewards": "Compact<Balance>"
                         },
                         "Share": "u128",
-                        "ChainId": {
-                            "_enum": {
-                                "RelayChain": "Null",
-                                "ParaChain": "ParaId"
-                            }
-                        },
-                        "XCurrencyId": {
-                            "chainId": "ChainId",
-                            "currencyId": "Vec<u8>"
-                        },
                         "OracleValue": "Price",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
@@ -606,6 +609,7 @@
                             "delay": "BlockNumber",
                             "origin": "PalletsOrigin"
                         },
+                        "AuthorityOrigin": "DelayedOrigin",
                         "StorageValue": "Vec<u8>",
                         "GraduallyUpdate": {
                             "key": "StorageKey",
@@ -663,16 +667,6 @@
                             "totalWithdrawnRewards": "Compact<Balance>"
                         },
                         "Share": "u128",
-                        "ChainId": {
-                            "_enum": {
-                                "RelayChain": "Null",
-                                "ParaChain": "ParaId"
-                            }
-                        },
-                        "XCurrencyId": {
-                            "chainId": "ChainId",
-                            "currencyId": "Vec<u8>"
-                        },
                         "OracleValue": "Price",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
@@ -1039,6 +1033,7 @@
                             "delay": "BlockNumber",
                             "origin": "PalletsOrigin"
                         },
+                        "AuthorityOrigin": "DelayedOrigin",
                         "StorageValue": "Vec<u8>",
                         "GraduallyUpdate": {
                             "key": "StorageKey",
@@ -1096,16 +1091,6 @@
                             "totalWithdrawnRewards": "Compact<Balance>"
                         },
                         "Share": "u128",
-                        "ChainId": {
-                            "_enum": {
-                                "RelayChain": "Null",
-                                "ParaChain": "ParaId"
-                            }
-                        },
-                        "XCurrencyId": {
-                            "chainId": "ChainId",
-                            "currencyId": "Vec<u8>"
-                        },
                         "OracleValue": "Price",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
@@ -1475,6 +1460,7 @@
                             "delay": "BlockNumber",
                             "origin": "PalletsOrigin"
                         },
+                        "AuthorityOrigin": "DelayedOrigin",
                         "StorageValue": "Vec<u8>",
                         "GraduallyUpdate": {
                             "key": "StorageKey",
@@ -1532,16 +1518,6 @@
                             "totalWithdrawnRewards": "Compact<Balance>"
                         },
                         "Share": "u128",
-                        "ChainId": {
-                            "_enum": {
-                                "RelayChain": "Null",
-                                "ParaChain": "ParaId"
-                            }
-                        },
-                        "XCurrencyId": {
-                            "chainId": "ChainId",
-                            "currencyId": "Vec<u8>"
-                        },
                         "OracleValue": "Price",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
@@ -1908,6 +1884,7 @@
                             "delay": "BlockNumber",
                             "origin": "PalletsOrigin"
                         },
+                        "AuthorityOrigin": "DelayedOrigin",
                         "StorageValue": "Vec<u8>",
                         "GraduallyUpdate": {
                             "key": "StorageKey",
@@ -1965,16 +1942,6 @@
                             "totalWithdrawnRewards": "Compact<Balance>"
                         },
                         "Share": "u128",
-                        "ChainId": {
-                            "_enum": {
-                                "RelayChain": "Null",
-                                "ParaChain": "ParaId"
-                            }
-                        },
-                        "XCurrencyId": {
-                            "chainId": "ChainId",
-                            "currencyId": "Vec<u8>"
-                        },
                         "OracleValue": "Price",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
@@ -2368,6 +2335,12 @@
                             {
                                 "name": "key",
                                 "type": "OracleKey"
+                            },
+                            {
+                                "name": "at",
+                                "type": "BlockHash",
+                                "isHistoric": true,
+                                "isOptional": true
                             }
                         ],
                         "type": "Option<TimestampedValue>",
@@ -2382,6 +2355,12 @@
                             {
                                 "name": "providerId",
                                 "type": "RpcDataProviderId"
+                            },
+                            {
+                                "name": "at",
+                                "type": "BlockHash",
+                                "isHistoric": true,
+                                "isOptional": true
                             }
                         ],
                         "type": "Vec<(OracleKey, Option<TimestampedValue>)>",
@@ -2528,6 +2507,7 @@
                             "delay": "BlockNumber",
                             "origin": "PalletsOrigin"
                         },
+                        "AuthorityOrigin": "DelayedOrigin",
                         "StorageValue": "Vec<u8>",
                         "GraduallyUpdate": {
                             "key": "StorageKey",
@@ -2585,16 +2565,6 @@
                             "totalWithdrawnRewards": "Compact<Balance>"
                         },
                         "Share": "u128",
-                        "ChainId": {
-                            "_enum": {
-                                "RelayChain": "Null",
-                                "ParaChain": "ParaId"
-                            }
-                        },
-                        "XCurrencyId": {
-                            "chainId": "ChainId",
-                            "currencyId": "Vec<u8>"
-                        },
                         "OracleValue": "Price",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
@@ -2961,6 +2931,7 @@
                             "delay": "BlockNumber",
                             "origin": "PalletsOrigin"
                         },
+                        "AuthorityOrigin": "DelayedOrigin",
                         "StorageValue": "Vec<u8>",
                         "GraduallyUpdate": {
                             "key": "StorageKey",
@@ -3018,16 +2989,6 @@
                             "totalWithdrawnRewards": "Compact<Balance>"
                         },
                         "Share": "u128",
-                        "ChainId": {
-                            "_enum": {
-                                "RelayChain": "Null",
-                                "ParaChain": "ParaId"
-                            }
-                        },
-                        "XCurrencyId": {
-                            "chainId": "ChainId",
-                            "currencyId": "Vec<u8>"
-                        },
                         "OracleValue": "Price",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
@@ -3394,6 +3355,7 @@
                             "delay": "BlockNumber",
                             "origin": "PalletsOrigin"
                         },
+                        "AuthorityOrigin": "DelayedOrigin",
                         "StorageValue": "Vec<u8>",
                         "GraduallyUpdate": {
                             "key": "StorageKey",
@@ -3451,16 +3413,6 @@
                             "totalWithdrawnRewards": "Compact<Balance>"
                         },
                         "Share": "u128",
-                        "ChainId": {
-                            "_enum": {
-                                "RelayChain": "Null",
-                                "ParaChain": "ParaId"
-                            }
-                        },
-                        "XCurrencyId": {
-                            "chainId": "ChainId",
-                            "currencyId": "Vec<u8>"
-                        },
                         "OracleValue": "Price",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
@@ -3830,6 +3782,7 @@
                             "delay": "BlockNumber",
                             "origin": "PalletsOrigin"
                         },
+                        "AuthorityOrigin": "DelayedOrigin",
                         "StorageValue": "Vec<u8>",
                         "GraduallyUpdate": {
                             "key": "StorageKey",
@@ -3887,16 +3840,6 @@
                             "totalWithdrawnRewards": "Compact<Balance>"
                         },
                         "Share": "u128",
-                        "ChainId": {
-                            "_enum": {
-                                "RelayChain": "Null",
-                                "ParaChain": "ParaId"
-                            }
-                        },
-                        "XCurrencyId": {
-                            "chainId": "ChainId",
-                            "currencyId": "Vec<u8>"
-                        },
                         "OracleValue": "Price",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
@@ -4263,6 +4206,7 @@
                             "delay": "BlockNumber",
                             "origin": "PalletsOrigin"
                         },
+                        "AuthorityOrigin": "DelayedOrigin",
                         "StorageValue": "Vec<u8>",
                         "GraduallyUpdate": {
                             "key": "StorageKey",
@@ -4320,16 +4264,6 @@
                             "totalWithdrawnRewards": "Compact<Balance>"
                         },
                         "Share": "u128",
-                        "ChainId": {
-                            "_enum": {
-                                "RelayChain": "Null",
-                                "ParaChain": "ParaId"
-                            }
-                        },
-                        "XCurrencyId": {
-                            "chainId": "ChainId",
-                            "currencyId": "Vec<u8>"
-                        },
                         "OracleValue": "Price",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
@@ -4723,6 +4657,12 @@
                             {
                                 "name": "key",
                                 "type": "OracleKey"
+                            },
+                            {
+                                "name": "at",
+                                "type": "BlockHash",
+                                "isHistoric": true,
+                                "isOptional": true
                             }
                         ],
                         "type": "Option<TimestampedValue>",
@@ -4737,6 +4677,12 @@
                             {
                                 "name": "providerId",
                                 "type": "RpcDataProviderId"
+                            },
+                            {
+                                "name": "at",
+                                "type": "BlockHash",
+                                "isHistoric": true,
+                                "isOptional": true
                             }
                         ],
                         "type": "Vec<(OracleKey, Option<TimestampedValue>)>",
@@ -4883,6 +4829,7 @@
                             "delay": "BlockNumber",
                             "origin": "PalletsOrigin"
                         },
+                        "AuthorityOrigin": "DelayedOrigin",
                         "StorageValue": "Vec<u8>",
                         "GraduallyUpdate": {
                             "key": "StorageKey",
@@ -4940,16 +4887,6 @@
                             "totalWithdrawnRewards": "Compact<Balance>"
                         },
                         "Share": "u128",
-                        "ChainId": {
-                            "_enum": {
-                                "RelayChain": "Null",
-                                "ParaChain": "ParaId"
-                            }
-                        },
-                        "XCurrencyId": {
-                            "chainId": "ChainId",
-                            "currencyId": "Vec<u8>"
-                        },
                         "OracleValue": "Price",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
@@ -5316,6 +5253,7 @@
                             "delay": "BlockNumber",
                             "origin": "PalletsOrigin"
                         },
+                        "AuthorityOrigin": "DelayedOrigin",
                         "StorageValue": "Vec<u8>",
                         "GraduallyUpdate": {
                             "key": "StorageKey",
@@ -5373,16 +5311,6 @@
                             "totalWithdrawnRewards": "Compact<Balance>"
                         },
                         "Share": "u128",
-                        "ChainId": {
-                            "_enum": {
-                                "RelayChain": "Null",
-                                "ParaChain": "ParaId"
-                            }
-                        },
-                        "XCurrencyId": {
-                            "chainId": "ChainId",
-                            "currencyId": "Vec<u8>"
-                        },
                         "OracleValue": "Price",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
@@ -5749,6 +5677,7 @@
                             "delay": "BlockNumber",
                             "origin": "PalletsOrigin"
                         },
+                        "AuthorityOrigin": "DelayedOrigin",
                         "StorageValue": "Vec<u8>",
                         "GraduallyUpdate": {
                             "key": "StorageKey",
@@ -5806,16 +5735,6 @@
                             "totalWithdrawnRewards": "Compact<Balance>"
                         },
                         "Share": "u128",
-                        "ChainId": {
-                            "_enum": {
-                                "RelayChain": "Null",
-                                "ParaChain": "ParaId"
-                            }
-                        },
-                        "XCurrencyId": {
-                            "chainId": "ChainId",
-                            "currencyId": "Vec<u8>"
-                        },
                         "OracleValue": "Price",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
@@ -6185,6 +6104,7 @@
                             "delay": "BlockNumber",
                             "origin": "PalletsOrigin"
                         },
+                        "AuthorityOrigin": "DelayedOrigin",
                         "StorageValue": "Vec<u8>",
                         "GraduallyUpdate": {
                             "key": "StorageKey",
@@ -6242,16 +6162,6 @@
                             "totalWithdrawnRewards": "Compact<Balance>"
                         },
                         "Share": "u128",
-                        "ChainId": {
-                            "_enum": {
-                                "RelayChain": "Null",
-                                "ParaChain": "ParaId"
-                            }
-                        },
-                        "XCurrencyId": {
-                            "chainId": "ChainId",
-                            "currencyId": "Vec<u8>"
-                        },
                         "OracleValue": "Price",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
@@ -6618,6 +6528,7 @@
                             "delay": "BlockNumber",
                             "origin": "PalletsOrigin"
                         },
+                        "AuthorityOrigin": "DelayedOrigin",
                         "StorageValue": "Vec<u8>",
                         "GraduallyUpdate": {
                             "key": "StorageKey",
@@ -6675,16 +6586,6 @@
                             "totalWithdrawnRewards": "Compact<Balance>"
                         },
                         "Share": "u128",
-                        "ChainId": {
-                            "_enum": {
-                                "RelayChain": "Null",
-                                "ParaChain": "ParaId"
-                            }
-                        },
-                        "XCurrencyId": {
-                            "chainId": "ChainId",
-                            "currencyId": "Vec<u8>"
-                        },
                         "OracleValue": "Price",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
