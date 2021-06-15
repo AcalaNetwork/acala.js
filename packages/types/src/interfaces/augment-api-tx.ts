@@ -18,12 +18,14 @@ import type { ApiTypes, SubmittableExtrinsic } from '@polkadot/api/types';
 declare module '@polkadot/api/types/submittable' {
   export interface AugmentedSubmittables<ApiType> {
     airDrop: {
-      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       airdrop: AugmentedSubmittable<(to: LookupSource | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, currencyId: AirDropCurrencyId | 'KAR' | 'ACA' | number | Uint8Array, amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [LookupSource, AirDropCurrencyId, Balance]>;
       updateAirdrop: AugmentedSubmittable<(to: LookupSource | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, currencyId: AirDropCurrencyId | 'KAR' | 'ACA' | number | Uint8Array, amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [LookupSource, AirDropCurrencyId, Balance]>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
     auction: {
-      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
        * Bid an auction.
        * 
@@ -31,18 +33,24 @@ declare module '@polkadot/api/types/submittable' {
        * transactor.
        **/
       bid: AugmentedSubmittable<(id: AuctionId | AnyNumber | Uint8Array, value: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AuctionId, Compact<Balance>]>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
     auctionManager: {
-      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
        * Cancel active auction after system shutdown
        * 
        * The dispatch origin of this call must be _None_.
        **/
       cancel: AugmentedSubmittable<(id: AuctionId | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AuctionId]>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
     cdpEngine: {
-      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
        * Liquidate unsafe CDP
        * 
@@ -87,9 +95,12 @@ declare module '@polkadot/api/types/submittable' {
        * - `who`: CDP's owner.
        **/
       settle: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string | Uint8Array, who: LookupSource | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, LookupSource]>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
     cdpTreasury: {
-      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       auctionCollateral: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string | Uint8Array, amount: Balance | AnyNumber | Uint8Array, target: Balance | AnyNumber | Uint8Array, splited: bool | boolean | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, Balance, Balance, bool]>;
       extractSurplusToTreasury: AugmentedSubmittable<(amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Balance]>;
       /**
@@ -102,9 +113,12 @@ declare module '@polkadot/api/types/submittable' {
        * - `amount`: expected size of per lot collateral auction
        **/
       setExpectedCollateralAuctionSize: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string | Uint8Array, size: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId, Balance]>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
     currencies: {
-      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
        * Transfer some balance to another account under `currency_id`.
        * 
@@ -125,9 +139,12 @@ declare module '@polkadot/api/types/submittable' {
        * The dispatch origin of this call must be _Root_.
        **/
       updateBalance: AugmentedSubmittable<(who: LookupSource | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, currencyId: CurrencyIdOf | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string | Uint8Array, amount: AmountOf | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [LookupSource, CurrencyIdOf, AmountOf]>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
     dex: {
-      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
        * Add liquidity to Enabled trading pair, or add provision to
        * Provisioning trading pair.
@@ -184,9 +201,12 @@ declare module '@polkadot/api/types/submittable' {
        * - `max_supply_amount`: acceptable maximum supply amount.
        **/
       swapWithExactTarget: AugmentedSubmittable<(path: Vec<CurrencyId> | (CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string | Uint8Array)[], targetAmount: Compact<Balance> | AnyNumber | Uint8Array, maxSupplyAmount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Vec<CurrencyId>, Compact<Balance>, Compact<Balance>]>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
     emergencyShutdown: {
-      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
        * Start emergency shutdown
        * 
@@ -205,9 +225,12 @@ declare module '@polkadot/api/types/submittable' {
        * - `amount`: stable currency amount used to refund.
        **/
       refundCollaterals: AugmentedSubmittable<(amount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Compact<Balance>]>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
     homa: {
-      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
        * Inject DOT to staking pool and mint LDOT in a certain exchange rate
        * decided by staking pool.
@@ -226,9 +249,12 @@ declare module '@polkadot/api/types/submittable' {
        * Get back those DOT that have been unbonded.
        **/
       withdrawRedemption: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
     homaValidatorListModule: {
-      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       bond: AugmentedSubmittable<(validator: RelaychainAccountId | string | Uint8Array, amount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [RelaychainAccountId, Compact<Balance>]>;
       freeze: AugmentedSubmittable<(validators: Vec<RelaychainAccountId> | (RelaychainAccountId | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<RelaychainAccountId>]>;
       rebond: AugmentedSubmittable<(validator: RelaychainAccountId | string | Uint8Array, amount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [RelaychainAccountId, Compact<Balance>]>;
@@ -236,9 +262,12 @@ declare module '@polkadot/api/types/submittable' {
       thaw: AugmentedSubmittable<(validators: Vec<RelaychainAccountId> | (RelaychainAccountId | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<RelaychainAccountId>]>;
       unbond: AugmentedSubmittable<(validator: RelaychainAccountId | string | Uint8Array, amount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [RelaychainAccountId, Compact<Balance>]>;
       withdrawUnbonded: AugmentedSubmittable<(validator: RelaychainAccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [RelaychainAccountId]>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
     honzon: {
-      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
        * Adjust the loans of `currency_id` by specific
        * `collateral_adjustment` and `debit_adjustment`
@@ -279,18 +308,24 @@ declare module '@polkadot/api/types/submittable' {
        * Cancel all authorization of caller
        **/
       unauthorizeAll: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
     nomineesElection: {
-      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       bond: AugmentedSubmittable<(amount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Compact<Balance>]>;
       chill: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
       nominate: AugmentedSubmittable<(targets: Vec<NomineeId> | (NomineeId | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<NomineeId>]>;
       rebond: AugmentedSubmittable<(amount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Compact<Balance>]>;
       unbond: AugmentedSubmittable<(amount: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Compact<Balance>]>;
       withdrawUnbonded: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
     polkadotBridge: {
-      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       forceEra: AugmentedSubmittable<(at: BlockNumber | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [BlockNumber]>;
       setMockRewardRate: AugmentedSubmittable<(accountIndex: u32 | AnyNumber | Uint8Array, rewardRate: Rate | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, Rate]>;
       simualteReceiveFromSubAccount: AugmentedSubmittable<(accountIndex: u32 | AnyNumber | Uint8Array, to: LookupSource | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, LookupSource, Balance]>;
@@ -301,9 +336,12 @@ declare module '@polkadot/api/types/submittable' {
       simulateTransferToSubAccount: AugmentedSubmittable<(accountIndex: u32 | AnyNumber | Uint8Array, amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, Balance]>;
       simulateUnbond: AugmentedSubmittable<(accountIndex: u32 | AnyNumber | Uint8Array, amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, Balance]>;
       simulateWithdrawUnbonded: AugmentedSubmittable<(accountIndex: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32]>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
     prices: {
-      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
        * Lock the price and feed it to system.
        * 
@@ -320,15 +358,22 @@ declare module '@polkadot/api/types/submittable' {
        * - `currency_id`: currency type.
        **/
       unlockPrice: AugmentedSubmittable<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [CurrencyId]>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
     stakingPool: {
-      [key: string]: SubmittableExtrinsicFunction<ApiType>;
       /**
        * Update params related to staking pool
        * 
        * The dispatch origin of this call must be `UpdateOrigin`.
        **/
       setStakingPoolParams: AugmentedSubmittable<(targetMaxFreeUnbondedRatio: ChangeRatio | { NoChange: any } | { NewValue: any } | string | Uint8Array, targetMinFreeUnbondedRatio: ChangeRatio | { NoChange: any } | { NewValue: any } | string | Uint8Array, targetUnbondingToFreeRatio: ChangeRatio | { NoChange: any } | { NewValue: any } | string | Uint8Array, unbondingToFreeAdjustment: ChangeRate | { NoChange: any } | { NewValue: any } | string | Uint8Array, baseFeeRate: ChangeRate | { NoChange: any } | { NewValue: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ChangeRatio, ChangeRatio, ChangeRatio, ChangeRate, ChangeRate]>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
   }
 
