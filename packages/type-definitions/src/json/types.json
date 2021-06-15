@@ -351,7 +351,7 @@
     "DestAddress": "Vec<u8>",
     "DepositNonce": "u64",
     "ResourceId": "[u8; 32]",
-    "ChainBridgeChainId": "u8",
+    "ChainId": "u8",
     "Keys": "SessionKeys2",
     "PalletsOrigin": {
         "_enum": {
