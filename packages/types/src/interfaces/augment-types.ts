@@ -5,6 +5,7 @@ import type { BitVec, Bool, Bytes, Compact, Data, DoNotConstruct, I128, I16, I25
 import type { PalletBalanceOf } from '@acala-network/types/interfaces/accounts';
 import type { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@acala-network/types/interfaces/auctionManager';
 import type { ChangeBalance, ChangeOptionRate, ChangeOptionRatio, LiquidationStrategy, OptionRate, OptionRatio, RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
+import type { CandidateInfoOf } from '@acala-network/types/interfaces/collatorSelection';
 import type { BalanceRequest, BalanceWrapper, TradingPairProvisionParameters, TradingPairStatus } from '@acala-network/types/interfaces/dex';
 import type { CallRequest, CodeInfo, Erc20Info, EstimateResourcesResponse, EvmAccountInfo, EvmAddress, EvmContractInfo } from '@acala-network/types/interfaces/evm';
 import type { RedeemStrategy } from '@acala-network/types/interfaces/homa';
@@ -323,6 +324,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<CandidateDescriptor>': Option<CandidateDescriptor>;
     'Option<CandidateHash>': Option<CandidateHash>;
     'Option<CandidateInfo>': Option<CandidateInfo>;
+    'Option<CandidateInfoOf>': Option<CandidateInfoOf>;
     'Option<CandidatePendingAvailability>': Option<CandidatePendingAvailability>;
     'Option<CandidateReceipt>': Option<CandidateReceipt>;
     'Option<ChainProperties>': Option<ChainProperties>;
@@ -1291,6 +1293,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<CandidateDescriptor>': Vec<CandidateDescriptor>;
     'Vec<CandidateHash>': Vec<CandidateHash>;
     'Vec<CandidateInfo>': Vec<CandidateInfo>;
+    'Vec<CandidateInfoOf>': Vec<CandidateInfoOf>;
     'Vec<CandidatePendingAvailability>': Vec<CandidatePendingAvailability>;
     'Vec<CandidateReceipt>': Vec<CandidateReceipt>;
     'Vec<ChainProperties>': Vec<ChainProperties>;
@@ -2259,6 +2262,7 @@ declare module '@polkadot/types/types/registry' {
     CandidateDescriptor: CandidateDescriptor;
     CandidateHash: CandidateHash;
     CandidateInfo: CandidateInfo;
+    CandidateInfoOf: CandidateInfoOf;
     CandidatePendingAvailability: CandidatePendingAvailability;
     CandidateReceipt: CandidateReceipt;
     ChainProperties: ChainProperties;

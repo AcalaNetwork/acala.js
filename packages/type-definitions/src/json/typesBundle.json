@@ -296,6 +296,7 @@
                             "liquidationPenalty": "Option<Rate>",
                             "requiredCollateralRatio": "Option<Rate>"
                         },
+                        "CandidateInfoOf": "CandidateInfo",
                         "TradingPairProvisionParameters": {
                             "minContribution": "(Balance, Balance)",
                             "targetProvision": "(Balance, Balance)",
@@ -523,7 +524,7 @@
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
                         "ChainId": "u8",
-                        "Keys": "SessionKeys2",
+                        "Keys": "SessionKeys1",
                         "PalletsOrigin": {
                             "_enum": {
                                 "System": "SystemOrigin",
@@ -720,6 +721,7 @@
                             "liquidationPenalty": "Option<Rate>",
                             "requiredCollateralRatio": "Option<Rate>"
                         },
+                        "CandidateInfoOf": "CandidateInfo",
                         "TradingPairProvisionParameters": {
                             "minContribution": "(Balance, Balance)",
                             "targetProvision": "(Balance, Balance)",
@@ -947,7 +949,7 @@
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
                         "ChainId": "u8",
-                        "Keys": "SessionKeys2",
+                        "Keys": "SessionKeys1",
                         "PalletsOrigin": {
                             "_enum": {
                                 "System": "SystemOrigin",
@@ -1144,6 +1146,7 @@
                             "liquidationPenalty": "Option<Rate>",
                             "requiredCollateralRatio": "Option<Rate>"
                         },
+                        "CandidateInfoOf": "CandidateInfo",
                         "TradingPairProvisionParameters": {
                             "minContribution": "(Balance, Balance)",
                             "targetProvision": "(Balance, Balance)",
@@ -1374,7 +1377,7 @@
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
                         "ChainId": "u8",
-                        "Keys": "SessionKeys2",
+                        "Keys": "SessionKeys1",
                         "PalletsOrigin": {
                             "_enum": {
                                 "System": "SystemOrigin",
@@ -1571,6 +1574,7 @@
                             "liquidationPenalty": "Option<Rate>",
                             "requiredCollateralRatio": "Option<Rate>"
                         },
+                        "CandidateInfoOf": "CandidateInfo",
                         "TradingPairProvisionParameters": {
                             "minContribution": "(Balance, Balance)",
                             "targetProvision": "(Balance, Balance)",
@@ -1800,7 +1804,7 @@
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
                         "ChainId": "u8",
-                        "Keys": "SessionKeys2",
+                        "Keys": "SessionKeys1",
                         "PalletsOrigin": {
                             "_enum": {
                                 "System": "SystemOrigin",
@@ -1995,6 +1999,7 @@
                             "liquidationPenalty": "Option<Rate>",
                             "requiredCollateralRatio": "Option<Rate>"
                         },
+                        "CandidateInfoOf": "CandidateInfo",
                         "TradingPairProvisionParameters": {
                             "minContribution": "(Balance, Balance)",
                             "targetProvision": "(Balance, Balance)",
@@ -2232,7 +2237,7 @@
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
                         "ChainId": "u8",
-                        "Keys": "SessionKeys2",
+                        "Keys": "SessionKeys1",
                         "PalletsOrigin": {
                             "_enum": {
                                 "System": "SystemOrigin",
@@ -2612,6 +2617,7 @@
                             "liquidationPenalty": "Option<Rate>",
                             "requiredCollateralRatio": "Option<Rate>"
                         },
+                        "CandidateInfoOf": "CandidateInfo",
                         "TradingPairProvisionParameters": {
                             "minContribution": "(Balance, Balance)",
                             "targetProvision": "(Balance, Balance)",
@@ -2839,7 +2845,7 @@
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
                         "ChainId": "u8",
-                        "Keys": "SessionKeys2",
+                        "Keys": "SessionKeys1",
                         "PalletsOrigin": {
                             "_enum": {
                                 "System": "SystemOrigin",
@@ -3036,6 +3042,7 @@
                             "liquidationPenalty": "Option<Rate>",
                             "requiredCollateralRatio": "Option<Rate>"
                         },
+                        "CandidateInfoOf": "CandidateInfo",
                         "TradingPairProvisionParameters": {
                             "minContribution": "(Balance, Balance)",
                             "targetProvision": "(Balance, Balance)",
@@ -3263,7 +3270,7 @@
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
                         "ChainId": "u8",
-                        "Keys": "SessionKeys2",
+                        "Keys": "SessionKeys1",
                         "PalletsOrigin": {
                             "_enum": {
                                 "System": "SystemOrigin",
@@ -3460,6 +3467,7 @@
                             "liquidationPenalty": "Option<Rate>",
                             "requiredCollateralRatio": "Option<Rate>"
                         },
+                        "CandidateInfoOf": "CandidateInfo",
                         "TradingPairProvisionParameters": {
                             "minContribution": "(Balance, Balance)",
                             "targetProvision": "(Balance, Balance)",
@@ -3690,7 +3698,7 @@
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
                         "ChainId": "u8",
-                        "Keys": "SessionKeys2",
+                        "Keys": "SessionKeys1",
                         "PalletsOrigin": {
                             "_enum": {
                                 "System": "SystemOrigin",
@@ -3887,6 +3895,7 @@
                             "liquidationPenalty": "Option<Rate>",
                             "requiredCollateralRatio": "Option<Rate>"
                         },
+                        "CandidateInfoOf": "CandidateInfo",
                         "TradingPairProvisionParameters": {
                             "minContribution": "(Balance, Balance)",
                             "targetProvision": "(Balance, Balance)",
@@ -4116,7 +4125,7 @@
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
                         "ChainId": "u8",
-                        "Keys": "SessionKeys2",
+                        "Keys": "SessionKeys1",
                         "PalletsOrigin": {
                             "_enum": {
                                 "System": "SystemOrigin",
@@ -4311,6 +4320,7 @@
                             "liquidationPenalty": "Option<Rate>",
                             "requiredCollateralRatio": "Option<Rate>"
                         },
+                        "CandidateInfoOf": "CandidateInfo",
                         "TradingPairProvisionParameters": {
                             "minContribution": "(Balance, Balance)",
                             "targetProvision": "(Balance, Balance)",
@@ -4548,7 +4558,7 @@
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
                         "ChainId": "u8",
-                        "Keys": "SessionKeys2",
+                        "Keys": "SessionKeys1",
                         "PalletsOrigin": {
                             "_enum": {
                                 "System": "SystemOrigin",
@@ -4928,6 +4938,7 @@
                             "liquidationPenalty": "Option<Rate>",
                             "requiredCollateralRatio": "Option<Rate>"
                         },
+                        "CandidateInfoOf": "CandidateInfo",
                         "TradingPairProvisionParameters": {
                             "minContribution": "(Balance, Balance)",
                             "targetProvision": "(Balance, Balance)",
@@ -5155,7 +5166,7 @@
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
                         "ChainId": "u8",
-                        "Keys": "SessionKeys2",
+                        "Keys": "SessionKeys1",
                         "PalletsOrigin": {
                             "_enum": {
                                 "System": "SystemOrigin",
@@ -5352,6 +5363,7 @@
                             "liquidationPenalty": "Option<Rate>",
                             "requiredCollateralRatio": "Option<Rate>"
                         },
+                        "CandidateInfoOf": "CandidateInfo",
                         "TradingPairProvisionParameters": {
                             "minContribution": "(Balance, Balance)",
                             "targetProvision": "(Balance, Balance)",
@@ -5579,7 +5591,7 @@
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
                         "ChainId": "u8",
-                        "Keys": "SessionKeys2",
+                        "Keys": "SessionKeys1",
                         "PalletsOrigin": {
                             "_enum": {
                                 "System": "SystemOrigin",
@@ -5776,6 +5788,7 @@
                             "liquidationPenalty": "Option<Rate>",
                             "requiredCollateralRatio": "Option<Rate>"
                         },
+                        "CandidateInfoOf": "CandidateInfo",
                         "TradingPairProvisionParameters": {
                             "minContribution": "(Balance, Balance)",
                             "targetProvision": "(Balance, Balance)",
@@ -6006,7 +6019,7 @@
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
                         "ChainId": "u8",
-                        "Keys": "SessionKeys2",
+                        "Keys": "SessionKeys1",
                         "PalletsOrigin": {
                             "_enum": {
                                 "System": "SystemOrigin",
@@ -6203,6 +6216,7 @@
                             "liquidationPenalty": "Option<Rate>",
                             "requiredCollateralRatio": "Option<Rate>"
                         },
+                        "CandidateInfoOf": "CandidateInfo",
                         "TradingPairProvisionParameters": {
                             "minContribution": "(Balance, Balance)",
                             "targetProvision": "(Balance, Balance)",
@@ -6432,7 +6446,7 @@
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
                         "ChainId": "u8",
-                        "Keys": "SessionKeys2",
+                        "Keys": "SessionKeys1",
                         "PalletsOrigin": {
                             "_enum": {
                                 "System": "SystemOrigin",
@@ -6627,6 +6641,7 @@
                             "liquidationPenalty": "Option<Rate>",
                             "requiredCollateralRatio": "Option<Rate>"
                         },
+                        "CandidateInfoOf": "CandidateInfo",
                         "TradingPairProvisionParameters": {
                             "minContribution": "(Balance, Balance)",
                             "targetProvision": "(Balance, Balance)",
@@ -6864,7 +6879,7 @@
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
                         "ChainId": "u8",
-                        "Keys": "SessionKeys2",
+                        "Keys": "SessionKeys1",
                         "PalletsOrigin": {
                             "_enum": {
                                 "System": "SystemOrigin",

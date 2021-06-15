@@ -8,6 +8,7 @@ import cdpEngine from './cdpEngine';
 import dex from './dex';
 import evm from './evm';
 import homa from './homa';
+import collatorSelection from './collatorSelection';
 import homaValidatorList from './homaValidatorList';
 import incentives from './incentives';
 import loans from './loans';
@@ -31,7 +32,7 @@ import karuraVersioned from './spec/karura';
 // FIXME: currently we cannot override this in runtime definations because the code generation script cannot handle overrides
 // This will make it behave correctly in runtime, but wrong types in TS defination.
 const additionalOverride = {
-  Keys: 'SessionKeys2',
+  Keys: 'SessionKeys1',
   PalletsOrigin: {
     _enum: {
       System: 'SystemOrigin',
@@ -101,6 +102,7 @@ const acalaDefs = {
   accounts,
   auctionManager,
   cdpEngine,
+  collatorSelection,
   dex,
   evm,
   homa,
