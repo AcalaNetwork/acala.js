@@ -2313,9 +2313,7 @@
                 },
                 "stakingPool": {
                     "Phase": "StakingPoolPhase"
-                },
-                "chainBridge": {},
-                "chainSafeTransfer": {}
+                }
             }
         },
         "mandala": {
@@ -4631,9 +4629,7 @@
                 },
                 "stakingPool": {
                     "Phase": "StakingPoolPhase"
-                },
-                "chainBridge": {},
-                "chainSafeTransfer": {}
+                }
             }
         },
         "karura": {
@@ -6949,9 +6945,7 @@
                 },
                 "stakingPool": {
                     "Phase": "StakingPoolPhase"
-                },
-                "chainBridge": {},
-                "chainSafeTransfer": {}
+                }
             }
         }
     }
