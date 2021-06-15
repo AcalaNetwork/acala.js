@@ -10,12 +10,6 @@
                 {
                     "name": "key",
                     "type": "OracleKey"
-                },
-                {
-                    "name": "at",
-                    "type": "BlockHash",
-                    "isHistoric": true,
-                    "isOptional": true
                 }
             ],
             "type": "Option<TimestampedValue>",
@@ -30,12 +24,6 @@
                 {
                     "name": "providerId",
                     "type": "RpcDataProviderId"
-                },
-                {
-                    "name": "at",
-                    "type": "BlockHash",
-                    "isHistoric": true,
-                    "isOptional": true
                 }
             ],
             "type": "Vec<(OracleKey, Option<TimestampedValue>)>",
