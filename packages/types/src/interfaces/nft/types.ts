@@ -1,8 +1,9 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { Bytes, Set, Struct, u32, u64 } from '@polkadot/types';
+import type { Bytes, Set, Struct, u128, u32, u64 } from '@polkadot/types';
 import type { AccountId, Balance } from '@acala-network/types/interfaces/runtime';
+import type { ClassId } from '@polkadot/types/interfaces/uniques';
 
 /** @name CID */
 export interface CID extends Bytes {}
@@ -12,9 +13,6 @@ export interface ClassData extends Struct {
   readonly deposit: Balance;
   readonly properties: Properties;
 }
-
-/** @name ClassId */
-export interface ClassId extends u32 {}
 
 /** @name ClassIdOf */
 export interface ClassIdOf extends ClassId {}
@@ -26,6 +24,12 @@ export interface ClassInfoOf extends Struct {
   readonly owner: AccountId;
   readonly data: ClassData;
 }
+
+/** @name NFTBalance */
+export interface NFTBalance extends u128 {}
+
+/** @name NFTClassId */
+export interface NFTClassId extends u32 {}
 
 /** @name Properties */
 export interface Properties extends Set {

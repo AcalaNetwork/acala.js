@@ -5,7 +5,6 @@ export default {
     AmountOf: 'Amount',
     AuctionId: 'u32',
     AuctionIdOf: 'AuctionId',
-    Share: 'u128',
     TokenSymbol: {
       _enum: {
         ACA: 0,
@@ -42,10 +41,14 @@ export default {
     AuthoritysOriginId: {
       _enum: ['Root', 'AcalaTreasury', 'HonzonTreasury', 'HomaTreasury', 'DSWF']
     },
-    DataProviderId: {
+    AcalaDataProviderId: {
       _enum: ['Aggregated', 'Acala', 'Band']
     },
     TradingPair: '(CurrencyId,  CurrencyId)',
-    NFTBalance: 'u128'
+  },
+  typesAlias: {
+    oracle: {
+      DataProviderId: 'AcalaDataProviderId'
+    }
   }
 };
