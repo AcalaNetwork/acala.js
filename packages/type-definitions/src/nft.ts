@@ -31,7 +31,7 @@ export default {
         Burnable: 0b00000010
       }
     },
-    NFTBalance: 'u128',
+    NFTBalance: 'u128'
   },
   typesAligns: {
     nft: {
