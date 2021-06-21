@@ -2,7 +2,7 @@ export default {
   rpc: {},
   types: {
     CID: 'Vec<u8>',
-    ClassId: 'u32',
+    NFTClassId: 'u32',
     ClassIdOf: 'ClassId',
     TokenId: 'u64',
     TokenIdOf: 'TokenId',
@@ -30,6 +30,12 @@ export default {
         Transferable: 0b00000001,
         Burnable: 0b00000010
       }
+    },
+    NFTBalance: 'u128'
+  },
+  typesAligns: {
+    nft: {
+      ClassId: 'NFTClassId'
     }
   }
 };

@@ -12,9 +12,9 @@ import type { RedeemStrategy } from '@acala-network/types/interfaces/homa';
 import type { Guarantee, RelaychainAccountId, SlashInfo, ValidatorBacking } from '@acala-network/types/interfaces/homaValidatorList';
 import type { PoolId } from '@acala-network/types/interfaces/incentives';
 import type { Position } from '@acala-network/types/interfaces/loans';
-import type { CID, ClassData, ClassIdOf, ClassInfoOf, Properties, TokenData, TokenId, TokenIdOf, TokenInfoOf } from '@acala-network/types/interfaces/nft';
+import type { CID, ClassData, ClassIdOf, ClassInfoOf, NFTBalance, NFTClassId, Properties, TokenData, TokenId, TokenIdOf, TokenInfoOf } from '@acala-network/types/interfaces/nft';
 import type { BondingLedger, HomaUnlockChunk, NomineeId } from '@acala-network/types/interfaces/nomineesElection';
-import type { AirDropCurrencyId, Amount, AmountOf, AuctionId, AuctionIdOf, AuthoritysOriginId, CurrencyId, CurrencyIdOf, DexShare, NFTBalance, TokenSymbol, TradingPair } from '@acala-network/types/interfaces/primitives';
+import type { AcalaDataProviderId, AirDropCurrencyId, Amount, AmountOf, AuctionId, AuctionIdOf, AuthoritysOriginId, CurrencyId, CurrencyIdOf, DexShare, TokenSymbol, TradingPair } from '@acala-network/types/interfaces/primitives';
 import type { DestAddress, PublicKey } from '@acala-network/types/interfaces/renvmBridge';
 import type { AccountId, AccountIdOf, AccountIndex, Address, AsOriginId, AssetId, Balance, BalanceOf, Block, BlockNumber, Call, CallHash, CallHashOf, ChangesTrieConfiguration, ChangesTrieSignal, CodecHash, Consensus, ConsensusEngineId, Digest, DigestItem, EncodedJustification, ExtrinsicsWeight, Fixed128, Fixed64, FixedI128, FixedI64, FixedU128, FixedU64, H1024, H128, H160, H2048, H256, H32, H512, H64, Hash, Header, HeaderPartial, I32F32, Index, IndicesLookupSource, Justification, Justifications, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, ModuleId, Moment, MultiAddress, MultiSigner, OpaqueCall, OracleKey, OracleValue, Origin, OriginCaller, PalletId, PalletVersion, PalletsOrigin, Pays, PerU16, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, Releases, RuntimeDbWeight, Seal, SealV0, SignedBlock, SignedBlockWithJustification, SignedBlockWithJustifications, Slot, StorageData, StorageProof, TransactionInfo, TransactionPriority, TransactionStorageProof, U32F32, ValidatorId, ValidatorIdOf, Weight, WeightMultiplier } from '@acala-network/types/interfaces/runtime';
 import type { BalanceInfo, ChangeRate, ChangeRatio, Ledger, Params, PolkadotAccountId, PolkadotAccountIdOf, StakingPoolPhase, SubAccountStatus } from '@acala-network/types/interfaces/stakingPool';
@@ -128,6 +128,7 @@ declare module '@polkadot/types/types/registry' {
     'Compact<Moment>': Compact<Moment>;
     'Compact<MomentOf>': Compact<MomentOf>;
     'Compact<NFTBalance>': Compact<NFTBalance>;
+    'Compact<NFTClassId>': Compact<NFTClassId>;
     'Compact<NominatorIndex>': Compact<NominatorIndex>;
     'Compact<OffchainAccuracy>': Compact<OffchainAccuracy>;
     'Compact<OracleValue>': Compact<OracleValue>;
@@ -197,6 +198,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<AbridgedCandidateReceipt>': Option<AbridgedCandidateReceipt>;
     'Option<AbridgedHostConfiguration>': Option<AbridgedHostConfiguration>;
     'Option<AbridgedHrmpChannel>': Option<AbridgedHrmpChannel>;
+    'Option<AcalaDataProviderId>': Option<AcalaDataProviderId>;
     'Option<AccountData>': Option<AccountData>;
     'Option<AccountId>': Option<AccountId>;
     'Option<AccountId32Junction>': Option<AccountId32Junction>;
@@ -737,6 +739,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<NextConfigDescriptor>': Option<NextConfigDescriptor>;
     'Option<NextConfigDescriptorV1>': Option<NextConfigDescriptorV1>;
     'Option<NFTBalance>': Option<NFTBalance>;
+    'Option<NFTClassId>': Option<NFTClassId>;
     'Option<NMapTypeLatest>': Option<NMapTypeLatest>;
     'Option<NMapTypeV13>': Option<NMapTypeV13>;
     'Option<NodeRole>': Option<NodeRole>;
@@ -1166,6 +1169,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<AbridgedCandidateReceipt>': Vec<AbridgedCandidateReceipt>;
     'Vec<AbridgedHostConfiguration>': Vec<AbridgedHostConfiguration>;
     'Vec<AbridgedHrmpChannel>': Vec<AbridgedHrmpChannel>;
+    'Vec<AcalaDataProviderId>': Vec<AcalaDataProviderId>;
     'Vec<AccountData>': Vec<AccountData>;
     'Vec<AccountId>': Vec<AccountId>;
     'Vec<AccountId32Junction>': Vec<AccountId32Junction>;
@@ -1706,6 +1710,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<NextConfigDescriptor>': Vec<NextConfigDescriptor>;
     'Vec<NextConfigDescriptorV1>': Vec<NextConfigDescriptorV1>;
     'Vec<NFTBalance>': Vec<NFTBalance>;
+    'Vec<NFTClassId>': Vec<NFTClassId>;
     'Vec<NMapTypeLatest>': Vec<NMapTypeLatest>;
     'Vec<NMapTypeV13>': Vec<NMapTypeV13>;
     'Vec<NodeRole>': Vec<NodeRole>;
@@ -2135,6 +2140,7 @@ declare module '@polkadot/types/types/registry' {
     AbridgedCandidateReceipt: AbridgedCandidateReceipt;
     AbridgedHostConfiguration: AbridgedHostConfiguration;
     AbridgedHrmpChannel: AbridgedHrmpChannel;
+    AcalaDataProviderId: AcalaDataProviderId;
     AccountData: AccountData;
     AccountId: AccountId;
     AccountId32Junction: AccountId32Junction;
@@ -2675,6 +2681,7 @@ declare module '@polkadot/types/types/registry' {
     NextConfigDescriptor: NextConfigDescriptor;
     NextConfigDescriptorV1: NextConfigDescriptorV1;
     NFTBalance: NFTBalance;
+    NFTClassId: NFTClassId;
     NMapTypeLatest: NMapTypeLatest;
     NMapTypeV13: NMapTypeV13;
     NodeRole: NodeRole;

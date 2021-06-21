@@ -21,13 +21,7 @@
     "StorageKeyBytes": "Vec<u8>",
     "StorageValueBytes": "Vec<u8>",
     "RpcDataProviderId": "Text",
-    "DataProviderId": {
-        "_enum": [
-            "Aggregated",
-            "Acala",
-            "Band"
-        ]
-    },
+    "DataProviderId": "u8",
     "TimestampedValue": {
         "value": "OracleValue",
         "timestamp": "Moment"
@@ -211,7 +205,7 @@
         "debit": "Balance"
     },
     "CID": "Vec<u8>",
-    "ClassId": "u32",
+    "NFTClassId": "u32",
     "ClassIdOf": "ClassId",
     "TokenId": "u64",
     "TokenIdOf": "TokenId",
@@ -240,6 +234,7 @@
             "Burnable": 2
         }
     },
+    "NFTBalance": "u128",
     "NomineeId": "AccountId",
     "HomaUnlockChunk": {
         "value": "Balance",
@@ -297,8 +292,14 @@
             "DSWF"
         ]
     },
+    "AcalaDataProviderId": {
+        "_enum": [
+            "Aggregated",
+            "Acala",
+            "Band"
+        ]
+    },
     "TradingPair": "(CurrencyId,  CurrencyId)",
-    "NFTBalance": "u128",
     "OracleKey": "CurrencyId",
     "AsOriginId": "AuthoritysOriginId",
     "SubAccountStatus": {

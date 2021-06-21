@@ -1,9 +1,16 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { Enum, U8aFixed, i128, u128, u32 } from '@polkadot/types';
+import type { Enum, U8aFixed, i128, u32 } from '@polkadot/types';
 import type { ITuple } from '@polkadot/types/types';
 import type { EvmAddress } from '@acala-network/types/interfaces/evm';
+
+/** @name AcalaDataProviderId */
+export interface AcalaDataProviderId extends Enum {
+  readonly isAggregated: boolean;
+  readonly isAcala: boolean;
+  readonly isBand: boolean;
+}
 
 /** @name AirDropCurrencyId */
 export interface AirDropCurrencyId extends Enum {
@@ -47,13 +54,6 @@ export interface CurrencyId extends Enum {
 /** @name CurrencyIdOf */
 export interface CurrencyIdOf extends CurrencyId {}
 
-/** @name DataProviderId */
-export interface DataProviderId extends Enum {
-  readonly isAggregated: boolean;
-  readonly isAcala: boolean;
-  readonly isBand: boolean;
-}
-
 /** @name DexShare */
 export interface DexShare extends Enum {
   readonly isToken: boolean;
@@ -61,12 +61,6 @@ export interface DexShare extends Enum {
   readonly isErc20: boolean;
   readonly asErc20: EvmAddress;
 }
-
-/** @name NFTBalance */
-export interface NFTBalance extends u128 {}
-
-/** @name Share */
-export interface Share extends u128 {}
 
 /** @name TokenSymbol */
 export interface TokenSymbol extends Enum {
