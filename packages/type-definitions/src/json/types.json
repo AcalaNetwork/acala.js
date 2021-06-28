@@ -286,10 +286,10 @@
     "AuthoritysOriginId": {
         "_enum": [
             "Root",
-            "AcalaTreasury",
+            "Treasury",
             "HonzonTreasury",
             "HomaTreasury",
-            "DSWF"
+            "TreasuryReserve"
         ]
     },
     "AcalaDataProviderId": {

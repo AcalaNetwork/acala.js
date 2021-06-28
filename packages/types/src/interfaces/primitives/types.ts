@@ -33,10 +33,10 @@ export interface AuctionIdOf extends AuctionId {}
 /** @name AuthoritysOriginId */
 export interface AuthoritysOriginId extends Enum {
   readonly isRoot: boolean;
-  readonly isAcalaTreasury: boolean;
+  readonly isTreasury: boolean;
   readonly isHonzonTreasury: boolean;
   readonly isHomaTreasury: boolean;
-  readonly isDswf: boolean;
+  readonly isTreasuryReserve: boolean;
 }
 
 /** @name CurrencyId */

@@ -39,7 +39,7 @@ export default {
       _enum: ['KAR', 'ACA']
     },
     AuthoritysOriginId: {
-      _enum: ['Root', 'AcalaTreasury', 'HonzonTreasury', 'HomaTreasury', 'DSWF']
+      _enum: ['Root', 'Treasury', 'HonzonTreasury', 'HomaTreasury', 'TreasuryReserve']
     },
     AcalaDataProviderId: {
       _enum: ['Aggregated', 'Acala', 'Band']
