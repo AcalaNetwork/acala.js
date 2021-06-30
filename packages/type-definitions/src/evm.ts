@@ -60,8 +60,7 @@ export default {
     },
     EvmAccountInfo: {
       nonce: 'Index',
-      contractInfo: 'Option<EvmContractInfo>',
-      developerDeposit: 'Option<Balance>'
+      contractInfo: 'Option<EvmContractInfo>'
     },
     CodeInfo: {
       codeSize: 'u32',

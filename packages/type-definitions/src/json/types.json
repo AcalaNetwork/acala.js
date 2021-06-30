@@ -11,7 +11,6 @@
         "delay": "BlockNumber",
         "origin": "PalletsOrigin"
     },
-    "AuthorityOrigin": "DelayedOrigin",
     "StorageValue": "Vec<u8>",
     "GraduallyUpdate": {
         "key": "StorageKey",
@@ -63,6 +62,11 @@
         "totalWithdrawnRewards": "Compact<Balance>"
     },
     "Share": "u128",
+    "ChainId": "u8",
+    "XCurrencyId": {
+        "chainId": "ChainId",
+        "currencyId": "Vec<u8>"
+    },
     "OracleValue": "Price",
     "PalletBalanceOf": "Balance",
     "CollateralAuctionItem": {
@@ -149,8 +153,7 @@
     },
     "EvmAccountInfo": {
         "nonce": "Index",
-        "contractInfo": "Option<EvmContractInfo>",
-        "developerDeposit": "Option<Balance>"
+        "contractInfo": "Option<EvmContractInfo>"
     },
     "CodeInfo": {
         "codeSize": "u32",
@@ -353,6 +356,5 @@
     "DestAddress": "Vec<u8>",
     "DepositNonce": "u64",
     "ResourceId": "[u8; 32]",
-    "ChainId": "u8",
     "Keys": "SessionKeys1"
 }

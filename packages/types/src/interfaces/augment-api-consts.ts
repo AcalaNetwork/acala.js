@@ -13,6 +13,7 @@ import type { ApiTypes } from '@polkadot/api/types';
 declare module '@polkadot/api/types/consts' {
   export interface AugmentedConsts<ApiType> {
     auctionManager: {
+      [key: string]: Codec;
       /**
        * When the total duration of the auction exceeds this soft cap, push
        * the auction to end more faster
@@ -37,12 +38,9 @@ declare module '@polkadot/api/types/consts' {
        * multiple modules send unsigned transactions.
        **/
       unsignedPriority: TransactionPriority & AugmentedConst<ApiType>;
-      /**
-       * Generic const
-       **/
-      [key: string]: Codec;
     };
     cdpEngine: {
+      [key: string]: Codec;
       /**
        * The list of valid collateral currency types
        **/
@@ -79,12 +77,9 @@ declare module '@polkadot/api/types/consts' {
        * multiple modules send unsigned transactions.
        **/
       unsignedPriority: TransactionPriority & AugmentedConst<ApiType>;
-      /**
-       * Generic const
-       **/
-      [key: string]: Codec;
     };
     cdpTreasury: {
+      [key: string]: Codec;
       /**
        * Stablecoin currency id
        **/
@@ -101,22 +96,16 @@ declare module '@polkadot/api/types/consts' {
        **/
       palletId: PalletId & AugmentedConst<ApiType>;
       treasuryAccount: AccountId & AugmentedConst<ApiType>;
-      /**
-       * Generic const
-       **/
-      [key: string]: Codec;
     };
     currencies: {
+      [key: string]: Codec;
       /**
        * The native currency id
        **/
       getNativeCurrencyId: CurrencyId & AugmentedConst<ApiType>;
-      /**
-       * Generic const
-       **/
-      [key: string]: Codec;
     };
     dex: {
+      [key: string]: Codec;
       /**
        * Trading fee rate
        * The first item of the tuple is the numerator of the fee rate, second
@@ -133,59 +122,41 @@ declare module '@polkadot/api/types/consts' {
        * The limit for length of trading path
        **/
       tradingPathLimit: u32 & AugmentedConst<ApiType>;
-      /**
-       * Generic const
-       **/
-      [key: string]: Codec;
     };
     emergencyShutdown: {
+      [key: string]: Codec;
       /**
        * The list of valid collateral currency types
        **/
       collateralCurrencyIds: Vec<CurrencyId> & AugmentedConst<ApiType>;
-      /**
-       * Generic const
-       **/
-      [key: string]: Codec;
     };
     homaValidatorListModule: {
+      [key: string]: Codec;
       bondingDuration: BlockNumber & AugmentedConst<ApiType>;
       minBondAmount: Balance & AugmentedConst<ApiType>;
       validatorInsuranceThreshold: Balance & AugmentedConst<ApiType>;
-      /**
-       * Generic const
-       **/
-      [key: string]: Codec;
     };
     loans: {
+      [key: string]: Codec;
       /**
        * The loan's module id, keep all collaterals of CDPs.
        **/
       palletId: PalletId & AugmentedConst<ApiType>;
-      /**
-       * Generic const
-       **/
-      [key: string]: Codec;
     };
     nomineesElection: {
+      [key: string]: Codec;
       bondingDuration: EraIndex & AugmentedConst<ApiType>;
       maxUnlockingChunks: u32 & AugmentedConst<ApiType>;
       minBondThreshold: Balance & AugmentedConst<ApiType>;
       nominateesCount: u32 & AugmentedConst<ApiType>;
-      /**
-       * Generic const
-       **/
-      [key: string]: Codec;
     };
     polkadotBridge: {
+      [key: string]: Codec;
       bondingDuration: EraIndex & AugmentedConst<ApiType>;
       eraLength: BlockNumber & AugmentedConst<ApiType>;
-      /**
-       * Generic const
-       **/
-      [key: string]: Codec;
     };
     prices: {
+      [key: string]: Codec;
       /**
        * The liquid currency id, it should be LDOT in Acala.
        **/
@@ -202,12 +173,9 @@ declare module '@polkadot/api/types/consts' {
        * The fixed prices of stable currency, it should be 1 USD in Acala.
        **/
       stableCurrencyFixedPrice: Price & AugmentedConst<ApiType>;
-      /**
-       * Generic const
-       **/
-      [key: string]: Codec;
     };
     stakingPool: {
+      [key: string]: Codec;
       /**
        * The default exchange rate for liquid currency to staking currency.
        **/
@@ -230,10 +198,6 @@ declare module '@polkadot/api/types/consts' {
        * The staking currency id(should be DOT in acala)
        **/
       stakingCurrencyId: CurrencyId & AugmentedConst<ApiType>;
-      /**
-       * Generic const
-       **/
-      [key: string]: Codec;
     };
   }
 
