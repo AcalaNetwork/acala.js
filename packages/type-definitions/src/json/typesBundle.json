@@ -166,6 +166,11 @@
                     }
                 }
             },
+            "instances": {
+                "council": [
+                    "generalCouncil"
+                ]
+            },
             "types": [
                 {
                     "minmax": [
@@ -2175,6 +2180,11 @@
                     }
                 }
             },
+            "instances": {
+                "council": [
+                    "generalCouncil"
+                ]
+            },
             "types": [
                 {
                     "minmax": [
@@ -4183,6 +4193,11 @@
                         "section": "stakingPool"
                     }
                 }
+            },
+            "instances": {
+                "council": [
+                    "generalCouncil"
+                ]
             },
             "types": [
                 {
