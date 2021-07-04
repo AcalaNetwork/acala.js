@@ -71,6 +71,9 @@ export const typesAlias = typesAliasFromDefs(acalaDefs, { ...ormlAlias });
 function getBundle(versioned: OverrideVersionedType[]) {
   return {
     rpc,
+    instances: {
+      council: ['generalCouncil']
+    },
     types: [...versioned].map((version) => {
       return {
         minmax: version.minmax,
