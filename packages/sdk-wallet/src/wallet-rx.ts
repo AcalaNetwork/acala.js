@@ -1,9 +1,8 @@
 import { ApiRx } from '@polkadot/api';
 
-import { filter, map, shareReplay, switchMap, takeWhile } from '@polkadot/x-rxjs/operators';
+import { map, shareReplay, switchMap } from '@polkadot/x-rxjs/operators';
 import { assert, memoize } from '@polkadot/util';
 import { BehaviorSubject, combineLatest, Observable, of } from '@polkadot/x-rxjs';
-import { ChainProperties } from '@polkadot/types/interfaces';
 import { TimestampedValue } from '@open-web3/orml-types/interfaces';
 import { eventsFilterRx, FixedPointNumber, Token, TokenBalance } from '@acala-network/sdk-core';
 import { Balance, CurrencyId, OracleKey } from '@acala-network/types/interfaces';
@@ -19,6 +18,7 @@ import { PriceData, PriceDataWithTimestamp } from './types';
 import type { ITuple } from '@polkadot/types/types';
 import type { Option } from '@polkadot/types';
 import { WalletBase } from './wallet-base';
+import { BlockHash } from '@polkadot/types/interfaces';
 
 const ORACLE_FEEDS_TOKEN = ['DOT', 'XBTC', 'RENBTC', 'POLKABTC'];
 
@@ -27,7 +27,6 @@ export class WalletRx extends WalletBase<ApiRx> {
   private currencyIdMap: Map<string, CurrencyId>;
   private tokenMap: Map<string, Token>;
   private readonly oracleFeed$: BehaviorSubject<PriceDataWithTimestamp[]>;
-  private readonly isReady$: BehaviorSubject<boolean>;
   private nativeToken!: string;
 
   constructor(api: ApiRx) {
@@ -36,48 +35,31 @@ export class WalletRx extends WalletBase<ApiRx> {
     this.decimalMap = new Map<string, number>([]);
     this.currencyIdMap = new Map<string, CurrencyId>([]);
     this.tokenMap = new Map<string, Token>([]);
-    this.isReady$ = new BehaviorSubject<boolean>(false);
     this.oracleFeed$ = new BehaviorSubject<PriceDataWithTimestamp[]>([]);
 
     // auto init and subscribe oracle feed
-    this._init().subscribe(() => {
-      this.subscribeInnerOracleFeed();
-    });
+    this._init();
+    this.subscribeInnerOracleFeed();
   }
 
-  private _init = memoize(
-    (): Observable<boolean> => {
-      return this.api.rpc.system.properties<ChainProperties>().pipe(
-        switchMap((properties) => {
-          const tokenDecimals = properties.tokenDecimals.unwrapOrDefault();
-          const tokenSymbol = properties.tokenSymbol.unwrapOrDefault();
+  private _init = () => {
+    const tokenDecimals = this.api.registry.chainDecimals;
+    const tokenSymbol = this.api.registry.chainTokens;
 
-          const defaultTokenDecimal = tokenDecimals?.[0].toNumber() || 18;
+    const defaultTokenDecimal = Number(tokenDecimals?.[0]) || 12;
 
-          this.nativeToken = tokenSymbol[0].toString();
+    this.nativeToken = tokenSymbol[0].toString();
 
-          try {
-            tokenSymbol.forEach((item, index) => {
-              const key = item.toString();
-              const currencyId = forceToTokenSymbolCurrencyId(this.api, key);
-              const decimal = tokenDecimals?.[index].toNumber() || defaultTokenDecimal;
+    tokenSymbol.forEach((item, index) => {
+      const key = item.toString();
+      const currencyId = forceToTokenSymbolCurrencyId(this.api, key);
+      const decimal = Number(tokenDecimals?.[index]) || defaultTokenDecimal;
 
-              this.decimalMap.set(key, tokenDecimals?.[index].toNumber() || defaultTokenDecimal);
-              this.currencyIdMap.set(key, currencyId);
-              this.tokenMap.set(key, Token.fromCurrencyId(currencyId, decimal));
-            });
-
-            this.isReady$.next(true);
-          } catch (e) {
-            throw new Error('init wallet sdk failed');
-          }
-
-          return of(true);
-        }),
-        shareReplay(1)
-      );
-    }
-  );
+      this.decimalMap.set(key, Number(tokenDecimals?.[index]) || defaultTokenDecimal);
+      this.currencyIdMap.set(key, currencyId);
+      this.tokenMap.set(key, Token.fromCurrencyId(currencyId, decimal));
+    });
+  };
 
   // query price info, support specify data source
   private _queryPrice = memoize(
@@ -149,8 +131,7 @@ export class WalletRx extends WalletBase<ApiRx> {
   );
 
   public queryPriceFromOracle = memoize((token: MaybeCurrency, at?: number) => {
-    return this.isReady$.pipe(
-      takeWhile((isReady) => isReady),
+    return of(at).pipe(
       switchMap(() => {
         if (!at) {
           const currencyName = forceToCurrencyIdName(token);
@@ -196,9 +177,7 @@ export class WalletRx extends WalletBase<ApiRx> {
     const liquidToken = this.getToken(liquidCurrencyId);
     const stakingToken = this.getToken(stakingCurrencyId);
 
-    return this.isReady$.pipe(
-      takeWhile((isReady) => isReady),
-      switchMap(() => this.getBlockHash(at)),
+    return this.getBlockHash(at).pipe(
       switchMap((hash) => {
         return combineLatest([
           this.queryPriceFromOracle(stakingToken, at),
@@ -239,9 +218,7 @@ export class WalletRx extends WalletBase<ApiRx> {
     const _token2 = Token.fromCurrencyId(token2CurrencyId);
     const [sorted1, sorted2] = Token.sort(_token1, _token2);
 
-    return this.isReady$.pipe(
-      takeWhile((isReady) => isReady),
-      switchMap(() => this.getBlockHash(at)),
+    return this.getBlockHash(at).pipe(
       switchMap((hash) => {
         return this.api.query.dex.liquidityPool
           .at<ITuple<[Balance, Balance]>>(hash, [sorted1.toChainData(), sorted2.toChainData()])
@@ -328,9 +305,7 @@ export class WalletRx extends WalletBase<ApiRx> {
       return of(FixedPointNumber.ZERO);
     }
 
-    return this.isReady$.pipe(
-      takeWhile((isReady) => isReady),
-      switchMap(() => this.getBlockHash(at)),
+    return this.getBlockHash(at).pipe(
       switchMap((hash) => {
         if (currencyName === this.nativeToken) {
           return this.api.query.balances.totalIssuance.at(hash, currencyId) as Observable<Balance>;
@@ -354,9 +329,7 @@ export class WalletRx extends WalletBase<ApiRx> {
         return of(new TokenBalance(new Token('empty'), FixedPointNumber.ZERO));
       }
 
-      return this.isReady$.pipe(
-        takeWhile((isReady) => isReady),
-        switchMap(() => this.getBlockHash(at)),
+      return this.getBlockHash(at).pipe(
         switchMap((hash) => {
           const currencyName = forceToCurrencyIdName(currencyId);
 
@@ -379,7 +352,7 @@ export class WalletRx extends WalletBase<ApiRx> {
   );
 
   private getBlockHash(at?: number | string) {
-    if (at && typeof at === 'string') return of(at);
+    if (at && typeof at === 'string') return of((at as unknown) as BlockHash);
 
     return of(at).pipe(
       switchMap((at) => {
@@ -393,14 +366,6 @@ export class WalletRx extends WalletBase<ApiRx> {
     );
   }
 
-  public get isReady(): boolean {
-    return this.isReady$.getValue();
-  }
-
-  public subscribeIsReady(): BehaviorSubject<boolean> {
-    return this.isReady$;
-  }
-
   public getAllTokens(): Token[] {
     return Array.from(this.tokenMap.values());
   }
@@ -411,8 +376,8 @@ export class WalletRx extends WalletBase<ApiRx> {
     if (isDexShare(currencyName)) {
       const [token1, token2] = getLPCurrenciesFormName(currencyName);
 
-      const decimal1 = this.decimalMap.get(token1) || 18;
-      const decimal2 = this.decimalMap.get(token2) || 18;
+      const decimal1 = this.decimalMap.get(token1) || 12;
+      const decimal2 = this.decimalMap.get(token2) || 12;
 
       return Token.fromCurrencyId(forceToCurrencyId(this.api, currency), [decimal1, decimal2]);
     }
@@ -431,17 +396,11 @@ export class WalletRx extends WalletBase<ApiRx> {
   }
 
   public queryPrices(currencies: MaybeCurrency[]): Observable<PriceData[]> {
-    return this.isReady$.pipe(
-      filter((isReady) => isReady),
-      switchMap(() => combineLatest(currencies.map((item) => this._queryPrice(item))))
-    );
+    return combineLatest(currencies.map((item) => this._queryPrice(item)));
   }
 
   public queryPrice(currency: MaybeCurrency, at?: number): Observable<PriceData> {
-    return this.isReady$.pipe(
-      filter((isReady) => isReady),
-      switchMap(() => this._queryPrice(currency, at))
-    );
+    return this._queryPrice(currency, at);
   }
 
   public queryOraclePrice(): Observable<PriceDataWithTimestamp[]> {
