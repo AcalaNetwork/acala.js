@@ -12,7 +12,6 @@ export interface PriceData {
 
 export type PriceDataWithTimestamp = PriceData & { timestamp: Date };
 
-
 export interface NativeAllBalance {
   freeBalance: TokenBalance;
   availableBalance: TokenBalance;

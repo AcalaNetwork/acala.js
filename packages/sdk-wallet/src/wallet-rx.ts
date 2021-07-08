@@ -4,7 +4,8 @@ import { filter, map, shareReplay, switchMap, takeWhile } from '@polkadot/x-rxjs
 import { assert, memoize, bnMax } from '@polkadot/util';
 import { BehaviorSubject, combineLatest, Observable, of } from '@polkadot/x-rxjs';
 import { ChainProperties } from '@polkadot/types/interfaces';
-import { TimestampedValue } from '@open-web3/orml-types/interfaces';
+import { Vec } from '@polkadot/types';
+import { TimestampedValue, VestingScheduleOf } from '@open-web3/orml-types/interfaces';
 import { eventsFilterRx, FixedPointNumber, Token, TokenBalance } from '@acala-network/sdk-core';
 import { Balance, CurrencyId, OracleKey } from '@acala-network/types/interfaces';
 import {
@@ -389,7 +390,7 @@ export class WalletRx extends WalletBase<ApiRx> {
           return combineLatest([
             this.api.query.system.account.at(hash, account),
             this.api.query.balances.locks.at(hash, account),
-            this.api.query.vesting.vestingSchedules.at(hash, account)
+            this.api.query.vesting.vestingSchedules.at<Vec<VestingScheduleOf>>(hash, account)
           ]);
         }),
         map(([accountInfo, locks, vestingSchedules]) => {
@@ -400,8 +401,8 @@ export class WalletRx extends WalletBase<ApiRx> {
           const vesting = locks.length ? locks.find((item) => item.id.eq('ormlvest')) : null;
           const vestingBalance = vesting?.amount;
           const isVesting = !!(vestingBalance && !vestingBalance.isZero());
-          const vestingSchedule = (vestingSchedules as any).length ? (vestingSchedules as any)[0] : null;
-          const vestingPerPeriod = vestingSchedule?.perPeriod as Balance;
+          const vestingSchedule = vestingSchedules.length ? vestingSchedules[0] : null;
+          const vestingPerPeriod = vestingSchedule?.perPeriod;
           const vestingPeriod = vestingSchedule?.period;
           const vestingStart = vestingSchedule?.start;
           const vestingPeriodCount = vestingSchedule?.periodCount;
@@ -427,7 +428,9 @@ export class WalletRx extends WalletBase<ApiRx> {
             ),
             vestingEndBlock: this.api.registry.createType(
               'BlockNumber',
-              vestingStart ? vestingStart.add(vestingPeriod.mul(vestingPeriodCount)) : 0
+              vestingStart && vestingPeriod && vestingPeriodCount
+                ? vestingStart.add(vestingPeriod.mul(vestingPeriodCount))
+                : 0
             ),
             vestingPeriod: vestingPeriod || this.api.registry.createType('Balance', 0)
           };
