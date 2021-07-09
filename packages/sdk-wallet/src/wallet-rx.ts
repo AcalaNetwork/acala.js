@@ -1,10 +1,11 @@
 import { ApiRx } from '@polkadot/api';
 
 import { filter, map, shareReplay, switchMap, takeWhile } from '@polkadot/x-rxjs/operators';
-import { assert, memoize } from '@polkadot/util';
+import { assert, memoize, bnMax } from '@polkadot/util';
 import { BehaviorSubject, combineLatest, Observable, of } from '@polkadot/x-rxjs';
 import { ChainProperties } from '@polkadot/types/interfaces';
-import { TimestampedValue } from '@open-web3/orml-types/interfaces';
+import { Vec } from '@polkadot/types';
+import { TimestampedValue, VestingScheduleOf } from '@open-web3/orml-types/interfaces';
 import { eventsFilterRx, FixedPointNumber, Token, TokenBalance } from '@acala-network/sdk-core';
 import { Balance, CurrencyId, OracleKey } from '@acala-network/types/interfaces';
 import {
@@ -15,7 +16,7 @@ import {
   isDexShare
 } from '@acala-network/sdk-core/converter';
 import { MaybeAccount, MaybeCurrency } from '@acala-network/sdk-core/types';
-import { PriceData, PriceDataWithTimestamp } from './types';
+import { PriceData, PriceDataWithTimestamp, NativeAllBalance } from './types';
 import type { ITuple } from '@polkadot/types/types';
 import type { Option } from '@polkadot/types';
 import { WalletBase } from './wallet-base';
@@ -293,7 +294,7 @@ export class WalletRx extends WalletBase<ApiRx> {
     return eventsFilterRx(this.api, [{ section: '*', method: 'NewFeedData' }], true).pipe(
       switchMap(() => {
         /* eslint-disable-next-line */
-        return ((this.api.rpc as any).oracle.getAllValues(oracleProvider) as Observable<[[OracleKey, TimestampedValue]]>);
+        return (this.api.rpc as any).oracle.getAllValues(oracleProvider) as Observable<[[OracleKey, TimestampedValue]]>;
       }),
       map((result) => {
         return result.map((item) => {
@@ -378,16 +379,74 @@ export class WalletRx extends WalletBase<ApiRx> {
     }
   );
 
+  private _queryNativeBalances = memoize(
+    (account: MaybeAccount, at?: number): Observable<NativeAllBalance> => {
+      const token = this.getNativeToken();
+
+      return this.isReady$.pipe(
+        takeWhile((isReady) => isReady),
+        switchMap(() => this.getBlockHash(at)),
+        switchMap((hash) => {
+          return combineLatest([
+            this.api.query.system.account.at(hash, account),
+            this.api.query.balances.locks.at(hash, account),
+            this.api.query.vesting.vestingSchedules.at<Vec<VestingScheduleOf>>(hash, account)
+          ]);
+        }),
+        map(([accountInfo, locks, vestingSchedules]) => {
+          const freeBalance = accountInfo.data.free;
+          const lockedBalance = bnMax(accountInfo.data.miscFrozen, accountInfo.data.feeFrozen);
+          const availableBalance = freeBalance.sub(lockedBalance);
+
+          const vesting = locks.length ? locks.find((item) => item.id.eq('ormlvest')) : null;
+          const vestingBalance = vesting?.amount;
+          const isVesting = !!(vestingBalance && !vestingBalance.isZero());
+          const vestingSchedule = vestingSchedules.length ? vestingSchedules[0] : null;
+          const vestingPerPeriod = vestingSchedule?.perPeriod;
+          const vestingPeriod = vestingSchedule?.period;
+          const vestingStart = vestingSchedule?.start;
+          const vestingPeriodCount = vestingSchedule?.periodCount;
+
+          return {
+            freeBalance: new TokenBalance(token, FixedPointNumber.fromInner(freeBalance.toString(), token?.decimal)),
+            lockedBalance: new TokenBalance(
+              token,
+              FixedPointNumber.fromInner(lockedBalance.toString(), token?.decimal)
+            ),
+            availableBalance: new TokenBalance(
+              token,
+              FixedPointNumber.fromInner(availableBalance.toString(), token?.decimal)
+            ),
+            vestingBalance: new TokenBalance(
+              token,
+              FixedPointNumber.fromInner(vestingBalance?.toString() || '0', token?.decimal)
+            ),
+            isVesting,
+            vestingPerPeriod: new TokenBalance(
+              token,
+              FixedPointNumber.fromInner(vestingPerPeriod?.toString() || '0', token?.decimal)
+            ),
+            vestingEndBlock: this.api.registry.createType(
+              'BlockNumber',
+              vestingStart && vestingPeriod && vestingPeriodCount
+                ? vestingStart.add(vestingPeriod.mul(vestingPeriodCount))
+                : 0
+            ),
+            vestingPeriod: vestingPeriod || this.api.registry.createType('Balance', 0)
+          };
+        }),
+        shareReplay(1)
+      );
+    }
+  );
+
   private getBlockHash(at?: number | string) {
     if (at && typeof at === 'string') return of(at);
 
     return of(at).pipe(
       switchMap((at) => {
-        if (!at) return this.api.query.system.number();
+        if (!at) return this.api.rpc.chain.getBlockHash();
 
-        return of(at);
-      }),
-      switchMap((at) => {
         return this.api.rpc.chain.getBlockHash(at);
       })
     );
@@ -405,6 +464,12 @@ export class WalletRx extends WalletBase<ApiRx> {
     return Array.from(this.tokenMap.values());
   }
 
+  public getNativeToken(): Token {
+    const nativeCurrencyId = this.api.consts.currencies.getNativeCurrencyId;
+
+    return this.getToken(nativeCurrencyId);
+  }
+
   public getToken(currency: MaybeCurrency): Token {
     const currencyName = forceToCurrencyIdName(currency);
 
@@ -420,6 +485,10 @@ export class WalletRx extends WalletBase<ApiRx> {
     // FIXME: need handle erc20
 
     return this.tokenMap.get(currencyName) || new Token('mock');
+  }
+
+  public queryNativeBalances(account: MaybeAccount, at?: number): Observable<NativeAllBalance> {
+    return this._queryNativeBalances(account, at);
   }
 
   public queryBalance(account: MaybeAccount, currency: MaybeCurrency, at?: number): Observable<TokenBalance> {
