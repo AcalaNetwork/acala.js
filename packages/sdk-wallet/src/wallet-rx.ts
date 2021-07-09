@@ -445,11 +445,8 @@ export class WalletRx extends WalletBase<ApiRx> {
 
     return of(at).pipe(
       switchMap((at) => {
-        if (!at) return this.api.query.system.number();
+        if (!at) return this.api.rpc.chain.getBlockHash();
 
-        return of(at);
-      }),
-      switchMap((at) => {
         return this.api.rpc.chain.getBlockHash(at);
       })
     );
