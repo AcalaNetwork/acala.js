@@ -5,7 +5,7 @@ import { assert, memoize, bnMax } from '@polkadot/util';
 import { BehaviorSubject, combineLatest, Observable, of } from '@polkadot/x-rxjs';
 import { Vec } from '@polkadot/types';
 import { TimestampedValue, VestingScheduleOf } from '@open-web3/orml-types/interfaces';
-import { eventsFilterRx, FixedPointNumber, Token, TokenBalance } from '@acala-network/sdk-core';
+import { eventsFilterRx, FixedPointNumber, getSubscribeOrAtQuery, Token, TokenBalance } from '@acala-network/sdk-core';
 import { Balance, CurrencyId, OracleKey } from '@acala-network/types/interfaces';
 import {
   forceToCurrencyId,
@@ -23,6 +23,7 @@ import { BlockHash } from '@polkadot/types/interfaces';
 
 const ORACLE_FEEDS_TOKEN = ['DOT', 'XBTC', 'RENBTC', 'POLKABTC'];
 
+const queryFN = getSubscribeOrAtQuery;
 export class WalletRx extends WalletBase<ApiRx> {
   private decimalMap: Map<string, number>;
   private currencyIdMap: Map<string, CurrencyId>;
@@ -62,7 +63,7 @@ export class WalletRx extends WalletBase<ApiRx> {
     });
   };
 
-  // query price info, support specify data source
+  // query price info
   private _queryPrice = memoize(
     (currency: MaybeCurrency, at?: number): Observable<PriceData> => {
       const currencyName = forceToCurrencyIdName(currency);
@@ -126,7 +127,8 @@ export class WalletRx extends WalletBase<ApiRx> {
             token: dexShareToken,
             price
           };
-        })
+        }),
+        shareReplay(1)
       );
     }
   );
@@ -167,7 +169,8 @@ export class WalletRx extends WalletBase<ApiRx> {
             );
           })
         );
-      })
+      }),
+      shareReplay(1)
     );
   });
 
@@ -182,7 +185,7 @@ export class WalletRx extends WalletBase<ApiRx> {
       switchMap((hash) => {
         return combineLatest([
           this.queryPriceFromOracle(stakingToken, at),
-          this.api.query.stakingPool.stakingPoolLedger.at(hash),
+          queryFN(this.api.query.stakingPool.stakingPoolLedger, hash)(),
           this._queryIssuance(liquidToken, at)
         ]);
       }),
@@ -208,7 +211,8 @@ export class WalletRx extends WalletBase<ApiRx> {
           token: liquidToken,
           price: stakingTokenPrice.price.times(ratio)
         };
-      })
+      }),
+      shareReplay(1)
     );
   });
 
@@ -221,24 +225,26 @@ export class WalletRx extends WalletBase<ApiRx> {
 
     return this.getBlockHash(at).pipe(
       switchMap((hash) => {
-        return this.api.query.dex.liquidityPool
-          .at<ITuple<[Balance, Balance]>>(hash, [sorted1.toChainData(), sorted2.toChainData()])
-          .pipe(
-            map((pool: ITuple<[Balance, Balance]>) => {
-              const balance1 = pool[0];
-              const balance2 = pool[1];
+        return queryFN(
+          this.api.query.dex.liquidityPool,
+          hash
+        )<ITuple<[Balance, Balance]>>([sorted1.toChainData(), sorted2.toChainData()]).pipe(
+          map((pool: ITuple<[Balance, Balance]>) => {
+            const balance1 = pool[0];
+            const balance2 = pool[1];
 
-              const fixedPoint1 = FixedPointNumber.fromInner(balance1.toString(), this.getToken(sorted1).decimal);
-              const fixedPoint2 = FixedPointNumber.fromInner(balance2.toString(), this.getToken(sorted2).decimal);
+            const fixedPoint1 = FixedPointNumber.fromInner(balance1.toString(), this.getToken(sorted1).decimal);
+            const fixedPoint2 = FixedPointNumber.fromInner(balance2.toString(), this.getToken(sorted2).decimal);
 
-              if (forceToCurrencyIdName(sorted1) === forceToCurrencyIdName(token1)) {
-                return [fixedPoint1, fixedPoint2];
-              } else {
-                return [fixedPoint2, fixedPoint1];
-              }
-            })
-          );
-      })
+            if (forceToCurrencyIdName(sorted1) === forceToCurrencyIdName(token1)) {
+              return [fixedPoint1, fixedPoint2];
+            } else {
+              return [fixedPoint2, fixedPoint1];
+            }
+          })
+        );
+      }),
+      shareReplay(1)
     );
   });
 
@@ -289,7 +295,8 @@ export class WalletRx extends WalletBase<ApiRx> {
             timestamp: new Date((item[1]?.value as any)?.timestamp.toNumber())
           };
         });
-      })
+      }),
+      shareReplay(1)
     );
   });
 
@@ -309,14 +316,15 @@ export class WalletRx extends WalletBase<ApiRx> {
     return this.getBlockHash(at).pipe(
       switchMap((hash) => {
         if (currencyName === this.nativeToken) {
-          return this.api.query.balances.totalIssuance.at(hash, currencyId) as Observable<Balance>;
+          return queryFN(this.api.query.balances.totalIssuance, hash)(currencyId);
         }
 
-        return this.api.query.tokens.totalIssuance.at(hash, currencyId) as Observable<Balance>;
+        return queryFN(this.api.query.tokens.totalIssuance, hash)(currencyId);
       }),
       map((data) =>
         !data ? new FixedPointNumber(0, token.decimal) : FixedPointNumber.fromInner(data.toString(), token.decimal)
-      )
+      ),
+      shareReplay(1)
     );
   });
 
@@ -335,9 +343,10 @@ export class WalletRx extends WalletBase<ApiRx> {
           const currencyName = forceToCurrencyIdName(currencyId);
 
           if (currencyName === this.nativeToken) {
-            return this.api.query.system.account.at(hash, account).pipe(map((data) => data.data.free));
+            return queryFN(this.api.query.system.account, hash)(account).pipe(map((data) => data.data?.free));
           }
-          return this.api.query.tokens.accounts.at(hash, account, currencyId).pipe(map((data) => data.free));
+
+          return queryFN(this.api.query.tokens.accounts, hash)(account, currencyId).pipe(map((data) => data.free));
         }),
         map((balance) => {
           const token = this.getToken(currencyId);
@@ -359,9 +368,9 @@ export class WalletRx extends WalletBase<ApiRx> {
       return this.getBlockHash(at).pipe(
         switchMap((hash) => {
           return combineLatest([
-            this.api.query.system.account.at(hash, account),
-            this.api.query.balances.locks.at(hash, account),
-            this.api.query.vesting.vestingSchedules.at<Vec<VestingScheduleOf>>(hash, account)
+            queryFN(this.api.query.system.account, hash)(account),
+            queryFN(this.api.query.balances.locks, hash)(account),
+            queryFN(this.api.query.vesting.vestingSchedules, hash)<Vec<VestingScheduleOf>>(account)
           ]);
         }),
         map(([accountInfo, locks, vestingSchedules]) => {
@@ -414,13 +423,9 @@ export class WalletRx extends WalletBase<ApiRx> {
   private getBlockHash(at?: number | string) {
     if (at && typeof at === 'string') return of((at as unknown) as BlockHash);
 
-    return of(at).pipe(
-      switchMap((at) => {
-        if (!at) return this.api.rpc.chain.getBlockHash();
+    if (!at) return of(('' as unknown) as BlockHash);
 
-        return this.api.rpc.chain.getBlockHash(at);
-      })
-    );
+    return this.api.rpc.chain.getBlockHash(at);
   }
 
   public getAllTokens(): Token[] {
