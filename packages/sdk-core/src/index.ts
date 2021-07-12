@@ -6,3 +6,4 @@ export * from './token-set';
 export * from './events';
 export * from './types';
 export * from './converter';
+export * from './functions';
