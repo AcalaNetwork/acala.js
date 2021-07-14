@@ -361,7 +361,7 @@ export class FixedPointNumber {
     );
   }
 
-  // alais sort name
+  // sort name
   public add = this.plus;
   public sub = this.minus;
   public mul = this.times;
