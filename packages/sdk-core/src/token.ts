@@ -12,6 +12,7 @@ interface TokenOpts {
   isDexShare?: boolean;
   isTokenSymbol?: boolean;
   isERC20?: boolean;
+  chain?: string;
 }
 
 export class Token {
@@ -20,6 +21,7 @@ export class Token {
   readonly isDexShare: boolean;
   readonly isTokenSymbol: boolean;
   readonly isERC20: boolean;
+  readonly chain: string | undefined;
 
   constructor(name: string, options?: TokenOpts) {
     this.name = name;
@@ -27,14 +29,17 @@ export class Token {
     this.isDexShare = options?.isDexShare || false;
     this.isTokenSymbol = options?.isTokenSymbol || false;
     this.isERC20 = options?.isERC20 || false;
+    this.chain = options?.chain;
   }
 
-  static fromCurrencyId(currency: CurrencyId, decimal?: number | number[]): Token {
-    const _decimal = Array.isArray(decimal) ? decimal.sort().reverse()[0] : decimal;
-
+  static fromCurrencyId(currency: CurrencyId, decimal?: number): Token {
     if (currency.isDexShare) {
-      return new Token(forceToCurrencyIdName(currency), {
-        decimal: _decimal,
+      // resort the Currencies of DexShare, for some CurrencyId may created manually.
+      const name = forceToCurrencyIdName(currency);
+      const [token1, token2] = Token.sortTokenNames(...getLPCurrenciesFormName(name));
+
+      return new Token(createLPCurrencyName(token1, token2), {
+        decimal: decimal,
         isDexShare: true,
         isTokenSymbol: false,
         isERC20: false
@@ -43,7 +48,7 @@ export class Token {
 
     if (currency.isToken) {
       return new Token(forceToCurrencyIdName(currency), {
-        decimal: _decimal,
+        decimal: decimal,
         isDexShare: false,
         isTokenSymbol: true,
         isERC20: false
@@ -52,7 +57,7 @@ export class Token {
 
     if (currency.isErc20) {
       return new Token(forceToCurrencyIdName(currency), {
-        decimal: _decimal,
+        decimal: decimal,
         isDexShare: false,
         isTokenSymbol: false,
         isERC20: true
@@ -75,15 +80,58 @@ export class Token {
     return new Token(name, options);
   }
 
-  static fromTokens(token1: Token, token2: Token): Token {
-    const decimal = token1.decimal > token2.decimal ? token1.decimal : token2.decimal;
+  /* create DexShareToken by Token array */
+  static fromTokens(token1: Token, token2: Token, decimal?: number): Token {
+    const [_token1, _token2] = this.sort(token1, token2);
 
-    return new Token(createLPCurrencyName(token1.name, token2.name), {
-      decimal,
+    // set decimal as token1 decimal;
+    const _decimal = decimal || _token1.decimal;
+
+    return new Token(createLPCurrencyName(_token1.name, _token2.name), {
+      decimal: _decimal,
       isDexShare: true,
       isTokenSymbol: false,
       isERC20: false
     });
+  }
+
+  /* create DexShareToken by CurrencyId array */
+  static fromCurrencies(currency1: CurrencyId, currency2: CurrencyId, decimal?: number | [number, number]): Token {
+    const decimal1 = Array.isArray(decimal) ? decimal[0] : decimal;
+    const decimal2 = Array.isArray(decimal) ? decimal[1] : decimal;
+
+    const token1 = Token.fromCurrencyId(currency1, decimal1);
+    const token2 = Token.fromCurrencyId(currency2, decimal2);
+
+    return Token.fromTokens(token1, token2);
+  }
+
+  /* create DexShareToken by TokenSymbol array */
+  static fromTokenSymbols(currency1: TokenSymbol, currency2: TokenSymbol, decimal?: number | [number, number]): Token {
+    const decimal1 = Array.isArray(decimal) ? decimal[0] : decimal;
+    const decimal2 = Array.isArray(decimal) ? decimal[1] : decimal;
+
+    const token1 = Token.fromTokenSymbol(currency1, decimal1);
+    const token2 = Token.fromTokenSymbol(currency2, decimal2);
+
+    return Token.fromTokens(token1, token2);
+  }
+
+  static sortTokenNames(...names: string[]): string[] {
+    const result = [...names];
+
+    return result.sort((a, b) => TOKEN_SORT[a] - TOKEN_SORT[b]);
+  }
+
+  static sortCurrencies(...currencies: CurrencyId[]): CurrencyId[] {
+    const result = [...currencies];
+
+    // FIXME: sort currencies should handle ERC20 and DexShare
+    for (const item of currencies) {
+      assert(item.isToken, `sortCurrencies doesn't support ERC20 and DexShare yet.`);
+    }
+
+    return result.sort((a, b) => TOKEN_SORT[a.asToken.toString()] - TOKEN_SORT[b.asToken.toString()]);
   }
 
   static sort(...tokens: Token[]): Token[] {
@@ -101,10 +149,12 @@ export class Token {
   }
 
   public toTradingPair(api: AnyApi): TradingPair {
-    if (!this.isDexShare) throw new Error(`can't convert to TradingPair`);
+    assert(this.isDexShare, 'the currency is not a dex share');
 
     try {
-      return api.createType('TradingPair', [getLPCurrenciesFormName(this.name).map((i) => ({ token: i }))]);
+      return api.createType('TradingPair', [
+        Token.sortTokenNames(...getLPCurrenciesFormName(this.name)).map((i) => ({ token: i }))
+      ]);
     } catch (e) {
       throw new Error(`can't convert to TradingPair`);
     }
@@ -112,7 +162,7 @@ export class Token {
 
   public toDexShare(api: AnyApi): DexShare {
     try {
-      assert(this.isDexShare, 'the currency is not a dex share');
+      assert(this.isDexShare, 'the token is not a dexShare');
 
       return api.createType('DexShare', this.toChainData());
     } catch (e) {
@@ -135,7 +185,8 @@ export class Token {
       decimal: this.decimal,
       isTokenSymbol: this.isTokenSymbol,
       isERC20: this.isERC20,
-      isDexShare: this.isDexShare
+      isDexShare: this.isDexShare,
+      chain: this.chain
     });
   }
 
@@ -143,25 +194,8 @@ export class Token {
     if (compair) {
       return compair(this, target);
     }
-    let temp = this.name === target.name;
 
-    if (this.decimal || target.decimal) {
-      temp = temp && this.decimal === target.decimal;
-    }
-
-    if (this.isDexShare || target.isDexShare) {
-      temp = temp && this.isDexShare === target.isDexShare;
-    }
-
-    if (this.isTokenSymbol || target.isTokenSymbol) {
-      temp = temp && this.isTokenSymbol === target.isTokenSymbol;
-    }
-
-    if (this.isERC20 || target.isERC20) {
-      temp = temp && this.isERC20 === target.isERC20;
-    }
-
-    return temp;
+    return JSON.stringify(this) === JSON.stringify(target);
   }
 
   public toChainData(): { Token: string } | { DexShare: [{ Token: string }, { Token: string }] } | { ERC20: string } {

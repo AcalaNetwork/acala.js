@@ -444,10 +444,10 @@ export class WalletRx extends WalletBase<ApiRx> {
     if (isDexShare(currencyName)) {
       const [token1, token2] = getLPCurrenciesFormName(currencyName);
 
-      const decimal1 = this.decimalMap.get(token1) || 12;
-      const decimal2 = this.decimalMap.get(token2) || 12;
+      const _token1 = this.getToken(token1);
+      const _token2 = this.getToken(token2);
 
-      return Token.fromCurrencyId(forceToCurrencyId(this.api, currency), [decimal1, decimal2]);
+      return Token.fromTokens(_token1, _token2);
     }
 
     // FIXME: need handle erc20
