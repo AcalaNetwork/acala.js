@@ -361,6 +361,17 @@ export class FixedPointNumber {
     );
   }
 
+  // alais sort name
+  public add = this.plus;
+  public sub = this.minus;
+  public mul = this.times;
+  public lt = this.isLessThan;
+  public gt = this.isGreaterThan;
+  public lte = this.isLessOrEqualTo;
+  public gte = this.isGreaterThanOrEqualTo;
+  public eq = this.isEqualTo;
+  // public div = this.div;
+
   static ZERO = new FixedPointNumber(0);
   static ONE = new FixedPointNumber(1);
   static TWO = new FixedPointNumber(2);
