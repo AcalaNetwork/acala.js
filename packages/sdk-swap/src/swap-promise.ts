@@ -10,7 +10,6 @@ import { ITuple } from '@polkadot/types/types';
 import { SwapParameters } from './swap-parameters';
 import { LiquidityPool, SwapTradeMode } from './types';
 import { SwapBase } from './swap-base';
-import { result } from 'lodash';
 
 export class SwapPromise extends SwapBase<ApiPromise> {
   constructor(api: ApiPromise) {
