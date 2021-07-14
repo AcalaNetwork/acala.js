@@ -114,8 +114,8 @@ export class SwapPromise extends SwapBase<ApiPromise> {
     path: [Token, Token],
     input: FixedPointNumber,
     mode: SwapTradeMode,
-    callback: (parameters: SwapParameters) => void
-  ): void {
+    callback: (error: any, parameters?: SwapParameters) => void
+  ): () => void {
     const inputToken = path[0];
     const outputToken = path[1];
 
@@ -140,9 +140,10 @@ export class SwapPromise extends SwapBase<ApiPromise> {
 
     const swapper = this._swapper(_inputToken, _outputToken);
 
-    swapper
-      .pipe(
-        map(([liquidityPool, paths]) => {
+    const subscriber = swapper.subscribe({
+      error: (e) => callback(e),
+      next: ([liquidityPool, paths]) => {
+        try {
           const result = this.getBestSwapResult(mode, paths, liquidityPool, [
             inputToken,
             outputToken,
@@ -151,10 +152,14 @@ export class SwapPromise extends SwapBase<ApiPromise> {
           ]);
 
           if (result) {
-            callback(result);
+            callback(undefined, result);
           }
-        })
-      )
-      .subscribe();
+        } catch (e) {
+          callback(e);
+        }
+      }
+    });
+
+    return () => subscriber.unsubscribe();
   }
 }

@@ -179,6 +179,11 @@ describe('fixed point number compare should worker', () => {
     expect(a.isGreaterThan(c)).toEqual(true);
     expect(b.isGreaterThan(a)).toEqual(false);
     expect(c.isGreaterThan(a)).toEqual(false);
+
+    expect(a.gt(b)).toEqual(true);
+    expect(a.gt(c)).toEqual(true);
+    expect(b.gt(a)).toEqual(false);
+    expect(c.gt(a)).toEqual(false);
   });
 
   test('isGreaterOrEqualThan', () => {
@@ -188,6 +193,9 @@ describe('fixed point number compare should worker', () => {
 
     expect(a.isGreaterThanOrEqualTo(b)).toEqual(true);
     expect(a.isGreaterThanOrEqualTo(c)).toEqual(true);
+
+    expect(a.gte(b)).toEqual(true);
+    expect(a.gte(c)).toEqual(true);
   });
 
   test('isLessThan', () => {
@@ -196,9 +204,12 @@ describe('fixed point number compare should worker', () => {
 
     expect(a.isLessThan(b)).toEqual(true);
     expect(b.isLessThan(a)).toEqual(false);
+
+    expect(a.lt(b)).toEqual(true);
+    expect(b.lt(a)).toEqual(false);
   });
 
-  test('isLessThan', () => {
+  test('isLessOrEqualThan', () => {
     const a = new FixedPointNumber(2);
     const b = new FixedPointNumber(10);
     const c = new FixedPointNumber(2);
@@ -206,6 +217,10 @@ describe('fixed point number compare should worker', () => {
     expect(b.isLessOrEqualTo(a)).toEqual(false);
     expect(a.isLessOrEqualTo(b)).toEqual(true);
     expect(a.isLessOrEqualTo(c)).toEqual(true);
+
+    expect(b.lte(a)).toEqual(false);
+    expect(a.lte(b)).toEqual(true);
+    expect(a.lte(c)).toEqual(true);
   });
 
   test('isEqualTo', () => {
@@ -213,6 +228,7 @@ describe('fixed point number compare should worker', () => {
     const b = new FixedPointNumber(2, 3);
 
     expect(a.isEqualTo(b)).toEqual(true);
+    expect(a.eq(b)).toEqual(true);
   });
 
   test('min max', () => {
