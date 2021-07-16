@@ -1,70 +1,43 @@
 import { ApiRx } from '@polkadot/api';
 
-import { map, shareReplay, switchMap } from '@polkadot/x-rxjs/operators';
-import { assert, memoize, bnMax } from '@polkadot/util';
+import { map, shareReplay, switchMap, take } from '@polkadot/x-rxjs/operators';
+import { memoize, bnMax } from '@polkadot/util';
 import { BehaviorSubject, combineLatest, Observable, of } from '@polkadot/x-rxjs';
 import { Vec } from '@polkadot/types';
-import { TimestampedValue, VestingScheduleOf } from '@open-web3/orml-types/interfaces';
+import { TimestampedValue, VestingScheduleOf, OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { eventsFilterRx, FixedPointNumber, getSubscribeOrAtQuery, Token, TokenBalance } from '@acala-network/sdk-core';
 import { Balance, CurrencyId, OracleKey } from '@acala-network/types/interfaces';
 import {
   forceToCurrencyId,
   forceToCurrencyIdName,
-  forceToTokenSymbolCurrencyId,
   getLPCurrenciesFormName,
   isDexShare
 } from '@acala-network/sdk-core/converter';
 import { MaybeAccount, MaybeCurrency } from '@acala-network/sdk-core/types';
-import { PriceData, PriceDataWithTimestamp, NativeAllBalance } from './types';
+import { PriceData, PriceDataWithTimestamp, NativeAllBalance, BalanceData } from './types';
 import type { ITuple } from '@polkadot/types/types';
 import type { Option } from '@polkadot/types';
 import { WalletBase } from './wallet-base';
-import { BlockHash } from '@polkadot/types/interfaces';
+import { AccountData, BlockHash } from '@polkadot/types/interfaces';
+import { BelowExistentialDeposit } from './errors';
 
 const ORACLE_FEEDS_TOKEN = ['DOT', 'XBTC', 'RENBTC', 'POLKABTC'];
 
 const queryFN = getSubscribeOrAtQuery;
 export class WalletRx extends WalletBase<ApiRx> {
-  private decimalMap: Map<string, number>;
-  private currencyIdMap: Map<string, CurrencyId>;
-  private tokenMap: Map<string, Token>;
   private readonly oracleFeed$: BehaviorSubject<PriceDataWithTimestamp[]>;
-  private nativeToken!: string;
 
   constructor(api: ApiRx) {
     super(api);
 
-    this.decimalMap = new Map<string, number>([]);
-    this.currencyIdMap = new Map<string, CurrencyId>([]);
-    this.tokenMap = new Map<string, Token>([]);
     this.oracleFeed$ = new BehaviorSubject<PriceDataWithTimestamp[]>([]);
 
-    // auto init and subscribe oracle feed
-    this._init();
+    // subscribe oracle feed
     this.subscribeInnerOracleFeed();
   }
 
-  private _init = () => {
-    const tokenDecimals = this.api.registry.chainDecimals;
-    const tokenSymbol = this.api.registry.chainTokens;
-
-    const defaultTokenDecimal = Number(tokenDecimals?.[0]) || 12;
-
-    this.nativeToken = tokenSymbol[0].toString();
-
-    tokenSymbol.forEach((item, index) => {
-      const key = item.toString();
-      const currencyId = forceToTokenSymbolCurrencyId(this.api, key);
-      const decimal = Number(tokenDecimals?.[index]) || defaultTokenDecimal;
-
-      this.decimalMap.set(key, Number(tokenDecimals?.[index]) || defaultTokenDecimal);
-      this.currencyIdMap.set(key, currencyId);
-      this.tokenMap.set(key, Token.fromCurrencyId(currencyId, decimal));
-    });
-  };
-
   // query price info
-  private _queryPrice = memoize(
+  public queryPrice = memoize(
     (currency: MaybeCurrency, at?: number): Observable<PriceData> => {
       const currencyName = forceToCurrencyIdName(currency);
       const liquidCurrencyId = this.api.consts?.stakingPool?.liquidCurrencyId;
@@ -186,7 +159,7 @@ export class WalletRx extends WalletBase<ApiRx> {
         return combineLatest([
           this.queryPriceFromOracle(stakingToken, at),
           queryFN(this.api.query.stakingPool.stakingPoolLedger, hash)(),
-          this._queryIssuance(liquidToken, at)
+          this.queryIssuance(liquidToken, at)
         ]);
       }),
       map(([stakingTokenPrice, ledger, liquidIssuance]) => {
@@ -273,7 +246,7 @@ export class WalletRx extends WalletBase<ApiRx> {
     }
   );
 
-  private _subscribeOracleFeed = memoize((oracleProvider = 'Aggregated') => {
+  public subscribeOracleFeed = memoize((oracleProvider = 'Aggregated') => {
     return eventsFilterRx(this.api, [{ section: '*', method: 'NewFeedData' }], true).pipe(
       switchMap(() => {
         /* eslint-disable-next-line */
@@ -300,7 +273,7 @@ export class WalletRx extends WalletBase<ApiRx> {
     );
   });
 
-  private _queryIssuance = memoize((currency: MaybeCurrency, at?: number) => {
+  public queryIssuance = memoize((currency: MaybeCurrency, at?: number) => {
     let currencyId: CurrencyId;
     let currencyName: string;
     let token: Token;
@@ -328,40 +301,62 @@ export class WalletRx extends WalletBase<ApiRx> {
     );
   });
 
-  private _queryBalance = memoize(
-    (account: MaybeAccount, currency: MaybeCurrency, at?: number): Observable<TokenBalance> => {
-      let currencyId: CurrencyId;
-
-      try {
-        currencyId = forceToCurrencyId(this.api, currency);
-      } catch (e) {
-        return of(new TokenBalance(new Token('empty'), FixedPointNumber.ZERO));
-      }
+  public queryBalance = memoize(
+    (account: MaybeAccount, currency: MaybeCurrency, at?: number): Observable<BalanceData> => {
+      const tokenName = forceToCurrencyIdName(currency);
+      const currencyId = forceToCurrencyId(this.api, currency);
+      const isNativeToken = tokenName === this.nativeToken;
 
       return this.getBlockHash(at).pipe(
         switchMap((hash) => {
-          const currencyName = forceToCurrencyIdName(currencyId);
-
-          if (currencyName === this.nativeToken) {
-            return queryFN(this.api.query.system.account, hash)(account).pipe(map((data) => data.data?.free));
+          if (isNativeToken) {
+            return queryFN(this.api.query.system.account, hash)(account).pipe(map((data) => data.data));
           }
 
-          return queryFN(this.api.query.tokens.accounts, hash)(account, currencyId).pipe(map((data) => data.free));
+          return (queryFN(this.api.query.tokens.accounts, hash)(account, currencyId).pipe(
+            map((data) => data)
+          ) as unknown) as Observable<OrmlAccountData>;
         }),
-        map((balance) => {
+        map((data) => {
           const token = this.getToken(currencyId);
-          const _balance = FixedPointNumber.fromInner(balance.toString(), token?.decimal);
 
-          assert(token && _balance, `token or balance create failed in query balance`);
+          let freeBalance = FixedPointNumber.ZERO;
+          let lockedBalance = FixedPointNumber.ZERO;
+          let reservedBalance = FixedPointNumber.ZERO;
+          let availableBalance = FixedPointNumber.ZERO;
 
-          return new TokenBalance(token, _balance);
+          if (isNativeToken) {
+            data = data as AccountData;
+
+            freeBalance = FixedPointNumber.fromInner(data.free.toString(), token.decimal);
+            lockedBalance = FixedPointNumber.fromInner(data.miscFrozen.toString(), token.decimal).max(
+              FixedPointNumber.fromInner(data.feeFrozen.toString(), token.decimal)
+            );
+            reservedBalance = FixedPointNumber.fromInner(data.reserved.toString(), token.decimal);
+          } else {
+            data = data as OrmlAccountData;
+
+            freeBalance = FixedPointNumber.fromInner(data.free.toString(), token.decimal);
+            lockedBalance = FixedPointNumber.fromInner(data.frozen.toString(), token.decimal);
+            reservedBalance = FixedPointNumber.fromInner(data.reserved.toString(), token.decimal);
+          }
+
+          availableBalance = freeBalance.sub(lockedBalance).sub(reservedBalance).max(FixedPointNumber.ZERO);
+
+          return {
+            token,
+            freeBalance,
+            lockedBalance,
+            reservedBalance,
+            availableBalance
+          };
         }),
         shareReplay(1)
       );
     }
   );
 
-  private _queryNativeBalances = memoize(
+  public queryNativeBalances = memoize(
     (account: MaybeAccount, at?: number): Observable<NativeAllBalance> => {
       const token = this.getNativeToken();
 
@@ -420,71 +415,52 @@ export class WalletRx extends WalletBase<ApiRx> {
     }
   );
 
-  private getBlockHash(at?: number | string) {
+  private getBlockHash = memoize((at?: number | string) => {
     if (at && typeof at === 'string') return of((at as unknown) as BlockHash);
 
     if (!at) return of(('' as unknown) as BlockHash);
 
     return this.api.rpc.chain.getBlockHash(at);
-  }
+  });
 
-  public getAllTokens(): Token[] {
-    return Array.from(this.tokenMap.values());
-  }
+  public checkTransfer(
+    account: MaybeAccount,
+    currency: MaybeCurrency,
+    amount: FixedPointNumber,
+    direction: 'from' | 'to' = 'to'
+  ): Observable<boolean> {
+    const transferConfig = this.getTransferConfig(currency);
 
-  public getNativeToken(): Token {
-    const nativeCurrencyId = this.api.consts.currencies.getNativeCurrencyId;
+    return this.queryBalance(account, currency).pipe(
+      map((balance) => {
+        if (direction === 'to') {
+          if (balance.freeBalance.add(amount).lt(transferConfig.existentialDeposit || FixedPointNumber.ZERO)) {
+            throw new BelowExistentialDeposit(account, currency);
+          }
+        }
 
-    return this.getToken(nativeCurrencyId);
-  }
+        if (direction === 'from') {
+          if (balance.freeBalance.minus(amount).lt(transferConfig.existentialDeposit || FixedPointNumber.ZERO)) {
+            throw new BelowExistentialDeposit(account, currency);
+          }
+        }
 
-  public getToken(currency: MaybeCurrency): Token {
-    const currencyName = forceToCurrencyIdName(currency);
-
-    if (isDexShare(currencyName)) {
-      const [token1, token2] = getLPCurrenciesFormName(currencyName);
-
-      const _token1 = this.getToken(token1);
-      const _token2 = this.getToken(token2);
-
-      return Token.fromTokens(_token1, _token2);
-    }
-
-    // FIXME: need handle erc20
-
-    return this.tokenMap.get(currencyName) || new Token('mock');
-  }
-
-  public queryNativeBalances(account: MaybeAccount, at?: number): Observable<NativeAllBalance> {
-    return this._queryNativeBalances(account, at);
-  }
-
-  public queryBalance(account: MaybeAccount, currency: MaybeCurrency, at?: number): Observable<TokenBalance> {
-    return this._queryBalance(account, currency, at);
-  }
-
-  public queryIssuance(currency: MaybeCurrency, at?: number): Observable<FixedPointNumber> {
-    return this._queryIssuance(currency, at);
+        return true;
+      }),
+      take(1)
+    );
   }
 
   public queryPrices(currencies: MaybeCurrency[]): Observable<PriceData[]> {
-    return combineLatest(currencies.map((item) => this._queryPrice(item)));
-  }
-
-  public queryPrice(currency: MaybeCurrency, at?: number): Observable<PriceData> {
-    return this._queryPrice(currency, at);
+    return combineLatest(currencies.map((item) => this.queryPrice(item)));
   }
 
   public queryOraclePrice(): Observable<PriceDataWithTimestamp[]> {
     return this.oracleFeed$;
   }
 
-  public subscribeOracleFeed(provider: string): Observable<PriceDataWithTimestamp[]> {
-    return this._subscribeOracleFeed(provider);
-  }
-
   private subscribeInnerOracleFeed() {
-    this._subscribeOracleFeed().subscribe({
+    this.subscribeOracleFeed().subscribe({
       next: (result) => {
         this.oracleFeed$.next(result);
       }

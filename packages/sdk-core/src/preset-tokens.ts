@@ -15,7 +15,7 @@ export default {
     }
   },
   polkadot: {
-    KSM: {
+    DOT: {
       symbol: 'DOT',
       display: 'DOT',
       decimal: 10
@@ -35,6 +35,11 @@ export default {
     LKSM: {
       symbol: 'LKSM',
       display: 'Liquid KSM',
+      decimal: 12
+    },
+    KUSD: {
+      symbol: 'KUSD',
+      display: 'KUSD',
       decimal: 12
     }
   }
