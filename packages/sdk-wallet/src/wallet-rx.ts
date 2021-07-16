@@ -305,12 +305,11 @@ export class WalletRx extends WalletBase<ApiRx> {
     (account: MaybeAccount, currency: MaybeCurrency, at?: number): Observable<BalanceData> => {
       const tokenName = forceToCurrencyIdName(currency);
       const currencyId = forceToCurrencyId(this.api, currency);
+      const isNativeToken = tokenName === this.nativeToken;
 
       return this.getBlockHash(at).pipe(
         switchMap((hash) => {
-          const currencyName = forceToCurrencyIdName(currencyId);
-
-          if (currencyName === this.nativeToken) {
+          if (isNativeToken) {
             return queryFN(this.api.query.system.account, hash)(account).pipe(map((data) => data.data));
           }
 
@@ -320,7 +319,6 @@ export class WalletRx extends WalletBase<ApiRx> {
         }),
         map((data) => {
           const token = this.getToken(currencyId);
-          const isNativeToken = tokenName === this.nativeToken;
 
           let freeBalance = FixedPointNumber.ZERO;
           let lockedBalance = FixedPointNumber.ZERO;

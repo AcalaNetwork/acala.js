@@ -1,58 +1,37 @@
 import { ApiPromise } from '@polkadot/api';
 
-import { assert } from '@polkadot/util';
-import { TimestampedValue } from '@open-web3/orml-types/interfaces';
-import { FixedPointNumber, Token, TokenBalance } from '@acala-network/sdk-core';
-import { Balance, BlockNumber, CurrencyId, OracleKey } from '@acala-network/types/interfaces';
+import { TimestampedValue, OrmlAccountData } from '@open-web3/orml-types/interfaces';
+import { FixedPointNumber, getPromiseOrAtQuery, Token } from '@acala-network/sdk-core';
+import { Balance, CurrencyId, OracleKey } from '@acala-network/types/interfaces';
 import {
   forceToCurrencyId,
   forceToCurrencyIdName,
-  forceToTokenSymbolCurrencyId,
   getLPCurrenciesFormName,
   isDexShare
 } from '@acala-network/sdk-core/converter';
 import { MaybeAccount, MaybeCurrency } from '@acala-network/sdk-core/types';
-import { PriceData, PriceDataWithTimestamp } from './types';
+import { BalanceData, PriceData, PriceDataWithTimestamp } from './types';
 import type { ITuple } from '@polkadot/types/types';
-import type { Option } from '@polkadot/types';
 import { WalletBase } from './wallet-base';
-import { BlockHash } from '@polkadot/types/interfaces';
+import { AccountData, BlockHash } from '@polkadot/types/interfaces';
+import { BelowExistentialDeposit } from './errors';
+import { Option } from '@polkadot/types';
 
 const ORACLE_FEEDS_TOKEN = ['DOT', 'XBTC', 'RENBTC', 'POLKABTC'];
 
+const queryFN = getPromiseOrAtQuery;
+
 export class WalletPromise extends WalletBase<ApiPromise> {
-  private decimalMap: Map<string, number>;
-  private currencyIdMap: Map<string, CurrencyId>;
-  private tokenMap: Map<string, Token>;
   private oracleFeed$: Promise<PriceDataWithTimestamp[]>;
-  private nativeToken!: string;
 
   constructor(api: ApiPromise) {
     super(api);
 
-    this.decimalMap = new Map<string, number>([]);
-    this.currencyIdMap = new Map<string, CurrencyId>([]);
-    this.tokenMap = new Map<string, Token>([]);
     this.oracleFeed$ = new Promise<PriceDataWithTimestamp[]>((resolve) => resolve([]));
-
-    const tokenDecimals = this.api.registry.chainDecimals;
-    const tokenSymbol = this.api.registry.chainTokens;
-    this.nativeToken = tokenSymbol[0].toString();
-
-    const defaultTokenDecimal = tokenDecimals?.[0] || 18;
-    tokenSymbol.forEach((item, index) => {
-      const key = item.toString();
-      const currencyId = forceToTokenSymbolCurrencyId(this.api, key);
-      const decimal = tokenDecimals?.[index] || defaultTokenDecimal;
-
-      this.decimalMap.set(key, tokenDecimals?.[index] || defaultTokenDecimal);
-      this.currencyIdMap.set(key, currencyId);
-      this.tokenMap.set(key, Token.fromCurrencyId(currencyId, decimal));
-    });
   }
 
   // query price info, support specify data source
-  private _queryPrice = async (currency: MaybeCurrency, at?: number): Promise<PriceData> => {
+  public queryPrice = async (currency: MaybeCurrency, at?: number): Promise<PriceData> => {
     const currencyName = forceToCurrencyIdName(currency);
     const liquidCurrencyId = this.api.consts?.stakingPool?.liquidCurrencyId;
 
@@ -94,21 +73,24 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     const token2 = this.getToken(key2);
     const dexShareToken = this.getToken(dexShareCurrency);
 
-    const [dex, totalIssuance, price1, price2] = await Promise.all([
-      this.queryDexPool(currency1, currency2, at),
-      this.queryIssuance(dexShareToken, at),
-      this.queryPrice(token1, at),
-      this.queryPrice(token2, at)
-    ]);
-    const currency1Amount = dex[0];
-    const currency2Amount = dex[1];
-    const currency1AmountOfOne = currency1Amount.div(totalIssuance);
-    const currency2AmountOfOne = currency2Amount.div(totalIssuance);
-    const price = currency1AmountOfOne.times(price1.price).plus(currency2AmountOfOne.times(price2.price));
-    return {
-      token: dexShareToken,
-      price
-    };
+    return this.getBlockHash(at).then(async (hash) => {
+      const [dex, totalIssuance, price1, price2] = await Promise.all([
+        queryFN(this.queryDexPool, hash)(currency1, currency2),
+        queryFN(this.queryIssuance, hash)(dexShareToken),
+        this.queryPrice(token1, at),
+        this.queryPrice(token2, at)
+      ]);
+      const currency1Amount = dex[0];
+      const currency2Amount = dex[1];
+      const currency1AmountOfOne = currency1Amount.div(totalIssuance);
+      const currency2AmountOfOne = currency2Amount.div(totalIssuance);
+      const price = currency1AmountOfOne.times(price1.price).plus(currency2AmountOfOne.times(price2.price));
+
+      return {
+        token: dexShareToken,
+        price
+      };
+    });
   };
 
   public queryPriceFromOracle = (token: MaybeCurrency, at?: number): Promise<PriceData> => {
@@ -130,20 +112,20 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     return this.getBlockHash(at).then((hash) => {
       const currencyId = forceToCurrencyId(this.api, token);
 
-      return this.api.query.acalaOracle.values
-        .at<Option<TimestampedValue>>(hash.toString(), currencyId)
-        .then((data) => {
-          const token = this.getToken(currencyId);
-          const price = data.unwrapOrDefault().value;
+      return ((queryFN(this.api.query.acalaOracle.values, hash)(currencyId) as any) as Promise<
+        Option<TimestampedValue>
+      >).then((data) => {
+        const token = this.getToken(currencyId);
+        const price = data.unwrapOrDefault().value;
 
-          return price.isEmpty
-            ? { token, price: new FixedPointNumber(0) }
-            : { token, price: FixedPointNumber.fromInner(price.toString()) };
-        });
+        return price.isEmpty
+          ? { token, price: new FixedPointNumber(0) }
+          : { token, price: FixedPointNumber.fromInner(price.toString()) };
+      });
     });
   };
 
-  public queryLiquidPriceFromStakingPool = (at?: number) => {
+  public queryLiquidPriceFromStakingPool = (at?: number): Promise<PriceData> => {
     const liquidCurrencyId = this.api.consts.stakingPool.liquidCurrencyId;
     const stakingCurrencyId = this.api.consts.stakingPool.stakingCurrencyId;
 
@@ -154,8 +136,8 @@ export class WalletPromise extends WalletBase<ApiPromise> {
       .then((hash) => {
         return Promise.all([
           this.queryPriceFromOracle(stakingToken, at),
-          this.api.query.stakingPool.stakingPoolLedger.at(hash.toString()),
-          this._queryIssuance(liquidToken, at)
+          queryFN(this.api.query.stakingPool.stakingPoolLedger, hash)(),
+          this.queryIssuance(liquidToken, at)
         ]);
       })
       .then(([stakingTokenPrice, ledger, liquidIssuance]) => {
@@ -183,7 +165,11 @@ export class WalletPromise extends WalletBase<ApiPromise> {
       });
   };
 
-  public queryDexPool = (token1: MaybeCurrency, token2: MaybeCurrency, at?: number) => {
+  public queryDexPool = (
+    token1: MaybeCurrency,
+    token2: MaybeCurrency,
+    at?: number
+  ): Promise<[FixedPointNumber, FixedPointNumber]> => {
     const token1CurrencyId = forceToCurrencyId(this.api, token1);
     const token2CurrencyId = forceToCurrencyId(this.api, token2);
     const _token1 = Token.fromCurrencyId(token1CurrencyId);
@@ -191,9 +177,11 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     const [sorted1, sorted2] = Token.sort(_token1, _token2);
 
     return this.getBlockHash(at).then((hash) => {
-      return this.api.query.dex.liquidityPool
-        .at<ITuple<[Balance, Balance]>>(hash.toString(), [sorted1.toChainData(), sorted2.toChainData()])
-        .then((pool: ITuple<[Balance, Balance]>) => {
+      return (queryFN(
+        this.api.query.dex.liquidityPool,
+        hash
+      )([sorted1.toChainData(), sorted2.toChainData()]) as Promise<ITuple<[Balance, Balance]>>).then(
+        (pool: ITuple<[Balance, Balance]>) => {
           const balance1 = pool[0];
           const balance2 = pool[1];
 
@@ -205,19 +193,20 @@ export class WalletPromise extends WalletBase<ApiPromise> {
           } else {
             return [fixedPoint2, fixedPoint1];
           }
-        });
+        }
+      );
     });
   };
 
-  public queryPriceFromDex = (currency: MaybeCurrency, at?: number) => {
+  public queryPriceFromDex = (currency: MaybeCurrency, at?: number): Promise<PriceData> => {
     const target = this.tokenMap.get(forceToCurrencyIdName(currency));
     const usd = this.tokenMap.get('AUSD') || this.tokenMap.get('KUSD');
 
     if (!target || !usd)
-      return {
+      return Promise.resolve({
         token: new Token(forceToCurrencyIdName(currency)),
         price: FixedPointNumber.ZERO
-      };
+      });
 
     return this.queryDexPool(target, usd, at).then((result) => {
       if (result[0].isZero() || result[1].isZero()) return { token: target, price: FixedPointNumber.ZERO };
@@ -229,7 +218,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     });
   };
 
-  private _queryIssuance = async (currency: MaybeCurrency, at?: number) => {
+  private queryIssuance = async (currency: MaybeCurrency, at?: number) => {
     let currencyId: CurrencyId;
     let currencyName: string;
     let token: Token;
@@ -245,97 +234,84 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     return this.getBlockHash(at)
       .then((hash) => {
         if (currencyName === this.nativeToken) {
-          return this.api.query.balances.totalIssuance.at(hash.toString(), currencyId) as Promise<Balance>;
+          return queryFN(this.api.query.balances.totalIssuance, hash.toString())(currencyId) as Promise<Balance>;
         }
 
-        return this.api.query.tokens.totalIssuance.at(hash.toString(), currencyId) as Promise<Balance>;
+        return queryFN(this.api.query.tokens.totalIssuance, hash.toString())(currencyId) as Promise<Balance>;
       })
       .then((data) =>
         !data ? new FixedPointNumber(0, token.decimal) : FixedPointNumber.fromInner(data.toString(), token.decimal)
       );
   };
 
-  private _queryBalance = async (account: MaybeAccount, currency: MaybeCurrency, at?: number) => {
-    let currencyId: CurrencyId;
-
-    try {
-      currencyId = forceToCurrencyId(this.api, currency);
-    } catch (e) {
-      return new TokenBalance(new Token('empty'), FixedPointNumber.ZERO);
-    }
+  public queryBalance = async (account: MaybeAccount, currency: MaybeCurrency, at?: number): Promise<BalanceData> => {
+    const tokenName = forceToCurrencyIdName(currency);
+    const currencyId = forceToCurrencyId(this.api, currency);
+    const isNativeToken = tokenName === this.nativeToken;
 
     return this.getBlockHash(at)
-      .then((hash) => {
-        const currencyName = forceToCurrencyIdName(currencyId);
+      .then(
+        (hash): Promise<AccountData | OrmlAccountData> => {
+          if (isNativeToken) {
+            return (queryFN(
+              this.api.query.system.account,
+              hash.toString()
+            )(account).then((data) => data.data) as any) as Promise<AccountData>;
+          }
 
-        if (currencyName === this.nativeToken) {
-          return this.api.query.system.account.at(hash.toString(), account).then((data) => data.data.free);
+          return (queryFN(this.api.query.tokens.accounts, hash.toString())(
+            account,
+            currencyId
+          ) as any) as Promise<OrmlAccountData>;
         }
-        return this.api.query.tokens.accounts.at(hash.toString(), account, currencyId).then((data) => data.free);
-      })
-      .then((balance) => {
+      )
+      .then((data) => {
         const token = this.getToken(currencyId);
-        const _balance = FixedPointNumber.fromInner(balance.toString(), token?.decimal);
+        let freeBalance = FixedPointNumber.ZERO;
+        let lockedBalance = FixedPointNumber.ZERO;
+        let reservedBalance = FixedPointNumber.ZERO;
+        let availableBalance = FixedPointNumber.ZERO;
 
-        assert(token && _balance, `token or balance create failed in query balance`);
+        if (isNativeToken) {
+          data = data as AccountData;
 
-        return new TokenBalance(token, _balance);
+          freeBalance = FixedPointNumber.fromInner(data.free.toString(), token.decimal);
+          lockedBalance = FixedPointNumber.fromInner(data.miscFrozen.toString(), token.decimal).max(
+            FixedPointNumber.fromInner(data.feeFrozen.toString(), token.decimal)
+          );
+          reservedBalance = FixedPointNumber.fromInner(data.reserved.toString(), token.decimal);
+        } else {
+          data = (data as unknown) as OrmlAccountData;
+
+          freeBalance = FixedPointNumber.fromInner(data.free.toString(), token.decimal);
+          lockedBalance = FixedPointNumber.fromInner(data.frozen.toString(), token.decimal);
+          reservedBalance = FixedPointNumber.fromInner(data.reserved.toString(), token.decimal);
+        }
+
+        availableBalance = freeBalance.sub(lockedBalance).sub(reservedBalance).max(FixedPointNumber.ZERO);
+
+        return {
+          token,
+          freeBalance,
+          lockedBalance,
+          reservedBalance,
+          availableBalance
+        };
       });
   };
 
-  private async getBlockHash(at?: number | string): Promise<BlockNumber | BlockHash> {
-    if (!at) return this.api.query.system.number();
+  private async getBlockHash(at?: number | string): Promise<string | BlockHash> {
+    if (!at) return '';
+
     return this.api.rpc.chain.getBlockHash(at);
   }
 
-  public getAllTokens(): Token[] {
-    return Array.from(this.tokenMap.values());
-  }
-
-  public getToken(currency: MaybeCurrency): Token {
-    const currencyName = forceToCurrencyIdName(currency);
-
-    if (isDexShare(currencyName)) {
-      return this.getDexTokenPair(currency);
-    }
-
-    // FIXME: need handle erc20
-
-    return this.tokenMap.get(currencyName) || new Token('mock');
-  }
-
-  public getDexTokenPair(currency: MaybeCurrency): Token {
-    const currencyName = forceToCurrencyIdName(currency);
-
-    if (isDexShare(currencyName)) {
-      const [token1, token2] = getLPCurrenciesFormName(currencyName);
-
-      const decimal1 = this.decimalMap.get(token1) || 18;
-      const decimal2 = this.decimalMap.get(token2) || 18;
-
-      return Token.fromCurrencyId(forceToCurrencyId(this.api, currency), [decimal1, decimal2]);
-    }
-
-    return new Token('mock');
-  }
-
-  public queryBalance(account: MaybeAccount, currency: MaybeCurrency, at?: number): Promise<TokenBalance> {
-    return this._queryBalance(account, currency, at);
-  }
-
-  public queryIssuance(currency: MaybeCurrency, at?: number): Promise<FixedPointNumber> {
-    return this._queryIssuance(currency, at);
-  }
-
   public queryPrices(currencies: MaybeCurrency[]): Promise<PriceData[]> {
-    return Promise.all(currencies.map((item) => this._queryPrice(item)));
-  }
-
-  public queryPrice(currency: MaybeCurrency, at?: number): Promise<PriceData> {
-    return this._queryPrice(currency, at);
+    return Promise.all(currencies.map((item) => this.queryPrice(item)));
   }
 
   public async queryOraclePrice(oracleProvider = 'Aggregated'): Promise<PriceDataWithTimestamp[]> {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     return (this.api.rpc as any).oracle.getAllValues(oracleProvider).then((result: [[OracleKey, TimestampedValue]]) => {
       return result.map((item) => {
         const token = this.tokenMap.get(item[0].asToken.toString()) || Token.fromTokenName(item[0].asToken.toString());
@@ -354,8 +330,33 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     });
   }
 
+  public checkTransfer(
+    account: MaybeAccount,
+    currency: MaybeCurrency,
+    amount: FixedPointNumber,
+    direction: 'from' | 'to' = 'to'
+  ): Promise<boolean> {
+    const transferConfig = this.getTransferConfig(currency);
+
+    return this.queryBalance(account, currency).then((balance) => {
+      if (direction === 'to') {
+        if (balance.freeBalance.add(amount).lt(transferConfig.existentialDeposit || FixedPointNumber.ZERO)) {
+          throw new BelowExistentialDeposit(account, currency);
+        }
+      }
+
+      if (direction === 'from') {
+        if (balance.freeBalance.minus(amount).lt(transferConfig.existentialDeposit || FixedPointNumber.ZERO)) {
+          throw new BelowExistentialDeposit(account, currency);
+        }
+      }
+
+      return true;
+    });
+  }
+
   // this interface is not implemented
-  public async subscribeOracleFeed(provider: string): Promise<PriceDataWithTimestamp[]> {
+  public async subscribeOracleFeed(): Promise<PriceDataWithTimestamp[]> {
     return [];
   }
 }

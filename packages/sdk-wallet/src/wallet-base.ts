@@ -110,32 +110,51 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
   abstract checkTransfer(
     account: MaybeAccount,
     currency: MaybeCurrency,
-    amount: FixedPointNumber
+    amount: FixedPointNumber,
+    direction?: 'from' | 'to'
   ): ObOrPromiseResult<T, boolean>;
 
   /**
    * @name queryBalance
    * @description get the balance of the currency
    */
-  abstract queryBalance(account: MaybeAccount, currency: MaybeCurrency): ObOrPromiseResult<T, BalanceData>;
+  abstract queryBalance(account: MaybeAccount, currency: MaybeCurrency, at?: number): ObOrPromiseResult<T, BalanceData>;
 
   /**
    * @name queryPrices
    * @description get prices of tokens
    */
-  abstract queryPrices(tokens: MaybeCurrency[]): ObOrPromiseResult<T, PriceData[]>;
+  abstract queryPrices(tokens: MaybeCurrency[], at?: number): ObOrPromiseResult<T, PriceData[]>;
 
   /**
    * @name queryPrice
    * @description get the price
    */
-  abstract queryPrice(currency: MaybeCurrency): ObOrPromiseResult<T, PriceData>;
+  abstract queryPrice(currency: MaybeCurrency, at?: number): ObOrPromiseResult<T, PriceData>;
 
   /**
    * @name queryOraclePrice
    * @description get the oracle feed price
    */
   abstract queryOraclePrice(): ObOrPromiseResult<T, PriceDataWithTimestamp[]>;
+
+  /**
+   * @name queryLiquidPriceFromStakingPool
+   * @description get the oracle feed price
+   */
+  abstract queryLiquidPriceFromStakingPool(at?: number): ObOrPromiseResult<T, PriceData>;
+
+  /**
+   * @name queryPriceFromDex
+   * @description get the oracle feed price
+   */
+  abstract queryPriceFromDex(currency: MaybeCurrency, at?: number): ObOrPromiseResult<T, PriceData>;
+
+  /**
+   * @name queryDexSharePriceFormDex
+   * @description get the oracle feed price
+   */
+  abstract queryDexSharePriceFormDex(currency: MaybeCurrency, at?: number): ObOrPromiseResult<T, PriceData>;
 
   /**
    * @name subscribeOracleFeeds
