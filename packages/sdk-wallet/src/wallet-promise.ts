@@ -97,24 +97,22 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     if (!at) {
       const currencyName = forceToCurrencyIdName(token);
 
-      return this.oracleFeed$.then(
-        (data): PriceData => {
-          const maybe = data.find((item) => item.token.name === currencyName);
+      return this.oracleFeed$.then((data): PriceData => {
+        const maybe = data.find((item) => item.token.name === currencyName);
 
-          return {
-            token: maybe?.token || new Token(currencyName),
-            price: maybe?.price || FixedPointNumber.ZERO
-          };
-        }
-      );
+        return {
+          token: maybe?.token || new Token(currencyName),
+          price: maybe?.price || FixedPointNumber.ZERO
+        };
+      });
     }
 
     return this.getBlockHash(at).then((hash) => {
       const currencyId = forceToCurrencyId(this.api, token);
 
-      return ((queryFN(this.api.query.acalaOracle.values, hash)(currencyId) as any) as Promise<
-        Option<TimestampedValue>
-      >).then((data) => {
+      return (
+        queryFN(this.api.query.acalaOracle.values, hash)(currencyId) as any as Promise<Option<TimestampedValue>>
+      ).then((data) => {
         const token = this.getToken(currencyId);
         const price = data.unwrapOrDefault().value;
 
@@ -177,24 +175,23 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     const [sorted1, sorted2] = Token.sort(_token1, _token2);
 
     return this.getBlockHash(at).then((hash) => {
-      return (queryFN(
-        this.api.query.dex.liquidityPool,
-        hash
-      )([sorted1.toChainData(), sorted2.toChainData()]) as Promise<ITuple<[Balance, Balance]>>).then(
-        (pool: ITuple<[Balance, Balance]>) => {
-          const balance1 = pool[0];
-          const balance2 = pool[1];
+      return (
+        queryFN(this.api.query.dex.liquidityPool, hash)([sorted1.toChainData(), sorted2.toChainData()]) as Promise<
+          ITuple<[Balance, Balance]>
+        >
+      ).then((pool: ITuple<[Balance, Balance]>) => {
+        const balance1 = pool[0];
+        const balance2 = pool[1];
 
-          const fixedPoint1 = FixedPointNumber.fromInner(balance1.toString(), this.getToken(sorted1).decimal);
-          const fixedPoint2 = FixedPointNumber.fromInner(balance2.toString(), this.getToken(sorted2).decimal);
+        const fixedPoint1 = FixedPointNumber.fromInner(balance1.toString(), this.getToken(sorted1).decimal);
+        const fixedPoint2 = FixedPointNumber.fromInner(balance2.toString(), this.getToken(sorted2).decimal);
 
-          if (forceToCurrencyIdName(sorted1) === forceToCurrencyIdName(token1)) {
-            return [fixedPoint1, fixedPoint2];
-          } else {
-            return [fixedPoint2, fixedPoint1];
-          }
+        if (forceToCurrencyIdName(sorted1) === forceToCurrencyIdName(token1)) {
+          return [fixedPoint1, fixedPoint2];
+        } else {
+          return [fixedPoint2, fixedPoint1];
         }
-      );
+      });
     });
   };
 
@@ -250,21 +247,19 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     const isNativeToken = tokenName === this.nativeToken;
 
     return this.getBlockHash(at)
-      .then(
-        (hash): Promise<AccountData | OrmlAccountData> => {
-          if (isNativeToken) {
-            return (queryFN(
-              this.api.query.system.account,
-              hash.toString()
-            )(account).then((data) => data.data) as any) as Promise<AccountData>;
-          }
-
-          return (queryFN(this.api.query.tokens.accounts, hash.toString())(
-            account,
-            currencyId
-          ) as any) as Promise<OrmlAccountData>;
+      .then((hash): Promise<AccountData | OrmlAccountData> => {
+        if (isNativeToken) {
+          return queryFN(
+            this.api.query.system.account,
+            hash.toString()
+          )(account).then((data) => data.data) as any as Promise<AccountData>;
         }
-      )
+
+        return queryFN(this.api.query.tokens.accounts, hash.toString())(
+          account,
+          currencyId
+        ) as any as Promise<OrmlAccountData>;
+      })
       .then((data) => {
         const token = this.getToken(currencyId);
         let freeBalance = FixedPointNumber.ZERO;
@@ -281,7 +276,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
           );
           reservedBalance = FixedPointNumber.fromInner(data.reserved.toString(), token.decimal);
         } else {
-          data = (data as unknown) as OrmlAccountData;
+          data = data as unknown as OrmlAccountData;
 
           freeBalance = FixedPointNumber.fromInner(data.free.toString(), token.decimal);
           lockedBalance = FixedPointNumber.fromInner(data.frozen.toString(), token.decimal);

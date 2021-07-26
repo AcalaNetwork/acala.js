@@ -1,5 +1,5 @@
-import { Observable, combineLatest } from '@polkadot/x-rxjs';
-import { map } from '@polkadot/x-rxjs/operators';
+import { Observable, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { assert } from '@polkadot/util';
 import { FixedPointNumber, forceToCurrencyId, MaybeCurrency, Token } from '@acala-network/sdk-core';
 import { CurrencyId, Position } from '@acala-network/types/interfaces';
@@ -194,17 +194,15 @@ export class LoanRx {
   private getLoanParams() {
     /* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */
     return ((this.api.derive as any).loan.loanType(this.currency) as Observable<DerivedLoanType>).pipe(
-      map(
-        (params: DerivedLoanType): LoanParams => {
-          return {
-            debitExchangeRate: FixedPointNumber.fromInner(params.debitExchangeRate.toString()),
-            globalInterestRatePerSec: FixedPointNumber.fromInner(params.globalInterestRatePerSec.toString()),
-            liquidationRatio: FixedPointNumber.fromInner(params.liquidationRatio.toString()),
-            requiredCollateralRatio: FixedPointNumber.fromInner(params.requiredCollateralRatio.toString()),
-            interestRatePerSec: FixedPointNumber.fromInner(params.interestRatePerSec.toString())
-          };
-        }
-      )
+      map((params: DerivedLoanType): LoanParams => {
+        return {
+          debitExchangeRate: FixedPointNumber.fromInner(params.debitExchangeRate.toString()),
+          globalInterestRatePerSec: FixedPointNumber.fromInner(params.globalInterestRatePerSec.toString()),
+          liquidationRatio: FixedPointNumber.fromInner(params.liquidationRatio.toString()),
+          requiredCollateralRatio: FixedPointNumber.fromInner(params.requiredCollateralRatio.toString()),
+          interestRatePerSec: FixedPointNumber.fromInner(params.interestRatePerSec.toString())
+        };
+      })
     );
   }
 }

@@ -28,6 +28,6 @@ export const rpc: Record<string, Record<string, DefinitionRpc | DefinitionRpcSub
 
 export const typesAlias: Record<string, OverrideModuleType> = acalaTypeAlias;
 
-export const typesBundle = (acalaTypesBundle as unknown) as OverrideBundleType;
+export const typesBundle = acalaTypesBundle as unknown as OverrideBundleType;
 
 export const signedExtensions = acalaSignedExtensions;

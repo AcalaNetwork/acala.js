@@ -1,6 +1,6 @@
 import { ApiPromise, ApiRx } from '@polkadot/api';
-import { Observable, BehaviorSubject } from '@polkadot/x-rxjs';
-import { map } from '@polkadot/x-rxjs/operators';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Token, TokenBalance, TokenPair, FixedPointNumber } from '@acala-network/sdk-core';
 
 import { getSupplyAmount, getTargetAmount } from './utils';
@@ -65,7 +65,7 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
   protected getTokenPairsFromPath(path: Token[]): TokenPair[] {
     const _path = path.slice();
     // push undefined as tail
-    _path.push((undefined as any) as Token);
+    _path.push(undefined as any as Token);
 
     return _path.reduce((acc, cur, current) => {
       if (!cur || !_path[current + 1]) return acc;
@@ -281,22 +281,20 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
     liquidityPools: LiquidityPool[],
     baseParams: [Token, Token, FixedPointNumber, FixedPointNumber]
   ): SwapParameters {
-    const swapResult = paths.map(
-      (path): SwapResult => {
-        const params = [...baseParams, path, liquidityPools] as [
-          Token,
-          Token,
-          FixedPointNumber,
-          FixedPointNumber,
-          Token[],
-          LiquidityPool[]
-        ];
+    const swapResult = paths.map((path): SwapResult => {
+      const params = [...baseParams, path, liquidityPools] as [
+        Token,
+        Token,
+        FixedPointNumber,
+        FixedPointNumber,
+        Token[],
+        LiquidityPool[]
+      ];
 
-        return mode === 'EXACT_INPUT'
-          ? this.getOutputAmountWithExactInput(...params)
-          : this.getInputAmountWithExactOutput(...params);
-      }
-    );
+      return mode === 'EXACT_INPUT'
+        ? this.getOutputAmountWithExactInput(...params)
+        : this.getInputAmountWithExactOutput(...params);
+    });
 
     const temp = swapResult.reduce((acc, cur) => {
       if (mode === 'EXACT_INPUT' && acc.output.balance.isGreaterThanOrEqualTo(cur.output.balance)) return acc;

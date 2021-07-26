@@ -1,5 +1,5 @@
-import { Observable, combineLatest } from '@polkadot/x-rxjs';
-import { map } from '@polkadot/x-rxjs/operators';
+import { Observable, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ApiInterfaceRx } from '@polkadot/api/types';
 
 import { CurrencyId, AccountId, Position } from '@acala-network/types/interfaces';

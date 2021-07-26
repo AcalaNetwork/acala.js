@@ -15,34 +15,96 @@ await wallet.init();
 
 ### Usage
 
-1. get the balance of address
+1. query the balance of address.
+  + the free balance the all balance in the account.
+  + the available balance the transferable in the account.
+  + the locked balance
+  + the reserved balance
 
 ```js
   const alice = 'alice';
-  const balance = await wallet.getBalance(alice, 'DOT');
+  const token = wallet.getToken('DOT');
+  const balance = await wallet.queryBalance(alice, 'DOT');
 
   console.log(`
-    amount: ${balance.amount}
-    decimal: ${balance.decimal}
-    currency: ${balance.currency.name}
+    freeBalance: ${balance.freeBalance.toString()}
+    availableBalance: ${balance.availableBalance.toString()}
+    lockedBalance: ${balance.lockedBalance.toString()}
   `);
 ```
 
-2. get all usable currencies in the network
+2. query all avialable tokens
 
-beacuse of the acala and the karura have different currencies, so we can use `getAllCurrencies` to query all usable currencies information in target chain.
+beacuse of the acala and the karura support multiply tokens, the user can use `getAllTokens` to query all usable tokens.
 
 ```js
-  const currencies = await wallet.getAllCurrencies();
+  const currencies = await wallet.getAllTokens();
 ```
 
 3. get the currencie of chain
 
 ```js
-  const currency = wallet.getCurrency('DOT');
+  const token = wallet.getToken('DOT');
 
   console.log(`
-    name: ${currency.name}
-    decimal: ${currency.decimal}
+    name: ${token.name}
+    decimal: ${token.decimal}
+  `)
+```
+
+3. query token price
+
+we can use `queryPrice` to query the tokens price
+
+```js
+  const token = wallet.getToken('DOT');
+  const price = await wallet.queryPrice(token);
+
+  console.log(`
+    name: ${token.name}
+    decimal: ${token.decimal}
+    price: ${price.toString()}
+  `)
+```
+
+4. query oacle price
+we can use `queryOraclePrice` to query the price from the oracle.
+
+```js
+  const token = wallet.getToken('DOT');
+  const price = await wallet.queryOraclePrice(token);
+
+  console.log(`
+    name: ${token.name}
+    decimal: ${token.decimal}
+    price: ${price.toString()}
+  `)
+```
+
+5. query dex share price
+we can use `queryDexSharePriceFromDex` to query the price from the oracle.
+
+```js
+  const token = wallet.getToken('lp://DOT/AUSD');
+  const price = await wallet.queryDexSharePriceFromDex(token);
+
+  console.log(`
+    name: ${token.name}
+    decimal: ${token.decimal}
+    price: ${price.toString()}
+  `)
+```
+
+6. query price from dex
+we can use `queryPriceFromDex` to query the price from the oracle.
+
+```js
+  const token = wallet.getToken('DOT');
+  const price = await wallet.queryPriceFromDex(token);
+
+  console.log(`
+    name: ${token.name}
+    decimal: ${token.decimal}
+    price: ${price.toString()}
   `)
 ```

@@ -1,6 +1,6 @@
 import { TypeRegistry } from '@polkadot/types/create';
 import metaHex from '../src/metadata/static-latest';
-import { Metadata } from '@polkadot/metadata';
+import { Metadata } from '@polkadot/types';
 
 const POLKADOT_KNOWN_ORIGINS: Record<string, string> = {
   Council: 'CollectiveOrigin',

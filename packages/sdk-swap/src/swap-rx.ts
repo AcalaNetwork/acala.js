@@ -1,7 +1,7 @@
 import { ApiRx } from '@polkadot/api';
 import { memoize } from '@polkadot/util';
-import { Observable, from, of } from '@polkadot/x-rxjs';
-import { filter, switchMap, startWith, map, shareReplay, withLatestFrom } from '@polkadot/x-rxjs/operators';
+import { Observable, from, of } from 'rxjs';
+import { filter, switchMap, startWith, map, shareReplay, withLatestFrom } from 'rxjs/operators';
 import { Balance, TradingPairStatus } from '@acala-network/types/interfaces';
 import { eventMethodsFilter, mockEventRecord, Token, TokenPair, TokenSet } from '@acala-network/sdk-core';
 import { FixedPointNumber } from '@acala-network/sdk-core/fixed-point-number';
