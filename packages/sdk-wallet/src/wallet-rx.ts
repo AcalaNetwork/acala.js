@@ -1,8 +1,8 @@
 import { ApiRx } from '@polkadot/api';
 
-import { map, shareReplay, switchMap, take } from '@polkadot/x-rxjs/operators';
+import { map, shareReplay, switchMap, take } from 'rxjs/operators';
 import { memoize, bnMax } from '@polkadot/util';
-import { BehaviorSubject, combineLatest, Observable, of } from '@polkadot/x-rxjs';
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { Vec } from '@polkadot/types';
 import { TimestampedValue, VestingScheduleOf, OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { eventsFilterRx, FixedPointNumber, getSubscribeOrAtQuery, Token, TokenBalance } from '@acala-network/sdk-core';
@@ -21,7 +21,7 @@ import { WalletBase } from './wallet-base';
 import { AccountData, BlockHash } from '@polkadot/types/interfaces';
 import { BelowExistentialDeposit } from './errors';
 
-const ORACLE_FEEDS_TOKEN = ['DOT', 'XBTC', 'RENBTC', 'POLKABTC'];
+const ORACLE_FEEDS_TOKEN = ['DOT', 'XBTC', 'RENBTC', 'POLKABTC', 'KSM'];
 
 const queryFN = getSubscribeOrAtQuery;
 export class WalletRx extends WalletBase<ApiRx> {
@@ -37,74 +37,70 @@ export class WalletRx extends WalletBase<ApiRx> {
   }
 
   // query price info
-  public queryPrice = memoize(
-    (currency: MaybeCurrency, at?: number): Observable<PriceData> => {
-      const currencyName = forceToCurrencyIdName(currency);
-      const liquidCurrencyId = this.api.consts?.stakingPool?.liquidCurrencyId;
+  public queryPrice = memoize((currency: MaybeCurrency, at?: number): Observable<PriceData> => {
+    const currencyName = forceToCurrencyIdName(currency);
+    const liquidCurrencyId = this.api.consts?.stakingPool?.liquidCurrencyId;
 
-      // get liquid currency price from staking pool exchange rate
-      if (liquidCurrencyId && forceToCurrencyIdName(currency) === forceToCurrencyIdName(liquidCurrencyId)) {
-        return this.queryLiquidPriceFromStakingPool(at);
-      }
-
-      // get dex share price
-      if (isDexShare(currencyName)) {
-        return this.queryDexSharePriceFormDex(currency, at);
-      }
-
-      // get stable coin price
-      if (currencyName === 'AUSD' || currencyName === 'KUSD') {
-        const usd = this.tokenMap.get('AUSD') || this.tokenMap.get('KUSD') || new Token('USD', { decimal: 12 });
-
-        return of({
-          token: usd,
-          price: new FixedPointNumber(1, usd.decimal)
-        });
-      }
-
-      // get price of ORACLE_FEEDS_TOKEN
-      if (ORACLE_FEEDS_TOKEN.includes(currencyName)) {
-        return this.queryPriceFromOracle(currency, at);
-      }
-
-      // get price from dex default
-      return this.queryPriceFromDex(currency, at);
+    // get liquid currency price from staking pool exchange rate
+    if (liquidCurrencyId && forceToCurrencyIdName(currency) === forceToCurrencyIdName(liquidCurrencyId)) {
+      return this.queryLiquidPriceFromStakingPool(at);
     }
-  );
 
-  public queryDexSharePriceFormDex = memoize(
-    (currency: MaybeCurrency, at?: number): Observable<PriceData> => {
-      const [key1, key2] = getLPCurrenciesFormName(forceToCurrencyIdName(currency));
-      const dexShareCurrency = forceToCurrencyId(this.api, currency);
-      const currency1 = forceToCurrencyId(this.api, key1);
-      const currency2 = forceToCurrencyId(this.api, key2);
-      const token1 = this.getToken(key1);
-      const token2 = this.getToken(key2);
-      const dexShareToken = this.getToken(dexShareCurrency);
-
-      return combineLatest([
-        this.queryDexPool(currency1, currency2, at),
-        this.queryIssuance(dexShareToken, at),
-        this.queryPrice(token1, at),
-        this.queryPrice(token2, at)
-      ]).pipe(
-        map(([dex, totalIssuance, price1, price2]) => {
-          const currency1Amount = dex[0];
-          const currency2Amount = dex[1];
-
-          const currency1AmountOfOne = currency1Amount.div(totalIssuance);
-          const currency2AmountOfOne = currency2Amount.div(totalIssuance);
-          const price = currency1AmountOfOne.times(price1.price).plus(currency2AmountOfOne.times(price2.price));
-
-          return {
-            token: dexShareToken,
-            price
-          };
-        }),
-        shareReplay(1)
-      );
+    // get dex share price
+    if (isDexShare(currencyName)) {
+      return this.queryDexSharePriceFormDex(currency, at);
     }
-  );
+
+    // get stable coin price
+    if (currencyName === 'AUSD' || currencyName === 'KUSD') {
+      const usd = this.tokenMap.get('AUSD') || this.tokenMap.get('KUSD') || new Token('USD', { decimal: 12 });
+
+      return of({
+        token: usd,
+        price: new FixedPointNumber(1, usd.decimal)
+      });
+    }
+
+    // get price of ORACLE_FEEDS_TOKEN
+    if (ORACLE_FEEDS_TOKEN.includes(currencyName)) {
+      return this.queryPriceFromOracle(currency, at);
+    }
+
+    // get price from dex default
+    return this.queryPriceFromDex(currency, at);
+  });
+
+  public queryDexSharePriceFormDex = memoize((currency: MaybeCurrency, at?: number): Observable<PriceData> => {
+    const [key1, key2] = getLPCurrenciesFormName(forceToCurrencyIdName(currency));
+    const dexShareCurrency = forceToCurrencyId(this.api, currency);
+    const currency1 = forceToCurrencyId(this.api, key1);
+    const currency2 = forceToCurrencyId(this.api, key2);
+    const token1 = this.getToken(key1);
+    const token2 = this.getToken(key2);
+    const dexShareToken = this.getToken(dexShareCurrency);
+
+    return combineLatest([
+      this.queryDexPool(currency1, currency2, at),
+      this.queryIssuance(dexShareToken, at),
+      this.queryPrice(token1, at),
+      this.queryPrice(token2, at)
+    ]).pipe(
+      map(([dex, totalIssuance, price1, price2]) => {
+        const currency1Amount = dex[0];
+        const currency2Amount = dex[1];
+
+        const currency1AmountOfOne = currency1Amount.div(totalIssuance);
+        const currency2AmountOfOne = currency2Amount.div(totalIssuance);
+        const price = currency1AmountOfOne.times(price1.price).plus(currency2AmountOfOne.times(price2.price));
+
+        return {
+          token: dexShareToken,
+          price
+        };
+      }),
+      shareReplay(1)
+    );
+  });
 
   public queryPriceFromOracle = memoize((token: MaybeCurrency, at?: number) => {
     return of(at).pipe(
@@ -113,16 +109,14 @@ export class WalletRx extends WalletBase<ApiRx> {
           const currencyName = forceToCurrencyIdName(token);
 
           return this.oracleFeed$.pipe(
-            map(
-              (data): PriceData => {
-                const maybe = data.find((item) => item.token.name === currencyName);
+            map((data): PriceData => {
+              const maybe = data.find((item) => item.token.name === currencyName);
 
-                return {
-                  token: maybe?.token || new Token(currencyName),
-                  price: maybe?.price || FixedPointNumber.ZERO
-                };
-              }
-            )
+              return {
+                token: maybe?.token || new Token(currencyName),
+                price: maybe?.price || FixedPointNumber.ZERO
+              };
+            })
           ) as Observable<PriceData>;
         }
 
@@ -221,30 +215,28 @@ export class WalletRx extends WalletBase<ApiRx> {
     );
   });
 
-  public queryPriceFromDex = memoize(
-    (currency: MaybeCurrency, at?: number): Observable<PriceData> => {
-      const target = this.tokenMap.get(forceToCurrencyIdName(currency));
-      const usd = this.tokenMap.get('AUSD') || this.tokenMap.get('KUSD');
+  public queryPriceFromDex = memoize((currency: MaybeCurrency, at?: number): Observable<PriceData> => {
+    const target = this.tokenMap.get(forceToCurrencyIdName(currency));
+    const usd = this.tokenMap.get('AUSD') || this.tokenMap.get('KUSD');
 
-      if (!target || !usd)
-        return of({
-          token: new Token(forceToCurrencyIdName(currency)),
-          price: FixedPointNumber.ZERO
-        });
+    if (!target || !usd)
+      return of({
+        token: new Token(forceToCurrencyIdName(currency)),
+        price: FixedPointNumber.ZERO
+      });
 
-      return this.queryDexPool(target, usd, at).pipe(
-        map((result) => {
-          if (result[0].isZero() || result[1].isZero()) return { token: target, price: FixedPointNumber.ZERO };
+    return this.queryDexPool(target, usd, at).pipe(
+      map((result) => {
+        if (result[0].isZero() || result[1].isZero()) return { token: target, price: FixedPointNumber.ZERO };
 
-          return {
-            token: target,
-            price: result[1].div(result[0])
-          };
-        }),
-        shareReplay(1)
-      );
-    }
-  );
+        return {
+          token: target,
+          price: result[1].div(result[0])
+        };
+      }),
+      shareReplay(1)
+    );
+  });
 
   public subscribeOracleFeed = memoize((oracleProvider = 'Aggregated') => {
     return eventsFilterRx(this.api, [{ section: '*', method: 'NewFeedData' }], true).pipe(
@@ -313,9 +305,9 @@ export class WalletRx extends WalletBase<ApiRx> {
             return queryFN(this.api.query.system.account, hash)(account).pipe(map((data) => data.data));
           }
 
-          return (queryFN(this.api.query.tokens.accounts, hash)(account, currencyId).pipe(
+          return queryFN(this.api.query.tokens.accounts, hash)(account, currencyId).pipe(
             map((data) => data)
-          ) as unknown) as Observable<OrmlAccountData>;
+          ) as unknown as Observable<OrmlAccountData>;
         }),
         map((data) => {
           const token = this.getToken(currencyId);
@@ -356,69 +348,64 @@ export class WalletRx extends WalletBase<ApiRx> {
     }
   );
 
-  public queryNativeBalances = memoize(
-    (account: MaybeAccount, at?: number): Observable<NativeAllBalance> => {
-      const token = this.getNativeToken();
+  public queryNativeBalances = memoize((account: MaybeAccount, at?: number): Observable<NativeAllBalance> => {
+    const token = this.getNativeToken();
 
-      return this.getBlockHash(at).pipe(
-        switchMap((hash) => {
-          return combineLatest([
-            queryFN(this.api.query.system.account, hash)(account),
-            queryFN(this.api.query.balances.locks, hash)(account),
-            queryFN(this.api.query.vesting.vestingSchedules, hash)<Vec<VestingScheduleOf>>(account)
-          ]);
-        }),
-        map(([accountInfo, locks, vestingSchedules]) => {
-          const freeBalance = accountInfo.data.free;
-          const lockedBalance = bnMax(accountInfo.data.miscFrozen, accountInfo.data.feeFrozen);
-          const availableBalance = freeBalance.sub(lockedBalance);
+    return this.getBlockHash(at).pipe(
+      switchMap((hash) => {
+        return combineLatest([
+          queryFN(this.api.query.system.account, hash)(account),
+          queryFN(this.api.query.balances.locks, hash)(account),
+          queryFN(this.api.query.vesting.vestingSchedules, hash)<Vec<VestingScheduleOf>>(account)
+        ]);
+      }),
+      map(([accountInfo, locks, vestingSchedules]) => {
+        const freeBalance = accountInfo.data.free;
+        const lockedBalance = bnMax(accountInfo.data.miscFrozen, accountInfo.data.feeFrozen);
+        const availableBalance = freeBalance.sub(lockedBalance);
 
-          const vesting = locks.length ? locks.find((item) => item.id.eq('ormlvest')) : null;
-          const vestingBalance = vesting?.amount;
-          const isVesting = !!(vestingBalance && !vestingBalance.isZero());
-          const vestingSchedule = vestingSchedules.length ? vestingSchedules[0] : null;
-          const vestingPerPeriod = vestingSchedule?.perPeriod;
-          const vestingPeriod = vestingSchedule?.period;
-          const vestingStart = vestingSchedule?.start;
-          const vestingPeriodCount = vestingSchedule?.periodCount;
+        const vesting = locks.length ? locks.find((item) => item.id.eq('ormlvest')) : null;
+        const vestingBalance = vesting?.amount;
+        const isVesting = !!(vestingBalance && !vestingBalance.isZero());
+        const vestingSchedule = vestingSchedules.length ? vestingSchedules[0] : null;
+        const vestingPerPeriod = vestingSchedule?.perPeriod;
+        const vestingPeriod = vestingSchedule?.period;
+        const vestingStart = vestingSchedule?.start;
+        const vestingPeriodCount = vestingSchedule?.periodCount;
 
-          return {
-            freeBalance: new TokenBalance(token, FixedPointNumber.fromInner(freeBalance.toString(), token?.decimal)),
-            lockedBalance: new TokenBalance(
-              token,
-              FixedPointNumber.fromInner(lockedBalance.toString(), token?.decimal)
-            ),
-            availableBalance: new TokenBalance(
-              token,
-              FixedPointNumber.fromInner(availableBalance.toString(), token?.decimal)
-            ),
-            vestingBalance: new TokenBalance(
-              token,
-              FixedPointNumber.fromInner(vestingBalance?.toString() || '0', token?.decimal)
-            ),
-            isVesting,
-            vestingPerPeriod: new TokenBalance(
-              token,
-              FixedPointNumber.fromInner(vestingPerPeriod?.toString() || '0', token?.decimal)
-            ),
-            vestingEndBlock: this.api.registry.createType(
-              'BlockNumber',
-              vestingStart && vestingPeriod && vestingPeriodCount
-                ? vestingStart.add(vestingPeriod.mul(vestingPeriodCount))
-                : 0
-            ),
-            vestingPeriod: vestingPeriod || this.api.registry.createType('Balance', 0)
-          };
-        }),
-        shareReplay(1)
-      );
-    }
-  );
+        return {
+          freeBalance: new TokenBalance(token, FixedPointNumber.fromInner(freeBalance.toString(), token?.decimal)),
+          lockedBalance: new TokenBalance(token, FixedPointNumber.fromInner(lockedBalance.toString(), token?.decimal)),
+          availableBalance: new TokenBalance(
+            token,
+            FixedPointNumber.fromInner(availableBalance.toString(), token?.decimal)
+          ),
+          vestingBalance: new TokenBalance(
+            token,
+            FixedPointNumber.fromInner(vestingBalance?.toString() || '0', token?.decimal)
+          ),
+          isVesting,
+          vestingPerPeriod: new TokenBalance(
+            token,
+            FixedPointNumber.fromInner(vestingPerPeriod?.toString() || '0', token?.decimal)
+          ),
+          vestingEndBlock: this.api.registry.createType(
+            'BlockNumber',
+            vestingStart && vestingPeriod && vestingPeriodCount
+              ? vestingStart.add(vestingPeriod.mul(vestingPeriodCount))
+              : 0
+          ),
+          vestingPeriod: vestingPeriod || this.api.registry.createType('Balance', 0)
+        };
+      }),
+      shareReplay(1)
+    );
+  });
 
   private getBlockHash = memoize((at?: number | string) => {
-    if (at && typeof at === 'string') return of((at as unknown) as BlockHash);
+    if (at && typeof at === 'string') return of(at as unknown as BlockHash);
 
-    if (!at) return of(('' as unknown) as BlockHash);
+    if (!at) return of('' as unknown as BlockHash);
 
     return this.api.rpc.chain.getBlockHash(at);
   });

@@ -201,10 +201,9 @@ export class Token {
   public toChainData(): { Token: string } | { DexShare: [{ Token: string }, { Token: string }] } | { ERC20: string } {
     if (this.isDexShare) {
       return {
-        DexShare: (getLPCurrenciesFormName(this.name).sort((i, j) => TOKEN_SORT[i] - TOKEN_SORT[j]) as [
-          string,
-          string
-        ]).map((item) => ({ Token: item })) as [{ Token: string }, { Token: string }]
+        DexShare: (
+          getLPCurrenciesFormName(this.name).sort((i, j) => TOKEN_SORT[i] - TOKEN_SORT[j]) as [string, string]
+        ).map((item) => ({ Token: item })) as [{ Token: string }, { Token: string }]
       };
     }
 

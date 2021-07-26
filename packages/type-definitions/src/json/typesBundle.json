@@ -1995,22 +1995,22 @@
                 }
             ],
             "alias": {
-                "tokens": {
-                    "AccountData": "OrmlAccountData",
-                    "BalanceLock": "OrmlBalanceLock"
+                "stakingPool": {
+                    "Phase": "StakingPoolPhase"
+                },
+                "oracle": {
+                    "DataProviderId": "AcalaDataProviderId"
+                },
+                "nomineesElection": {
+                    "UnlockChunk": "HomaUnlockChunk"
                 },
                 "evm": {
                     "AccountInfo": "EvmAccountInfo",
                     "ContractInfo": "EvmContractInfo"
                 },
-                "nomineesElection": {
-                    "UnlockChunk": "HomaUnlockChunk"
-                },
-                "oracle": {
-                    "DataProviderId": "AcalaDataProviderId"
-                },
-                "stakingPool": {
-                    "Phase": "StakingPoolPhase"
+                "tokens": {
+                    "AccountData": "OrmlAccountData",
+                    "BalanceLock": "OrmlBalanceLock"
                 }
             }
         },
@@ -4009,22 +4009,22 @@
                 }
             ],
             "alias": {
-                "tokens": {
-                    "AccountData": "OrmlAccountData",
-                    "BalanceLock": "OrmlBalanceLock"
+                "stakingPool": {
+                    "Phase": "StakingPoolPhase"
+                },
+                "oracle": {
+                    "DataProviderId": "AcalaDataProviderId"
+                },
+                "nomineesElection": {
+                    "UnlockChunk": "HomaUnlockChunk"
                 },
                 "evm": {
                     "AccountInfo": "EvmAccountInfo",
                     "ContractInfo": "EvmContractInfo"
                 },
-                "nomineesElection": {
-                    "UnlockChunk": "HomaUnlockChunk"
-                },
-                "oracle": {
-                    "DataProviderId": "AcalaDataProviderId"
-                },
-                "stakingPool": {
-                    "Phase": "StakingPoolPhase"
+                "tokens": {
+                    "AccountData": "OrmlAccountData",
+                    "BalanceLock": "OrmlBalanceLock"
                 }
             }
         },
@@ -6023,22 +6023,22 @@
                 }
             ],
             "alias": {
-                "tokens": {
-                    "AccountData": "OrmlAccountData",
-                    "BalanceLock": "OrmlBalanceLock"
+                "stakingPool": {
+                    "Phase": "StakingPoolPhase"
+                },
+                "oracle": {
+                    "DataProviderId": "AcalaDataProviderId"
+                },
+                "nomineesElection": {
+                    "UnlockChunk": "HomaUnlockChunk"
                 },
                 "evm": {
                     "AccountInfo": "EvmAccountInfo",
                     "ContractInfo": "EvmContractInfo"
                 },
-                "nomineesElection": {
-                    "UnlockChunk": "HomaUnlockChunk"
-                },
-                "oracle": {
-                    "DataProviderId": "AcalaDataProviderId"
-                },
-                "stakingPool": {
-                    "Phase": "StakingPoolPhase"
+                "tokens": {
+                    "AccountData": "OrmlAccountData",
+                    "BalanceLock": "OrmlBalanceLock"
                 }
             }
         }

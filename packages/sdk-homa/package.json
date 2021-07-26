@@ -16,7 +16,8 @@
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
     "@acala-network/sdk-core": "1.0.2-7",
-    "lodash": "^4.17.20"
+    "lodash": "^4.17.20",
+    "rxjs": "^7.2.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.161"

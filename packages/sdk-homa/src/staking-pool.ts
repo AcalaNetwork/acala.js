@@ -195,9 +195,7 @@ export class StakingPool {
    * @name getStakingAmountInRedeemByFreeUnbonded
    * @description get staking amount with redeem by free unbonded
    */
-  public getStakingAmountInRedeemByFreeUnbonded(
-    amount: FixedPointNumber
-  ): {
+  public getStakingAmountInRedeemByFreeUnbonded(amount: FixedPointNumber): {
     demand: FixedPointNumber;
     fee: FixedPointNumber;
     received: FixedPointNumber;

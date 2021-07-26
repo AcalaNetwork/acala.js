@@ -11,43 +11,23 @@ import { Token, FixedPointNumber, getPresetToken } from '@acala-network/sdk-core
 import { SwapTrade } from '@acala-network/sdk-swap';
 
 const provider = new WsProvider('ws://localhost:9944');
-const api = ApiPromise.create(options({ provider }));
+const api = await ApiPromise.create(options({ provider }));
 
-const aca = getPresetToken('ACA').clone({ amount: new FixedPointNumber(100) });
-const ausd = getPresetToken('AUSD');
+await api.isReady;
 
-const availableTokenPairs = SwapTrade.getAvailableToenPairs(api);
-const maxTradePathLength = new FixedPointNumber(api.const.dex.tradingPathLimit.toString());
-const fee = {
-  numerator: new FixedPointNumber(api.const.dex.getExchangeFee[0].toString()),
-  denominator: new FixedPointNumber(api.const.dex.getExchanngeFee[1].toString())
-};
+const swap = new SwapPromise(api);
 
-const swapTrade = new SwapTrade({
-  input: aca,
-  output: ausd,
-  mode: 'EXACT_INPUT',
-  availableTokenPairs,
-  maxTradePathLength,
-  fee,
-  acceptSlippage: new FixedPointNumber(0.001)
-});
+const input = new FixedPointNumber(1, 12);
 
-const tradePairs = SwapTrade.getTradeTokenPairsByPaths();
+// KAR -> KSM
+const result = swap.swap(['KAR', 'KSM'], input, 'EXACT_INPUT');
 
-const unsub = api.query.queryMulti(
-  tradePairs.map((item) => ([api.query.dex.liquidityPool, ...item.toChainData()])),
-  (result) => {
-    const pools = SwapTrade.convertLiquidityPoolsToTokenPairs(result, tradePairs);
-    const tradeParameters = swapTrade.getTradeParameters(pools)
-
-    if (tradeParameters.mode === 'EXECT_INPUT') {
-      api.tx.dex.swapWithExactSupply(...tradeParameters.toChainData(tradeParameters.mode)).signAndSend(...)
-    } else {
-      api.tx.dex.swapWithExactTarget(...tradeParameters.toChainData(tradeParameters.mode)).signAndSend(...)
-    }
-
-    unsub();
-  }
+console.log(`
+  path: ${result.path.map((item) => item.toString()).join('->')}
+  input: ${result.input.amount.toString()},
+  output: ${result.output.amount.toString()}
+  mode: ${result.mode}
+  exchangeFee: ${result.exchangeFee.toString()}
+`)
 );
 ```

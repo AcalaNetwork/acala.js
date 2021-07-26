@@ -34,9 +34,11 @@ export class LiquidityPoolHelper {
     this.pool1 = amount1;
   }
 
-  public estimateAddLiquidity(
-    params: AddLiquidityParams
-  ): { incrementA: FixedPointNumber; incrementB: FixedPointNumber; incrementShare: FixedPointNumber } {
+  public estimateAddLiquidity(params: AddLiquidityParams): {
+    incrementA: FixedPointNumber;
+    incrementB: FixedPointNumber;
+    incrementShare: FixedPointNumber;
+  } {
     const { totalShare, maxAmountA, maxAmountB, tokenA } = params;
 
     // sort input by ordered tokens
