@@ -18,7 +18,7 @@ import { PriceData, PriceDataWithTimestamp, NativeAllBalance, BalanceData } from
 import type { ITuple } from '@polkadot/types/types';
 import type { Option } from '@polkadot/types';
 import { WalletBase } from './wallet-base';
-import { AccountData, BlockHash } from '@polkadot/types/interfaces';
+import { AccountData, AccountInfo, BalanceLock, BlockHash } from '@polkadot/types/interfaces';
 import { BelowExistentialDeposit } from './errors';
 
 const ORACLE_FEEDS_TOKEN = ['DOT', 'XBTC', 'RENBTC', 'POLKABTC', 'KSM'];
@@ -38,7 +38,7 @@ export class WalletRx extends WalletBase<ApiRx> {
 
   // query price info
   public queryPrice = memoize((currency: MaybeCurrency, at?: number): Observable<PriceData> => {
-    const currencyName = forceToCurrencyIdName(currency);
+    const tokenName = forceToCurrencyIdName(currency);
     const liquidCurrencyId = this.api.consts?.stakingPool?.liquidCurrencyId;
 
     // get liquid currency price from staking pool exchange rate
@@ -47,12 +47,12 @@ export class WalletRx extends WalletBase<ApiRx> {
     }
 
     // get dex share price
-    if (isDexShare(currencyName)) {
+    if (isDexShare(tokenName)) {
       return this.queryDexSharePriceFormDex(currency, at);
     }
 
     // get stable coin price
-    if (currencyName === 'AUSD' || currencyName === 'KUSD') {
+    if (tokenName === 'AUSD' || tokenName === 'KUSD') {
       const usd = this.tokenMap.get('AUSD') || this.tokenMap.get('KUSD') || new Token('USD', { decimal: 12 });
 
       return of({
@@ -62,7 +62,7 @@ export class WalletRx extends WalletBase<ApiRx> {
     }
 
     // get price of ORACLE_FEEDS_TOKEN
-    if (ORACLE_FEEDS_TOKEN.includes(currencyName)) {
+    if (ORACLE_FEEDS_TOKEN.includes(tokenName)) {
       return this.queryPriceFromOracle(currency, at);
     }
 
@@ -95,7 +95,7 @@ export class WalletRx extends WalletBase<ApiRx> {
 
         return {
           token: dexShareToken,
-          price
+          price: price.clone()
         };
       }),
       shareReplay(1)
@@ -106,15 +106,15 @@ export class WalletRx extends WalletBase<ApiRx> {
     return of(at).pipe(
       switchMap(() => {
         if (!at) {
-          const currencyName = forceToCurrencyIdName(token);
+          const tokenName = forceToCurrencyIdName(token);
 
           return this.oracleFeed$.pipe(
             map((data): PriceData => {
-              const maybe = data.find((item) => item.token.name === currencyName);
+              const maybe = data.find((item) => item.token.name === tokenName);
 
               return {
-                token: maybe?.token || new Token(currencyName),
-                price: maybe?.price || FixedPointNumber.ZERO
+                token: maybe?.token || this.getToken(tokenName),
+                price: (maybe?.price || FixedPointNumber.ZERO).clone()
               };
             })
           ) as Observable<PriceData>;
@@ -267,12 +267,12 @@ export class WalletRx extends WalletBase<ApiRx> {
 
   public queryIssuance = memoize((currency: MaybeCurrency, at?: number) => {
     let currencyId: CurrencyId;
-    let currencyName: string;
+    let tokenName: string;
     let token: Token;
 
     try {
       currencyId = forceToCurrencyId(this.api, currency);
-      currencyName = forceToCurrencyIdName(currency);
+      tokenName = forceToCurrencyIdName(currency);
       token = this.getToken(currency);
     } catch (e) {
       return of(FixedPointNumber.ZERO);
@@ -280,7 +280,7 @@ export class WalletRx extends WalletBase<ApiRx> {
 
     return this.getBlockHash(at).pipe(
       switchMap((hash) => {
-        if (currencyName === this.nativeToken) {
+        if (tokenName === this.nativeToken) {
           return queryFN(this.api.query.balances.totalIssuance, hash)(currencyId);
         }
 
@@ -354,19 +354,19 @@ export class WalletRx extends WalletBase<ApiRx> {
     return this.getBlockHash(at).pipe(
       switchMap((hash) => {
         return combineLatest([
-          queryFN(this.api.query.system.account, hash)(account),
-          queryFN(this.api.query.balances.locks, hash)(account),
+          queryFN(this.api.query.system.account, hash)<AccountInfo>(account),
+          queryFN(this.api.query.balances.locks, hash)<Vec<BalanceLock>>(account),
           queryFN(this.api.query.vesting.vestingSchedules, hash)<Vec<VestingScheduleOf>>(account)
         ]);
       }),
       map(([accountInfo, locks, vestingSchedules]) => {
         const freeBalance = accountInfo.data.free;
         const lockedBalance = bnMax(accountInfo.data.miscFrozen, accountInfo.data.feeFrozen);
-        const availableBalance = freeBalance.sub(lockedBalance);
+        const availableBalance = freeBalance.toBn().sub(lockedBalance);
 
         const vesting = locks.length ? locks.find((item) => item.id.eq('ormlvest')) : null;
         const vestingBalance = vesting?.amount;
-        const isVesting = !!(vestingBalance && !vestingBalance.isZero());
+        const isVesting = !!(vestingBalance && !vestingBalance.toBn().isZero());
         const vestingSchedule = vestingSchedules.length ? vestingSchedules[0] : null;
         const vestingPerPeriod = vestingSchedule?.perPeriod;
         const vestingPeriod = vestingSchedule?.period;
@@ -392,7 +392,7 @@ export class WalletRx extends WalletBase<ApiRx> {
           vestingEndBlock: this.api.registry.createType(
             'BlockNumber',
             vestingStart && vestingPeriod && vestingPeriodCount
-              ? vestingStart.add(vestingPeriod.mul(vestingPeriodCount))
+              ? vestingStart.toBn().add(vestingPeriod.toBn().mul(vestingPeriodCount))
               : 0
           ),
           vestingPeriod: vestingPeriod || this.api.registry.createType('Balance', 0)
@@ -417,19 +417,48 @@ export class WalletRx extends WalletBase<ApiRx> {
     direction: 'from' | 'to' = 'to'
   ): Observable<boolean> {
     const transferConfig = this.getTransferConfig(currency);
+    const tokenName = forceToCurrencyIdName(currency);
+
+    const isNativeToken = tokenName === this.nativeToken;
 
     return this.queryBalance(account, currency).pipe(
-      map((balance) => {
+      switchMap((balance) => {
+        // always check ED if the direction is `to`
         if (direction === 'to') {
-          if (balance.freeBalance.add(amount).lt(transferConfig.existentialDeposit || FixedPointNumber.ZERO)) {
-            throw new BelowExistentialDeposit(account, currency);
-          }
+          return of({ balance, needCheck: true });
         }
 
-        if (direction === 'from') {
-          if (balance.freeBalance.minus(amount).lt(transferConfig.existentialDeposit || FixedPointNumber.ZERO)) {
-            throw new BelowExistentialDeposit(account, currency);
-          }
+        // handle direction is `from`
+        return this.api.query.system.account(account).pipe(
+          map((accountInfo) => {
+            if (isNativeToken) {
+              return { balance: balance, needCheck: !(accountInfo.consumers.toBigInt() === BigInt(0)) };
+            }
+
+            return {
+              balance: balance,
+              needCheck: !(
+                accountInfo.providers.toBigInt() > BigInt(0) || accountInfo.consumers.toBigInt() === BigInt(0)
+              )
+            };
+          })
+        );
+      }),
+      map(({ balance, needCheck }: { balance: BalanceData; needCheck: boolean }) => {
+        if (!needCheck) return true;
+
+        if (
+          direction === 'to' &&
+          balance.freeBalance.add(amount).lt(transferConfig.existentialDeposit || FixedPointNumber.ZERO)
+        ) {
+          throw new BelowExistentialDeposit(account, currency);
+        }
+
+        if (
+          direction === 'from' &&
+          balance.freeBalance.minus(amount).lt(transferConfig.existentialDeposit || FixedPointNumber.ZERO)
+        ) {
+          throw new BelowExistentialDeposit(account, currency);
         }
 
         return true;

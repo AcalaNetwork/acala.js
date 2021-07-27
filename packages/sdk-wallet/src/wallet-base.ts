@@ -57,13 +57,13 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
    * @description get all available currencies
    */
   public getAllTokens(): Token[] {
-    return Array.from(this.tokenMap.values());
+    return Array.from(this.tokenMap.values()).map((item) => item.clone());
   }
 
   public getNativeToken(): Token {
     const nativeCurrencyId = this.api.consts.currencies.getNativeCurrencyId;
 
-    return this.getToken(nativeCurrencyId);
+    return this.getToken(nativeCurrencyId).clone();
   }
 
   /**
@@ -84,7 +84,7 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
 
     // FIXME: need handle erc20
 
-    return this.tokenMap.get(currencyName) || new Token('mock');
+    return this.tokenMap.get(currencyName)?.clone() || new Token('EMPTY');
   }
 
   public getTransferConfig(currency: MaybeCurrency): TransferConfig {
