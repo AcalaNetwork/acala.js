@@ -325,29 +325,44 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     });
   }
 
-  public checkTransfer(
+  public async checkTransfer(
     account: MaybeAccount,
     currency: MaybeCurrency,
     amount: FixedPointNumber,
     direction: 'from' | 'to' = 'to'
   ): Promise<boolean> {
     const transferConfig = this.getTransferConfig(currency);
+    const tokenName = forceToCurrencyIdName(currency);
+    const isNativeToken = tokenName === this.nativeToken;
+    const accountInfo = await this.api.query.system.account(account);
+    const balance = await this.queryBalance(account, currency);
 
-    return this.queryBalance(account, currency).then((balance) => {
-      if (direction === 'to') {
-        if (balance.freeBalance.add(amount).lt(transferConfig.existentialDeposit || FixedPointNumber.ZERO)) {
-          throw new BelowExistentialDeposit(account, currency);
-        }
+    let needCheck = true;
+
+    // always check ED if the direction is `to`
+    if (
+      direction === 'to' &&
+      balance.freeBalance.add(amount).lt(transferConfig.existentialDeposit || FixedPointNumber.ZERO)
+    ) {
+      throw new BelowExistentialDeposit(account, currency);
+    }
+
+    if (direction === 'from') {
+      if (isNativeToken) {
+        needCheck = !(accountInfo.consumers.toBigInt() === BigInt(0));
+      } else {
+        needCheck = !(accountInfo.providers.toBigInt() > BigInt(0) || accountInfo.consumers.toBigInt() === BigInt(0));
       }
 
-      if (direction === 'from') {
-        if (balance.freeBalance.minus(amount).lt(transferConfig.existentialDeposit || FixedPointNumber.ZERO)) {
-          throw new BelowExistentialDeposit(account, currency);
-        }
+      if (
+        needCheck &&
+        balance.freeBalance.minus(amount).lt(transferConfig.existentialDeposit || FixedPointNumber.ZERO)
+      ) {
+        throw new BelowExistentialDeposit(account, currency);
       }
+    }
 
-      return true;
-    });
+    return true;
   }
 
   // this interface is not implemented

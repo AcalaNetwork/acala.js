@@ -38,5 +38,5 @@ const EXISTENTIAL_DEPOSIT: ExistentialDepositConfig = {
 };
 
 export const getExistentialDeposit = (network: string, currency: string): FixedPointNumber | undefined => {
-  return EXISTENTIAL_DEPOSIT?.[network.toLocaleLowerCase()]?.[currency.toUpperCase()];
+  return EXISTENTIAL_DEPOSIT?.[network.toLocaleLowerCase()]?.[currency.toUpperCase()].clone();
 };
