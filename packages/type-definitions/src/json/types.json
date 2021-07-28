@@ -204,36 +204,42 @@
         "debit": "Balance"
     },
     "CID": "Vec<u8>",
-    "NFTClassId": "u32",
-    "ClassIdOf": "ClassId",
+    "Attributes": "BTreeMap<Vec<u8>, Vec<u8>>",
+    "TokenInfoOf": {
+        "metadata": "CID",
+        "owner": "AccountId",
+        "data": "TokenData"
+    },
+    "Properties": {
+        "_set": {
+            "_bitLength": 8,
+            "Transferable": 1,
+            "Burnable": 2,
+            "Mintable": 4,
+            "ClassPropertiesMutable": 8
+        }
+    },
+    "ClassData": {
+        "deposit": "Balance",
+        "properties": "Properties",
+        "attributes": "Attributes"
+    },
+    "TokenData": {
+        "deposit": "Balance",
+        "attributes": "Attributes"
+    },
     "TokenId": "u64",
     "TokenIdOf": "TokenId",
+    "NFTClassId": "u32",
+    "ClassIdOf": "ClassId",
+    "NFTBalance": "u128",
+    "NFTBalanceOf": "NFTBalance",
     "ClassInfoOf": {
         "metadata": "CID",
         "totalIssuance": "TokenId",
         "owner": "AccountId",
         "data": "ClassData"
     },
-    "TokenInfoOf": {
-        "metadata": "CID",
-        "owner": "AccountId",
-        "data": "TokenData"
-    },
-    "ClassData": {
-        "deposit": "Balance",
-        "properties": "Properties"
-    },
-    "TokenData": {
-        "deposit": "Balance"
-    },
-    "Properties": {
-        "_set": {
-            "_bitLength": 8,
-            "Transferable": 1,
-            "Burnable": 2
-        }
-    },
-    "NFTBalance": "u128",
     "NomineeId": "AccountId",
     "HomaUnlockChunk": {
         "value": "Balance",
