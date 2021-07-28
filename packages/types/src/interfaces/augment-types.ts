@@ -12,7 +12,7 @@ import type { RedeemStrategy } from '@acala-network/types/interfaces/homa';
 import type { Guarantee, RelaychainAccountId, SlashInfo, ValidatorBacking } from '@acala-network/types/interfaces/homaValidatorList';
 import type { PoolId } from '@acala-network/types/interfaces/incentives';
 import type { Position } from '@acala-network/types/interfaces/loans';
-import type { CID, ClassData, ClassIdOf, ClassInfoOf, NFTBalance, NFTClassId, Properties, TokenData, TokenId, TokenIdOf, TokenInfoOf } from '@acala-network/types/interfaces/nft';
+import type { Attributes, CID, ClassData, ClassIdOf, ClassInfoOf, NFTBalance, NFTBalanceOf, NFTClassId, Properties, TokenData, TokenId, TokenIdOf, TokenInfoOf } from '@acala-network/types/interfaces/nft';
 import type { BondingLedger, HomaUnlockChunk, NomineeId } from '@acala-network/types/interfaces/nomineesElection';
 import type { AcalaDataProviderId, AirDropCurrencyId, Amount, AmountOf, AuctionId, AuctionIdOf, AuthoritysOriginId, CurrencyId, CurrencyIdOf, DexShare, TokenSymbol, TradingPair } from '@acala-network/types/interfaces/primitives';
 import type { DestAddress, PublicKey } from '@acala-network/types/interfaces/renvmBridge';
@@ -130,6 +130,7 @@ declare module '@polkadot/types/types/registry' {
     'Compact<Moment>': Compact<Moment>;
     'Compact<MomentOf>': Compact<MomentOf>;
     'Compact<NFTBalance>': Compact<NFTBalance>;
+    'Compact<NFTBalanceOf>': Compact<NFTBalanceOf>;
     'Compact<NFTClassId>': Compact<NFTClassId>;
     'Compact<NominatorIndex>': Compact<NominatorIndex>;
     'Compact<OffchainAccuracy>': Compact<OffchainAccuracy>;
@@ -251,6 +252,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<AssignmentId>': Option<AssignmentId>;
     'Option<AssignmentKind>': Option<AssignmentKind>;
     'Option<AttestedCandidate>': Option<AttestedCandidate>;
+    'Option<Attributes>': Option<Attributes>;
     'Option<AuctionId>': Option<AuctionId>;
     'Option<AuctionIdOf>': Option<AuctionIdOf>;
     'Option<AuctionIndex>': Option<AuctionIndex>;
@@ -737,6 +739,7 @@ declare module '@polkadot/types/types/registry' {
     'Option<NextConfigDescriptor>': Option<NextConfigDescriptor>;
     'Option<NextConfigDescriptorV1>': Option<NextConfigDescriptorV1>;
     'Option<NFTBalance>': Option<NFTBalance>;
+    'Option<NFTBalanceOf>': Option<NFTBalanceOf>;
     'Option<NFTClassId>': Option<NFTClassId>;
     'Option<NodeRole>': Option<NodeRole>;
     'Option<Nominations>': Option<Nominations>;
@@ -1261,6 +1264,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<AssignmentId>': Vec<AssignmentId>;
     'Vec<AssignmentKind>': Vec<AssignmentKind>;
     'Vec<AttestedCandidate>': Vec<AttestedCandidate>;
+    'Vec<Attributes>': Vec<Attributes>;
     'Vec<AuctionId>': Vec<AuctionId>;
     'Vec<AuctionIdOf>': Vec<AuctionIdOf>;
     'Vec<AuctionIndex>': Vec<AuctionIndex>;
@@ -1747,6 +1751,7 @@ declare module '@polkadot/types/types/registry' {
     'Vec<NextConfigDescriptor>': Vec<NextConfigDescriptor>;
     'Vec<NextConfigDescriptorV1>': Vec<NextConfigDescriptorV1>;
     'Vec<NFTBalance>': Vec<NFTBalance>;
+    'Vec<NFTBalanceOf>': Vec<NFTBalanceOf>;
     'Vec<NFTClassId>': Vec<NFTClassId>;
     'Vec<NodeRole>': Vec<NodeRole>;
     'Vec<Nominations>': Vec<Nominations>;
@@ -2271,6 +2276,7 @@ declare module '@polkadot/types/types/registry' {
     AssignmentId: AssignmentId;
     AssignmentKind: AssignmentKind;
     AttestedCandidate: AttestedCandidate;
+    Attributes: Attributes;
     AuctionId: AuctionId;
     AuctionIdOf: AuctionIdOf;
     AuctionIndex: AuctionIndex;
@@ -2757,6 +2763,7 @@ declare module '@polkadot/types/types/registry' {
     NextConfigDescriptor: NextConfigDescriptor;
     NextConfigDescriptorV1: NextConfigDescriptorV1;
     NFTBalance: NFTBalance;
+    NFTBalanceOf: NFTBalanceOf;
     NFTClassId: NFTClassId;
     NodeRole: NodeRole;
     Nominations: Nominations;
