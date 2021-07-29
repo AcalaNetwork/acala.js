@@ -16,8 +16,10 @@ export default {
         KAR: 128,
         KUSD: 129,
         KSM: 130,
-        LKSM: 131
+        LKSM: 131,
         // Reserve for XBTC = 132
+
+        CASH: 140
       }
     },
     DexShare: {
