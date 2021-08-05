@@ -20,6 +20,10 @@ function computeExchangeFee(path: Token[], fee: FixedPointNumber) {
   );
 }
 
+function tokenEq(token1: Token, token2: Token) {
+  return token1.name === token2.name;
+}
+
 export abstract class SwapBase<T extends ApiPromise | ApiRx> {
   protected api: T;
 
@@ -100,11 +104,11 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
   protected checkTradingPairIsEnabled(currency1: Token, currency2: Token, tradingPairs: TokenPair[]): boolean {
     const temp = new TokenPair(currency1, currency2);
 
-    return !!tradingPairs.find((item) => item.isEqual(temp));
+    return !!tradingPairs.find((item) => item.isEqual(temp, tokenEq));
   }
 
   protected sortLiquidityPoolWithTokenOrder(pool: LiquidityPool, token1: Token): [FixedPointNumber, FixedPointNumber] {
-    if (pool.token1.isEqual(token1)) {
+    if (pool.token1.isEqual(token1, tokenEq)) {
       return [pool.balance1, pool.balance2];
     }
 
@@ -130,7 +134,9 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
     for (let i = 0; i < path.length - 1; i++) {
       const pair = new TokenPair(path[i], path[i + 1]);
       const [token1, token2] = pair.getPair();
-      const pool = liquidityPools.find((item) => item.token1.isEqual(token1) && item.token2.isEqual(token2));
+      const pool = liquidityPools.find(
+        (item) => item.token1.isEqual(token1, tokenEq) && item.token2.isEqual(token2, tokenEq)
+      );
 
       if (!pool) throw new NoLiquidityPoolError();
 
@@ -184,7 +190,9 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
     for (let i = path.length - 1; i > 0; i--) {
       const pair = new TokenPair(path[i], path[i - 1]);
       const [token1, token2] = pair.getPair();
-      const pool = liquidityPools.find((item) => item.token1.isEqual(token1) && item.token2.isEqual(token2));
+      const pool = liquidityPools.find(
+        (item) => item.token1.isEqual(token1, tokenEq) && item.token2.isEqual(token2, tokenEq)
+      );
 
       if (!pool) throw new NoLiquidityPoolError();
 
@@ -233,7 +241,7 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
     for (let i = 0; i < path.length - 1; i++) {
       const pair = new TokenPair(path[i], path[i + 1]);
       const [token1, token2] = pair.getPair();
-      const pool = pools.find((item) => item.token1.isEqual(token1) && item.token2.isEqual(token2));
+      const pool = pools.find((item) => item.token1.isEqual(token1, tokenEq) && item.token2.isEqual(token2, tokenEq));
 
       if (!pool) throw new NoLiquidityPoolError();
 

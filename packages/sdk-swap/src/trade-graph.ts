@@ -1,6 +1,9 @@
 import { Token, TokenPair } from '@acala-network/sdk-core';
 import { set } from 'lodash';
 
+function tokenEq(token1: Token, token2: Token) {
+  return token1.name === token2.name;
+}
 export class TradeGraph {
   private adj: Record<string, Token[]>;
 
@@ -38,7 +41,7 @@ export class TradeGraph {
 
         if (nextSearchPathItem.length > 0) {
           nextSearchPathItem = nextSearchPathItem.filter((m) => {
-            return !path.find((n) => n.isEqual(m));
+            return !path.find((n) => n.isEqual(m, tokenEq));
           });
 
           searchList.push(nextSearchPathItem);
@@ -47,7 +50,7 @@ export class TradeGraph {
         path.pop();
       }
 
-      if (path.length > 0 && path[path.length - 1].isEqual(end)) {
+      if (path.length > 0 && path[path.length - 1].isEqual(end, tokenEq)) {
         result.push([...path]);
 
         path.pop();

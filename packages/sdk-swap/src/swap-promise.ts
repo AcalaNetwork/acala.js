@@ -1,7 +1,7 @@
 import { ApiPromise } from '@polkadot/api';
 import { memoize } from '@polkadot/util';
 import { Observable, from, of } from 'rxjs';
-import { switchMap, map, shareReplay, withLatestFrom, filter } from 'rxjs/operators';
+import { switchMap, map, shareReplay, withLatestFrom, filter, take } from 'rxjs/operators';
 import { Balance } from '@acala-network/types/interfaces';
 import { eventMethodsFilter, Token, TokenPair, TokenSet } from '@acala-network/sdk-core';
 import { FixedPointNumber } from '@acala-network/sdk-core/fixed-point-number';
@@ -124,26 +124,14 @@ export class SwapPromise extends SwapBase<ApiPromise> {
     // clear input amount's precision information
     const _input = FixedPointNumber._fromBN(input._getInner());
 
-    const _inputToken = new Token(inputToken.name, {
-      isDexShare: inputToken.isDexShare,
-      isERC20: inputToken.isERC20,
-      isTokenSymbol: inputToken.isTokenSymbol,
-      decimal: 18
-    });
-    const _outputToken = new Token(outputToken.name, {
-      isDexShare: outputToken.isDexShare,
-      isERC20: outputToken.isERC20,
-      isTokenSymbol: outputToken.isTokenSymbol,
-      decimal: 18
-    });
-
     const inputAmount = mode === 'EXACT_INPUT' ? _input : FixedPointNumber.ZERO;
     const outputAmount = mode === 'EXACT_OUTPUT' ? _input : FixedPointNumber.ZERO;
 
-    const swapper = this.swapper(_inputToken, _outputToken);
+    const swapper = this.swapper(inputToken, outputToken);
 
     const result = await swapper
       .pipe(
+        filter(([liquidityPool]) => liquidityPool.length !== 0),
         map(([liquidityPool, paths]) => {
           return this.getBestSwapResult(mode, paths, liquidityPool, [
             inputToken,
@@ -152,7 +140,7 @@ export class SwapPromise extends SwapBase<ApiPromise> {
             outputAmount
           ]);
         }),
-        filter((i) => !i)
+        take(1)
       )
       .toPromise();
 
