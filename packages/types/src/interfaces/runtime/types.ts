@@ -285,6 +285,16 @@ export interface PhantomData extends Null {}
 /** @name PreRuntime */
 export interface PreRuntime extends ITuple<[ConsensusEngineId, Bytes]> {}
 
+/** @name ProxyType */
+export interface ProxyType extends Enum {
+  readonly isAny: boolean;
+  readonly isCancelProxy: boolean;
+  readonly isGovernance: boolean;
+  readonly isAuction: boolean;
+  readonly isSwap: boolean;
+  readonly isLoan: boolean;
+}
+
 /** @name Releases */
 export interface Releases extends Enum {
   readonly isV1: boolean;

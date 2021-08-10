@@ -483,6 +483,16 @@
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
+                        "ProxyType": {
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
+                        },
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -851,6 +861,16 @@
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
+                        "ProxyType": {
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
+                        },
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -1223,6 +1243,16 @@
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
+                        "ProxyType": {
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
+                        },
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -1594,6 +1624,16 @@
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
+                        "ProxyType": {
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
+                        },
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -1970,6 +2010,16 @@
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
+                        "ProxyType": {
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
+                        },
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -2529,6 +2579,16 @@
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
+                        "ProxyType": {
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
+                        },
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -2897,6 +2957,16 @@
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
+                        "ProxyType": {
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
+                        },
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -3269,6 +3339,16 @@
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
+                        "ProxyType": {
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
+                        },
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -3640,6 +3720,16 @@
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
+                        "ProxyType": {
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
+                        },
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -4016,6 +4106,16 @@
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
+                        "ProxyType": {
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
+                        },
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -4575,6 +4675,16 @@
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
+                        "ProxyType": {
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
+                        },
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -4943,6 +5053,16 @@
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
+                        "ProxyType": {
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
+                        },
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -5315,6 +5435,16 @@
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
+                        "ProxyType": {
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
+                        },
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -5686,6 +5816,16 @@
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
+                        "ProxyType": {
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
+                        },
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -6062,6 +6202,16 @@
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
+                        "ProxyType": {
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
+                        },
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
