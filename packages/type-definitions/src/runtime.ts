@@ -3,6 +3,9 @@ export default {
   types: {
     OracleKey: 'CurrencyId',
     OracleValue: 'Price',
-    AsOriginId: 'AuthoritysOriginId'
+    AsOriginId: 'AuthoritysOriginId',
+    ProxyType: {
+      _enum: ['Any', 'CancelProxy', 'Governance', 'Auction', 'Swap', 'Loan']
+    }
   }
 };
