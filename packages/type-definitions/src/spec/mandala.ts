@@ -25,7 +25,11 @@ const typesBundleTypes: OverrideVersionedType[] = [
     minmax: [720, undefined],
     types: {
       Address: 'GenericMultiAddress',
-      LookupSource: 'GenericMultiAddress'
+      LookupSource: 'GenericMultiAddress',
+      AssetInstance: 'AssetInstanceV0',
+      MultiAsset: 'MultiAssetV0',
+      Xcm: 'XcmV0',
+      XcmOrder: 'XcmOrderV0'
     }
   },
   {
@@ -74,6 +78,7 @@ const typesBundleTypes: OverrideVersionedType[] = [
       }
     }
   }
+
 ];
 
 export default typesBundleTypes;

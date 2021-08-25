@@ -5499,7 +5499,11 @@
                         "ChainId": "u8",
                         "Keys": "SessionKeys1",
                         "Address": "GenericMultiAddress",
-                        "LookupSource": "GenericMultiAddress"
+                        "LookupSource": "GenericMultiAddress",
+                        "AssetInstance": "AssetInstanceV0",
+                        "MultiAsset": "MultiAssetV0",
+                        "Xcm": "XcmV0",
+                        "XcmOrder": "XcmOrderV0"
                     }
                 },
                 {
