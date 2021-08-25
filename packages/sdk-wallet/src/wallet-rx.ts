@@ -395,7 +395,7 @@ export class WalletRx extends WalletBase<ApiRx> {
               ? vestingStart.toBn().add(vestingPeriod.toBn().mul(vestingPeriodCount))
               : 0
           ),
-          vestingPeriod: vestingPeriod || this.api.registry.createType('Balance', 0)
+          vestingPeriod: vestingPeriod || this.api.registry.createType('BlockNumber', 0)
         };
       }),
       shareReplay(1)
