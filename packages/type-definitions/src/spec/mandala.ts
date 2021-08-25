@@ -78,7 +78,6 @@ const typesBundleTypes: OverrideVersionedType[] = [
       }
     }
   }
-
 ];
 
 export default typesBundleTypes;
