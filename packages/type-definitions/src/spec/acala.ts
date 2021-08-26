@@ -77,6 +77,28 @@ const versioned: OverrideVersionedType[] = [
         }
       }
     }
+  },
+  {
+    minmax: [730, 1007],
+    types: {
+      TokenSymbol: {
+        _enum: {
+          ACA: 0,
+          AUSD: 1,
+          DOT: 2,
+          LDOT: 3,
+          RENBTC: 4,
+
+          KAR: 128,
+          KUSD: 129,
+          KSM: 130,
+          LKSM: 131,
+          // Reserve for XBTC = 132
+
+          CASH: 140
+        }
+      }
+    }
   }
 ];
 

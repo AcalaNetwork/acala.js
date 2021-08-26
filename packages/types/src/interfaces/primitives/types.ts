@@ -69,11 +69,11 @@ export interface TokenSymbol extends Enum {
   readonly isDot: boolean;
   readonly isLdot: boolean;
   readonly isRenbtc: boolean;
+  readonly isCash: boolean;
   readonly isKar: boolean;
   readonly isKusd: boolean;
   readonly isKsm: boolean;
   readonly isLksm: boolean;
-  readonly isCash: boolean;
 }
 
 /** @name TradingPair */

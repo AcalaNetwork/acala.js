@@ -1,33 +1,21 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-import type { Option, Vec, bool, u32, u64 } from '@polkadot/types';
+import type { Option, Vec, bool, u64 } from '@polkadot/types';
 import type { AnyNumber, ITuple, Observable } from '@polkadot/types/types';
 import type { CollateralAuctionItem } from '@acala-network/types/interfaces/auctionManager';
 import type { RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
 import type { TradingPairStatus } from '@acala-network/types/interfaces/dex';
-import type { Guarantee, RelaychainAccountId, ValidatorBacking } from '@acala-network/types/interfaces/homaValidatorList';
 import type { Position } from '@acala-network/types/interfaces/loans';
-import type { BondingLedger, NomineeId } from '@acala-network/types/interfaces/nomineesElection';
-import type { AirDropCurrencyId, AuctionId, CurrencyId, TradingPair } from '@acala-network/types/interfaces/primitives';
+import type { AuctionId, CurrencyId, TradingPair } from '@acala-network/types/interfaces/primitives';
 import type { AccountId, Balance, BlockNumber } from '@acala-network/types/interfaces/runtime';
-import type { Ledger, Params, SubAccountStatus } from '@acala-network/types/interfaces/stakingPool';
 import type { ExchangeRate, Rate } from '@acala-network/types/interfaces/support';
 import type { AuctionInfo, Price } from '@open-web3/orml-types/interfaces/traits';
 import type { AccountData, BalanceLock } from '@polkadot/types/interfaces/balances';
-import type { EraIndex } from '@polkadot/types/interfaces/staking';
-import type { Phase } from '@polkadot/types/interfaces/system';
 import type { ApiTypes } from '@polkadot/api/types';
 
 declare module '@polkadot/api/types/storage' {
   export interface AugmentedQueries<ApiType> {
-    airDrop: {
-      airDrops: AugmentedQuery<ApiType, (arg1: AccountId | string | Uint8Array, arg2: AirDropCurrencyId | 'KAR' | 'ACA' | number | Uint8Array) => Observable<Balance>, [AccountId, AirDropCurrencyId]> & QueryableStorageEntry<ApiType, [AccountId, AirDropCurrencyId]>;
-      /**
-       * Generic query
-       **/
-      [key: string]: QueryableStorageEntry<ApiType>;
-    };
     auction: {
       /**
        * Index auctions by end time.
@@ -124,6 +112,12 @@ declare module '@polkadot/api/types/storage' {
     };
     dex: {
       /**
+       * Initial exchange rate, used to calculate the dex share amount for founders of provisioning
+       * 
+       * InitialShareExchangeRates: map TradingPair => (ExchangeRate, ExchangeRate)
+       **/
+      initialShareExchangeRates: AugmentedQuery<ApiType, (arg: TradingPair) => Observable<ITuple<[ExchangeRate, ExchangeRate]>>, [TradingPair]> & QueryableStorageEntry<ApiType, [TradingPair]>;
+      /**
        * Liquidity pool for TradingPair.
        * 
        * LiquidityPool: map TradingPair => (Balance, Balance)
@@ -165,38 +159,14 @@ declare module '@polkadot/api/types/storage' {
        **/
       [key: string]: QueryableStorageEntry<ApiType>;
     };
-    homaValidatorListModule: {
-      /**
-       * The slash guarantee deposits for relaychain validators.
-       * 
-       * Guarantees: double_map RelaychainAccountId, AccountId => Option<Guarantee>
-       **/
-      guarantees: AugmentedQuery<ApiType, (arg1: RelaychainAccountId | string | Uint8Array, arg2: AccountId | string | Uint8Array) => Observable<Option<Guarantee>>, [RelaychainAccountId, AccountId]> & QueryableStorageEntry<ApiType, [RelaychainAccountId, AccountId]>;
-      /**
-       * Total deposits for users.
-       * 
-       * TotalLockedByGuarantor: map AccountId => Option<Balance>
-       **/
-      totalLockedByGuarantor: AugmentedQuery<ApiType, (arg: AccountId | string | Uint8Array) => Observable<Option<Balance>>, [AccountId]> & QueryableStorageEntry<ApiType, [AccountId]>;
-      /**
-       * Total deposit for validators.
-       * 
-       * ValidatorBackings: map RelaychainAccountId => Option<ValidatorBacking>
-       **/
-      validatorBackings: AugmentedQuery<ApiType, (arg: RelaychainAccountId | string | Uint8Array) => Observable<Option<ValidatorBacking>>, [RelaychainAccountId]> & QueryableStorageEntry<ApiType, [RelaychainAccountId]>;
-      /**
-       * Generic query
-       **/
-      [key: string]: QueryableStorageEntry<ApiType>;
-    };
     honzon: {
       /**
        * The authorization relationship map from
        * Authorizer -> (CollateralType, Authorizee) -> Authorized
        * 
-       * Authorization: double_map AccountId, (CurrencyId, T::AccountId) => Option<()>
+       * Authorization: double_map AccountId, (CurrencyId, T::AccountId) => Option<Balance>
        **/
-      authorization: AugmentedQuery<ApiType, (arg1: AccountId | string | Uint8Array, arg2: ITuple<[CurrencyId, AccountId]> | [CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string | Uint8Array, AccountId | string | Uint8Array]) => Observable<Option<ITuple<[]>>>, [AccountId, ITuple<[CurrencyId, AccountId]>]> & QueryableStorageEntry<ApiType, [AccountId, ITuple<[CurrencyId, AccountId]>]>;
+      authorization: AugmentedQuery<ApiType, (arg1: AccountId | string | Uint8Array, arg2: ITuple<[CurrencyId, AccountId]> | [CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string | Uint8Array, AccountId | string | Uint8Array]) => Observable<Option<Balance>>, [AccountId, ITuple<[CurrencyId, AccountId]>]> & QueryableStorageEntry<ApiType, [AccountId, ITuple<[CurrencyId, AccountId]>]>;
       /**
        * Generic query
        **/
@@ -222,52 +192,6 @@ declare module '@polkadot/api/types/storage' {
        **/
       [key: string]: QueryableStorageEntry<ApiType>;
     };
-    nomineesElection: {
-      /**
-       * Current era index.
-       * 
-       * CurrentEra: EraIndex
-       **/
-      currentEra: AugmentedQuery<ApiType, () => Observable<EraIndex>, []> & QueryableStorageEntry<ApiType, []>;
-      /**
-       * The nomination bonding ledger.
-       * 
-       * Ledger: map => AccountId, BondingLedger
-       **/
-      ledger: AugmentedQuery<ApiType, (arg: AccountId | string | Uint8Array) => Observable<BondingLedger>, [AccountId]> & QueryableStorageEntry<ApiType, [AccountId]>;
-      /**
-       * The nominations for nominators.
-       * 
-       * Nominations: map AccountId => Vec<NomineeId>
-       **/
-      nominations: AugmentedQuery<ApiType, (arg: AccountId | string | Uint8Array) => Observable<Vec<NomineeId>>, [AccountId]> & QueryableStorageEntry<ApiType, [AccountId]>;
-      /**
-       * The elected nominees.
-       * 
-       * Nominees: Vec<NomineeId>
-       **/
-      nominees: AugmentedQuery<ApiType, () => Observable<Vec<NomineeId>>, []> & QueryableStorageEntry<ApiType, []>;
-      /**
-       * The total voting value for nominees.
-       * 
-       * Votes: map NomineeId => Balance
-       **/
-      votes: AugmentedQuery<ApiType, (arg: NomineeId | string | Uint8Array) => Observable<Balance>, [NomineeId]> & QueryableStorageEntry<ApiType, [NomineeId]>;
-      /**
-       * Generic query
-       **/
-      [key: string]: QueryableStorageEntry<ApiType>;
-    };
-    polkadotBridge: {
-      currentEra: AugmentedQuery<ApiType, () => Observable<EraIndex>, []> & QueryableStorageEntry<ApiType, []>;
-      eraStartBlockNumber: AugmentedQuery<ApiType, () => Observable<BlockNumber>, []> & QueryableStorageEntry<ApiType, []>;
-      forcedEra: AugmentedQuery<ApiType, () => Observable<Option<BlockNumber>>, []> & QueryableStorageEntry<ApiType, []>;
-      subAccounts: AugmentedQuery<ApiType, (arg: u32 | AnyNumber | Uint8Array) => Observable<SubAccountStatus>, [u32]> & QueryableStorageEntry<ApiType, [u32]>;
-      /**
-       * Generic query
-       **/
-      [key: string]: QueryableStorageEntry<ApiType>;
-    };
     prices: {
       /**
        * Mapping from currency id to it's locked price
@@ -275,58 +199,6 @@ declare module '@polkadot/api/types/storage' {
        * map CurrencyId => Option<Price>
        **/
       lockedPrice: AugmentedQuery<ApiType, (arg: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string | Uint8Array) => Observable<Option<Price>>, [CurrencyId]> & QueryableStorageEntry<ApiType, [CurrencyId]>;
-      /**
-       * Generic query
-       **/
-      [key: string]: QueryableStorageEntry<ApiType>;
-    };
-    stakingPool: {
-      /**
-       * Current era index on Relaychain.
-       * 
-       * CurrentEra: EraIndex
-       **/
-      currentEra: AugmentedQuery<ApiType, () => Observable<EraIndex>, []> & QueryableStorageEntry<ApiType, []>;
-      /**
-       * Unbond on next era beginning by AccountId.
-       * AccountId => Unbond
-       * 
-       * NextEraUnbonds: AccountId => Balance
-       **/
-      nextEraUnbonds: AugmentedQuery<ApiType, (arg: AccountId | string | Uint8Array) => Observable<Balance>, [AccountId]> & QueryableStorageEntry<ApiType, [AccountId]>;
-      /**
-       * The rebalance phase of current era.
-       * 
-       * RebalancePhase: Phase
-       **/
-      rebalancePhase: AugmentedQuery<ApiType, () => Observable<Phase>, []> & QueryableStorageEntry<ApiType, []>;
-      /**
-       * The ledger of staking pool.
-       * 
-       * StakingPoolLedger: Ledger
-       **/
-      stakingPoolLedger: AugmentedQuery<ApiType, () => Observable<Ledger>, []> & QueryableStorageEntry<ApiType, []>;
-      /**
-       * The params of staking pool.
-       * 
-       * StakingPoolParams: Params
-       **/
-      stakingPoolParams: AugmentedQuery<ApiType, () => Observable<Params>, []> & QueryableStorageEntry<ApiType, []>;
-      /**
-       * The records of unbonding.
-       * ExpiredEraIndex => (TotalUnbounding, ClaimedUnbonding,
-       * InitialClaimedUnbonding)
-       * 
-       * Unbonding: map EraIndex => (Balance, Balance, Balance)
-       **/
-      unbonding: AugmentedQuery<ApiType, (arg: EraIndex | AnyNumber | Uint8Array) => Observable<ITuple<[Balance, Balance, Balance]>>, [EraIndex]> & QueryableStorageEntry<ApiType, [EraIndex]>;
-      /**
-       * The records of unbonding by AccountId.
-       * AccountId, ExpiredEraIndex => Unbounding
-       * 
-       * Unbondings: double_map AccountId, EraIndex => Balance
-       **/
-      unbondings: AugmentedQuery<ApiType, (arg1: AccountId | string | Uint8Array, arg2: EraIndex | AnyNumber | Uint8Array) => Observable<Balance>, [AccountId, EraIndex]> & QueryableStorageEntry<ApiType, [AccountId, EraIndex]>;
       /**
        * Generic query
        **/
@@ -351,6 +223,12 @@ declare module '@polkadot/api/types/storage' {
        * The total issuance of a token type.
        **/
       totalIssuance: AugmentedQuery<ApiType, (arg: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { ChainSafe: any } | string | Uint8Array) => Observable<Balance>, [CurrencyId]> & QueryableStorageEntry<ApiType, [CurrencyId]>;
+      /**
+       * Generic query
+       **/
+      [key: string]: QueryableStorageEntry<ApiType>;
+    };
+    xTokens: {
       /**
        * Generic query
        **/

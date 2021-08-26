@@ -2,7 +2,7 @@ import { ApiPromise } from '@polkadot/api';
 
 import { TimestampedValue, OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { FixedPointNumber, getPromiseOrAtQuery, Token } from '@acala-network/sdk-core';
-import { Balance, CurrencyId, OracleKey } from '@acala-network/types/interfaces';
+import { Balance, CurrencyId, OracleKey, Ledger } from '@acala-network/types/interfaces';
 import {
   forceToCurrencyId,
   forceToCurrencyIdName,
@@ -13,7 +13,7 @@ import { MaybeAccount, MaybeCurrency } from '@acala-network/sdk-core/types';
 import { BalanceData, PriceData, PriceDataWithTimestamp } from './types';
 import type { ITuple } from '@polkadot/types/types';
 import { WalletBase } from './wallet-base';
-import { AccountData, BlockHash } from '@polkadot/types/interfaces';
+import { AccountData, BlockHash, AccountInfo } from '@polkadot/types/interfaces';
 import { BelowExistentialDeposit } from './errors';
 import { Option } from '@polkadot/types';
 
@@ -33,11 +33,11 @@ export class WalletPromise extends WalletBase<ApiPromise> {
   // query price info, support specify data source
   public queryPrice = async (currency: MaybeCurrency, at?: number): Promise<PriceData> => {
     const currencyName = forceToCurrencyIdName(currency);
-    const liquidCurrencyId = this.api.consts?.stakingPool?.liquidCurrencyId;
+    const liquidCurrencyId = this.api.consts?.homaLite?.liquidCurrencyId;
 
     // get liquid currency price from staking pool exchange rate
     if (liquidCurrencyId && forceToCurrencyIdName(currency) === forceToCurrencyIdName(liquidCurrencyId)) {
-      return this.queryLiquidPriceFromStakingPool(at);
+      return this.queryLiquidPriceFromHomaLite(at);
     }
 
     // get dex share price
@@ -123,6 +123,35 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     });
   };
 
+  public queryLiquidPriceFromHomaLite = (at?: number): Promise<PriceData> => {
+    const liquidCurrencyId = this.api.consts.homaLite.liquidCurrencyId;
+    const stakingCurrencyId = this.api.consts.homaLite.stakingCurrencyId;
+
+    const liquidToken = this.getToken(liquidCurrencyId);
+    const stakingToken = this.getToken(stakingCurrencyId);
+
+    return this.getBlockHash(at)
+      .then((hash) => {
+        return Promise.all([
+          this.queryPriceFromOracle(stakingToken, at),
+          queryFN<() => Promise<Balance>>(this.api.query.homaLite.totalStakingCurrency, hash)(),
+          this.queryIssuance(liquidToken, at)
+        ]);
+      })
+      .then(([stakingTokenPrice, stakingBalance, liquidIssuance]) => {
+        const bonded = FixedPointNumber.fromInner(stakingBalance.toString());
+
+        bonded.forceSetPrecision(stakingToken.decimal);
+
+        const ratio = liquidIssuance.isZero() ? FixedPointNumber.ZERO : bonded.div(liquidIssuance);
+
+        return {
+          token: liquidToken,
+          price: stakingTokenPrice.price.times(ratio)
+        };
+      });
+  };
+
   public queryLiquidPriceFromStakingPool = (at?: number): Promise<PriceData> => {
     const liquidCurrencyId = this.api.consts.stakingPool.liquidCurrencyId;
     const stakingCurrencyId = this.api.consts.stakingPool.stakingCurrencyId;
@@ -134,7 +163,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
       .then((hash) => {
         return Promise.all([
           this.queryPriceFromOracle(stakingToken, at),
-          queryFN(this.api.query.stakingPool.stakingPoolLedger, hash)(),
+          queryFN<() => Promise<Ledger>>(this.api.query.stakingPool.stakingPoolLedger, hash)(),
           this.queryIssuance(liquidToken, at)
         ]);
       })
@@ -249,7 +278,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     return this.getBlockHash(at)
       .then((hash): Promise<AccountData | OrmlAccountData> => {
         if (isNativeToken) {
-          return queryFN(
+          return queryFN<(account: any) => Promise<AccountInfo>>(
             this.api.query.system.account,
             hash.toString()
           )(account).then((data) => data.data) as any as Promise<AccountData>;
@@ -334,7 +363,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     const transferConfig = this.getTransferConfig(currency);
     const tokenName = forceToCurrencyIdName(currency);
     const isNativeToken = tokenName === this.nativeToken;
-    const accountInfo = await this.api.query.system.account(account);
+    const accountInfo = (await this.api.query.system.account(account)) as unknown as AccountInfo;
     const balance = await this.queryBalance(account, currency);
 
     let needCheck = true;
