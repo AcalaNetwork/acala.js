@@ -4,10 +4,10 @@
 import type { Vec, u32 } from '@polkadot/types';
 import type { Codec, ITuple } from '@polkadot/types/types';
 import type { CurrencyId } from '@acala-network/types/interfaces/primitives';
-import type { AccountId, Balance, BlockNumber, PalletId, TransactionPriority } from '@acala-network/types/interfaces/runtime';
+import type { AccountId, Balance, BlockNumber, PalletId, TransactionPriority, Weight } from '@acala-network/types/interfaces/runtime';
 import type { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
 import type { Price } from '@open-web3/orml-types/interfaces/traits';
-import type { EraIndex } from '@polkadot/types/interfaces/staking';
+import type { MultiLocation } from '@polkadot/types/interfaces/xcm';
 import type { ApiTypes } from '@polkadot/api/types';
 
 declare module '@polkadot/api/types/consts' {
@@ -22,6 +22,12 @@ declare module '@polkadot/api/types/consts' {
        * The extended time for the auction to end after each successful bid
        **/
       auctionTimeToClose: BlockNumber & AugmentedConst<ApiType>;
+      /**
+       * The default parital path list for DEX to directly take auction,
+       * Note: the path is parital, the whole swap path is collateral currency id concat
+       * the partial path. And the list is sorted, DEX try to take auction by order.
+       **/
+      defaultSwapParitalPathList: Vec<Vec<CurrencyId>> & AugmentedConst<ApiType>;
       /**
        * The stable currency id
        **/
@@ -60,14 +66,19 @@ declare module '@polkadot/api/types/consts' {
        **/
       defaultLiquidationRatio: Ratio & AugmentedConst<ApiType>;
       /**
+       * The default parital path list for CDP engine to swap collateral to stable,
+       * Note: the path is parital, the whole swap path is collateral currency id concat
+       * the partial path. And the list is sorted, CDP engine trys to swap stable by order.
+       **/
+      defaultSwapParitalPathList: Vec<Vec<CurrencyId>> & AugmentedConst<ApiType>;
+      /**
        * Stablecoin currency id
        **/
       getStableCurrencyId: CurrencyId & AugmentedConst<ApiType>;
       /**
-       * The max slippage allowed when liquidate an unsafe CDP by swap with
-       * DEX
+       * When swap with DEX, the acceptable max slippage for the price from oracle.
        **/
-      maxSlippageSwapWithDex: Ratio & AugmentedConst<ApiType>;
+      maxSwapSlippageCompareToOracle: Ratio & AugmentedConst<ApiType>;
       /**
        * The minimum debit value to avoid debit dust
        **/
@@ -148,10 +159,11 @@ declare module '@polkadot/api/types/consts' {
        **/
       [key: string]: Codec;
     };
-    homaValidatorListModule: {
-      bondingDuration: BlockNumber & AugmentedConst<ApiType>;
-      minBondAmount: Balance & AugmentedConst<ApiType>;
-      validatorInsuranceThreshold: Balance & AugmentedConst<ApiType>;
+    honzon: {
+      /**
+       * Reserved amount per authorization.
+       **/
+      depositPerAuthorization: Balance & AugmentedConst<ApiType>;
       /**
        * Generic const
        **/
@@ -162,24 +174,6 @@ declare module '@polkadot/api/types/consts' {
        * The loan's module id, keep all collaterals of CDPs.
        **/
       palletId: PalletId & AugmentedConst<ApiType>;
-      /**
-       * Generic const
-       **/
-      [key: string]: Codec;
-    };
-    nomineesElection: {
-      bondingDuration: EraIndex & AugmentedConst<ApiType>;
-      maxUnlockingChunks: u32 & AugmentedConst<ApiType>;
-      minBondThreshold: Balance & AugmentedConst<ApiType>;
-      nominateesCount: u32 & AugmentedConst<ApiType>;
-      /**
-       * Generic const
-       **/
-      [key: string]: Codec;
-    };
-    polkadotBridge: {
-      bondingDuration: EraIndex & AugmentedConst<ApiType>;
-      eraLength: BlockNumber & AugmentedConst<ApiType>;
       /**
        * Generic const
        **/
@@ -207,29 +201,25 @@ declare module '@polkadot/api/types/consts' {
        **/
       [key: string]: Codec;
     };
-    stakingPool: {
+    tokens: {
+      maxLocks: u32 & AugmentedConst<ApiType>;
       /**
-       * The default exchange rate for liquid currency to staking currency.
+       * Generic const
        **/
-      defaultExchangeRate: ExchangeRate & AugmentedConst<ApiType>;
+      [key: string]: Codec;
+    };
+    xTokens: {
       /**
-       * The liquid currency id(should be LDOT in acala)
+       * Base XCM weight.
+       * 
+       * The actually weight for an XCM message is `T::BaseXcmWeight +
+       * T::Weigher::weight(&msg)`.
        **/
-      liquidCurrencyId: CurrencyId & AugmentedConst<ApiType>;
+      baseXcmWeight: Weight & AugmentedConst<ApiType>;
       /**
-       * The staking pool's module id, keep all staking currency belong to
-       * Homa protocol.
+       * Self chain location.
        **/
-      palletId: PalletId & AugmentedConst<ApiType>;
-      /**
-       * The sub account indexs of parachain to vault assets of Homa protocol
-       * in Polkadot.
-       **/
-      poolAccountIndexes: Vec<u32> & AugmentedConst<ApiType>;
-      /**
-       * The staking currency id(should be DOT in acala)
-       **/
-      stakingCurrencyId: CurrencyId & AugmentedConst<ApiType>;
+      selfLocation: MultiLocation & AugmentedConst<ApiType>;
       /**
        * Generic const
        **/

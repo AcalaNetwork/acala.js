@@ -6,7 +6,7 @@ import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { Vec } from '@polkadot/types';
 import { TimestampedValue, VestingScheduleOf, OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { eventsFilterRx, FixedPointNumber, getSubscribeOrAtQuery, Token, TokenBalance } from '@acala-network/sdk-core';
-import { Balance, CurrencyId, OracleKey } from '@acala-network/types/interfaces';
+import { Balance, CurrencyId, Ledger, OracleKey } from '@acala-network/types/interfaces';
 import {
   forceToCurrencyId,
   forceToCurrencyIdName,
@@ -39,11 +39,11 @@ export class WalletRx extends WalletBase<ApiRx> {
   // query price info
   public queryPrice = memoize((currency: MaybeCurrency, at?: number): Observable<PriceData> => {
     const tokenName = forceToCurrencyIdName(currency);
-    const liquidCurrencyId = this.api.consts?.stakingPool?.liquidCurrencyId;
+    const liquidCurrencyId = this.api.consts?.homaLite?.liquidCurrencyId;
 
     // get liquid currency price from staking pool exchange rate
     if (liquidCurrencyId && forceToCurrencyIdName(currency) === forceToCurrencyIdName(liquidCurrencyId)) {
-      return this.queryLiquidPriceFromStakingPool(at);
+      return this.queryLiquidPriceFromHomaLite(at);
     }
 
     // get dex share price
@@ -141,6 +141,37 @@ export class WalletRx extends WalletBase<ApiRx> {
     );
   });
 
+  public queryLiquidPriceFromHomaLite = memoize((at?: number) => {
+    const liquidCurrencyId = this.api.consts.homaLite.liquidCurrencyId;
+    const stakingCurrencyId = this.api.consts.homaLite.stakingCurrencyId;
+
+    const liquidToken = this.getToken(liquidCurrencyId);
+    const stakingToken = this.getToken(stakingCurrencyId);
+
+    return this.getBlockHash(at).pipe(
+      switchMap((hash) => {
+        return combineLatest([
+          this.queryPriceFromOracle(stakingToken, at),
+          queryFN<() => Observable<Balance>>(this.api.query.homaLite.totalStakingCurrency, hash)(),
+          this.queryIssuance(liquidToken, at)
+        ]);
+      }),
+      map(([stakingTokenPrice, stakingBalance, liquidIssuance]) => {
+        const bonded = FixedPointNumber.fromInner(stakingBalance.toString());
+
+        bonded.forceSetPrecision(stakingToken.decimal);
+
+        const ratio = liquidIssuance.isZero() ? FixedPointNumber.ZERO : bonded.div(liquidIssuance);
+
+        return {
+          token: liquidToken,
+          price: stakingTokenPrice.price.times(ratio)
+        };
+      }),
+      shareReplay(1)
+    );
+  });
+
   public queryLiquidPriceFromStakingPool = memoize((at?: number) => {
     const liquidCurrencyId = this.api.consts.stakingPool.liquidCurrencyId;
     const stakingCurrencyId = this.api.consts.stakingPool.stakingCurrencyId;
@@ -152,7 +183,7 @@ export class WalletRx extends WalletBase<ApiRx> {
       switchMap((hash) => {
         return combineLatest([
           this.queryPriceFromOracle(stakingToken, at),
-          queryFN(this.api.query.stakingPool.stakingPoolLedger, hash)(),
+          queryFN<() => Observable<Ledger>>(this.api.query.stakingPool.stakingPoolLedger, hash)(),
           this.queryIssuance(liquidToken, at)
         ]);
       }),
@@ -302,7 +333,10 @@ export class WalletRx extends WalletBase<ApiRx> {
       return this.getBlockHash(at).pipe(
         switchMap((hash) => {
           if (isNativeToken) {
-            return queryFN(this.api.query.system.account, hash)(account).pipe(map((data) => data.data));
+            return queryFN<(account: any) => Observable<AccountInfo>>(
+              this.api.query.system.account,
+              hash
+            )(account).pipe(map((data) => data.data));
           }
 
           return queryFN(this.api.query.tokens.accounts, hash)(account, currencyId).pipe(
@@ -429,7 +463,7 @@ export class WalletRx extends WalletBase<ApiRx> {
         }
 
         // handle direction is `from`
-        return this.api.query.system.account(account).pipe(
+        return (this.api.query.system.account(account) as Observable<AccountInfo>).pipe(
           map((accountInfo) => {
             if (isNativeToken) {
               return { balance: balance, needCheck: !(accountInfo.consumers.toBigInt() === BigInt(0)) };

@@ -260,12 +260,12 @@
             "AUSD": 1,
             "DOT": 2,
             "LDOT": 3,
-            "RENBTC": 4,
+            "RENBTC": 20,
+            "CASH": 21,
             "KAR": 128,
             "KUSD": 129,
             "KSM": 130,
-            "LKSM": 131,
-            "CASH": 140
+            "LKSM": 131
         }
     },
     "DexShare": {

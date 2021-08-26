@@ -11,15 +11,20 @@ export default {
         AUSD: 1,
         DOT: 2,
         LDOT: 3,
-        RENBTC: 4,
+        // 20 - 39: External tokens (e.g. bridged)
+        RENBTC: 20,
+        CASH: 21,
+        // 40 - 127: Polkadot parachain tokens
 
+        // 128 - 147: Karura & Kusama native tokens
         KAR: 128,
         KUSD: 129,
         KSM: 130,
-        LKSM: 131,
-        // Reserve for XBTC = 132
-
-        CASH: 140
+        LKSM: 131
+        // 148 - 167: External tokens (e.g. bridged)
+        // 149: Reserved for renBTC
+        // 150: Reserved for CASH
+        // 168 - 255: Kusama parachain tokens
       }
     },
     DexShare: {
