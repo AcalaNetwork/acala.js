@@ -312,7 +312,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
           reservedBalance = FixedPointNumber.fromInner(data.reserved.toString(), token.decimal);
         }
 
-        availableBalance = freeBalance.sub(lockedBalance).sub(reservedBalance).max(FixedPointNumber.ZERO);
+        availableBalance = freeBalance.sub(lockedBalance).max(FixedPointNumber.ZERO);
 
         return {
           token,
