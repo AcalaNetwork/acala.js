@@ -318,6 +318,7 @@
             "Loan"
         ]
     },
+    "AtLeast64BitUnsigned": "u128",
     "SubAccountStatus": {
         "bonded": "Balance",
         "available": "Balance",

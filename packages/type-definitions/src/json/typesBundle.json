@@ -493,6 +493,7 @@
                                 "Loan"
                             ]
                         },
+                        "AtLeast64BitUnsigned": "u128",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -871,6 +872,7 @@
                                 "Loan"
                             ]
                         },
+                        "AtLeast64BitUnsigned": "u128",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -1253,6 +1255,7 @@
                                 "Loan"
                             ]
                         },
+                        "AtLeast64BitUnsigned": "u128",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -1638,6 +1641,7 @@
                                 "Loan"
                             ]
                         },
+                        "AtLeast64BitUnsigned": "u128",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -2024,6 +2028,7 @@
                                 "Loan"
                             ]
                         },
+                        "AtLeast64BitUnsigned": "u128",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -2404,6 +2409,7 @@
                                 "Loan"
                             ]
                         },
+                        "AtLeast64BitUnsigned": "u128",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -2973,6 +2979,7 @@
                                 "Loan"
                             ]
                         },
+                        "AtLeast64BitUnsigned": "u128",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -3351,6 +3358,7 @@
                                 "Loan"
                             ]
                         },
+                        "AtLeast64BitUnsigned": "u128",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -3733,6 +3741,7 @@
                                 "Loan"
                             ]
                         },
+                        "AtLeast64BitUnsigned": "u128",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -4118,6 +4127,7 @@
                                 "Loan"
                             ]
                         },
+                        "AtLeast64BitUnsigned": "u128",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -4504,6 +4514,7 @@
                                 "Loan"
                             ]
                         },
+                        "AtLeast64BitUnsigned": "u128",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -4884,6 +4895,7 @@
                                 "Loan"
                             ]
                         },
+                        "AtLeast64BitUnsigned": "u128",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -5453,6 +5465,7 @@
                                 "Loan"
                             ]
                         },
+                        "AtLeast64BitUnsigned": "u128",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -5831,6 +5844,7 @@
                                 "Loan"
                             ]
                         },
+                        "AtLeast64BitUnsigned": "u128",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -6213,6 +6227,7 @@
                                 "Loan"
                             ]
                         },
+                        "AtLeast64BitUnsigned": "u128",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -6598,6 +6613,7 @@
                                 "Loan"
                             ]
                         },
+                        "AtLeast64BitUnsigned": "u128",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -6984,6 +7000,7 @@
                                 "Loan"
                             ]
                         },
+                        "AtLeast64BitUnsigned": "u128",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -7364,6 +7381,7 @@
                                 "Loan"
                             ]
                         },
+                        "AtLeast64BitUnsigned": "u128",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",

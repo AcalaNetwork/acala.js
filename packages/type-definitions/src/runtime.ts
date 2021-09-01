@@ -6,6 +6,7 @@ export default {
     AsOriginId: 'AuthoritysOriginId',
     ProxyType: {
       _enum: ['Any', 'CancelProxy', 'Governance', 'Auction', 'Swap', 'Loan']
-    }
+    },
+    AtLeast64BitUnsigned: 'u128'
   }
 };
