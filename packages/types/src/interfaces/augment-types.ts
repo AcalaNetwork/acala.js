@@ -6,6 +6,7 @@ import type { PalletBalanceOf } from '@acala-network/types/interfaces/accounts';
 import type { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@acala-network/types/interfaces/auctionManager';
 import type { ChangeBalance, ChangeOptionRate, ChangeOptionRatio, LiquidationStrategy, OptionRate, OptionRatio, RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
 import type { CandidateInfoOf } from '@acala-network/types/interfaces/collatorSelection';
+import type { CashYieldIndex, CompoundAuthoritySignature, GatewayNotice, GatewayNoticePayload } from '@acala-network/types/interfaces/compoundCash';
 import type { BalanceRequest, BalanceWrapper, TradingPairProvisionParameters, TradingPairStatus } from '@acala-network/types/interfaces/dex';
 import type { CallRequest, CodeInfo, Erc20Info, EstimateResourcesResponse, EvmAccountInfo, EvmAddress, EvmContractInfo } from '@acala-network/types/interfaces/evm';
 import type { RedeemStrategy } from '@acala-network/types/interfaces/homa';
@@ -223,6 +224,7 @@ declare module '@polkadot/types/types/registry' {
     CandidateInfoOf: CandidateInfoOf;
     CandidatePendingAvailability: CandidatePendingAvailability;
     CandidateReceipt: CandidateReceipt;
+    CashYieldIndex: CashYieldIndex;
     ChainId: ChainId;
     ChainProperties: ChainProperties;
     ChainType: ChainType;
@@ -255,6 +257,7 @@ declare module '@polkadot/types/types/registry' {
     CompactAssignmentsWith24: CompactAssignmentsWith24;
     CompactScore: CompactScore;
     CompactScoreCompact: CompactScoreCompact;
+    CompoundAuthoritySignature: CompoundAuthoritySignature;
     ConfigData: ConfigData;
     Consensus: Consensus;
     ConsensusEngineId: ConsensusEngineId;
@@ -472,6 +475,8 @@ declare module '@polkadot/types/types/registry' {
     FundInfo: FundInfo;
     Fungibility: Fungibility;
     Gas: Gas;
+    GatewayNotice: GatewayNotice;
+    GatewayNoticePayload: GatewayNoticePayload;
     GiltBid: GiltBid;
     GlobalValidationData: GlobalValidationData;
     GlobalValidationSchedule: GlobalValidationSchedule;

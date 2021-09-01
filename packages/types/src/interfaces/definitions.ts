@@ -14,4 +14,5 @@ export { default as primitives } from './primitives/definitions';
 export { default as runtime } from './runtime/definitions';
 export { default as stakingPool } from './stakingPool/definitions';
 export { default as renvmBridge } from './renvmBridge/definitions';
+export { default as compoundCash } from './compoundCash/definitions';
 export { default as support } from './support/definitions';

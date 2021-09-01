@@ -19,6 +19,7 @@ import primitives from './primitives';
 // ecosystem
 import renvmBridge from './renvmBridge';
 import { chainBridge, chainSafeTransfer } from './chainSafe';
+import compoundCash from './compoundCash';
 
 import runtime from './runtime';
 import { signedExtensions as acalaSignedExtensions } from './signedExtensions';
@@ -56,7 +57,8 @@ const acalaDefs = {
   // ecosystem
   renvmBridge,
   chainBridge,
-  chainSafeTransfer
+  chainSafeTransfer,
+  compoundCash
 };
 
 export const types = {
