@@ -265,7 +265,8 @@
             "KAR": 128,
             "KUSD": 129,
             "KSM": 130,
-            "LKSM": 131
+            "LKSM": 131,
+            "BNC": 168
         }
     },
     "DexShare": {

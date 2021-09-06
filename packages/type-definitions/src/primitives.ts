@@ -20,11 +20,12 @@ export default {
         KAR: 128,
         KUSD: 129,
         KSM: 130,
-        LKSM: 131
+        LKSM: 131,
         // 148 - 167: External tokens (e.g. bridged)
         // 149: Reserved for renBTC
         // 150: Reserved for CASH
         // 168 - 255: Kusama parachain tokens
+        BNC: 168
       }
     },
     DexShare: {
