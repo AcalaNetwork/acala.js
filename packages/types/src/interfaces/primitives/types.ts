@@ -74,6 +74,7 @@ export interface TokenSymbol extends Enum {
   readonly isKusd: boolean;
   readonly isKsm: boolean;
   readonly isLksm: boolean;
+  readonly isBnc: boolean;
 }
 
 /** @name TradingPair */
