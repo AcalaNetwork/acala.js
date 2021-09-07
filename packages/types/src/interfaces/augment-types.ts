@@ -67,7 +67,7 @@ import type { ProxyAnnouncement, ProxyDefinition, ProxyType } from '@polkadot/ty
 import type { AccountStatus, AccountValidity } from '@polkadot/types/interfaces/purchase';
 import type { ActiveRecovery, RecoveryConfig } from '@polkadot/types/interfaces/recovery';
 import type { RpcMethods } from '@polkadot/types/interfaces/rpc';
-import type { Si0Field, Si0LookupTypeId, Si0Path, Si0Type, Si0TypeDef, Si0TypeDefArray, Si0TypeDefBitSequence, Si0TypeDefCompact, Si0TypeDefComposite, Si0TypeDefPhantom, Si0TypeDefPrimitive, Si0TypeDefSequence, Si0TypeDefTuple, Si0TypeDefVariant, Si0TypeParameter, Si0Variant, SiField, SiLookupTypeId, SiPath, SiType, SiTypeDef, SiTypeDefArray, SiTypeDefBitSequence, SiTypeDefCompact, SiTypeDefComposite, SiTypeDefPrimitive, SiTypeDefRange, SiTypeDefSequence, SiTypeDefTuple, SiTypeDefVariant, SiTypeParameter, SiVariant } from '@polkadot/types/interfaces/scaleInfo';
+import type { Si0Field, Si0LookupTypeId, Si0Path, Si0Type, Si0TypeDef, Si0TypeDefArray, Si0TypeDefBitSequence, Si0TypeDefCompact, Si0TypeDefComposite, Si0TypeDefPhantom, Si0TypeDefPrimitive, Si0TypeDefSequence, Si0TypeDefTuple, Si0TypeDefVariant, Si0TypeParameter, Si0Variant, SiField, SiLookupTypeId, SiPath, SiType, SiTypeDef, SiTypeDefArray, SiTypeDefBitSequence, SiTypeDefCompact, SiTypeDefComposite, SiTypeDefPrimitive, SiTypeDefSequence, SiTypeDefTuple, SiTypeDefVariant, SiTypeParameter, SiVariant } from '@polkadot/types/interfaces/scaleInfo';
 import type { Period, Priority, SchedulePeriod, SchedulePriority, Scheduled, ScheduledTo254, TaskAddress } from '@polkadot/types/interfaces/scheduler';
 import type { BeefyKey, FullIdentification, IdentificationTuple, Keys, MembershipProof, SessionIndex, SessionKeys1, SessionKeys10, SessionKeys10B, SessionKeys2, SessionKeys3, SessionKeys4, SessionKeys5, SessionKeys6, SessionKeys6B, SessionKeys7, SessionKeys7B, SessionKeys8, SessionKeys8B, SessionKeys9, SessionKeys9B, ValidatorCount } from '@polkadot/types/interfaces/session';
 import type { Bid, BidKind, SocietyJudgement, SocietyVote, StrikeCount, VouchingStatus } from '@polkadot/types/interfaces/society';
@@ -80,7 +80,7 @@ import type { Multiplier } from '@polkadot/types/interfaces/txpayment';
 import type { ClassDetails, ClassId, ClassMetadata, DepositBalance, DepositBalanceOf, DestroyWitness, InstanceDetails, InstanceId, InstanceMetadata } from '@polkadot/types/interfaces/uniques';
 import type { Multisig, Timepoint } from '@polkadot/types/interfaces/utility';
 import type { VestingInfo } from '@polkadot/types/interfaces/vesting';
-import type { AssetInstance, AssetInstanceV0, AssetInstanceV1, BodyId, BodyPart, DoubleEncodedCall, Fungibility, InboundStatus, Junction, MultiAsset, MultiAssetFilter, MultiAssetFilterV1, MultiAssetV0, MultiAssetV1, MultiAssets, MultiAssetsV1, MultiLocation, MultiLocationV0, MultiLocationV1, NetworkId, OutboundStatus, Outcome, QueueConfigData, VersionedMultiAsset, VersionedMultiAssets, VersionedMultiLocation, VersionedXcm, WildFungibility, WildMultiAsset, WildMultiAssetV1, Xcm, XcmAssetId, XcmError, XcmOrder, XcmOrderV0, XcmOrderV1, XcmOrigin, XcmOriginKind, XcmResponse, XcmV0, XcmV1, XcmpMessageFormat } from '@polkadot/types/interfaces/xcm';
+import type { AssetInstance, AssetInstanceV0, AssetInstanceV1, BodyId, BodyPart, DoubleEncodedCall, Fungibility, InboundStatus, InstructionV2, InteriorMultiLocation, Junction, JunctionV0, JunctionV1, JunctionV2, Junctions, JunctionsV1, JunctionsV2, MultiAsset, MultiAssetFilter, MultiAssetFilterV1, MultiAssetFilterV2, MultiAssetV0, MultiAssetV1, MultiAssetV2, MultiAssets, MultiAssetsV1, MultiAssetsV2, MultiLocation, MultiLocationV0, MultiLocationV1, MultiLocationV2, NetworkId, OriginKindV0, OriginKindV1, OriginKindV2, OutboundStatus, Outcome, QueryId, QueryStatus, QueueConfigData, Response, ResponseV0, ResponseV1, ResponseV2, ResponseV2Error, ResponseV2Result, VersionMigrationStage, VersionedMultiAsset, VersionedMultiAssets, VersionedMultiLocation, VersionedResponse, VersionedXcm, WeightLimitV2, WildFungibility, WildMultiAsset, WildMultiAssetV1, Xcm, XcmAssetId, XcmError, XcmErrorV0, XcmErrorV1, XcmErrorV2, XcmOrder, XcmOrderV0, XcmOrderV1, XcmOrigin, XcmOriginKind, XcmV0, XcmV1, XcmV2, XcmVersion, XcmpMessageFormat } from '@polkadot/types/interfaces/xcm';
 
 declare module '@polkadot/types/types/registry' {
   export interface InterfaceTypes {
@@ -548,11 +548,19 @@ declare module '@polkadot/types/types/registry' {
     InstanceMetadata: InstanceMetadata;
     InstantiateRequest: InstantiateRequest;
     InstantiateReturnValue: InstantiateReturnValue;
+    InstructionV2: InstructionV2;
     InstructionWeights: InstructionWeights;
+    InteriorMultiLocation: InteriorMultiLocation;
     InvalidDisputeStatementKind: InvalidDisputeStatementKind;
     InvalidTransaction: InvalidTransaction;
     Json: Json;
     Junction: Junction;
+    Junctions: Junctions;
+    JunctionsV1: JunctionsV1;
+    JunctionsV2: JunctionsV2;
+    JunctionV0: JunctionV0;
+    JunctionV1: JunctionV1;
+    JunctionV2: JunctionV2;
     Justification: Justification;
     JustificationNotification: JustificationNotification;
     Justifications: Justifications;
@@ -623,14 +631,18 @@ declare module '@polkadot/types/types/registry' {
     MultiAsset: MultiAsset;
     MultiAssetFilter: MultiAssetFilter;
     MultiAssetFilterV1: MultiAssetFilterV1;
+    MultiAssetFilterV2: MultiAssetFilterV2;
     MultiAssets: MultiAssets;
     MultiAssetsV1: MultiAssetsV1;
+    MultiAssetsV2: MultiAssetsV2;
     MultiAssetV0: MultiAssetV0;
     MultiAssetV1: MultiAssetV1;
+    MultiAssetV2: MultiAssetV2;
     MultiDisputeStatementSet: MultiDisputeStatementSet;
     MultiLocation: MultiLocation;
     MultiLocationV0: MultiLocationV0;
     MultiLocationV1: MultiLocationV1;
+    MultiLocationV2: MultiLocationV2;
     Multiplier: Multiplier;
     Multisig: Multisig;
     MultiSignature: MultiSignature;
@@ -674,6 +686,9 @@ declare module '@polkadot/types/types/registry' {
     OrderedSet: OrderedSet;
     Origin: Origin;
     OriginCaller: OriginCaller;
+    OriginKindV0: OriginKindV0;
+    OriginKindV1: OriginKindV1;
+    OriginKindV2: OriginKindV2;
     OrmlAccountData: OrmlAccountData;
     OrmlBalanceLock: OrmlBalanceLock;
     OrmlVestingSchedule: OrmlVestingSchedule;
@@ -772,6 +787,8 @@ declare module '@polkadot/types/types/registry' {
     ProxyState: ProxyState;
     ProxyType: ProxyType;
     PublicKey: PublicKey;
+    QueryId: QueryId;
+    QueryStatus: QueryStatus;
     QueueConfigData: QueueConfigData;
     QueuedParathread: QueuedParathread;
     Randomness: Randomness;
@@ -826,6 +843,12 @@ declare module '@polkadot/types/types/registry' {
     ReportIdOf: ReportIdOf;
     ReserveData: ReserveData;
     ReserveIdentifier: ReserveIdentifier;
+    Response: Response;
+    ResponseV0: ResponseV0;
+    ResponseV1: ResponseV1;
+    ResponseV2: ResponseV2;
+    ResponseV2Error: ResponseV2Error;
+    ResponseV2Result: ResponseV2Result;
     Retriable: Retriable;
     RewardDestination: RewardDestination;
     RewardPoint: RewardPoint;
@@ -914,7 +937,6 @@ declare module '@polkadot/types/types/registry' {
     SiTypeDefCompact: SiTypeDefCompact;
     SiTypeDefComposite: SiTypeDefComposite;
     SiTypeDefPrimitive: SiTypeDefPrimitive;
-    SiTypeDefRange: SiTypeDefRange;
     SiTypeDefSequence: SiTypeDefSequence;
     SiTypeDefTuple: SiTypeDefTuple;
     SiTypeDefVariant: SiTypeDefVariant;
@@ -1072,7 +1094,9 @@ declare module '@polkadot/types/types/registry' {
     VersionedMultiAsset: VersionedMultiAsset;
     VersionedMultiAssets: VersionedMultiAssets;
     VersionedMultiLocation: VersionedMultiLocation;
+    VersionedResponse: VersionedResponse;
     VersionedXcm: VersionedXcm;
+    VersionMigrationStage: VersionMigrationStage;
     VestingInfo: VestingInfo;
     VestingSchedule: VestingSchedule;
     VestingScheduleOf: VestingScheduleOf;
@@ -1093,6 +1117,7 @@ declare module '@polkadot/types/types/registry' {
     VrfOutput: VrfOutput;
     VrfProof: VrfProof;
     Weight: Weight;
+    WeightLimitV2: WeightLimitV2;
     WeightMultiplier: WeightMultiplier;
     WeightPerClass: WeightPerClass;
     WeightToFeeCoefficient: WeightToFeeCoefficient;
@@ -1107,14 +1132,18 @@ declare module '@polkadot/types/types/registry' {
     Xcm: Xcm;
     XcmAssetId: XcmAssetId;
     XcmError: XcmError;
+    XcmErrorV0: XcmErrorV0;
+    XcmErrorV1: XcmErrorV1;
+    XcmErrorV2: XcmErrorV2;
     XcmOrder: XcmOrder;
     XcmOrderV0: XcmOrderV0;
     XcmOrderV1: XcmOrderV1;
     XcmOrigin: XcmOrigin;
     XcmOriginKind: XcmOriginKind;
     XcmpMessageFormat: XcmpMessageFormat;
-    XcmResponse: XcmResponse;
     XcmV0: XcmV0;
     XcmV1: XcmV1;
+    XcmV2: XcmV2;
+    XcmVersion: XcmVersion;
   }
 }

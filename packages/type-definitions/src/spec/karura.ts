@@ -27,6 +27,7 @@ const typesBundleTypes: OverrideVersionedType[] = [
       Address: 'GenericMultiAddress',
       LookupSource: 'GenericMultiAddress',
       AssetInstance: 'AssetInstanceV0',
+      MultiLocation: 'MultiLocationV0',
       MultiAsset: 'MultiAssetV0',
       Xcm: 'XcmV0',
       XcmOrder: 'XcmOrderV0'

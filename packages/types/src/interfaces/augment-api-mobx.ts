@@ -1052,14 +1052,14 @@ export interface StorageType extends BaseStorageType {
      * 
      * double_map: who, asset_id => u128
      **/
-    abstractFungibleBalances: StorageDoubleMap<MultiLocation | { Here: any } | { X1: any } | { X2: any } | { X3: any } | { X4: any } | { X5: any } | { X6: any } | { X7: any } | { X8: any } | string, Bytes | string, u128>;
+    abstractFungibleBalances: StorageDoubleMap<MultiLocation | { parents?: any; interior?: any } | string, Bytes | string, u128>;
     /**
      * Concrete fungible balances under a given location and a concrete
      * fungible id.
      * 
      * double_map: who, asset_id => u128
      **/
-    concreteFungibleBalances: StorageDoubleMap<MultiLocation | { Here: any } | { X1: any } | { X2: any } | { X3: any } | { X4: any } | { X5: any } | { X6: any } | { X7: any } | { X8: any } | string, MultiLocation | { Here: any } | { X1: any } | { X2: any } | { X3: any } | { X4: any } | { X5: any } | { X6: any } | { X7: any } | { X8: any } | string, u128>;
+    concreteFungibleBalances: StorageDoubleMap<MultiLocation | { parents?: any; interior?: any } | string, MultiLocation | { parents?: any; interior?: any } | string, u128>;
   };
   vesting: {    /**
      * Vesting schedules of an account.
