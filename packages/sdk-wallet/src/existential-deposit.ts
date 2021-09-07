@@ -21,13 +21,15 @@ const EXISTENTIAL_DEPOSIT: ExistentialDepositConfig = {
     DOT: ZERO,
     LDOT: ZERO,
     RENBTC: ZERO,
-    CASH: ZERO
+    CASH: ZERO,
+    BNC: ZERO
   },
   karura: {
     KAR: new FixedPointNumber(0.1, 12),
     KUSD: new FixedPointNumber(0.01, 12),
     KSM: new FixedPointNumber(10 * 0.00001, 12),
     LKSM: new FixedPointNumber(50 * 0.00001, 12),
+    BNC: new FixedPointNumber(800 * 0.00001, 12),
     ACA: MAX,
     AUSD: MAX,
     DOT: MAX,
