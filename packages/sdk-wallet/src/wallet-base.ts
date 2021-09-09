@@ -42,13 +42,17 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
     this.nativeToken = tokenSymbol[0].toString();
 
     tokenSymbol.forEach((item, index) => {
-      const key = item.toString();
-      const currencyId = forceToTokenSymbolCurrencyId(this.api, key);
-      const decimal = Number(tokenDecimals?.[index]) || defaultTokenDecimal;
+      try {
+        const key = item.toString();
+        const currencyId = forceToTokenSymbolCurrencyId(this.api, key);
+        const decimal = Number(tokenDecimals?.[index]) || defaultTokenDecimal;
 
-      this.decimalMap.set(key, Number(tokenDecimals?.[index]) || defaultTokenDecimal);
-      this.currencyIdMap.set(key, currencyId);
-      this.tokenMap.set(key, Token.fromCurrencyId(currencyId, decimal));
+        this.decimalMap.set(key, Number(tokenDecimals?.[index]) || defaultTokenDecimal);
+        this.currencyIdMap.set(key, currencyId);
+        this.tokenMap.set(key, Token.fromCurrencyId(currencyId, decimal));
+      } catch (e) {
+        // ignore eorror
+      }
     });
   }
 
