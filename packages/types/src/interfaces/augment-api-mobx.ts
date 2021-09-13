@@ -577,25 +577,25 @@ export interface StorageType extends BaseStorageType {
      * 
      * DexSavingRewardRate: map PoolId => Rate
      **/
-    dexSavingRewardRate: StorageMap<PoolId | { LoansIncentive: any } | { DexIncentive: any } | { HomaIncentive: any } | { DexSaving: any } | { HomaValidatorAllowance: any } | string, Rate>;
+    dexSavingRewardRate: StorageMap<PoolId | { Loans: any } | { Dex: any } | string, Rate>;
     /**
      * Mapping from pool to its fixed reward amount per period.
      * 
      * IncentiveRewardAmount: map PoolId => Balance
      **/
-    incentiveRewardAmount: StorageMap<PoolId | { LoansIncentive: any } | { DexIncentive: any } | { HomaIncentive: any } | { DexSaving: any } | { HomaValidatorAllowance: any } | string, Balance>;
+    incentiveRewardAmount: StorageMap<PoolId | { Loans: any } | { Dex: any } | string, Balance>;
     /**
      * Mapping from pool to its payout deduction rate.
      * 
      * PayoutDeductionRates: map PoolId => Rate
      **/
-    payoutDeductionRates: StorageMap<PoolId | { LoansIncentive: any } | { DexIncentive: any } | { HomaIncentive: any } | { DexSaving: any } | { HomaValidatorAllowance: any } | string, Rate>;
+    payoutDeductionRates: StorageMap<PoolId | { Loans: any } | { Dex: any } | string, Rate>;
     /**
      * The pending rewards amount, actual available rewards amount may be deducted
      * 
      * PendingRewards: double_map PoolId, AccountId => Balance
      **/
-    pendingRewards: StorageDoubleMap<PoolId | { LoansIncentive: any } | { DexIncentive: any } | { HomaIncentive: any } | { DexSaving: any } | { HomaValidatorAllowance: any } | string, AccountId | string, Balance>;
+    pendingRewards: StorageDoubleMap<PoolId | { Loans: any } | { Dex: any } | string, AccountId | string, Balance>;
   };
   loans: {    /**
      * The collateralized debit positions, map from
@@ -787,12 +787,12 @@ export interface StorageType extends BaseStorageType {
   rewards: {    /**
      * Stores reward pool info.
      **/
-    pools: StorageMap<PoolId | { LoansIncentive: any } | { DexIncentive: any } | { HomaIncentive: any } | { DexSaving: any } | { HomaValidatorAllowance: any } | string, PoolInfo>;
+    pools: StorageMap<PoolId | { Loans: any } | { Dex: any } | string, PoolInfo>;
     /**
      * Record share amount and withdrawn reward amount for specific `AccountId`
      * under `PoolId`.
      **/
-    shareAndWithdrawnReward: StorageDoubleMap<PoolId | { LoansIncentive: any } | { DexIncentive: any } | { HomaIncentive: any } | { DexSaving: any } | { HomaValidatorAllowance: any } | string, AccountId | string, ITuple<[Share, Balance]>>;
+    shareAndWithdrawnReward: StorageDoubleMap<PoolId | { Loans: any } | { Dex: any } | string, AccountId | string, ITuple<[Share, Balance]>>;
   };
   scheduler: {    /**
      * Items to be executed, indexed by the block number that they should be executed on.

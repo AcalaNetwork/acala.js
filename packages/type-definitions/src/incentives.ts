@@ -3,11 +3,8 @@ export default {
   types: {
     PoolId: {
       _enum: {
-        LoansIncentive: 'CurrencyId',
-        DexIncentive: 'CurrencyId',
-        HomaIncentive: 'Null',
-        DexSaving: 'CurrencyId',
-        HomaValidatorAllowance: 'AccountId'
+        Loans: 'CurrencyId',
+        Dex: 'CurrencyId'
       }
     }
   }
