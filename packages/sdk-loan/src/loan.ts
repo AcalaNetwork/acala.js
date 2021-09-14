@@ -32,7 +32,7 @@ export interface LoanPosition extends LoanParams {
   maxGenerate: FixedPointNumber;
 }
 
-const YEAR = 365 * 24 * 60 * 60; // second of one year
+const YEAR_SECONDS = 365 * 24 * 60 * 60; // second of one year
 
 export class LoanRx {
   private api: ApiRx;
@@ -151,8 +151,8 @@ export class LoanRx {
     return result;
   }
 
-  private getStableFeeAPR(liquidationRatio: FixedPointNumber): FixedPointNumber {
-    return liquidationRatio.times(new FixedPointNumber(YEAR));
+  private getStableFeeAPR(interestRate: FixedPointNumber): FixedPointNumber {
+    return new FixedPointNumber(Math.pow(Number(interestRate.plus(FixedPointNumber.ONE).toString()), YEAR_SECONDS) - 1);
   }
 
   private getLiquidationPrice(
