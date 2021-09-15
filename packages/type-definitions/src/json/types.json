@@ -57,9 +57,10 @@
         "perPeriod": "Compact<Balance>"
     },
     "VestingScheduleOf": "OrmlVestingSchedule",
+    "OrmlCurrencyId": "u8",
     "PoolInfo": {
         "totalShares": "Share",
-        "rewards": "BTreeMap<Balance, Balance>"
+        "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
     },
     "CompactBalance": "Compact<Balance>",
     "PoolInfoV0": {
@@ -69,6 +70,63 @@
     },
     "Share": "u128",
     "OracleValue": "Price",
+    "Amount": "i128",
+    "AmountOf": "Amount",
+    "AuctionId": "u32",
+    "AuctionIdOf": "AuctionId",
+    "TokenSymbol": {
+        "_enum": {
+            "ACA": 0,
+            "AUSD": 1,
+            "DOT": 2,
+            "LDOT": 3,
+            "RENBTC": 20,
+            "CASH": 21,
+            "KAR": 128,
+            "KUSD": 129,
+            "KSM": 130,
+            "LKSM": 131,
+            "BNC": 168
+        }
+    },
+    "DexShare": {
+        "_enum": {
+            "Token": "TokenSymbol",
+            "Erc20": "EvmAddress"
+        }
+    },
+    "CurrencyId": {
+        "_enum": {
+            "Token": "TokenSymbol",
+            "DEXShare": "(DexShare, DexShare)",
+            "ERC20": "EvmAddress",
+            "ChainSafe": "[u8; 32]"
+        }
+    },
+    "CurrencyIdOf": "CurrencyId",
+    "AirDropCurrencyId": {
+        "_enum": [
+            "KAR",
+            "ACA"
+        ]
+    },
+    "AuthoritysOriginId": {
+        "_enum": [
+            "Root",
+            "Treasury",
+            "HonzonTreasury",
+            "HomaTreasury",
+            "TreasuryReserve"
+        ]
+    },
+    "AcalaDataProviderId": {
+        "_enum": [
+            "Aggregated",
+            "Acala",
+            "Band"
+        ]
+    },
+    "TradingPair": "(CurrencyId,  CurrencyId)",
     "PalletBalanceOf": "Balance",
     "CollateralAuctionItem": {
         "refundRecipient": "AccountId",
@@ -261,63 +319,6 @@
         "active": "Balance",
         "unlocking": "Vec<HomaUnlockChunk>"
     },
-    "Amount": "i128",
-    "AmountOf": "Amount",
-    "AuctionId": "u32",
-    "AuctionIdOf": "AuctionId",
-    "TokenSymbol": {
-        "_enum": {
-            "ACA": 0,
-            "AUSD": 1,
-            "DOT": 2,
-            "LDOT": 3,
-            "RENBTC": 20,
-            "CASH": 21,
-            "KAR": 128,
-            "KUSD": 129,
-            "KSM": 130,
-            "LKSM": 131,
-            "BNC": 168
-        }
-    },
-    "DexShare": {
-        "_enum": {
-            "Token": "TokenSymbol",
-            "Erc20": "EvmAddress"
-        }
-    },
-    "CurrencyId": {
-        "_enum": {
-            "Token": "TokenSymbol",
-            "DEXShare": "(DexShare, DexShare)",
-            "ERC20": "EvmAddress",
-            "ChainSafe": "[u8; 32]"
-        }
-    },
-    "CurrencyIdOf": "CurrencyId",
-    "AirDropCurrencyId": {
-        "_enum": [
-            "KAR",
-            "ACA"
-        ]
-    },
-    "AuthoritysOriginId": {
-        "_enum": [
-            "Root",
-            "Treasury",
-            "HonzonTreasury",
-            "HomaTreasury",
-            "TreasuryReserve"
-        ]
-    },
-    "AcalaDataProviderId": {
-        "_enum": [
-            "Aggregated",
-            "Acala",
-            "Band"
-        ]
-    },
-    "TradingPair": "(CurrencyId,  CurrencyId)",
     "OracleKey": "CurrencyId",
     "AsOriginId": "AuthoritysOriginId",
     "ProxyType": {

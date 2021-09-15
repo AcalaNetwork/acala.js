@@ -36,6 +36,7 @@ const additionalOverride = {
 };
 
 const acalaDefs = {
+  primitives,
   accounts,
   auctionManager,
   cdpEngine,
@@ -48,7 +49,6 @@ const acalaDefs = {
   loans,
   nft,
   nomineesElection,
-  primitives,
   runtime,
   stakingPool,
   support,

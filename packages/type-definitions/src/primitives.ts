@@ -55,6 +55,9 @@ export default {
     TradingPair: '(CurrencyId,  CurrencyId)'
   },
   typesAlias: {
+    rewards: {
+      OrmlCurrencyId: 'CurrencyId'
+    },
     oracle: {
       DataProviderId: 'AcalaDataProviderId'
     }
