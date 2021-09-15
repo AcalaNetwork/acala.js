@@ -237,9 +237,14 @@
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
                         "PoolInfo": {
+                            "totalShares": "Share",
+                            "rewards": "BTreeMap<Balance, Balance>"
+                        },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
                             "totalShares": "Compact<Share>",
-                            "totalRewards": "Compact<Balance>",
-                            "totalWithdrawnRewards": "Compact<Balance>"
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
                         },
                         "Share": "u128",
                         "OracleValue": "Price",
@@ -373,6 +378,15 @@
                             "_enum": {
                                 "Loans": "CurrencyId",
                                 "Dex": "CurrencyId"
+                            }
+                        },
+                        "PoolIdV0": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
                             }
                         },
                         "Position": {
@@ -613,9 +627,14 @@
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
                         "PoolInfo": {
+                            "totalShares": "Share",
+                            "rewards": "BTreeMap<Balance, Balance>"
+                        },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
                             "totalShares": "Compact<Share>",
-                            "totalRewards": "Compact<Balance>",
-                            "totalWithdrawnRewards": "Compact<Balance>"
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
                         },
                         "Share": "u128",
                         "OracleValue": "Price",
@@ -749,6 +768,15 @@
                             "_enum": {
                                 "Loans": "CurrencyId",
                                 "Dex": "CurrencyId"
+                            }
+                        },
+                        "PoolIdV0": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
                             }
                         },
                         "Position": {
@@ -989,9 +1017,14 @@
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
                         "PoolInfo": {
+                            "totalShares": "Share",
+                            "rewards": "BTreeMap<Balance, Balance>"
+                        },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
                             "totalShares": "Compact<Share>",
-                            "totalRewards": "Compact<Balance>",
-                            "totalWithdrawnRewards": "Compact<Balance>"
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
                         },
                         "Share": "u128",
                         "OracleValue": "Price",
@@ -1125,6 +1158,15 @@
                             "_enum": {
                                 "Loans": "CurrencyId",
                                 "Dex": "CurrencyId"
+                            }
+                        },
+                        "PoolIdV0": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
                             }
                         },
                         "Position": {
@@ -1375,9 +1417,14 @@
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
                         "PoolInfo": {
+                            "totalShares": "Share",
+                            "rewards": "BTreeMap<Balance, Balance>"
+                        },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
                             "totalShares": "Compact<Share>",
-                            "totalRewards": "Compact<Balance>",
-                            "totalWithdrawnRewards": "Compact<Balance>"
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
                         },
                         "Share": "u128",
                         "OracleValue": "Price",
@@ -1513,6 +1560,15 @@
                                 "DexIncentive": "CurrencyId",
                                 "DexSaving": "CurrencyId",
                                 "Homa": "Null"
+                            }
+                        },
+                        "PoolIdV0": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
                             }
                         },
                         "Position": {
@@ -1756,9 +1812,14 @@
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
                         "PoolInfo": {
+                            "totalShares": "Share",
+                            "rewards": "BTreeMap<Balance, Balance>"
+                        },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
                             "totalShares": "Compact<Share>",
-                            "totalRewards": "Compact<Balance>",
-                            "totalWithdrawnRewards": "Compact<Balance>"
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
                         },
                         "Share": "u128",
                         "OracleValue": "Price",
@@ -1892,6 +1953,15 @@
                             "_enum": {
                                 "Loans": "CurrencyId",
                                 "Dex": "CurrencyId"
+                            }
+                        },
+                        "PoolIdV0": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
                             }
                         },
                         "Position": {
@@ -2140,9 +2210,14 @@
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
                         "PoolInfo": {
+                            "totalShares": "Share",
+                            "rewards": "BTreeMap<Balance, Balance>"
+                        },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
                             "totalShares": "Compact<Share>",
-                            "totalRewards": "Compact<Balance>",
-                            "totalWithdrawnRewards": "Compact<Balance>"
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
                         },
                         "Share": "u128",
                         "OracleValue": "Price",
@@ -2276,6 +2351,15 @@
                             "_enum": {
                                 "Loans": "CurrencyId",
                                 "Dex": "CurrencyId"
+                            }
+                        },
+                        "PoolIdV0": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
                             }
                         },
                         "Position": {
@@ -2518,9 +2602,14 @@
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
                         "PoolInfo": {
+                            "totalShares": "Share",
+                            "rewards": "BTreeMap<Balance, Balance>"
+                        },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
                             "totalShares": "Compact<Share>",
-                            "totalRewards": "Compact<Balance>",
-                            "totalWithdrawnRewards": "Compact<Balance>"
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
                         },
                         "Share": "u128",
                         "OracleValue": "Price",
@@ -2654,6 +2743,15 @@
                             "_enum": {
                                 "Loans": "CurrencyId",
                                 "Dex": "CurrencyId"
+                            }
+                        },
+                        "PoolIdV0": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
                             }
                         },
                         "Position": {
@@ -2900,6 +2998,12 @@
                             "totalRewards": "Compact<Balance>",
                             "totalWithdrawnRewards": "Compact<Balance>"
                         },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
+                            "totalShares": "Compact<Share>",
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
+                        },
                         "Share": "u128",
                         "OracleValue": "Price",
                         "PalletBalanceOf": "Balance",
@@ -3029,6 +3133,15 @@
                             "unbonding": "Option<(Balance, BlockNumber)>"
                         },
                         "PoolId": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
+                            }
+                        },
+                        "PoolIdV0": {
                             "_enum": {
                                 "LoansIncentive": "CurrencyId",
                                 "DexIncentive": "CurrencyId",
@@ -3471,9 +3584,14 @@
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
                         "PoolInfo": {
+                            "totalShares": "Share",
+                            "rewards": "BTreeMap<Balance, Balance>"
+                        },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
                             "totalShares": "Compact<Share>",
-                            "totalRewards": "Compact<Balance>",
-                            "totalWithdrawnRewards": "Compact<Balance>"
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
                         },
                         "Share": "u128",
                         "OracleValue": "Price",
@@ -3607,6 +3725,15 @@
                             "_enum": {
                                 "Loans": "CurrencyId",
                                 "Dex": "CurrencyId"
+                            }
+                        },
+                        "PoolIdV0": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
                             }
                         },
                         "Position": {
@@ -3847,9 +3974,14 @@
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
                         "PoolInfo": {
+                            "totalShares": "Share",
+                            "rewards": "BTreeMap<Balance, Balance>"
+                        },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
                             "totalShares": "Compact<Share>",
-                            "totalRewards": "Compact<Balance>",
-                            "totalWithdrawnRewards": "Compact<Balance>"
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
                         },
                         "Share": "u128",
                         "OracleValue": "Price",
@@ -3983,6 +4115,15 @@
                             "_enum": {
                                 "Loans": "CurrencyId",
                                 "Dex": "CurrencyId"
+                            }
+                        },
+                        "PoolIdV0": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
                             }
                         },
                         "Position": {
@@ -4223,9 +4364,14 @@
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
                         "PoolInfo": {
+                            "totalShares": "Share",
+                            "rewards": "BTreeMap<Balance, Balance>"
+                        },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
                             "totalShares": "Compact<Share>",
-                            "totalRewards": "Compact<Balance>",
-                            "totalWithdrawnRewards": "Compact<Balance>"
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
                         },
                         "Share": "u128",
                         "OracleValue": "Price",
@@ -4359,6 +4505,15 @@
                             "_enum": {
                                 "Loans": "CurrencyId",
                                 "Dex": "CurrencyId"
+                            }
+                        },
+                        "PoolIdV0": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
                             }
                         },
                         "Position": {
@@ -4609,9 +4764,14 @@
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
                         "PoolInfo": {
+                            "totalShares": "Share",
+                            "rewards": "BTreeMap<Balance, Balance>"
+                        },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
                             "totalShares": "Compact<Share>",
-                            "totalRewards": "Compact<Balance>",
-                            "totalWithdrawnRewards": "Compact<Balance>"
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
                         },
                         "Share": "u128",
                         "OracleValue": "Price",
@@ -4747,6 +4907,15 @@
                                 "DexIncentive": "CurrencyId",
                                 "DexSaving": "CurrencyId",
                                 "Homa": "Null"
+                            }
+                        },
+                        "PoolIdV0": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
                             }
                         },
                         "Position": {
@@ -4990,9 +5159,14 @@
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
                         "PoolInfo": {
+                            "totalShares": "Share",
+                            "rewards": "BTreeMap<Balance, Balance>"
+                        },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
                             "totalShares": "Compact<Share>",
-                            "totalRewards": "Compact<Balance>",
-                            "totalWithdrawnRewards": "Compact<Balance>"
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
                         },
                         "Share": "u128",
                         "OracleValue": "Price",
@@ -5126,6 +5300,15 @@
                             "_enum": {
                                 "Loans": "CurrencyId",
                                 "Dex": "CurrencyId"
+                            }
+                        },
+                        "PoolIdV0": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
                             }
                         },
                         "Position": {
@@ -5374,9 +5557,14 @@
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
                         "PoolInfo": {
+                            "totalShares": "Share",
+                            "rewards": "BTreeMap<Balance, Balance>"
+                        },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
                             "totalShares": "Compact<Share>",
-                            "totalRewards": "Compact<Balance>",
-                            "totalWithdrawnRewards": "Compact<Balance>"
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
                         },
                         "Share": "u128",
                         "OracleValue": "Price",
@@ -5510,6 +5698,15 @@
                             "_enum": {
                                 "Loans": "CurrencyId",
                                 "Dex": "CurrencyId"
+                            }
+                        },
+                        "PoolIdV0": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
                             }
                         },
                         "Position": {
@@ -5752,9 +5949,14 @@
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
                         "PoolInfo": {
+                            "totalShares": "Share",
+                            "rewards": "BTreeMap<Balance, Balance>"
+                        },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
                             "totalShares": "Compact<Share>",
-                            "totalRewards": "Compact<Balance>",
-                            "totalWithdrawnRewards": "Compact<Balance>"
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
                         },
                         "Share": "u128",
                         "OracleValue": "Price",
@@ -5888,6 +6090,15 @@
                             "_enum": {
                                 "Loans": "CurrencyId",
                                 "Dex": "CurrencyId"
+                            }
+                        },
+                        "PoolIdV0": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
                             }
                         },
                         "Position": {
@@ -6134,6 +6345,12 @@
                             "totalRewards": "Compact<Balance>",
                             "totalWithdrawnRewards": "Compact<Balance>"
                         },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
+                            "totalShares": "Compact<Share>",
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
+                        },
                         "Share": "u128",
                         "OracleValue": "Price",
                         "PalletBalanceOf": "Balance",
@@ -6263,6 +6480,15 @@
                             "unbonding": "Option<(Balance, BlockNumber)>"
                         },
                         "PoolId": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
+                            }
+                        },
+                        "PoolIdV0": {
                             "_enum": {
                                 "LoansIncentive": "CurrencyId",
                                 "DexIncentive": "CurrencyId",
@@ -6705,9 +6931,14 @@
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
                         "PoolInfo": {
+                            "totalShares": "Share",
+                            "rewards": "BTreeMap<Balance, Balance>"
+                        },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
                             "totalShares": "Compact<Share>",
-                            "totalRewards": "Compact<Balance>",
-                            "totalWithdrawnRewards": "Compact<Balance>"
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
                         },
                         "Share": "u128",
                         "OracleValue": "Price",
@@ -6841,6 +7072,15 @@
                             "_enum": {
                                 "Loans": "CurrencyId",
                                 "Dex": "CurrencyId"
+                            }
+                        },
+                        "PoolIdV0": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
                             }
                         },
                         "Position": {
@@ -7081,9 +7321,14 @@
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
                         "PoolInfo": {
+                            "totalShares": "Share",
+                            "rewards": "BTreeMap<Balance, Balance>"
+                        },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
                             "totalShares": "Compact<Share>",
-                            "totalRewards": "Compact<Balance>",
-                            "totalWithdrawnRewards": "Compact<Balance>"
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
                         },
                         "Share": "u128",
                         "OracleValue": "Price",
@@ -7217,6 +7462,15 @@
                             "_enum": {
                                 "Loans": "CurrencyId",
                                 "Dex": "CurrencyId"
+                            }
+                        },
+                        "PoolIdV0": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
                             }
                         },
                         "Position": {
@@ -7457,9 +7711,14 @@
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
                         "PoolInfo": {
+                            "totalShares": "Share",
+                            "rewards": "BTreeMap<Balance, Balance>"
+                        },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
                             "totalShares": "Compact<Share>",
-                            "totalRewards": "Compact<Balance>",
-                            "totalWithdrawnRewards": "Compact<Balance>"
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
                         },
                         "Share": "u128",
                         "OracleValue": "Price",
@@ -7593,6 +7852,15 @@
                             "_enum": {
                                 "Loans": "CurrencyId",
                                 "Dex": "CurrencyId"
+                            }
+                        },
+                        "PoolIdV0": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
                             }
                         },
                         "Position": {
@@ -7843,9 +8111,14 @@
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
                         "PoolInfo": {
+                            "totalShares": "Share",
+                            "rewards": "BTreeMap<Balance, Balance>"
+                        },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
                             "totalShares": "Compact<Share>",
-                            "totalRewards": "Compact<Balance>",
-                            "totalWithdrawnRewards": "Compact<Balance>"
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
                         },
                         "Share": "u128",
                         "OracleValue": "Price",
@@ -7981,6 +8254,15 @@
                                 "DexIncentive": "CurrencyId",
                                 "DexSaving": "CurrencyId",
                                 "Homa": "Null"
+                            }
+                        },
+                        "PoolIdV0": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
                             }
                         },
                         "Position": {
@@ -8224,9 +8506,14 @@
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
                         "PoolInfo": {
+                            "totalShares": "Share",
+                            "rewards": "BTreeMap<Balance, Balance>"
+                        },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
                             "totalShares": "Compact<Share>",
-                            "totalRewards": "Compact<Balance>",
-                            "totalWithdrawnRewards": "Compact<Balance>"
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
                         },
                         "Share": "u128",
                         "OracleValue": "Price",
@@ -8360,6 +8647,15 @@
                             "_enum": {
                                 "Loans": "CurrencyId",
                                 "Dex": "CurrencyId"
+                            }
+                        },
+                        "PoolIdV0": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
                             }
                         },
                         "Position": {
@@ -8608,9 +8904,14 @@
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
                         "PoolInfo": {
+                            "totalShares": "Share",
+                            "rewards": "BTreeMap<Balance, Balance>"
+                        },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
                             "totalShares": "Compact<Share>",
-                            "totalRewards": "Compact<Balance>",
-                            "totalWithdrawnRewards": "Compact<Balance>"
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
                         },
                         "Share": "u128",
                         "OracleValue": "Price",
@@ -8744,6 +9045,15 @@
                             "_enum": {
                                 "Loans": "CurrencyId",
                                 "Dex": "CurrencyId"
+                            }
+                        },
+                        "PoolIdV0": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
                             }
                         },
                         "Position": {
@@ -8986,9 +9296,14 @@
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
                         "PoolInfo": {
+                            "totalShares": "Share",
+                            "rewards": "BTreeMap<Balance, Balance>"
+                        },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
                             "totalShares": "Compact<Share>",
-                            "totalRewards": "Compact<Balance>",
-                            "totalWithdrawnRewards": "Compact<Balance>"
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
                         },
                         "Share": "u128",
                         "OracleValue": "Price",
@@ -9122,6 +9437,15 @@
                             "_enum": {
                                 "Loans": "CurrencyId",
                                 "Dex": "CurrencyId"
+                            }
+                        },
+                        "PoolIdV0": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
                             }
                         },
                         "Position": {
@@ -9368,6 +9692,12 @@
                             "totalRewards": "Compact<Balance>",
                             "totalWithdrawnRewards": "Compact<Balance>"
                         },
+                        "CompactBalance": "Compact<Balance>",
+                        "PoolInfoV0": {
+                            "totalShares": "Compact<Share>",
+                            "totalRewards": "CompactBalance",
+                            "totalWithdrawnRewards": "CompactBalance"
+                        },
                         "Share": "u128",
                         "OracleValue": "Price",
                         "PalletBalanceOf": "Balance",
@@ -9497,6 +9827,15 @@
                             "unbonding": "Option<(Balance, BlockNumber)>"
                         },
                         "PoolId": {
+                            "_enum": {
+                                "LoansIncentive": "CurrencyId",
+                                "DexIncentive": "CurrencyId",
+                                "HomaIncentive": "Null",
+                                "DexSaving": "CurrencyId",
+                                "HomaValidatorAllowance": "AccountId"
+                            }
+                        },
+                        "PoolIdV0": {
                             "_enum": {
                                 "LoansIncentive": "CurrencyId",
                                 "DexIncentive": "CurrencyId",

@@ -10,7 +10,7 @@ import type { BalanceRequest, BalanceWrapper, TradingPairProvisionParameters, Tr
 import type { CallRequest, CodeInfo, Erc20Info, EstimateResourcesResponse, EvmAccountInfo, EvmAddress, EvmContractInfo } from '@acala-network/types/interfaces/evm';
 import type { RedeemStrategy } from '@acala-network/types/interfaces/homa';
 import type { Guarantee, RelaychainAccountId, SlashInfo, ValidatorBacking } from '@acala-network/types/interfaces/homaValidatorList';
-import type { PoolId } from '@acala-network/types/interfaces/incentives';
+import type { PoolId, PoolIdV0 } from '@acala-network/types/interfaces/incentives';
 import type { Position } from '@acala-network/types/interfaces/loans';
 import type { Attributes, CID, ClassData, ClassIdOf, ClassInfoOf, NFTBalance, NFTBalanceOf, NFTClassId, Properties, TokenData, TokenId, TokenIdOf, TokenInfoOf } from '@acala-network/types/interfaces/nft';
 import type { BondingLedger, HomaUnlockChunk, NomineeId } from '@acala-network/types/interfaces/nomineesElection';
@@ -22,7 +22,7 @@ import type { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/
 import type { AuthorityOrigin, CallOf, DelayedOrigin, DispatchTime, ScheduleTaskIndex } from '@open-web3/orml-types/interfaces/authority';
 import type { GraduallyUpdate, StorageKeyBytes, StorageValue, StorageValueBytes } from '@open-web3/orml-types/interfaces/graduallyUpdates';
 import type { DataProviderId, OrderedSet, RpcDataProviderId, TimestampedValue, TimestampedValueOf } from '@open-web3/orml-types/interfaces/oracle';
-import type { PoolInfo, Share } from '@open-web3/orml-types/interfaces/rewards';
+import type { CompactBalance, PoolInfo, PoolInfoV0, Share } from '@open-web3/orml-types/interfaces/rewards';
 import type { OrmlAccountData, OrmlBalanceLock } from '@open-web3/orml-types/interfaces/tokens';
 import type { AuctionInfo, DelayedDispatchTime, DispatchId, Price } from '@open-web3/orml-types/interfaces/traits';
 import type { OrmlVestingSchedule, VestingScheduleOf } from '@open-web3/orml-types/interfaces/vesting';
@@ -253,6 +253,7 @@ declare module '@polkadot/types/types/registry' {
     CompactAssignmentsTo265: CompactAssignmentsTo265;
     CompactAssignmentsWith16: CompactAssignmentsWith16;
     CompactAssignmentsWith24: CompactAssignmentsWith24;
+    CompactBalance: CompactBalance;
     CompactScore: CompactScore;
     CompactScoreCompact: CompactScoreCompact;
     ConfigData: ConfigData;
@@ -764,7 +765,9 @@ declare module '@polkadot/types/types/registry' {
     PolkadotAccountId: PolkadotAccountId;
     PolkadotAccountIdOf: PolkadotAccountIdOf;
     PoolId: PoolId;
+    PoolIdV0: PoolIdV0;
     PoolInfo: PoolInfo;
+    PoolInfoV0: PoolInfoV0;
     PortableRegistry: PortableRegistry;
     PortableType: PortableType;
     Position: Position;

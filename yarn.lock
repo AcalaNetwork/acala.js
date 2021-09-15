@@ -11,7 +11,7 @@ __metadata:
   dependencies:
     "@acala-network/types": 2.2.2-5
     "@babel/runtime": ^7.10.2
-    "@open-web3/orml-types": ^0.9.4-34
+    "@open-web3/orml-types": ^0.9.4-36
     "@polkadot/api-derive": ^5.8.3
   languageName: unknown
   linkType: soft
@@ -23,7 +23,7 @@ __metadata:
     "@acala-network/api-derive": 2.2.2-5
     "@acala-network/types": 2.2.2-5
     "@babel/runtime": ^7.10.2
-    "@open-web3/orml-api-derive": ^0.9.4-34
+    "@open-web3/orml-api-derive": ^0.9.4-36
     "@polkadot/api": ^5.8.3
     "@polkadot/rpc-core": ^5.8.3
   languageName: unknown
@@ -109,7 +109,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@acala-network/type-definitions@workspace:packages/type-definitions"
   dependencies:
-    "@open-web3/orml-type-definitions": ^0.9.4-34
+    "@open-web3/orml-type-definitions": ^0.9.4-36
   languageName: unknown
   linkType: soft
 
@@ -119,8 +119,8 @@ __metadata:
   dependencies:
     "@acala-network/type-definitions": 2.2.2-5
     "@babel/runtime": ^7.10.2
-    "@open-web3/api-mobx": ^0.9.4-34
-    "@open-web3/orml-types": ^0.9.4-34
+    "@open-web3/api-mobx": ^0.9.4-36
+    "@open-web3/orml-types": ^0.9.4-36
     "@polkadot/api": ^5.8.3
     "@polkadot/typegen": ^5.8.3
     "@polkadot/types": ^5.8.3
@@ -2170,15 +2170,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@open-web3/api-mobx@npm:^0.9.4-34":
-  version: 0.9.4-34
-  resolution: "@open-web3/api-mobx@npm:0.9.4-34"
+"@open-web3/api-mobx@npm:^0.9.4-36":
+  version: 0.9.4-36
+  resolution: "@open-web3/api-mobx@npm:0.9.4-36"
   dependencies:
     mobx: ^5.15.7
     mobx-utils: ^5.6.2
   peerDependencies:
     "@polkadot/api": 5.*
-  checksum: 5cd97152a7c0971769dd1ad0fd1da71192eb7ef7f3241dcca9638e471659185eb4b0186f8fc5e17edde5681fc8a1c195de4f7dc1e9e97cce47e0ccfaffe7d713
+  checksum: 848e8720003e6df5d66faed84a295f08cdbc54955ccb9a49507dd50ab33a4419f1b25286258cb9394a26eb5218c2332cde15aa1188a9541ce3afe183e246e17c
   languageName: node
   linkType: hard
 
@@ -2276,46 +2276,46 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@open-web3/orml-api-derive@npm:^0.9.4-34":
-  version: 0.9.4-34
-  resolution: "@open-web3/orml-api-derive@npm:0.9.4-34"
+"@open-web3/orml-api-derive@npm:^0.9.4-36":
+  version: 0.9.4-36
+  resolution: "@open-web3/orml-api-derive@npm:0.9.4-36"
   dependencies:
     memoizee: ^0.4.15
     rxjs: ^7.2.0
   peerDependencies:
     "@polkadot/api": 5.*
-  checksum: d585321b4c053f35feb7df28608ea37c32964a34bf00a25ff616d6ba781e5681c1f9738f52380f78f7af15ea44ac54e2de46c65e2dbedbafb6e2be6634e5f4fe
+  checksum: 2b2756c00d8ae1e6d27aa40aab23ddb066e5e13dd60cbecbcbb151eee91af4c1dcbb31c180080d396374b6617d7340484441fafe307aa4706c957623ff40878d
   languageName: node
   linkType: hard
 
-"@open-web3/orml-type-definitions@npm:0.9.4-34, @open-web3/orml-type-definitions@npm:^0.9.4-34":
-  version: 0.9.4-34
-  resolution: "@open-web3/orml-type-definitions@npm:0.9.4-34"
+"@open-web3/orml-type-definitions@npm:0.9.4-36, @open-web3/orml-type-definitions@npm:^0.9.4-36":
+  version: 0.9.4-36
+  resolution: "@open-web3/orml-type-definitions@npm:0.9.4-36"
   dependencies:
     lodash.merge: ^4.6.2
-  checksum: 3f034c51af6759e54c5dfd632c4f11395de9bad5d5598c0d7b46aa93055b016ace455ed04e472fdabdc27e5705805ac7deb6f55e142453ed582605d60c7eb28e
+  checksum: acdc24428be173353d1fbe0162a5ba4a3e79fc9375a03a75416aff33dda17cb970a9b82841da5a09eb8b6560c845d731816d21962cbd8a545591c300a9ca666b
   languageName: node
   linkType: hard
 
-"@open-web3/orml-types@npm:^0.9.4-34":
-  version: 0.9.4-34
-  resolution: "@open-web3/orml-types@npm:0.9.4-34"
+"@open-web3/orml-types@npm:^0.9.4-36":
+  version: 0.9.4-36
+  resolution: "@open-web3/orml-types@npm:0.9.4-36"
   dependencies:
-    "@open-web3/orml-type-definitions": 0.9.4-34
+    "@open-web3/orml-type-definitions": 0.9.4-36
   peerDependencies:
     "@polkadot/api": 5.*
     "@polkadot/typegen": 5.*
-  checksum: 85859711ceb73a83f34fc8e909c7ac1608b32bb063d969bcd9b3caf77cc47a90880037118c5a0cf8c280855857c51976096a3030e4e42e2791c94050136d887a
+  checksum: a5d3a9255403018cbddd342ecedbd72dce872258ef60ab8ee7741fa9632ece832c8e5ca46a7559b3a3a5e97c376ef9bc07cc36418af68b68a833e394272e5ff7
   languageName: node
   linkType: hard
 
-"@open-web3/util@npm:^0.9.4-34":
-  version: 0.9.4-34
-  resolution: "@open-web3/util@npm:0.9.4-34"
+"@open-web3/util@npm:^0.9.4-36":
+  version: 0.9.4-36
+  resolution: "@open-web3/util@npm:0.9.4-36"
   dependencies:
     "@yarnpkg/lockfile": ^1.1.0
     big.js: ^6.1.1
-  checksum: 4addcf0a4a2b817ae4c02b37a8560a54f32a44a8767afe60a86b25fb3b1a6dd487004019e2f8a4eaa1c7cea20b7f45f6d2f52addb7469b30f73f488718e2b4fe
+  checksum: e9ebe32a4856b125d6ee4583457e2c1b1bc8f4e7616ebab581bd226fdc383e2ef25593a342add9c2aa045ffc7dcd3e45220126b769770cfe8c790f6f4660910d
   languageName: node
   linkType: hard
 
@@ -10164,7 +10164,7 @@ resolve@^2.0.0-next.3:
     "@babel/register": ^7.13.6
     "@babel/runtime": ^7.14.0
     "@open-web3/dev-config": ^0.1.13
-    "@open-web3/util": ^0.9.4-34
+    "@open-web3/util": ^0.9.4-36
     "@types/jest": ^25.2.3
     ts-node: ^8.6.1
     tsconfig-paths: ^3.9.0
