@@ -1,6 +1,6 @@
 import type { OverrideVersionedType } from '@polkadot/types/types';
 
-const typesBundleTypes: OverrideVersionedType[] = [
+const versioned: OverrideVersionedType[] = [
   {
     minmax: [600, 699],
     types: {
@@ -95,7 +95,6 @@ const typesBundleTypes: OverrideVersionedType[] = [
           KSM: 130,
           LKSM: 131,
           // Reserve for XBTC = 132
-
           CASH: 140
         }
       }
@@ -119,7 +118,27 @@ const typesBundleTypes: OverrideVersionedType[] = [
         }
       }
     }
+  },
+  {
+    minmax: [723, 1009],
+    types: {
+      PoolId: {
+        _enum: {
+          LoansIncentive: 'CurrencyId',
+          DexIncentive: 'CurrencyId',
+          HomaIncentive: 'Null',
+          DexSaving: 'CurrencyId',
+          HomaValidatorAllowance: 'AccountId'
+        }
+      },
+      // for orml-reward types
+      PoolInfo: {
+        totalShares: 'Compact<Share>',
+        totalRewards: 'Compact<Balance>',
+        totalWithdrawnRewards: 'Compact<Balance>'
+      }
+    }
   }
 ];
 
-export default typesBundleTypes;
+export default versioned;

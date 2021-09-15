@@ -118,6 +118,26 @@ const versioned: OverrideVersionedType[] = [
         }
       }
     }
+  },
+  {
+    minmax: [723, 1009],
+    types: {
+      PoolId: {
+        _enum: {
+          LoansIncentive: 'CurrencyId',
+          DexIncentive: 'CurrencyId',
+          HomaIncentive: 'Null',
+          DexSaving: 'CurrencyId',
+          HomaValidatorAllowance: 'AccountId'
+        }
+      },
+      // for orml-reward types
+      PoolInfo: {
+        totalShares: 'Compact<Share>',
+        totalRewards: 'Compact<Balance>',
+        totalWithdrawnRewards: 'Compact<Balance>'
+      }
+    }
   }
 ];
 

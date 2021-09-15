@@ -58,9 +58,14 @@
     },
     "VestingScheduleOf": "OrmlVestingSchedule",
     "PoolInfo": {
+        "totalShares": "Share",
+        "rewards": "BTreeMap<Balance, Balance>"
+    },
+    "CompactBalance": "Compact<Balance>",
+    "PoolInfoV0": {
         "totalShares": "Compact<Share>",
-        "totalRewards": "Compact<Balance>",
-        "totalWithdrawnRewards": "Compact<Balance>"
+        "totalRewards": "CompactBalance",
+        "totalWithdrawnRewards": "CompactBalance"
     },
     "Share": "u128",
     "OracleValue": "Price",
@@ -191,6 +196,12 @@
         "unbonding": "Option<(Balance, BlockNumber)>"
     },
     "PoolId": {
+        "_enum": {
+            "Loans": "CurrencyId",
+            "Dex": "CurrencyId"
+        }
+    },
+    "PoolIdV0": {
         "_enum": {
             "LoansIncentive": "CurrencyId",
             "DexIncentive": "CurrencyId",

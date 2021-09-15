@@ -7,6 +7,14 @@ import type { AccountId } from '@acala-network/types/interfaces/runtime';
 
 /** @name PoolId */
 export interface PoolId extends Enum {
+  readonly isLoans: boolean;
+  readonly asLoans: CurrencyId;
+  readonly isDex: boolean;
+  readonly asDex: CurrencyId;
+}
+
+/** @name PoolIdV0 */
+export interface PoolIdV0 extends Enum {
   readonly isLoansIncentive: boolean;
   readonly asLoansIncentive: CurrencyId;
   readonly isDexIncentive: boolean;
