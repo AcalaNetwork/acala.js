@@ -2,7 +2,7 @@ import { FixedPointNumber as FN, MaybeAccount, MaybeCurrency } from '@acala-netw
 
 export interface LoanParams {
   // the debit exchange rate
-  debitExchange: FN;
+  debitExchangeRate: FN;
   // interest rate
   interestRatePerSec: FN;
   // liquidition ratio
@@ -39,4 +39,5 @@ export interface LoanPosition {
   maxWithdrawn: FN;
   // the max stable amount can payback
   maxPayback: FN;
+  liquidationPrice: FN;
 }

@@ -32,7 +32,7 @@ export interface LoanPosition extends LoanParams {
   maxGenerate: FixedPointNumber;
 }
 
-const YEAR_SECONDS = 365 * 24 * 60 * 60; // second of one year
+export const YEAR_SECONDS = 365 * 24 * 60 * 60; // second of one year
 
 export class LoanRx {
   private api: ApiRx;
@@ -46,7 +46,7 @@ export class LoanRx {
 
   constructor(api: ApiRx, currency: MaybeCurrency, address: string, wallet: WalletRx) {
     const collateralToken = wallet.getToken(currency);
-    const stableCoinToken = wallet.getToken(api.consts.cdpEngine.getStableCurrencyId);
+    const · = wallet.getToken(api.consts.cdpEngine.getStableCurrencyId);
 
     assert(collateralToken && stableCoinToken, `init the loan sdk failed, can't find useable token in currency chain`);
 
