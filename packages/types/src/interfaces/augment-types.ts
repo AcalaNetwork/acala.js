@@ -22,7 +22,7 @@ import type { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/
 import type { AuthorityOrigin, CallOf, DelayedOrigin, DispatchTime, ScheduleTaskIndex } from '@open-web3/orml-types/interfaces/authority';
 import type { GraduallyUpdate, StorageKeyBytes, StorageValue, StorageValueBytes } from '@open-web3/orml-types/interfaces/graduallyUpdates';
 import type { DataProviderId, OrderedSet, RpcDataProviderId, TimestampedValue, TimestampedValueOf } from '@open-web3/orml-types/interfaces/oracle';
-import type { CompactBalance, PoolInfo, PoolInfoV0, Share } from '@open-web3/orml-types/interfaces/rewards';
+import type { CompactBalance, OrmlCurrencyId, PoolInfo, PoolInfoV0, Share } from '@open-web3/orml-types/interfaces/rewards';
 import type { OrmlAccountData, OrmlBalanceLock } from '@open-web3/orml-types/interfaces/tokens';
 import type { AuctionInfo, DelayedDispatchTime, DispatchId, Price } from '@open-web3/orml-types/interfaces/traits';
 import type { OrmlVestingSchedule, VestingScheduleOf } from '@open-web3/orml-types/interfaces/vesting';
@@ -692,6 +692,7 @@ declare module '@polkadot/types/types/registry' {
     OriginKindV2: OriginKindV2;
     OrmlAccountData: OrmlAccountData;
     OrmlBalanceLock: OrmlBalanceLock;
+    OrmlCurrencyId: OrmlCurrencyId;
     OrmlVestingSchedule: OrmlVestingSchedule;
     OutboundHrmpMessage: OutboundHrmpMessage;
     OutboundLaneData: OutboundLaneData;
