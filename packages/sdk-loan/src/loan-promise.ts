@@ -67,26 +67,26 @@ export class LoanPromise extends LoanBase<ApiPromise> {
   public getParams = async (type: MaybeCurrency): Promise<LoanParams> => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const result: DerivedLoanType = await (this.api.derive as any).loan.loadType(type);
-    const allPerSec = new FN(result.interestRatePerSec.toString()).plus(
-      new FN(result.globalInterestRatePerSec.toString())
+    const allPerSec = FN.fromInner(result.interestRatePerSec.toString()).plus(
+      FN.fromInner(result.globalInterestRatePerSec.toString())
     );
     return {
-      debitExchangeRate: new FN(result.debitExchangeRate.toString()),
-      interestRatePerSec: new FN(result.interestRatePerSec.toString()),
-      liquidationRatio: new FN(result.liquidationRatio.toString()),
-      requiredCollateralRatio: new FN(result.requiredCollateralRatio.toString()),
-      stableFeeAPR: new FN(Math.pow(Number(allPerSec.plus(FN.ONE).toString()), YEAR_SECONDS) - 1)
+      debitExchangeRate: FN.fromInner(result.debitExchangeRate.toString()),
+      interestRatePerSec: allPerSec,
+      liquidationRatio: FN.fromInner(result.liquidationRatio.toString()),
+      requiredCollateralRatio: FN.fromInner(result.requiredCollateralRatio.toString()),
+      stableFeeAPR: FN.fromInner(Math.pow(Number(allPerSec.plus(FN.ONE).toString()), YEAR_SECONDS) - 1)
     };
   };
 
   public debitToStableCoin = async (type: MaybeCurrency, amount: FN): Promise<FN> => {
     const { debitExchangeRate } = await this.getParams(type);
-    return amount.times(FN.fromInner(debitExchangeRate.toString(), this.stableCoinToken.decimal));
+    return amount.times(debitExchangeRate);
   };
 
   public stableCoinToDebit = async (type: MaybeCurrency, amount: FN): Promise<FN> => {
     const { debitExchangeRate } = await this.getParams(type);
-    return amount.div(FN.fromInner(debitExchangeRate.toString(), this.stableCoinToken.decimal));
+    return amount.div(debitExchangeRate);
   };
 }
 
