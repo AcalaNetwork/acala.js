@@ -62,6 +62,9 @@ export interface DexShare extends Enum {
   readonly asErc20: EvmAddress;
 }
 
+/** @name OrmlCurrencyId */
+export interface OrmlCurrencyId extends CurrencyId {}
+
 /** @name TokenSymbol */
 export interface TokenSymbol extends Enum {
   readonly isAca: boolean;
