@@ -57,7 +57,7 @@
         "perPeriod": "Compact<Balance>"
     },
     "VestingScheduleOf": "OrmlVestingSchedule",
-    "OrmlCurrencyId": "u8",
+    "OrmlCurrencyId": "CurrencyId",
     "PoolInfo": {
         "totalShares": "Share",
         "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"

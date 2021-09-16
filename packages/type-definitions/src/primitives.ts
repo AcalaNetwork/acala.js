@@ -52,7 +52,8 @@ export default {
     AcalaDataProviderId: {
       _enum: ['Aggregated', 'Acala', 'Band']
     },
-    TradingPair: '(CurrencyId,  CurrencyId)'
+    TradingPair: '(CurrencyId,  CurrencyId)',
+    OrmlCurrencyId: 'CurrencyId'
   },
   typesAlias: {
     rewards: {

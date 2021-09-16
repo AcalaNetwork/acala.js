@@ -236,7 +236,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Share",
                             "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
@@ -627,7 +627,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Share",
                             "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
@@ -1018,7 +1018,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Share",
                             "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
@@ -1419,7 +1419,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Share",
                             "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
@@ -1815,7 +1815,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Share",
                             "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
@@ -2214,7 +2214,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Share",
                             "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
@@ -2607,7 +2607,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Share",
                             "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
@@ -3000,7 +3000,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Compact<Share>",
                             "totalRewards": "Compact<Balance>",
@@ -3594,7 +3594,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Share",
                             "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
@@ -3985,7 +3985,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Share",
                             "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
@@ -4376,7 +4376,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Share",
                             "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
@@ -4777,7 +4777,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Share",
                             "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
@@ -5173,7 +5173,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Share",
                             "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
@@ -5572,7 +5572,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Share",
                             "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
@@ -5965,7 +5965,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Share",
                             "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
@@ -6358,7 +6358,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Compact<Share>",
                             "totalRewards": "Compact<Balance>",
@@ -6952,7 +6952,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Share",
                             "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
@@ -7343,7 +7343,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Share",
                             "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
@@ -7734,7 +7734,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Share",
                             "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
@@ -8135,7 +8135,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Share",
                             "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
@@ -8531,7 +8531,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Share",
                             "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
@@ -8930,7 +8930,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Share",
                             "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
@@ -9323,7 +9323,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Share",
                             "rewards": "BTreeMap<OrmlCurrencyId, (Balance, Balance)>"
@@ -9716,7 +9716,7 @@
                             "perPeriod": "Compact<Balance>"
                         },
                         "VestingScheduleOf": "OrmlVestingSchedule",
-                        "OrmlCurrencyId": "u8",
+                        "OrmlCurrencyId": "CurrencyId",
                         "PoolInfo": {
                             "totalShares": "Compact<Share>",
                             "totalRewards": "Compact<Balance>",
