@@ -1,5 +1,5 @@
 {
-  "version": "2.2.2-9",
+  "version": "2.3.0",
   "private": true,
   "engines": {
     "yarn": "^1.10.1"
@@ -8,8 +8,8 @@
     "packages/*"
   ],
   "resolutions": {
-    "@polkadot/api": "^5.8.3",
-    "@polkadot/types": "^5.8.3"
+    "@polkadot/api": "^5.9.1",
+    "@polkadot/types": "^5.9.1"
   },
   "scripts": {
     "build": "yarn build:interfaces && polkadot-dev-build-ts",
