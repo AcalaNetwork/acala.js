@@ -21,5 +21,9 @@
     "@open-web3/orml-api-derive": "^0.9.4-38",
     "@polkadot/api": "^5.9.1",
     "@polkadot/rpc-core": "^5.9.1"
+  },
+  "peerDependencies": {
+    "@polkadot/api": "^5.9.1",
+    "@polkadot/types": "^5.9.1"
   }
 }
