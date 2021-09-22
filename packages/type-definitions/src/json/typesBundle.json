@@ -557,7 +557,7 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1",
                         "Address": "LookupSource",
                         "LookupSource": "IndicesLookupSource"
@@ -948,7 +948,7 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1",
                         "Address": "GenericMultiAddress",
                         "LookupSource": "GenericMultiAddress"
@@ -1344,7 +1344,7 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1",
                         "Address": "GenericMultiAddress",
                         "LookupSource": "GenericMultiAddress",
@@ -1747,7 +1747,7 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -2146,7 +2146,7 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -2539,7 +2539,7 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -2932,7 +2932,7 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -3330,12 +3330,15 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 }
             ],
             "alias": {
+                "chainBridge": {
+                    "ChainId": "ChainBridgeChainId"
+                },
                 "stakingPool": {
                     "Phase": "StakingPoolPhase"
                 },
@@ -3915,7 +3918,7 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1",
                         "Address": "LookupSource",
                         "LookupSource": "IndicesLookupSource"
@@ -4306,7 +4309,7 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1",
                         "Address": "GenericMultiAddress",
                         "LookupSource": "GenericMultiAddress"
@@ -4702,7 +4705,7 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1",
                         "Address": "GenericMultiAddress",
                         "LookupSource": "GenericMultiAddress",
@@ -5105,7 +5108,7 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -5504,7 +5507,7 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -5897,7 +5900,7 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -6290,7 +6293,7 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -6688,12 +6691,15 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 }
             ],
             "alias": {
+                "chainBridge": {
+                    "ChainId": "ChainBridgeChainId"
+                },
                 "stakingPool": {
                     "Phase": "StakingPoolPhase"
                 },
@@ -7273,7 +7279,7 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1",
                         "Address": "LookupSource",
                         "LookupSource": "IndicesLookupSource"
@@ -7664,7 +7670,7 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1",
                         "Address": "GenericMultiAddress",
                         "LookupSource": "GenericMultiAddress"
@@ -8060,7 +8066,7 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1",
                         "Address": "GenericMultiAddress",
                         "LookupSource": "GenericMultiAddress",
@@ -8463,7 +8469,7 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -8862,7 +8868,7 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -9255,7 +9261,7 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -9648,7 +9654,7 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -10046,12 +10052,15 @@
                         "DestAddress": "Vec<u8>",
                         "DepositNonce": "u64",
                         "ResourceId": "[u8; 32]",
-                        "ChainId": "u8",
+                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 }
             ],
             "alias": {
+                "chainBridge": {
+                    "ChainId": "ChainBridgeChainId"
+                },
                 "stakingPool": {
                     "Phase": "StakingPoolPhase"
                 },
