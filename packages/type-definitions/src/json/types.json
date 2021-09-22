@@ -383,6 +383,6 @@
     "DestAddress": "Vec<u8>",
     "DepositNonce": "u64",
     "ResourceId": "[u8; 32]",
-    "ChainId": "u8",
+    "ChainBridgeChainId": "u8",
     "Keys": "SessionKeys1"
 }
