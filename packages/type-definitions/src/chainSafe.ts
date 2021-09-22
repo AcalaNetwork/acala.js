@@ -6,7 +6,7 @@ export const chainBridge = {
     ChainBridgeChainId: 'u8'
   },
   typesAlias: {
-    chainbridge: {
+    chainBridge: {
       ChainId: 'ChainBridgeChainId'
     }
   }
