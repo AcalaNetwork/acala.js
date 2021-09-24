@@ -20,8 +20,7 @@ import type { Option } from '@polkadot/types';
 import { WalletBase } from './wallet-base';
 import { AccountData, AccountInfo, BalanceLock, BlockHash } from '@polkadot/types/interfaces';
 import { BelowExistentialDeposit } from './errors';
-
-const ORACLE_FEEDS_TOKEN = ['DOT', 'XBTC', 'RENBTC', 'POLKABTC', 'KSM'];
+import { ORACLE_FEEDS_TOKEN } from './config';
 
 const queryFN = getSubscribeOrAtQuery;
 export class WalletRx extends WalletBase<ApiRx> {
@@ -157,10 +156,7 @@ export class WalletRx extends WalletBase<ApiRx> {
         ]);
       }),
       map(([stakingTokenPrice, stakingBalance, liquidIssuance]) => {
-        const bonded = FixedPointNumber.fromInner(stakingBalance.toString());
-
-        bonded.forceSetPrecision(stakingToken.decimal);
-
+        const bonded = FixedPointNumber.fromInner(stakingBalance.toString(), stakingToken.decimal);
         const ratio = liquidIssuance.isZero() ? FixedPointNumber.ZERO : bonded.div(liquidIssuance);
 
         return {
