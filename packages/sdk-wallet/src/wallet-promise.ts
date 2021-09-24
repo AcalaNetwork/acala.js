@@ -16,18 +16,13 @@ import { WalletBase } from './wallet-base';
 import { AccountData, BlockHash, AccountInfo } from '@polkadot/types/interfaces';
 import { BelowExistentialDeposit } from './errors';
 import { Option } from '@polkadot/types';
-
-const ORACLE_FEEDS_TOKEN = ['DOT', 'XBTC', 'RENBTC', 'POLKABTC'];
+import { ORACLE_FEEDS_TOKEN } from './config';
 
 const queryFN = getPromiseOrAtQuery;
 
 export class WalletPromise extends WalletBase<ApiPromise> {
-  private oracleFeed$: Promise<PriceDataWithTimestamp[]>;
-
   constructor(api: ApiPromise) {
     super(api);
-
-    this.oracleFeed$ = new Promise<PriceDataWithTimestamp[]>((resolve) => resolve([]));
   }
 
   // query price info, support specify data source
@@ -94,19 +89,6 @@ export class WalletPromise extends WalletBase<ApiPromise> {
   };
 
   public queryPriceFromOracle = (token: MaybeCurrency, at?: number): Promise<PriceData> => {
-    if (!at) {
-      const currencyName = forceToCurrencyIdName(token);
-
-      return this.oracleFeed$.then((data): PriceData => {
-        const maybe = data.find((item) => item.token.name === currencyName);
-
-        return {
-          token: maybe?.token || new Token(currencyName),
-          price: maybe?.price || FixedPointNumber.ZERO
-        };
-      });
-    }
-
     return this.getBlockHash(at).then((hash) => {
       const currencyId = forceToCurrencyId(this.api, token);
 
@@ -139,9 +121,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
         ]);
       })
       .then(([stakingTokenPrice, stakingBalance, liquidIssuance]) => {
-        const bonded = FixedPointNumber.fromInner(stakingBalance.toString());
-
-        bonded.forceSetPrecision(stakingToken.decimal);
+        const bonded = FixedPointNumber.fromInner(stakingBalance.toString(), stakingToken.decimal);
 
         const ratio = liquidIssuance.isZero() ? FixedPointNumber.ZERO : bonded.div(liquidIssuance);
 
