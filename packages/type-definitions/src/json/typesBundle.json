@@ -1047,7 +1047,8 @@
                                 "KUSD": 129,
                                 "KSM": 130,
                                 "LKSM": 131,
-                                "BNC": 168
+                                "BNC": 168,
+                                "VSKSM": 169
                             }
                         },
                         "DexShare": {
@@ -1448,7 +1449,8 @@
                                 "KUSD": 129,
                                 "KSM": 130,
                                 "LKSM": 131,
-                                "BNC": 168
+                                "BNC": 168,
+                                "VSKSM": 169
                             }
                         },
                         "DexShare": {
@@ -3030,7 +3032,8 @@
                                 "KUSD": 129,
                                 "KSM": 130,
                                 "LKSM": 131,
-                                "BNC": 168
+                                "BNC": 168,
+                                "VSKSM": 169
                             }
                         },
                         "DexShare": {
@@ -4408,7 +4411,8 @@
                                 "KUSD": 129,
                                 "KSM": 130,
                                 "LKSM": 131,
-                                "BNC": 168
+                                "BNC": 168,
+                                "VSKSM": 169
                             }
                         },
                         "DexShare": {
@@ -4809,7 +4813,8 @@
                                 "KUSD": 129,
                                 "KSM": 130,
                                 "LKSM": 131,
-                                "BNC": 168
+                                "BNC": 168,
+                                "VSKSM": 169
                             }
                         },
                         "DexShare": {
@@ -6391,7 +6396,8 @@
                                 "KUSD": 129,
                                 "KSM": 130,
                                 "LKSM": 131,
-                                "BNC": 168
+                                "BNC": 168,
+                                "VSKSM": 169
                             }
                         },
                         "DexShare": {
@@ -7769,7 +7775,8 @@
                                 "KUSD": 129,
                                 "KSM": 130,
                                 "LKSM": 131,
-                                "BNC": 168
+                                "BNC": 168,
+                                "VSKSM": 169
                             }
                         },
                         "DexShare": {
@@ -8170,7 +8177,8 @@
                                 "KUSD": 129,
                                 "KSM": 130,
                                 "LKSM": 131,
-                                "BNC": 168
+                                "BNC": 168,
+                                "VSKSM": 169
                             }
                         },
                         "DexShare": {
@@ -9752,7 +9760,8 @@
                                 "KUSD": 129,
                                 "KSM": 130,
                                 "LKSM": 131,
-                                "BNC": 168
+                                "BNC": 168,
+                                "VSKSM": 169
                             }
                         },
                         "DexShare": {
