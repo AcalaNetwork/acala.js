@@ -8,7 +8,7 @@ type ExistentialDepositConfig = {
 };
 
 /**
- * existentialDeposit is maintenance manual, please ensure the config is match the current;
+ * existential deposit is maintained manually, please ensure the config is match the current;
  */
 const EXISTENTIAL_DEPOSIT: ExistentialDepositConfig = {
   acala: {
@@ -39,6 +39,7 @@ const EXISTENTIAL_DEPOSIT: ExistentialDepositConfig = {
   }
 };
 
-export const getExistentialDeposit = (network: string, currency: string): FixedPointNumber | undefined => {
-  return EXISTENTIAL_DEPOSIT?.[network.toLocaleLowerCase()]?.[currency.toUpperCase()].clone();
+// get ed config, return 0 if the config doesn't set.
+export const getExistentialDepositConfig = (network: string, currency: string): FixedPointNumber => {
+  return EXISTENTIAL_DEPOSIT?.[network.toLocaleLowerCase()]?.[currency.toUpperCase()].clone() || ZERO;
 };

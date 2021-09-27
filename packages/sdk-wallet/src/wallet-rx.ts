@@ -5,7 +5,13 @@ import { memoize, bnMax } from '@polkadot/util';
 import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { Vec } from '@polkadot/types';
 import { TimestampedValue, VestingScheduleOf, OrmlAccountData } from '@open-web3/orml-types/interfaces';
-import { eventsFilterRx, FixedPointNumber, getSubscribeOrAtQuery, Token, TokenBalance } from '@acala-network/sdk-core';
+import {
+  eventsFilterRx,
+  FixedPointNumber as FN,
+  getSubscribeOrAtQuery,
+  Token,
+  TokenBalance
+} from '@acala-network/sdk-core';
 import { Balance, CurrencyId, Ledger, OracleKey } from '@acala-network/types/interfaces';
 import {
   forceToCurrencyId,
@@ -15,12 +21,14 @@ import {
 } from '@acala-network/sdk-core/converter';
 import { MaybeAccount, MaybeCurrency } from '@acala-network/sdk-core/types';
 import { PriceData, PriceDataWithTimestamp, NativeAllBalance, BalanceData } from './types';
-import type { ITuple } from '@polkadot/types/types';
+import type { ISubmittableResult, ITuple } from '@polkadot/types/types';
 import type { Option } from '@polkadot/types';
 import { WalletBase } from './wallet-base';
 import { AccountData, AccountInfo, BalanceLock, BlockHash } from '@polkadot/types/interfaces';
 import { BelowExistentialDeposit } from './errors';
 import { ORACLE_FEEDS_TOKEN } from './config';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 
 const queryFN = getSubscribeOrAtQuery;
 export class WalletRx extends WalletBase<ApiRx> {
@@ -56,7 +64,7 @@ export class WalletRx extends WalletBase<ApiRx> {
 
       return of({
         token: usd,
-        price: new FixedPointNumber(1, usd.decimal)
+        price: new FN(1, usd.decimal)
       });
     }
 
@@ -113,7 +121,7 @@ export class WalletRx extends WalletBase<ApiRx> {
 
               return {
                 token: maybe?.token || this.getToken(tokenName),
-                price: (maybe?.price || FixedPointNumber.ZERO).clone()
+                price: (maybe?.price || FN.ZERO).clone()
               };
             })
           ) as Observable<PriceData>;
@@ -128,9 +136,7 @@ export class WalletRx extends WalletBase<ApiRx> {
                 const token = this.getToken(currencyId);
                 const price = data.unwrapOrDefault().value;
 
-                return price.isEmpty
-                  ? { token, price: new FixedPointNumber(0) }
-                  : { token, price: FixedPointNumber.fromInner(price.toString()) };
+                return price.isEmpty ? { token, price: new FN(0) } : { token, price: FN.fromInner(price.toString()) };
               })
             );
           })
@@ -156,8 +162,8 @@ export class WalletRx extends WalletBase<ApiRx> {
         ]);
       }),
       map(([stakingTokenPrice, stakingBalance, liquidIssuance]) => {
-        const bonded = FixedPointNumber.fromInner(stakingBalance.toString(), stakingToken.decimal);
-        const ratio = liquidIssuance.isZero() ? FixedPointNumber.ZERO : bonded.div(liquidIssuance);
+        const bonded = FN.fromInner(stakingBalance.toString(), stakingToken.decimal);
+        const ratio = liquidIssuance.isZero() ? FN.ZERO : bonded.div(liquidIssuance);
 
         return {
           token: liquidToken,
@@ -184,10 +190,10 @@ export class WalletRx extends WalletBase<ApiRx> {
         ]);
       }),
       map(([stakingTokenPrice, ledger, liquidIssuance]) => {
-        const bonded = FixedPointNumber.fromInner(ledger.bonded.toString());
-        const freePool = FixedPointNumber.fromInner(ledger.freePool.toString());
-        const unbindingToFree = FixedPointNumber.fromInner(ledger.unbondingToFree.toString());
-        const toUnbindNextEra = FixedPointNumber.fromInner(
+        const bonded = FN.fromInner(ledger.bonded.toString());
+        const freePool = FN.fromInner(ledger.freePool.toString());
+        const unbindingToFree = FN.fromInner(ledger.unbondingToFree.toString());
+        const toUnbindNextEra = FN.fromInner(
           !ledger.toUnbondNextEra.isEmpty ? ledger.toUnbondNextEra[0].toString() : '0'
         );
 
@@ -195,11 +201,11 @@ export class WalletRx extends WalletBase<ApiRx> {
           .plus(freePool)
           .plus(unbindingToFree)
           .minus(toUnbindNextEra)
-          .max(FixedPointNumber.ZERO);
+          .max(FN.ZERO);
 
         totalStakingTokenBalance.forceSetPrecision(stakingToken.decimal);
 
-        const ratio = liquidIssuance.isZero() ? FixedPointNumber.ZERO : totalStakingTokenBalance.div(liquidIssuance);
+        const ratio = liquidIssuance.isZero() ? FN.ZERO : totalStakingTokenBalance.div(liquidIssuance);
 
         return {
           token: liquidToken,
@@ -227,8 +233,8 @@ export class WalletRx extends WalletBase<ApiRx> {
             const balance1 = pool[0];
             const balance2 = pool[1];
 
-            const fixedPoint1 = FixedPointNumber.fromInner(balance1.toString(), this.getToken(sorted1).decimal);
-            const fixedPoint2 = FixedPointNumber.fromInner(balance2.toString(), this.getToken(sorted2).decimal);
+            const fixedPoint1 = FN.fromInner(balance1.toString(), this.getToken(sorted1).decimal);
+            const fixedPoint2 = FN.fromInner(balance2.toString(), this.getToken(sorted2).decimal);
 
             if (forceToCurrencyIdName(sorted1) === forceToCurrencyIdName(token1)) {
               return [fixedPoint1, fixedPoint2];
@@ -249,12 +255,12 @@ export class WalletRx extends WalletBase<ApiRx> {
     if (!target || !usd)
       return of({
         token: new Token(forceToCurrencyIdName(currency)),
-        price: FixedPointNumber.ZERO
+        price: FN.ZERO
       });
 
     return this.queryDexPool(target, usd, at).pipe(
       map((result) => {
-        if (result[0].isZero() || result[1].isZero()) return { token: target, price: FixedPointNumber.ZERO };
+        if (result[0].isZero() || result[1].isZero()) return { token: target, price: FN.ZERO };
 
         return {
           token: target,
@@ -275,7 +281,7 @@ export class WalletRx extends WalletBase<ApiRx> {
         return result.map((item) => {
           const token =
             this.tokenMap.get(item[0].asToken.toString()) || Token.fromTokenName(item[0].asToken.toString());
-          const price = FixedPointNumber.fromInner(
+          const price = FN.fromInner(
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             (item[1]?.value as any)?.value.toString() || '0'
           );
@@ -302,7 +308,7 @@ export class WalletRx extends WalletBase<ApiRx> {
       tokenName = forceToCurrencyIdName(currency);
       token = this.getToken(currency);
     } catch (e) {
-      return of(FixedPointNumber.ZERO);
+      return of(FN.ZERO);
     }
 
     return this.getBlockHash(at).pipe(
@@ -313,9 +319,7 @@ export class WalletRx extends WalletBase<ApiRx> {
 
         return queryFN(this.api.query.tokens.totalIssuance, hash)(currencyId);
       }),
-      map((data) =>
-        !data ? new FixedPointNumber(0, token.decimal) : FixedPointNumber.fromInner(data.toString(), token.decimal)
-      ),
+      map((data) => (!data ? new FN(0, token.decimal) : FN.fromInner(data.toString(), token.decimal))),
       shareReplay(1)
     );
   });
@@ -342,28 +346,28 @@ export class WalletRx extends WalletBase<ApiRx> {
         map((data) => {
           const token = this.getToken(currencyId);
 
-          let freeBalance = FixedPointNumber.ZERO;
-          let lockedBalance = FixedPointNumber.ZERO;
-          let reservedBalance = FixedPointNumber.ZERO;
-          let availableBalance = FixedPointNumber.ZERO;
+          let freeBalance = FN.ZERO;
+          let lockedBalance = FN.ZERO;
+          let reservedBalance = FN.ZERO;
+          let availableBalance = FN.ZERO;
 
           if (isNativeToken) {
             data = data as AccountData;
 
-            freeBalance = FixedPointNumber.fromInner(data.free.toString(), token.decimal);
-            lockedBalance = FixedPointNumber.fromInner(data.miscFrozen.toString(), token.decimal).max(
-              FixedPointNumber.fromInner(data.feeFrozen.toString(), token.decimal)
+            freeBalance = FN.fromInner(data.free.toString(), token.decimal);
+            lockedBalance = FN.fromInner(data.miscFrozen.toString(), token.decimal).max(
+              FN.fromInner(data.feeFrozen.toString(), token.decimal)
             );
-            reservedBalance = FixedPointNumber.fromInner(data.reserved.toString(), token.decimal);
+            reservedBalance = FN.fromInner(data.reserved.toString(), token.decimal);
           } else {
             data = data as OrmlAccountData;
 
-            freeBalance = FixedPointNumber.fromInner(data.free.toString(), token.decimal);
-            lockedBalance = FixedPointNumber.fromInner(data.frozen.toString(), token.decimal);
-            reservedBalance = FixedPointNumber.fromInner(data.reserved.toString(), token.decimal);
+            freeBalance = FN.fromInner(data.free.toString(), token.decimal);
+            lockedBalance = FN.fromInner(data.frozen.toString(), token.decimal);
+            reservedBalance = FN.fromInner(data.reserved.toString(), token.decimal);
           }
 
-          availableBalance = freeBalance.sub(lockedBalance).max(FixedPointNumber.ZERO);
+          availableBalance = freeBalance.sub(lockedBalance).max(FN.ZERO);
 
           return {
             token,
@@ -404,21 +408,12 @@ export class WalletRx extends WalletBase<ApiRx> {
         const vestingPeriodCount = vestingSchedule?.periodCount;
 
         return {
-          freeBalance: new TokenBalance(token, FixedPointNumber.fromInner(freeBalance.toString(), token?.decimal)),
-          lockedBalance: new TokenBalance(token, FixedPointNumber.fromInner(lockedBalance.toString(), token?.decimal)),
-          availableBalance: new TokenBalance(
-            token,
-            FixedPointNumber.fromInner(availableBalance.toString(), token?.decimal)
-          ),
-          vestingBalance: new TokenBalance(
-            token,
-            FixedPointNumber.fromInner(vestingBalance?.toString() || '0', token?.decimal)
-          ),
+          freeBalance: new TokenBalance(token, FN.fromInner(freeBalance.toString(), token?.decimal)),
+          lockedBalance: new TokenBalance(token, FN.fromInner(lockedBalance.toString(), token?.decimal)),
+          availableBalance: new TokenBalance(token, FN.fromInner(availableBalance.toString(), token?.decimal)),
+          vestingBalance: new TokenBalance(token, FN.fromInner(vestingBalance?.toString() || '0', token?.decimal)),
           isVesting,
-          vestingPerPeriod: new TokenBalance(
-            token,
-            FixedPointNumber.fromInner(vestingPerPeriod?.toString() || '0', token?.decimal)
-          ),
+          vestingPerPeriod: new TokenBalance(token, FN.fromInner(vestingPerPeriod?.toString() || '0', token?.decimal)),
           vestingEndBlock: this.api.registry.createType(
             'BlockNumber',
             vestingStart && vestingPeriod && vestingPeriodCount
@@ -443,7 +438,7 @@ export class WalletRx extends WalletBase<ApiRx> {
   public checkTransfer(
     account: MaybeAccount,
     currency: MaybeCurrency,
-    amount: FixedPointNumber,
+    amount: FN,
     direction: 'from' | 'to' = 'to'
   ): Observable<boolean> {
     const transferConfig = this.getTransferConfig(currency);
@@ -477,16 +472,13 @@ export class WalletRx extends WalletBase<ApiRx> {
       map(({ balance, needCheck }: { balance: BalanceData; needCheck: boolean }) => {
         if (!needCheck) return true;
 
-        if (
-          direction === 'to' &&
-          balance.freeBalance.add(amount).lt(transferConfig.existentialDeposit || FixedPointNumber.ZERO)
-        ) {
+        if (direction === 'to' && balance.freeBalance.add(amount).lt(transferConfig.existentialDeposit || FN.ZERO)) {
           throw new BelowExistentialDeposit(account, currency);
         }
 
         if (
           direction === 'from' &&
-          balance.freeBalance.minus(amount).lt(transferConfig.existentialDeposit || FixedPointNumber.ZERO)
+          balance.freeBalance.minus(amount).lt(transferConfig.existentialDeposit || FN.ZERO)
         ) {
           throw new BelowExistentialDeposit(account, currency);
         }
@@ -511,5 +503,54 @@ export class WalletRx extends WalletBase<ApiRx> {
         this.oracleFeed$.next(result);
       }
     });
+  }
+
+  public getMaxInputBalance(
+    call: SubmittableExtrinsic<'rxjs', ISubmittableResult>,
+    currency: MaybeCurrency,
+    account: MaybeAccount,
+    isAllowDeath: boolean
+  ): Observable<FN> {
+    return call.paymentInfo(account.toString()).pipe(
+      switchMap((paymentInfo) => {
+        return combineLatest([
+          of(paymentInfo),
+          this.api.query.system.accounts(account.toString()) as Observable<AccountInfo>,
+          this.api.query.tokens.accounts(
+            account.toString(),
+            forceToCurrencyId(this.api, currency)
+          ) as unknown as Observable<OrmlAccountData>
+        ]);
+      }),
+      map(([paymentInfo, accountInfo, currencyInfo]) => {
+        const nativeToken = this.getToken(this.nativeToken);
+        const targetToken = this.getToken(currency);
+        const isNativeToken = this.isNativeToken(currency);
+        const providers = accountInfo.providers.toNumber();
+        const consumers = accountInfo.consumers.toNumber();
+        const nativeFreeBalance = FN.fromInner(accountInfo.data.free.toString(), nativeToken.decimal);
+        // native locked balance = max(accountInfo.data.miscFrozen, accountInfo.data.feeFrozen)
+        const nativeLockedBalance = FN.fromInner(accountInfo.data.miscFrozen.toString(), nativeToken.decimal).max(
+          FN.fromInner(accountInfo.data.feeFrozen.toString(), nativeToken.decimal)
+        );
+        const targetFreeBalance = FN.fromInner(currencyInfo.free.toString(), targetToken.decimal);
+        const targetLockedBalance = FN.fromInner(currencyInfo.frozen.toString(), targetToken.decimal);
+        const ed = this.getTransferConfig(currency).existentialDeposit;
+        const fee = FN.fromInner(paymentInfo.partialFee.toString(), nativeToken.decimal);
+
+        return getMaxAvailableBalance({
+          isNativeToken,
+          isAllowDeath,
+          providers,
+          consumers,
+          nativeFreeBalance,
+          nativeLockedBalance,
+          targetFreeBalance,
+          targetLockedBalance,
+          ed,
+          fee
+        });
+      })
+    );
   }
 }

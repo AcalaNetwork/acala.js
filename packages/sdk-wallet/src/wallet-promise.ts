@@ -1,7 +1,7 @@
 import { ApiPromise } from '@polkadot/api';
 
 import { TimestampedValue, OrmlAccountData } from '@open-web3/orml-types/interfaces';
-import { FixedPointNumber, getPromiseOrAtQuery, Token } from '@acala-network/sdk-core';
+import { FixedPointNumber as FN, getPromiseOrAtQuery, Token } from '@acala-network/sdk-core';
 import { Balance, CurrencyId, OracleKey, Ledger } from '@acala-network/types/interfaces';
 import {
   forceToCurrencyId,
@@ -11,12 +11,14 @@ import {
 } from '@acala-network/sdk-core/converter';
 import { MaybeAccount, MaybeCurrency } from '@acala-network/sdk-core/types';
 import { BalanceData, PriceData, PriceDataWithTimestamp } from './types';
-import type { ITuple } from '@polkadot/types/types';
+import type { ISubmittableResult, ITuple } from '@polkadot/types/types';
 import { WalletBase } from './wallet-base';
 import { AccountData, BlockHash, AccountInfo } from '@polkadot/types/interfaces';
 import { BelowExistentialDeposit } from './errors';
 import { Option } from '@polkadot/types';
 import { ORACLE_FEEDS_TOKEN } from './config';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 
 const queryFN = getPromiseOrAtQuery;
 
@@ -46,7 +48,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
 
       return {
         token: usd,
-        price: new FixedPointNumber(1, usd.decimal)
+        price: new FN(1, usd.decimal)
       };
     }
 
@@ -98,9 +100,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
         const token = this.getToken(currencyId);
         const price = data.unwrapOrDefault().value;
 
-        return price.isEmpty
-          ? { token, price: new FixedPointNumber(0) }
-          : { token, price: FixedPointNumber.fromInner(price.toString()) };
+        return price.isEmpty ? { token, price: new FN(0) } : { token, price: FN.fromInner(price.toString()) };
       });
     });
   };
@@ -121,9 +121,9 @@ export class WalletPromise extends WalletBase<ApiPromise> {
         ]);
       })
       .then(([stakingTokenPrice, stakingBalance, liquidIssuance]) => {
-        const bonded = FixedPointNumber.fromInner(stakingBalance.toString(), stakingToken.decimal);
+        const bonded = FN.fromInner(stakingBalance.toString(), stakingToken.decimal);
 
-        const ratio = liquidIssuance.isZero() ? FixedPointNumber.ZERO : bonded.div(liquidIssuance);
+        const ratio = liquidIssuance.isZero() ? FN.ZERO : bonded.div(liquidIssuance);
 
         return {
           token: liquidToken,
@@ -148,10 +148,10 @@ export class WalletPromise extends WalletBase<ApiPromise> {
         ]);
       })
       .then(([stakingTokenPrice, ledger, liquidIssuance]) => {
-        const bonded = FixedPointNumber.fromInner(ledger.bonded.toString());
-        const freePool = FixedPointNumber.fromInner(ledger.freePool.toString());
-        const unbindingToFree = FixedPointNumber.fromInner(ledger.unbondingToFree.toString());
-        const toUnbindNextEra = FixedPointNumber.fromInner(
+        const bonded = FN.fromInner(ledger.bonded.toString());
+        const freePool = FN.fromInner(ledger.freePool.toString());
+        const unbindingToFree = FN.fromInner(ledger.unbondingToFree.toString());
+        const toUnbindNextEra = FN.fromInner(
           !ledger.toUnbondNextEra.isEmpty ? ledger.toUnbondNextEra[0].toString() : '0'
         );
 
@@ -159,11 +159,11 @@ export class WalletPromise extends WalletBase<ApiPromise> {
           .plus(freePool)
           .plus(unbindingToFree)
           .minus(toUnbindNextEra)
-          .max(FixedPointNumber.ZERO);
+          .max(FN.ZERO);
 
         totalStakingTokenBalance.forceSetPrecision(stakingToken.decimal);
 
-        const ratio = liquidIssuance.isZero() ? FixedPointNumber.ZERO : totalStakingTokenBalance.div(liquidIssuance);
+        const ratio = liquidIssuance.isZero() ? FN.ZERO : totalStakingTokenBalance.div(liquidIssuance);
 
         return {
           token: liquidToken,
@@ -172,11 +172,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
       });
   };
 
-  public queryDexPool = (
-    token1: MaybeCurrency,
-    token2: MaybeCurrency,
-    at?: number
-  ): Promise<[FixedPointNumber, FixedPointNumber]> => {
+  public queryDexPool = (token1: MaybeCurrency, token2: MaybeCurrency, at?: number): Promise<[FN, FN]> => {
     const token1CurrencyId = forceToCurrencyId(this.api, token1);
     const token2CurrencyId = forceToCurrencyId(this.api, token2);
     const _token1 = Token.fromCurrencyId(token1CurrencyId);
@@ -192,8 +188,8 @@ export class WalletPromise extends WalletBase<ApiPromise> {
         const balance1 = pool[0];
         const balance2 = pool[1];
 
-        const fixedPoint1 = FixedPointNumber.fromInner(balance1.toString(), this.getToken(sorted1).decimal);
-        const fixedPoint2 = FixedPointNumber.fromInner(balance2.toString(), this.getToken(sorted2).decimal);
+        const fixedPoint1 = FN.fromInner(balance1.toString(), this.getToken(sorted1).decimal);
+        const fixedPoint2 = FN.fromInner(balance2.toString(), this.getToken(sorted2).decimal);
 
         if (forceToCurrencyIdName(sorted1) === forceToCurrencyIdName(token1)) {
           return [fixedPoint1, fixedPoint2];
@@ -211,11 +207,11 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     if (!target || !usd)
       return Promise.resolve({
         token: new Token(forceToCurrencyIdName(currency)),
-        price: FixedPointNumber.ZERO
+        price: FN.ZERO
       });
 
     return this.queryDexPool(target, usd, at).then((result) => {
-      if (result[0].isZero() || result[1].isZero()) return { token: target, price: FixedPointNumber.ZERO };
+      if (result[0].isZero() || result[1].isZero()) return { token: target, price: FN.ZERO };
 
       return {
         token: target,
@@ -234,7 +230,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
       currencyName = forceToCurrencyIdName(currency);
       token = this.getToken(currency);
     } catch (e) {
-      return FixedPointNumber.ZERO;
+      return FN.ZERO;
     }
 
     return this.getBlockHash(at)
@@ -245,9 +241,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
 
         return queryFN(this.api.query.tokens.totalIssuance, hash.toString())(currencyId) as Promise<Balance>;
       })
-      .then((data) =>
-        !data ? new FixedPointNumber(0, token.decimal) : FixedPointNumber.fromInner(data.toString(), token.decimal)
-      );
+      .then((data) => (!data ? new FN(0, token.decimal) : FN.fromInner(data.toString(), token.decimal)));
   };
 
   public queryBalance = async (account: MaybeAccount, currency: MaybeCurrency, at?: number): Promise<BalanceData> => {
@@ -271,28 +265,28 @@ export class WalletPromise extends WalletBase<ApiPromise> {
       })
       .then((data) => {
         const token = this.getToken(currencyId);
-        let freeBalance = FixedPointNumber.ZERO;
-        let lockedBalance = FixedPointNumber.ZERO;
-        let reservedBalance = FixedPointNumber.ZERO;
-        let availableBalance = FixedPointNumber.ZERO;
+        let freeBalance = FN.ZERO;
+        let lockedBalance = FN.ZERO;
+        let reservedBalance = FN.ZERO;
+        let availableBalance = FN.ZERO;
 
         if (isNativeToken) {
           data = data as AccountData;
 
-          freeBalance = FixedPointNumber.fromInner(data.free.toString(), token.decimal);
-          lockedBalance = FixedPointNumber.fromInner(data.miscFrozen.toString(), token.decimal).max(
-            FixedPointNumber.fromInner(data.feeFrozen.toString(), token.decimal)
+          freeBalance = FN.fromInner(data.free.toString(), token.decimal);
+          lockedBalance = FN.fromInner(data.miscFrozen.toString(), token.decimal).max(
+            FN.fromInner(data.feeFrozen.toString(), token.decimal)
           );
-          reservedBalance = FixedPointNumber.fromInner(data.reserved.toString(), token.decimal);
+          reservedBalance = FN.fromInner(data.reserved.toString(), token.decimal);
         } else {
           data = data as unknown as OrmlAccountData;
 
-          freeBalance = FixedPointNumber.fromInner(data.free.toString(), token.decimal);
-          lockedBalance = FixedPointNumber.fromInner(data.frozen.toString(), token.decimal);
-          reservedBalance = FixedPointNumber.fromInner(data.reserved.toString(), token.decimal);
+          freeBalance = FN.fromInner(data.free.toString(), token.decimal);
+          lockedBalance = FN.fromInner(data.frozen.toString(), token.decimal);
+          reservedBalance = FN.fromInner(data.reserved.toString(), token.decimal);
         }
 
-        availableBalance = freeBalance.sub(lockedBalance).max(FixedPointNumber.ZERO);
+        availableBalance = freeBalance.sub(lockedBalance).max(FN.ZERO);
 
         return {
           token,
@@ -319,7 +313,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     return (this.api.rpc as any).oracle.getAllValues(oracleProvider).then((result: [[OracleKey, TimestampedValue]]) => {
       return result.map((item) => {
         const token = this.tokenMap.get(item[0].asToken.toString()) || Token.fromTokenName(item[0].asToken.toString());
-        const price = FixedPointNumber.fromInner(
+        const price = FN.fromInner(
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           (item[1]?.value as any)?.value.toString() || '0'
         );
@@ -337,7 +331,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
   public async checkTransfer(
     account: MaybeAccount,
     currency: MaybeCurrency,
-    amount: FixedPointNumber,
+    amount: FN,
     direction: 'from' | 'to' = 'to'
   ): Promise<boolean> {
     const transferConfig = this.getTransferConfig(currency);
@@ -349,10 +343,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     let needCheck = true;
 
     // always check ED if the direction is `to`
-    if (
-      direction === 'to' &&
-      balance.freeBalance.add(amount).lt(transferConfig.existentialDeposit || FixedPointNumber.ZERO)
-    ) {
+    if (direction === 'to' && balance.freeBalance.add(amount).lt(transferConfig.existentialDeposit || FN.ZERO)) {
       throw new BelowExistentialDeposit(account, currency);
     }
 
@@ -363,10 +354,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
         needCheck = !(accountInfo.providers.toBigInt() > BigInt(0) || accountInfo.consumers.toBigInt() === BigInt(0));
       }
 
-      if (
-        needCheck &&
-        balance.freeBalance.minus(amount).lt(transferConfig.existentialDeposit || FixedPointNumber.ZERO)
-      ) {
+      if (needCheck && balance.freeBalance.minus(amount).lt(transferConfig.existentialDeposit || FN.ZERO)) {
         throw new BelowExistentialDeposit(account, currency);
       }
     }
@@ -377,5 +365,48 @@ export class WalletPromise extends WalletBase<ApiPromise> {
   // this interface is not implemented
   public async subscribeOracleFeed(): Promise<PriceDataWithTimestamp[]> {
     return [];
+  }
+
+  public async getMaxInputBalance(
+    call: SubmittableExtrinsic<'promise', ISubmittableResult>,
+    currency: MaybeCurrency,
+    account: MaybeAccount,
+    isAllowDeath: boolean
+  ): Promise<FN> {
+    const paymentInfo = await call.paymentInfo(account.toString());
+    const accountInfo = await this.api.query.system.accounts<AccountInfo>(account.toString());
+    const currencyInfo = await this.api.query.tokens.accounts<OrmlAccountData>(
+      account.toString(),
+      forceToCurrencyId(this.api, currency)
+    );
+
+    const nativeToken = this.getToken(this.nativeToken);
+    const targetToken = this.getToken(currency);
+    const isNativeToken = this.isNativeToken(currency);
+
+    const providers = accountInfo.providers.toNumber();
+    const consumers = accountInfo.consumers.toNumber();
+    const nativeFreeBalance = FN.fromInner(accountInfo.data.free.toString(), nativeToken.decimal);
+    // native locked balance = max(accountInfo.data.miscFrozen, accountInfo.data.feeFrozen)
+    const nativeLockedBalance = FN.fromInner(accountInfo.data.miscFrozen.toString(), nativeToken.decimal).max(
+      FN.fromInner(accountInfo.data.feeFrozen.toString(), nativeToken.decimal)
+    );
+    const targetFreeBalance = FN.fromInner(currencyInfo.free.toString(), targetToken.decimal);
+    const targetLockedBalance = FN.fromInner(currencyInfo.frozen.toString(), targetToken.decimal);
+    const ed = this.getTransferConfig(currency).existentialDeposit;
+    const fee = FN.fromInner(paymentInfo.partialFee.toString(), nativeToken.decimal);
+
+    return getMaxAvailableBalance({
+      isNativeToken,
+      isAllowDeath,
+      providers,
+      consumers,
+      nativeFreeBalance,
+      nativeLockedBalance,
+      targetFreeBalance,
+      targetLockedBalance,
+      ed,
+      fee
+    });
   }
 }

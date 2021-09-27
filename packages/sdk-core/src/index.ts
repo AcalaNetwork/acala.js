@@ -7,3 +7,4 @@ export * from './events';
 export * from './types';
 export * from './converter';
 export * from './functions';
+export * from './common-errors';
