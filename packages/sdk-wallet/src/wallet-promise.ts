@@ -220,7 +220,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     });
   };
 
-  private queryIssuance = async (currency: MaybeCurrency, at?: number) => {
+  public queryIssuance = async (currency: MaybeCurrency, at?: number): Promise<FixedPointNumber> => {
     let currencyId: CurrencyId;
     let currencyName: string;
     let token: Token;

@@ -25,7 +25,8 @@ export default {
         // 149: Reserved for renBTC
         // 150: Reserved for CASH
         // 168 - 255: Kusama parachain tokens
-        BNC: 168
+        BNC: 168,
+        VSKSM: 169
       }
     },
     DexShare: {
