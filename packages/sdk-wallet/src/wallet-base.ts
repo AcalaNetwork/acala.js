@@ -62,7 +62,6 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
     return forceToCurrencyIdName(currency) === forceToCurrencyIdName(this.nativeToken);
   }
 
-
   /**
    * @name getAllTokens
    * @description get all available currencies
