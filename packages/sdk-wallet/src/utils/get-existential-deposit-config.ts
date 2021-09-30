@@ -7,6 +7,9 @@ type ExistentialDepositConfig = {
   [chain in string]: { [token in string]: FixedPointNumber };
 };
 
+/**
+ * existential deposit is maintained manually, please ensure the config is match the current;
+ */
 const EXISTENTIAL_DEPOSIT: ExistentialDepositConfig = {
   acala: {
     KAR: ZERO,
@@ -52,7 +55,8 @@ const EXISTENTIAL_DEPOSIT: ExistentialDepositConfig = {
   }
 };
 
-export const getExistentialDeposit = (network: string, currency: string): FixedPointNumber => {
+// get ed config, return 0 if the config doesn't set.
+export const getExistentialDepositConfig = (network: string, currency: string): FixedPointNumber => {
   // use dev config as default
   const config = EXISTENTIAL_DEPOSIT?.[network.toLocaleUpperCase()] || EXISTENTIAL_DEPOSIT.dev;
 

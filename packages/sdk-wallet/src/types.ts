@@ -16,7 +16,7 @@ export interface BalanceData {
 }
 
 export interface TransferConfig {
-  existentialDeposit?: FixedPointNumber;
+  existentialDeposit: FixedPointNumber;
 }
 
 export interface NativeAllBalance {

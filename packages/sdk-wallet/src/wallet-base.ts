@@ -7,13 +7,15 @@ import {
   forceToCurrencyIdName,
   getLPCurrenciesFormName,
   isDexShare,
-  FixedPointNumber
+  FixedPointNumber as FN
 } from '@acala-network/sdk-core';
 import { CurrencyId } from '@acala-network/types/interfaces';
 
 import { ApiRx, ApiPromise } from '@polkadot/api';
-import { getExistentialDeposit } from './existential-deposit';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { ISubmittableResult } from '@polkadot/types/types';
 import { BalanceData, PriceData, PriceDataWithTimestamp, TransferConfig } from './types';
+import { getExistentialDepositConfig } from './utils/get-existential-deposit-config';
 
 export abstract class WalletBase<T extends ApiRx | ApiPromise> {
   protected api: T;
@@ -54,6 +56,10 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
         // ignore eorror
       }
     });
+  }
+
+  public isNativeToken(currency: MaybeCurrency): boolean {
+    return forceToCurrencyIdName(currency) === forceToCurrencyIdName(this.nativeToken);
   }
 
   /**
@@ -98,11 +104,11 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
       const [token1] = Token.sortTokenNames(...getLPCurrenciesFormName(name));
 
       return {
-        existentialDeposit: getExistentialDeposit(this.runtimeChain, token1)
+        existentialDeposit: getExistentialDepositConfig(this.runtimeChain, token1)
       };
     }
 
-    const existentialDeposit = getExistentialDeposit(this.runtimeChain, forceToCurrencyIdName(currency));
+    const existentialDeposit = getExistentialDepositConfig(this.runtimeChain, forceToCurrencyIdName(currency));
 
     return { existentialDeposit };
   }
@@ -111,10 +117,10 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
    * @name checkTransfer
    * @description check transfer amount to target account is ok or not
    */
-  abstract checkTransfer(
+  public abstract checkTransfer(
     account: MaybeAccount,
     currency: MaybeCurrency,
-    amount: FixedPointNumber,
+    amount: FN,
     direction?: 'from' | 'to'
   ): ObOrPromiseResult<T, boolean>;
 
@@ -122,46 +128,58 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
    * @name queryBalance
    * @description get the balance of the currency
    */
-  abstract queryBalance(account: MaybeAccount, currency: MaybeCurrency, at?: number): ObOrPromiseResult<T, BalanceData>;
+  public abstract queryBalance(
+    account: MaybeAccount,
+    currency: MaybeCurrency,
+    at?: number
+  ): ObOrPromiseResult<T, BalanceData>;
 
   /**
    * @name queryPrices
    * @description get prices of tokens
    */
-  abstract queryPrices(tokens: MaybeCurrency[], at?: number): ObOrPromiseResult<T, PriceData[]>;
+  public abstract queryPrices(tokens: MaybeCurrency[], at?: number): ObOrPromiseResult<T, PriceData[]>;
 
   /**
    * @name queryPrice
    * @description get the price
    */
-  abstract queryPrice(currency: MaybeCurrency, at?: number): ObOrPromiseResult<T, PriceData>;
+  public abstract queryPrice(currency: MaybeCurrency, at?: number): ObOrPromiseResult<T, PriceData>;
 
   /**
    * @name queryOraclePrice
    * @description get the oracle feed price
    */
-  abstract queryOraclePrice(): ObOrPromiseResult<T, PriceDataWithTimestamp[]>;
-
-  /**
-   * @name queryLiquidPriceFromStakingPool
-   * @description get the oracle feed price
-   */
-  abstract queryLiquidPriceFromStakingPool(at?: number): ObOrPromiseResult<T, PriceData>;
+  public abstract queryOraclePrice(): ObOrPromiseResult<T, PriceDataWithTimestamp[]>;
 
   /**
    * @name queryPriceFromDex
    * @description get the oracle feed price
    */
-  abstract queryPriceFromDex(currency: MaybeCurrency, at?: number): ObOrPromiseResult<T, PriceData>;
+  public abstract queryPriceFromDex(currency: MaybeCurrency, at?: number): ObOrPromiseResult<T, PriceData>;
+
+  /**
+   * @name queryLiquidPriceFromStakingPool
+   * @description get the oracle feed price
+   */
+  public abstract queryLiquidPriceFromStakingPool(at?: number): ObOrPromiseResult<T, PriceData>;
 
   /**
    * @name queryDexSharePriceFormDex
    * @description get the oracle feed price
    */
-  abstract queryDexSharePriceFormDex(currency: MaybeCurrency, at?: number): ObOrPromiseResult<T, PriceData>;
+  public abstract queryDexSharePriceFormDex(currency: MaybeCurrency, at?: number): ObOrPromiseResult<T, PriceData>;
 
   /**
    * @name subscribeOracleFeeds
    */
-  abstract subscribeOracleFeed(provider: string): ObOrPromiseResult<T, PriceDataWithTimestamp[]>;
+  public abstract subscribeOracleFeed(provider: string): ObOrPromiseResult<T, PriceDataWithTimestamp[]>;
+
+  public abstract getMaxInputBalance(
+    call: SubmittableExtrinsic<T extends ApiRx ? 'rxjs' : 'promise', ISubmittableResult>,
+    currency: MaybeCurrency,
+    account: MaybeAccount,
+    isAllowDeath: boolean,
+    feeFactor?: number
+  ): ObOrPromiseResult<T, FN>;
 }
