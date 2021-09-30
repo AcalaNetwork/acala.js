@@ -509,13 +509,14 @@ export class WalletRx extends WalletBase<ApiRx> {
     call: SubmittableExtrinsic<'rxjs', ISubmittableResult>,
     currency: MaybeCurrency,
     account: MaybeAccount,
-    isAllowDeath: boolean
+    isAllowDeath: boolean,
+    feeFactor = 1
   ): Observable<FN> {
     return call.paymentInfo(account.toString()).pipe(
       switchMap((paymentInfo) => {
         return combineLatest([
           of(paymentInfo),
-          this.api.query.system.accounts(account.toString()) as Observable<AccountInfo>,
+          this.api.query.system.account(account.toString()) as Observable<AccountInfo>,
           this.api.query.tokens.accounts(
             account.toString(),
             forceToCurrencyId(this.api, currency)
@@ -536,7 +537,7 @@ export class WalletRx extends WalletBase<ApiRx> {
         const targetFreeBalance = FN.fromInner(currencyInfo.free.toString(), targetToken.decimal);
         const targetLockedBalance = FN.fromInner(currencyInfo.frozen.toString(), targetToken.decimal);
         const ed = this.getTransferConfig(currency).existentialDeposit;
-        const fee = FN.fromInner(paymentInfo.partialFee.toString(), nativeToken.decimal);
+        const fee = FN.fromInner(paymentInfo.partialFee.toString(), nativeToken.decimal).mul(new FN(feeFactor));
 
         return getMaxAvailableBalance({
           isNativeToken,

@@ -220,7 +220,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     });
   };
 
-  public queryIssuance = async (currency: MaybeCurrency, at?: number): Promise<FixedPointNumber> => {
+  public queryIssuance = async (currency: MaybeCurrency, at?: number): Promise<FN> => {
     let currencyId: CurrencyId;
     let currencyName: string;
     let token: Token;
@@ -371,10 +371,11 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     call: SubmittableExtrinsic<'promise', ISubmittableResult>,
     currency: MaybeCurrency,
     account: MaybeAccount,
-    isAllowDeath: boolean
+    isAllowDeath: boolean,
+    feeFactor = 1
   ): Promise<FN> {
     const paymentInfo = await call.paymentInfo(account.toString());
-    const accountInfo = await this.api.query.system.accounts<AccountInfo>(account.toString());
+    const accountInfo = await this.api.query.system.account<AccountInfo>(account.toString());
     const currencyInfo = await this.api.query.tokens.accounts<OrmlAccountData>(
       account.toString(),
       forceToCurrencyId(this.api, currency)
@@ -394,7 +395,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     const targetFreeBalance = FN.fromInner(currencyInfo.free.toString(), targetToken.decimal);
     const targetLockedBalance = FN.fromInner(currencyInfo.frozen.toString(), targetToken.decimal);
     const ed = this.getTransferConfig(currency).existentialDeposit;
-    const fee = FN.fromInner(paymentInfo.partialFee.toString(), nativeToken.decimal);
+    const fee = FN.fromInner(paymentInfo.partialFee.toString(), nativeToken.decimal).mul(new FN(feeFactor));
 
     return getMaxAvailableBalance({
       isNativeToken,

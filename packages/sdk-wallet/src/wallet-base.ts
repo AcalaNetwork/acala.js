@@ -180,6 +180,7 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
     call: SubmittableExtrinsic<T extends ApiRx ? 'rxjs' : 'promise', ISubmittableResult>,
     currency: MaybeCurrency,
     account: MaybeAccount,
-    isAllowDeath: boolean
+    isAllowDeath: boolean,
+    feeFactor?: number
   ): ObOrPromiseResult<T, FN>;
 }
