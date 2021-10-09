@@ -138,6 +138,13 @@ const versioned: OverrideVersionedType[] = [
         totalWithdrawnRewards: 'Compact<Balance>'
       }
     }
+  },
+  {
+    minmax: [1012, undefined],
+    types: {
+      Xcm: 'XcmV1',
+      XcmOrder: 'XcmOrderV1'
+    }
   }
 ];
 
