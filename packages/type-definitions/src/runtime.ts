@@ -7,6 +7,7 @@ export default {
     ProxyType: {
       _enum: ['Any', 'CancelProxy', 'Governance', 'Auction', 'Swap', 'Loan']
     },
-    AtLeast64BitUnsigned: 'u128'
+    AtLeast64BitUnsigned: 'u128',
+    StableAssetPoolId: 'u32'
   }
 };

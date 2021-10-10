@@ -40,7 +40,7 @@ export default {
         Token: 'TokenSymbol',
         DEXShare: '(DexShare, DexShare)',
         ERC20: 'EvmAddress',
-        StableAssetPoolToken: 'PoolId'
+        StableAssetPoolToken: 'StableAssetPoolId'
       }
     },
     CurrencyIdOf: 'CurrencyId',

@@ -274,7 +274,7 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "PoolId"
+                                "StableAssetPoolToken": "StableAssetPoolId"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -506,6 +506,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -555,9 +556,6 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1",
                         "Address": "LookupSource",
                         "LookupSource": "IndicesLookupSource"
@@ -665,7 +663,7 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "PoolId"
+                                "StableAssetPoolToken": "StableAssetPoolId"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -897,6 +895,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -946,9 +945,6 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1",
                         "Address": "GenericMultiAddress",
                         "LookupSource": "GenericMultiAddress"
@@ -1062,7 +1058,7 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "PoolId"
+                                "StableAssetPoolToken": "StableAssetPoolId"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -1294,6 +1290,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -1343,9 +1340,6 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1",
                         "Address": "GenericMultiAddress",
                         "LookupSource": "GenericMultiAddress",
@@ -1464,7 +1458,7 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "PoolId"
+                                "StableAssetPoolToken": "StableAssetPoolId"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -1698,6 +1692,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -1747,9 +1742,6 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -2097,6 +2089,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -2146,9 +2139,6 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -2258,7 +2248,7 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "PoolId"
+                                "StableAssetPoolToken": "StableAssetPoolId"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -2490,6 +2480,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -2539,9 +2530,6 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -2651,7 +2639,7 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "PoolId"
+                                "StableAssetPoolToken": "StableAssetPoolId"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -2883,6 +2871,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -2932,9 +2921,6 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -3047,7 +3033,7 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "PoolId"
+                                "StableAssetPoolToken": "StableAssetPoolId"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -3282,6 +3268,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -3331,17 +3318,11 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 }
             ],
             "alias": {
-                "chainBridge": {
-                    "ChainId": "ChainBridgeChainId"
-                },
                 "stakingPool": {
                     "Phase": "StakingPoolPhase"
                 },
@@ -3638,7 +3619,7 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "PoolId"
+                                "StableAssetPoolToken": "StableAssetPoolId"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -3870,6 +3851,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -3919,9 +3901,6 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1",
                         "Address": "LookupSource",
                         "LookupSource": "IndicesLookupSource"
@@ -4029,7 +4008,7 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "PoolId"
+                                "StableAssetPoolToken": "StableAssetPoolId"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -4261,6 +4240,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -4310,9 +4290,6 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1",
                         "Address": "GenericMultiAddress",
                         "LookupSource": "GenericMultiAddress"
@@ -4426,7 +4403,7 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "PoolId"
+                                "StableAssetPoolToken": "StableAssetPoolId"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -4658,6 +4635,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -4707,9 +4685,6 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1",
                         "Address": "GenericMultiAddress",
                         "LookupSource": "GenericMultiAddress",
@@ -4828,7 +4803,7 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "PoolId"
+                                "StableAssetPoolToken": "StableAssetPoolId"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -5062,6 +5037,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -5111,9 +5087,6 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -5461,6 +5434,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -5510,9 +5484,6 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -5622,7 +5593,7 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "PoolId"
+                                "StableAssetPoolToken": "StableAssetPoolId"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -5854,6 +5825,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -5903,9 +5875,6 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -6015,7 +5984,7 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "PoolId"
+                                "StableAssetPoolToken": "StableAssetPoolId"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -6247,6 +6216,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -6296,9 +6266,6 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -6411,7 +6378,7 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "PoolId"
+                                "StableAssetPoolToken": "StableAssetPoolId"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -6646,6 +6613,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -6695,17 +6663,11 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 }
             ],
             "alias": {
-                "chainBridge": {
-                    "ChainId": "ChainBridgeChainId"
-                },
                 "stakingPool": {
                     "Phase": "StakingPoolPhase"
                 },
@@ -7002,7 +6964,7 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "PoolId"
+                                "StableAssetPoolToken": "StableAssetPoolId"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -7234,6 +7196,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -7283,9 +7246,6 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1",
                         "Address": "LookupSource",
                         "LookupSource": "IndicesLookupSource"
@@ -7393,7 +7353,7 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "PoolId"
+                                "StableAssetPoolToken": "StableAssetPoolId"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -7625,6 +7585,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -7674,9 +7635,6 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1",
                         "Address": "GenericMultiAddress",
                         "LookupSource": "GenericMultiAddress"
@@ -7790,7 +7748,7 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "PoolId"
+                                "StableAssetPoolToken": "StableAssetPoolId"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -8022,6 +7980,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -8071,9 +8030,6 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1",
                         "Address": "GenericMultiAddress",
                         "LookupSource": "GenericMultiAddress",
@@ -8192,7 +8148,7 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "PoolId"
+                                "StableAssetPoolToken": "StableAssetPoolId"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -8426,6 +8382,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -8475,9 +8432,6 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -8825,6 +8779,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -8874,9 +8829,6 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -8986,7 +8938,7 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "PoolId"
+                                "StableAssetPoolToken": "StableAssetPoolId"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -9218,6 +9170,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -9267,9 +9220,6 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -9379,7 +9329,7 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "PoolId"
+                                "StableAssetPoolToken": "StableAssetPoolId"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -9611,6 +9561,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -9660,9 +9611,6 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 },
@@ -9775,7 +9723,7 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "PoolId"
+                                "StableAssetPoolToken": "StableAssetPoolId"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -10010,6 +9958,7 @@
                             ]
                         },
                         "AtLeast64BitUnsigned": "u128",
+                        "StableAssetPoolId": "u32",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -10059,17 +10008,11 @@
                         "Ratio": "FixedU128",
                         "PublicKey": "[u8; 20]",
                         "DestAddress": "Vec<u8>",
-                        "DepositNonce": "u64",
-                        "ResourceId": "[u8; 32]",
-                        "ChainBridgeChainId": "u8",
                         "Keys": "SessionKeys1"
                     }
                 }
             ],
             "alias": {
-                "chainBridge": {
-                    "ChainId": "ChainBridgeChainId"
-                },
                 "stakingPool": {
                     "Phase": "StakingPoolPhase"
                 },
