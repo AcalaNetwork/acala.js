@@ -101,7 +101,7 @@
             "Token": "TokenSymbol",
             "DEXShare": "(DexShare, DexShare)",
             "ERC20": "EvmAddress",
-            "StableAssetPoolToken": "PoolId"
+            "StableAssetPoolToken": "StableAssetPoolId"
         }
     },
     "CurrencyIdOf": "CurrencyId",
@@ -333,6 +333,7 @@
         ]
     },
     "AtLeast64BitUnsigned": "u128",
+    "StableAssetPoolId": "u32",
     "SubAccountStatus": {
         "bonded": "Balance",
         "available": "Balance",
@@ -382,8 +383,5 @@
     "Ratio": "FixedU128",
     "PublicKey": "[u8; 20]",
     "DestAddress": "Vec<u8>",
-    "DepositNonce": "u64",
-    "ResourceId": "[u8; 32]",
-    "ChainBridgeChainId": "u8",
     "Keys": "SessionKeys1"
 }

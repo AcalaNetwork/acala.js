@@ -4,7 +4,7 @@
 import type { Enum, i128, u32 } from '@polkadot/types';
 import type { ITuple } from '@polkadot/types/types';
 import type { EvmAddress } from '@acala-network/types/interfaces/evm';
-import type { PoolId } from '@acala-network/types/interfaces/incentives';
+import type { StableAssetPoolId } from '@acala-network/types/interfaces/runtime';
 
 /** @name AcalaDataProviderId */
 export interface AcalaDataProviderId extends Enum {
@@ -49,7 +49,7 @@ export interface CurrencyId extends Enum {
   readonly isErc20: boolean;
   readonly asErc20: EvmAddress;
   readonly isStableAssetPoolToken: boolean;
-  readonly asStableAssetPoolToken: PoolId;
+  readonly asStableAssetPoolToken: StableAssetPoolId;
 }
 
 /** @name CurrencyIdOf */
