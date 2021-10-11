@@ -14,9 +14,9 @@ import type { PoolId, PoolIdV0 } from '@acala-network/types/interfaces/incentive
 import type { Position } from '@acala-network/types/interfaces/loans';
 import type { Attributes, CID, ClassData, ClassIdOf, ClassInfoOf, NFTBalance, NFTBalanceOf, NFTClassId, Properties, TokenData, TokenId, TokenIdOf, TokenInfoOf } from '@acala-network/types/interfaces/nft';
 import type { BondingLedger, HomaUnlockChunk, NomineeId } from '@acala-network/types/interfaces/nomineesElection';
-import type { AcalaDataProviderId, AirDropCurrencyId, Amount, AmountOf, AuctionId, AuctionIdOf, AuthoritysOriginId, CurrencyId, CurrencyIdOf, DexShare, TokenSymbol, TradingPair } from '@acala-network/types/interfaces/primitives';
+import type { AcalaDataProviderId, AirDropCurrencyId, Amount, AmountOf, AuctionId, AuctionIdOf, AuthoritysOriginId, ChainBridgeChainId, CurrencyId, CurrencyIdOf, DexShare, TokenSymbol, TradingPair } from '@acala-network/types/interfaces/primitives';
 import type { DestAddress, PublicKey } from '@acala-network/types/interfaces/renvmBridge';
-import type { AccountId, AccountId20, AccountId32, AccountIdOf, AccountIndex, Address, AsOriginId, AssetId, AtLeast64BitUnsigned, Balance, BalanceOf, Block, BlockNumber, BlockNumberFor, BlockNumberOf, Call, CallHash, CallHashOf, ChangesTrieConfiguration, ChangesTrieSignal, CodecHash, Consensus, ConsensusEngineId, Digest, DigestItem, EncodedJustification, ExtrinsicsWeight, Fixed128, Fixed64, FixedI128, FixedI64, FixedU128, FixedU64, H1024, H128, H160, H2048, H256, H32, H512, H64, Hash, Header, HeaderPartial, I32F32, Index, IndicesLookupSource, Justification, Justifications, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, ModuleId, Moment, MultiAddress, MultiSigner, OpaqueCall, OracleKey, OracleValue, Origin, OriginCaller, PalletId, PalletVersion, PalletsOrigin, Pays, PerU16, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, Releases, RuntimeDbWeight, Seal, SealV0, SignedBlock, SignedBlockWithJustification, SignedBlockWithJustifications, Slot, StorageData, StorageProof, TransactionInfo, TransactionPriority, TransactionStorageProof, U32F32, ValidatorId, ValidatorIdOf, Weight, WeightMultiplier } from '@acala-network/types/interfaces/runtime';
+import type { AccountId, AccountId20, AccountId32, AccountIdOf, AccountIndex, Address, AsOriginId, AssetId, AtLeast64BitUnsigned, Balance, BalanceOf, Block, BlockNumber, BlockNumberFor, BlockNumberOf, Call, CallHash, CallHashOf, ChangesTrieConfiguration, ChangesTrieSignal, CodecHash, Consensus, ConsensusEngineId, Digest, DigestItem, EncodedJustification, ExtrinsicsWeight, Fixed128, Fixed64, FixedI128, FixedI64, FixedU128, FixedU64, H1024, H128, H160, H2048, H256, H32, H512, H64, Hash, Header, HeaderPartial, I32F32, Index, IndicesLookupSource, Justification, Justifications, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, ModuleId, Moment, MultiAddress, MultiSigner, OpaqueCall, OracleKey, OracleValue, Origin, OriginCaller, PalletId, PalletVersion, PalletsOrigin, Pays, PerU16, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, Releases, RuntimeDbWeight, Seal, SealV0, SignedBlock, SignedBlockWithJustification, SignedBlockWithJustifications, Slot, StableAssetPoolId, StorageData, StorageProof, TransactionInfo, TransactionPriority, TransactionStorageProof, U32F32, ValidatorId, ValidatorIdOf, Weight, WeightMultiplier } from '@acala-network/types/interfaces/runtime';
 import type { BalanceInfo, ChangeRate, ChangeRatio, Ledger, Params, PolkadotAccountId, PolkadotAccountIdOf, StakingPoolPhase, SubAccountStatus } from '@acala-network/types/interfaces/stakingPool';
 import type { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
 import type { AuthorityOrigin, CallOf, DelayedOrigin, DispatchTime, ScheduleTaskIndex } from '@open-web3/orml-types/interfaces/authority';
@@ -223,6 +223,7 @@ declare module '@polkadot/types/types/registry' {
     CandidateInfoOf: CandidateInfoOf;
     CandidatePendingAvailability: CandidatePendingAvailability;
     CandidateReceipt: CandidateReceipt;
+    ChainBridgeChainId: ChainBridgeChainId;
     ChainId: ChainId;
     ChainProperties: ChainProperties;
     ChainType: ChainType;
@@ -964,6 +965,7 @@ declare module '@polkadot/types/types/registry' {
     SpanIndex: SpanIndex;
     SpanRecord: SpanRecord;
     Sr25519Signature: Sr25519Signature;
+    StableAssetPoolId: StableAssetPoolId;
     StakingLedger: StakingLedger;
     StakingLedgerTo223: StakingLedgerTo223;
     StakingLedgerTo240: StakingLedgerTo240;
