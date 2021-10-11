@@ -100,7 +100,7 @@ export const getMaxAvailableBalance = (config: Config): FN => {
       return targetFreeBalance.sub(ed.sub(targetLockedBalance)).max(ZERO);
 
     // if target locked balance >= ed
-    if (targetLockedBalance.gte(ed)) return targetFreeBalance;
+    if (targetLockedBalance.gte(ed)) return targetFreeBalance.sub(targetLockedBalance).max(ZERO);
   }
 
   throw new MayFailedCausedByFee();

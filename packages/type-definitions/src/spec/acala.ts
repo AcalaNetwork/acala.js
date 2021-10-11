@@ -1,11 +1,75 @@
 import type { OverrideVersionedType } from '@polkadot/types/types';
 
+const xcmV0 = {
+  MultiLocation: 'MultiLocationV0',
+  MultiAsset: 'MultiAssetV0',
+  Xcm: 'XcmV0',
+  XcmOrder: 'XcmOrderV0'
+};
+
+const xcmV1 = {
+  MultiLocation: 'MultiLocationV1',
+  MultiAsset: 'MultiAssetV1',
+  Xcm: 'XcmV1',
+  XcmOrder: 'XcmOrderV1'
+};
+
+const addressV0 = {
+  Address: 'LookupSource',
+  LookupSource: 'IndicesLookupSource'
+};
+
+const addressV1 = {
+  Address: 'GenericMultiAddress',
+  LookupSource: 'GenericMultiAddress'
+};
+
+const currencyV0 = {
+  CurrencyId: {
+    _enum: {
+      Token: 'TokenSymbol',
+      DEXShare: '(TokenSymbol, TokenSymbol)',
+      ERC20: 'EvmAddress'
+    }
+  }
+};
+
+const poolIdV0 = {
+  PoolId: {
+    _enum: {
+      Loans: 'CurrencyId',
+      DexIncentive: 'CurrencyId',
+      DexSaving: 'CurrencyId',
+      Homa: 'Null'
+    }
+  }
+};
+
+const poolIdV1 = {
+  PoolId: {
+    _enum: {
+      LoansIncentive: 'CurrencyId',
+      DexIncentive: 'CurrencyId',
+      HomaIncentive: 'Null',
+      DexSaving: 'CurrencyId',
+      HomaValidatorAllowance: 'AccountId'
+    }
+  },
+  // for orml-reward types
+  PoolInfo: {
+    totalShares: 'Compact<Share>',
+    totalRewards: 'Compact<Balance>',
+    totalWithdrawnRewards: 'Compact<Balance>'
+  }
+};
+
 const versioned: OverrideVersionedType[] = [
   {
     minmax: [600, 699],
     types: {
-      Address: 'LookupSource',
-      LookupSource: 'IndicesLookupSource',
+      ...xcmV0,
+      ...poolIdV0,
+      ...addressV0,
       TokenSymbol: {
         _enum: ['ACA', 'AUSD', 'DOT', 'XBTC', 'LDOT', 'RENBTC']
       }
@@ -14,41 +78,21 @@ const versioned: OverrideVersionedType[] = [
   {
     minmax: [700, 719],
     types: {
-      Address: 'GenericMultiAddress',
-      LookupSource: 'GenericMultiAddress',
+      ...xcmV0,
+      ...poolIdV0,
+      ...addressV1,
       TokenSymbol: {
         _enum: ['ACA', 'AUSD', 'DOT', 'XBTC', 'LDOT', 'RENBTC']
       }
     }
   },
   {
-    minmax: [720, undefined],
+    minmax: [720, 722],
     types: {
-      Address: 'GenericMultiAddress',
-      LookupSource: 'GenericMultiAddress',
-      AssetInstance: 'AssetInstanceV0',
-      MultiLocation: 'MultiLocationV0',
-      MultiAsset: 'MultiAssetV0',
-      Xcm: 'XcmV0',
-      XcmOrder: 'XcmOrderV0'
-    }
-  },
-  {
-    minmax: [600, 722],
-    types: {
-      PoolId: {
-        _enum: {
-          Loans: 'CurrencyId',
-          DexIncentive: 'CurrencyId',
-          DexSaving: 'CurrencyId',
-          Homa: 'Null'
-        }
-      }
-    }
-  },
-  {
-    minmax: [719, 729],
-    types: {
+      ...addressV1,
+      ...xcmV0,
+      ...poolIdV0,
+      ...currencyV0,
       TokenSymbol: {
         _enum: {
           ACA: 0,
@@ -69,12 +113,35 @@ const versioned: OverrideVersionedType[] = [
           SDN: 135,
           KILT: 138
         }
-      },
-      CurrencyId: {
+      }
+    }
+  },
+  {
+    minmax: [723, 729],
+    types: {
+      ...addressV1,
+      ...xcmV0,
+      ...poolIdV1,
+      ...currencyV0,
+      TokenSymbol: {
         _enum: {
-          Token: 'TokenSymbol',
-          DEXShare: '(TokenSymbol, TokenSymbol)',
-          ERC20: 'EvmAddress'
+          ACA: 0,
+          AUSD: 1,
+          DOT: 2,
+          LDOT: 3,
+          XBTC: 4,
+          RENBTC: 5,
+          POLKABTC: 6,
+          PLM: 7,
+          PHA: 8,
+          HDT: 9,
+          BCG: 11,
+          KAR: 128,
+          KUSD: 129,
+          KSM: 130,
+          LKSM: 131,
+          SDN: 135,
+          KILT: 138
         }
       }
     }
@@ -82,6 +149,9 @@ const versioned: OverrideVersionedType[] = [
   {
     minmax: [730, 1007],
     types: {
+      ...addressV1,
+      ...xcmV0,
+      ...poolIdV1,
       TokenSymbol: {
         _enum: {
           ACA: 0,
@@ -103,6 +173,9 @@ const versioned: OverrideVersionedType[] = [
   {
     minmax: [1008, 1008],
     types: {
+      ...addressV1,
+      ...xcmV0,
+      ...poolIdV1,
       TokenSymbol: {
         _enum: {
           ACA: 0,
@@ -120,23 +193,25 @@ const versioned: OverrideVersionedType[] = [
     }
   },
   {
-    minmax: [723, 1009],
+    minmax: [1008, 1009],
     types: {
-      PoolId: {
-        _enum: {
-          LoansIncentive: 'CurrencyId',
-          DexIncentive: 'CurrencyId',
-          HomaIncentive: 'Null',
-          DexSaving: 'CurrencyId',
-          HomaValidatorAllowance: 'AccountId'
-        }
-      },
-      // for orml-reward types
-      PoolInfo: {
-        totalShares: 'Compact<Share>',
-        totalRewards: 'Compact<Balance>',
-        totalWithdrawnRewards: 'Compact<Balance>'
-      }
+      ...addressV1,
+      ...xcmV0,
+      ...poolIdV1
+    }
+  },
+  {
+    minmax: [1010, 1011],
+    types: {
+      ...addressV1,
+      ...xcmV0
+    }
+  },
+  {
+    minmax: [1012, undefined],
+    types: {
+      ...addressV1,
+      ...xcmV1
     }
   }
 ];
