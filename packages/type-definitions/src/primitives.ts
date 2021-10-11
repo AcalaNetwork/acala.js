@@ -54,7 +54,8 @@ export default {
       _enum: ['Aggregated', 'Acala', 'Band']
     },
     TradingPair: '(CurrencyId,  CurrencyId)',
-    OrmlCurrencyId: 'CurrencyId'
+    OrmlCurrencyId: 'CurrencyId',
+    ChainBridgeChainId: 'u8'
   },
   typesAlias: {
     rewards: {
@@ -62,6 +63,9 @@ export default {
     },
     oracle: {
       DataProviderId: 'AcalaDataProviderId'
+    },
+    chainBridge: {
+      ChainId: 'ChainBridgeChainId'
     }
   }
 };

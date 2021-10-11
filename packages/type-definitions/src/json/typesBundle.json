@@ -301,6 +301,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -690,6 +691,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -1085,6 +1087,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -1485,6 +1488,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -1884,6 +1888,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -2275,6 +2280,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -2666,6 +2672,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -3060,6 +3067,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -3338,6 +3346,9 @@
                 },
                 "oracle": {
                     "DataProviderId": "AcalaDataProviderId"
+                },
+                "chainBridge": {
+                    "ChainId": "ChainBridgeChainId"
                 },
                 "tokens": {
                     "AccountData": "OrmlAccountData",
@@ -3646,6 +3657,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -4035,6 +4047,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -4430,6 +4443,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -4830,6 +4844,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -5229,6 +5244,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -5620,6 +5636,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -6011,6 +6028,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -6405,6 +6423,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -6683,6 +6702,9 @@
                 },
                 "oracle": {
                     "DataProviderId": "AcalaDataProviderId"
+                },
+                "chainBridge": {
+                    "ChainId": "ChainBridgeChainId"
                 },
                 "tokens": {
                     "AccountData": "OrmlAccountData",
@@ -6991,6 +7013,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -7380,6 +7403,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -7775,6 +7799,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -8175,6 +8200,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -8574,6 +8600,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -8965,6 +8992,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -9356,6 +9384,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -9750,6 +9779,7 @@
                             ]
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
+                        "ChainBridgeChainId": "u8",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -10028,6 +10058,9 @@
                 },
                 "oracle": {
                     "DataProviderId": "AcalaDataProviderId"
+                },
+                "chainBridge": {
+                    "ChainId": "ChainBridgeChainId"
                 },
                 "tokens": {
                     "AccountData": "OrmlAccountData",

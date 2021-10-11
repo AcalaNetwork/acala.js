@@ -1,7 +1,7 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { Enum, i128, u32 } from '@polkadot/types';
+import type { Enum, i128, u32, u8 } from '@polkadot/types';
 import type { ITuple } from '@polkadot/types/types';
 import type { EvmAddress } from '@acala-network/types/interfaces/evm';
 import type { StableAssetPoolId } from '@acala-network/types/interfaces/runtime';
@@ -39,6 +39,9 @@ export interface AuthoritysOriginId extends Enum {
   readonly isHomaTreasury: boolean;
   readonly isTreasuryReserve: boolean;
 }
+
+/** @name ChainBridgeChainId */
+export interface ChainBridgeChainId extends u8 {}
 
 /** @name CurrencyId */
 export interface CurrencyId extends Enum {
