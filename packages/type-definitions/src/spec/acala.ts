@@ -201,14 +201,14 @@ const versioned: OverrideVersionedType[] = [
     }
   },
   {
-    minmax: [1010, 1011],
+    minmax: [1010, 1013],
     types: {
       ...addressV1,
       ...xcmV0
     }
   },
   {
-    minmax: [1012, undefined],
+    minmax: [1014, undefined],
     types: {
       ...addressV1,
       ...xcmV1
