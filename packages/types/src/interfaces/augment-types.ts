@@ -1,7 +1,6 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { BitVec, Bool, Bytes, Data, I128, I16, I256, I32, I64, I8, Json, Null, Raw, StorageKey, Text, Type, U128, U16, U256, U32, U64, U8, USize, bool, i128, i16, i256, i32, i64, i8, u128, u16, u256, u32, u64, u8, usize } from '@polkadot/types';
 import type { PalletBalanceOf } from '@acala-network/types/interfaces/accounts';
 import type { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from '@acala-network/types/interfaces/auctionManager';
 import type { ChangeBalance, ChangeOptionRate, ChangeOptionRatio, LiquidationStrategy, OptionRate, OptionRatio, RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
@@ -26,6 +25,7 @@ import type { CompactBalance, OrmlCurrencyId, PoolInfo, PoolInfoV0, Share } from
 import type { OrmlAccountData, OrmlBalanceLock } from '@open-web3/orml-types/interfaces/tokens';
 import type { AuctionInfo, DelayedDispatchTime, DispatchId, Price } from '@open-web3/orml-types/interfaces/traits';
 import type { OrmlVestingSchedule, VestingScheduleOf } from '@open-web3/orml-types/interfaces/vesting';
+import type { BitVec, Bool, Bytes, Data, I128, I16, I256, I32, I64, I8, Json, Null, Raw, StorageKey, Text, Type, U128, U16, U256, U32, U64, U8, USize, bool, i128, i16, i256, i32, i64, i8, u128, u16, u256, u32, u64, u8, usize } from '@polkadot/types';
 import type { AssetApproval, AssetApprovalKey, AssetBalance, AssetDestroyWitness, AssetDetails, AssetMetadata, TAssetBalance, TAssetDepositBalance } from '@polkadot/types/interfaces/assets';
 import type { BlockAttestations, IncludedBlocks, MoreAttestations } from '@polkadot/types/interfaces/attestations';
 import type { RawAuraPreDigest } from '@polkadot/types/interfaces/aura';
@@ -34,7 +34,7 @@ import type { UncleEntryItem } from '@polkadot/types/interfaces/authorship';
 import type { AllowedSlots, BabeAuthorityWeight, BabeBlockWeight, BabeEpochConfiguration, BabeEquivocationProof, BabeWeight, EpochAuthorship, MaybeRandomness, MaybeVrf, NextConfigDescriptor, NextConfigDescriptorV1, Randomness, RawBabePreDigest, RawBabePreDigestCompat, RawBabePreDigestPrimary, RawBabePreDigestPrimaryTo159, RawBabePreDigestSecondaryPlain, RawBabePreDigestSecondaryTo159, RawBabePreDigestSecondaryVRF, RawBabePreDigestTo159, SlotNumber, VrfData, VrfOutput, VrfProof } from '@polkadot/types/interfaces/babe';
 import type { AccountData, BalanceLock, BalanceLockTo212, BalanceStatus, Reasons, ReserveData, ReserveIdentifier, VestingSchedule, WithdrawReasons } from '@polkadot/types/interfaces/balances';
 import type { BeefyCommitment, BeefyId, BeefyNextAuthoritySet, BeefyPayload, BeefySignedCommitment, MmrRootHash, ValidatorSetId } from '@polkadot/types/interfaces/beefy';
-import type { BridgedBlockHash, BridgedBlockNumber, BridgedHeader, CallOrigin, ChainId, DeliveredMessages, DispatchFeePayment, InboundLaneData, InboundRelayer, InitializationData, LaneId, MessageData, MessageKey, MessageNonce, MessagesDeliveryProofOf, MessagesProofOf, OperatingMode, OutboundLaneData, OutboundMessageFee, OutboundPayload, Parameter, RelayerId, UnrewardedRelayer, UnrewardedRelayersState } from '@polkadot/types/interfaces/bridges';
+import type { BridgeMessageId, BridgedBlockHash, BridgedBlockNumber, BridgedHeader, CallOrigin, ChainId, DeliveredMessages, DispatchFeePayment, InboundLaneData, InboundRelayer, InitializationData, LaneId, MessageData, MessageKey, MessageNonce, MessagesDeliveryProofOf, MessagesProofOf, OperatingMode, OutboundLaneData, OutboundMessageFee, OutboundPayload, Parameter, RelayerId, UnrewardedRelayer, UnrewardedRelayersState } from '@polkadot/types/interfaces/bridges';
 import type { BlockHash } from '@polkadot/types/interfaces/chain';
 import type { PrefixedStorageKey } from '@polkadot/types/interfaces/childstate';
 import type { EthereumAddress, StatementKind } from '@polkadot/types/interfaces/claims';
@@ -53,10 +53,10 @@ import type { AnySignature, EcdsaSignature, Ed25519Signature, Era, Extrinsic, Ex
 import type { AssetOptions, Owner, PermissionLatest, PermissionVersions, PermissionsV1 } from '@polkadot/types/interfaces/genericAsset';
 import type { ActiveGilt, ActiveGiltsTotal, ActiveIndex, GiltBid } from '@polkadot/types/interfaces/gilt';
 import type { AuthorityIndex, AuthorityList, AuthoritySet, AuthoritySetChange, AuthoritySetChanges, AuthorityWeight, DelayKind, DelayKindBest, EncodedFinalityProofs, ForkTreePendingChange, ForkTreePendingChangeNode, GrandpaCommit, GrandpaEquivocation, GrandpaEquivocationProof, GrandpaEquivocationValue, GrandpaJustification, GrandpaPrecommit, GrandpaPrevote, GrandpaSignedPrecommit, JustificationNotification, KeyOwnerProof, NextAuthority, PendingChange, PendingPause, PendingResume, Precommits, Prevotes, ReportedRoundStates, RoundState, SetId, StoredPendingChange, StoredState } from '@polkadot/types/interfaces/grandpa';
-import type { IdentityFields, IdentityInfo, IdentityInfoAdditional, IdentityJudgement, RegistrarIndex, RegistrarInfo, Registration, RegistrationJudgement } from '@polkadot/types/interfaces/identity';
+import type { IdentityFields, IdentityInfo, IdentityInfoAdditional, IdentityInfoTo198, IdentityJudgement, RegistrarIndex, RegistrarInfo, Registration, RegistrationJudgement, RegistrationTo198 } from '@polkadot/types/interfaces/identity';
 import type { AuthIndex, AuthoritySignature, Heartbeat, HeartbeatTo244, OpaqueMultiaddr, OpaqueNetworkState, OpaquePeerId } from '@polkadot/types/interfaces/imOnline';
 import type { CallIndex, LotteryConfig } from '@polkadot/types/interfaces/lottery';
-import type { ErrorMetadataLatest, ErrorMetadataV10, ErrorMetadataV11, ErrorMetadataV12, ErrorMetadataV13, ErrorMetadataV14, ErrorMetadataV9, EventMetadataLatest, EventMetadataV10, EventMetadataV11, EventMetadataV12, EventMetadataV13, EventMetadataV14, EventMetadataV9, ExtrinsicMetadataLatest, ExtrinsicMetadataV11, ExtrinsicMetadataV12, ExtrinsicMetadataV13, ExtrinsicMetadataV14, FunctionArgumentMetadataLatest, FunctionArgumentMetadataV10, FunctionArgumentMetadataV11, FunctionArgumentMetadataV12, FunctionArgumentMetadataV13, FunctionArgumentMetadataV14, FunctionArgumentMetadataV9, FunctionMetadataLatest, FunctionMetadataV10, FunctionMetadataV11, FunctionMetadataV12, FunctionMetadataV13, FunctionMetadataV14, FunctionMetadataV9, MetadataAll, MetadataLatest, MetadataV10, MetadataV11, MetadataV12, MetadataV13, MetadataV14, MetadataV9, ModuleConstantMetadataLatest, ModuleConstantMetadataV10, ModuleConstantMetadataV11, ModuleConstantMetadataV12, ModuleConstantMetadataV13, ModuleConstantMetadataV9, ModuleMetadataLatest, ModuleMetadataV10, ModuleMetadataV11, ModuleMetadataV12, ModuleMetadataV13, ModuleMetadataV9, PalletCallMetadataLatest, PalletCallMetadataV14, PalletConstantMetadataLatest, PalletConstantMetadataV14, PalletErrorMetadataLatest, PalletErrorMetadataV14, PalletEventMetadataLatest, PalletEventMetadataV14, PalletMetadataLatest, PalletMetadataV14, PalletStorageMetadataLatest, PalletStorageMetadataV14, PortableRegistry, PortableType, SignedExtensionMetadataLatest, SignedExtensionMetadataV14, StorageEntryMetadataLatest, StorageEntryMetadataV10, StorageEntryMetadataV11, StorageEntryMetadataV12, StorageEntryMetadataV13, StorageEntryMetadataV14, StorageEntryMetadataV9, StorageEntryModifierLatest, StorageEntryModifierV10, StorageEntryModifierV11, StorageEntryModifierV12, StorageEntryModifierV13, StorageEntryModifierV14, StorageEntryModifierV9, StorageEntryTypeLatest, StorageEntryTypeV10, StorageEntryTypeV11, StorageEntryTypeV12, StorageEntryTypeV13, StorageEntryTypeV14, StorageEntryTypeV9, StorageHasher, StorageHasherV10, StorageHasherV11, StorageHasherV12, StorageHasherV13, StorageHasherV14, StorageHasherV9, StorageMetadataLatest, StorageMetadataV10, StorageMetadataV11, StorageMetadataV12, StorageMetadataV13, StorageMetadataV9 } from '@polkadot/types/interfaces/metadata';
+import type { ErrorMetadataLatest, ErrorMetadataV10, ErrorMetadataV11, ErrorMetadataV12, ErrorMetadataV13, ErrorMetadataV14, ErrorMetadataV9, EventMetadataLatest, EventMetadataV10, EventMetadataV11, EventMetadataV12, EventMetadataV13, EventMetadataV14, EventMetadataV9, ExtrinsicMetadataLatest, ExtrinsicMetadataV11, ExtrinsicMetadataV12, ExtrinsicMetadataV13, ExtrinsicMetadataV14, FunctionArgumentMetadataLatest, FunctionArgumentMetadataV10, FunctionArgumentMetadataV11, FunctionArgumentMetadataV12, FunctionArgumentMetadataV13, FunctionArgumentMetadataV14, FunctionArgumentMetadataV9, FunctionMetadataLatest, FunctionMetadataV10, FunctionMetadataV11, FunctionMetadataV12, FunctionMetadataV13, FunctionMetadataV14, FunctionMetadataV9, MetadataAll, MetadataLatest, MetadataV10, MetadataV11, MetadataV12, MetadataV13, MetadataV14, MetadataV9, ModuleConstantMetadataV10, ModuleConstantMetadataV11, ModuleConstantMetadataV12, ModuleConstantMetadataV13, ModuleConstantMetadataV9, ModuleMetadataV10, ModuleMetadataV11, ModuleMetadataV12, ModuleMetadataV13, ModuleMetadataV9, PalletCallMetadataLatest, PalletCallMetadataV14, PalletConstantMetadataLatest, PalletConstantMetadataV14, PalletErrorMetadataLatest, PalletErrorMetadataV14, PalletEventMetadataLatest, PalletEventMetadataV14, PalletMetadataLatest, PalletMetadataV14, PalletStorageMetadataLatest, PalletStorageMetadataV14, PortableRegistry, PortableRegistryV14, PortableType, PortableTypeV14, SignedExtensionMetadataLatest, SignedExtensionMetadataV14, StorageEntryMetadataLatest, StorageEntryMetadataV10, StorageEntryMetadataV11, StorageEntryMetadataV12, StorageEntryMetadataV13, StorageEntryMetadataV14, StorageEntryMetadataV9, StorageEntryModifierLatest, StorageEntryModifierV10, StorageEntryModifierV11, StorageEntryModifierV12, StorageEntryModifierV13, StorageEntryModifierV14, StorageEntryModifierV9, StorageEntryTypeLatest, StorageEntryTypeV10, StorageEntryTypeV11, StorageEntryTypeV12, StorageEntryTypeV13, StorageEntryTypeV14, StorageEntryTypeV9, StorageHasher, StorageHasherV10, StorageHasherV11, StorageHasherV12, StorageHasherV13, StorageHasherV14, StorageHasherV9, StorageMetadataV10, StorageMetadataV11, StorageMetadataV12, StorageMetadataV13, StorageMetadataV9 } from '@polkadot/types/interfaces/metadata';
 import type { MmrLeafProof } from '@polkadot/types/interfaces/mmr';
 import type { StorageKind } from '@polkadot/types/interfaces/offchain';
 import type { DeferredOffenceOf, Kind, OffenceDetails, Offender, OpaqueTimeSlot, ReportIdOf, Reporter } from '@polkadot/types/interfaces/offences';
@@ -67,12 +67,12 @@ import type { ProxyAnnouncement, ProxyDefinition, ProxyType } from '@polkadot/ty
 import type { AccountStatus, AccountValidity } from '@polkadot/types/interfaces/purchase';
 import type { ActiveRecovery, RecoveryConfig } from '@polkadot/types/interfaces/recovery';
 import type { RpcMethods } from '@polkadot/types/interfaces/rpc';
-import type { Si0Field, Si0LookupTypeId, Si0Path, Si0Type, Si0TypeDef, Si0TypeDefArray, Si0TypeDefBitSequence, Si0TypeDefCompact, Si0TypeDefComposite, Si0TypeDefPhantom, Si0TypeDefPrimitive, Si0TypeDefSequence, Si0TypeDefTuple, Si0TypeDefVariant, Si0TypeParameter, Si0Variant, SiField, SiLookupTypeId, SiPath, SiType, SiTypeDef, SiTypeDefArray, SiTypeDefBitSequence, SiTypeDefCompact, SiTypeDefComposite, SiTypeDefPrimitive, SiTypeDefSequence, SiTypeDefTuple, SiTypeDefVariant, SiTypeParameter, SiVariant } from '@polkadot/types/interfaces/scaleInfo';
+import type { Si0Field, Si0LookupTypeId, Si0Path, Si0Type, Si0TypeDef, Si0TypeDefArray, Si0TypeDefBitSequence, Si0TypeDefCompact, Si0TypeDefComposite, Si0TypeDefPhantom, Si0TypeDefPrimitive, Si0TypeDefSequence, Si0TypeDefTuple, Si0TypeDefVariant, Si0TypeParameter, Si0Variant, Si1Field, Si1LookupTypeId, Si1Path, Si1Type, Si1TypeDef, Si1TypeDefArray, Si1TypeDefBitSequence, Si1TypeDefCompact, Si1TypeDefComposite, Si1TypeDefPrimitive, Si1TypeDefSequence, Si1TypeDefTuple, Si1TypeDefVariant, Si1TypeParameter, Si1Variant, SiField, SiLookupTypeId, SiPath, SiType, SiTypeDef, SiTypeDefArray, SiTypeDefBitSequence, SiTypeDefCompact, SiTypeDefComposite, SiTypeDefPrimitive, SiTypeDefSequence, SiTypeDefTuple, SiTypeDefVariant, SiTypeParameter, SiVariant } from '@polkadot/types/interfaces/scaleInfo';
 import type { Period, Priority, SchedulePeriod, SchedulePriority, Scheduled, ScheduledTo254, TaskAddress } from '@polkadot/types/interfaces/scheduler';
 import type { BeefyKey, FullIdentification, IdentificationTuple, Keys, MembershipProof, SessionIndex, SessionKeys1, SessionKeys10, SessionKeys10B, SessionKeys2, SessionKeys3, SessionKeys4, SessionKeys5, SessionKeys6, SessionKeys6B, SessionKeys7, SessionKeys7B, SessionKeys8, SessionKeys8B, SessionKeys9, SessionKeys9B, ValidatorCount } from '@polkadot/types/interfaces/session';
 import type { Bid, BidKind, SocietyJudgement, SocietyVote, StrikeCount, VouchingStatus } from '@polkadot/types/interfaces/society';
 import type { ActiveEraInfo, CompactAssignments, CompactAssignmentsTo257, CompactAssignmentsTo265, CompactAssignmentsWith16, CompactAssignmentsWith24, CompactScore, CompactScoreCompact, ElectionCompute, ElectionPhase, ElectionResult, ElectionScore, ElectionSize, ElectionStatus, EraIndex, EraPoints, EraRewardPoints, EraRewards, Exposure, ExtendedBalance, Forcing, IndividualExposure, KeyType, MomentOf, Nominations, NominatorIndex, NominatorIndexCompact, OffchainAccuracy, OffchainAccuracyCompact, PhragmenScore, Points, RawSolution, RawSolutionTo265, RawSolutionWith16, RawSolutionWith24, ReadySolution, RewardDestination, RewardPoint, RoundSnapshot, SeatHolder, SignedSubmission, SignedSubmissionOf, SignedSubmissionTo276, SlashJournalEntry, SlashingSpans, SlashingSpansTo204, SolutionOrSnapshotSize, SolutionSupport, SolutionSupports, SpanIndex, SpanRecord, StakingLedger, StakingLedgerTo223, StakingLedgerTo240, SubmissionIndicesOf, Supports, UnappliedSlash, UnappliedSlashOther, UnlockChunk, ValidatorIndex, ValidatorIndexCompact, ValidatorPrefs, ValidatorPrefsTo145, ValidatorPrefsTo196, ValidatorPrefsWithBlocked, ValidatorPrefsWithCommission, VoteWeight, Voter } from '@polkadot/types/interfaces/staking';
-import type { ApiId, BlockTrace, BlockTraceEvent, BlockTraceEventData, BlockTraceSpan, KeyValueOption, ReadProof, RuntimeVersion, RuntimeVersionApi, RuntimeVersionPartial, StorageChangeSet, TraceBlockResponse, TraceError } from '@polkadot/types/interfaces/state';
+import type { ApiId, BlockTrace, BlockTraceEvent, BlockTraceEventData, BlockTraceSpan, KeyValueOption, ReadProof, RuntimeVersion, RuntimeVersionApi, RuntimeVersionPartial, SpecVersion, StorageChangeSet, TraceBlockResponse, TraceError } from '@polkadot/types/interfaces/state';
 import type { WeightToFeeCoefficient } from '@polkadot/types/interfaces/support';
 import type { AccountInfo, AccountInfoWithDualRefCount, AccountInfoWithProviders, AccountInfoWithRefCount, AccountInfoWithRefCountU8, AccountInfoWithTripleRefCount, ApplyExtrinsicResult, ArithmeticError, BlockLength, BlockWeights, ChainProperties, ChainType, ConsumedWeight, DigestOf, DispatchClass, DispatchError, DispatchErrorModule, DispatchErrorTo198, DispatchInfo, DispatchInfoTo190, DispatchInfoTo244, DispatchOutcome, DispatchResult, DispatchResultOf, DispatchResultTo198, Event, EventId, EventIndex, EventRecord, Health, InvalidTransaction, Key, LastRuntimeUpgradeInfo, NetworkState, NetworkStatePeerset, NetworkStatePeersetInfo, NodeRole, NotConnectedPeer, Peer, PeerEndpoint, PeerEndpointAddr, PeerInfo, PeerPing, PerDispatchClassU32, PerDispatchClassWeight, PerDispatchClassWeightsPerClass, Phase, RawOrigin, RefCount, RefCountTo259, SyncState, SystemOrigin, TokenError, TransactionValidityError, UnknownTransaction, WeightPerClass } from '@polkadot/types/interfaces/system';
 import type { Bounty, BountyIndex, BountyStatus, BountyStatusActive, BountyStatusCuratorProposed, BountyStatusPendingPayout, OpenTip, OpenTipFinderTo225, OpenTipTip, OpenTipTo225, TreasuryProposal } from '@polkadot/types/interfaces/treasury';
@@ -80,7 +80,7 @@ import type { Multiplier } from '@polkadot/types/interfaces/txpayment';
 import type { ClassDetails, ClassId, ClassMetadata, DepositBalance, DepositBalanceOf, DestroyWitness, InstanceDetails, InstanceId, InstanceMetadata } from '@polkadot/types/interfaces/uniques';
 import type { Multisig, Timepoint } from '@polkadot/types/interfaces/utility';
 import type { VestingInfo } from '@polkadot/types/interfaces/vesting';
-import type { AssetInstance, AssetInstanceV0, AssetInstanceV1, BodyId, BodyPart, DoubleEncodedCall, Fungibility, InboundStatus, InstructionV2, InteriorMultiLocation, Junction, JunctionV0, JunctionV1, JunctionV2, Junctions, JunctionsV1, JunctionsV2, MultiAsset, MultiAssetFilter, MultiAssetFilterV1, MultiAssetFilterV2, MultiAssetV0, MultiAssetV1, MultiAssetV2, MultiAssets, MultiAssetsV1, MultiAssetsV2, MultiLocation, MultiLocationV0, MultiLocationV1, MultiLocationV2, NetworkId, OriginKindV0, OriginKindV1, OriginKindV2, OutboundStatus, Outcome, QueryId, QueryStatus, QueueConfigData, Response, ResponseV0, ResponseV1, ResponseV2, ResponseV2Error, ResponseV2Result, VersionMigrationStage, VersionedMultiAsset, VersionedMultiAssets, VersionedMultiLocation, VersionedResponse, VersionedXcm, WeightLimitV2, WildFungibility, WildMultiAsset, WildMultiAssetV1, Xcm, XcmAssetId, XcmError, XcmErrorV0, XcmErrorV1, XcmErrorV2, XcmOrder, XcmOrderV0, XcmOrderV1, XcmOrigin, XcmOriginKind, XcmV0, XcmV1, XcmV2, XcmVersion, XcmpMessageFormat } from '@polkadot/types/interfaces/xcm';
+import type { AssetInstance, AssetInstanceV0, AssetInstanceV1, AssetInstanceV2, BodyId, BodyPart, DoubleEncodedCall, Fungibility, FungibilityV0, FungibilityV1, FungibilityV2, InboundStatus, InstructionV2, InteriorMultiLocation, Junction, JunctionV0, JunctionV1, JunctionV2, Junctions, JunctionsV1, JunctionsV2, MultiAsset, MultiAssetFilter, MultiAssetFilterV1, MultiAssetFilterV2, MultiAssetV0, MultiAssetV1, MultiAssetV2, MultiAssets, MultiAssetsV1, MultiAssetsV2, MultiLocation, MultiLocationV0, MultiLocationV1, MultiLocationV2, NetworkId, OriginKindV0, OriginKindV1, OriginKindV2, OutboundStatus, Outcome, QueryId, QueryStatus, QueueConfigData, Response, ResponseV0, ResponseV1, ResponseV2, ResponseV2Error, ResponseV2Result, VersionMigrationStage, VersionedMultiAsset, VersionedMultiAssets, VersionedMultiLocation, VersionedResponse, VersionedXcm, WeightLimitV2, WildFungibility, WildFungibilityV0, WildFungibilityV1, WildFungibilityV2, WildMultiAsset, WildMultiAssetV1, WildMultiAssetV2, Xcm, XcmAssetId, XcmError, XcmErrorV0, XcmErrorV1, XcmErrorV2, XcmOrder, XcmOrderV0, XcmOrderV1, XcmOrderV2, XcmOrigin, XcmOriginKind, XcmV0, XcmV1, XcmV2, XcmVersion, XcmpMessageFormat } from '@polkadot/types/interfaces/xcm';
 
 declare module '@polkadot/types/types/registry' {
   export interface InterfaceTypes {
@@ -132,6 +132,7 @@ declare module '@polkadot/types/types/registry' {
     AssetInstance: AssetInstance;
     AssetInstanceV0: AssetInstanceV0;
     AssetInstanceV1: AssetInstanceV1;
+    AssetInstanceV2: AssetInstanceV2;
     AssetMetadata: AssetMetadata;
     AssetOptions: AssetOptions;
     AssignmentId: AssignmentId;
@@ -207,6 +208,7 @@ declare module '@polkadot/types/types/registry' {
     BridgedBlockHash: BridgedBlockHash;
     BridgedBlockNumber: BridgedBlockNumber;
     BridgedHeader: BridgedHeader;
+    BridgeMessageId: BridgeMessageId;
     BufferedSessionChange: BufferedSessionChange;
     Bytes: Bytes;
     Call: Call;
@@ -476,6 +478,9 @@ declare module '@polkadot/types/types/registry' {
     FundIndex: FundIndex;
     FundInfo: FundInfo;
     Fungibility: Fungibility;
+    FungibilityV0: FungibilityV0;
+    FungibilityV1: FungibilityV1;
+    FungibilityV2: FungibilityV2;
     Gas: Gas;
     GiltBid: GiltBid;
     GlobalValidationData: GlobalValidationData;
@@ -530,6 +535,7 @@ declare module '@polkadot/types/types/registry' {
     IdentityFields: IdentityFields;
     IdentityInfo: IdentityInfo;
     IdentityInfoAdditional: IdentityInfoAdditional;
+    IdentityInfoTo198: IdentityInfoTo198;
     IdentityJudgement: IdentityJudgement;
     ImmortalEra: ImmortalEra;
     ImportedAux: ImportedAux;
@@ -615,14 +621,12 @@ declare module '@polkadot/types/types/registry' {
     MetadataV9: MetadataV9;
     MmrLeafProof: MmrLeafProof;
     MmrRootHash: MmrRootHash;
-    ModuleConstantMetadataLatest: ModuleConstantMetadataLatest;
     ModuleConstantMetadataV10: ModuleConstantMetadataV10;
     ModuleConstantMetadataV11: ModuleConstantMetadataV11;
     ModuleConstantMetadataV12: ModuleConstantMetadataV12;
     ModuleConstantMetadataV13: ModuleConstantMetadataV13;
     ModuleConstantMetadataV9: ModuleConstantMetadataV9;
     ModuleId: ModuleId;
-    ModuleMetadataLatest: ModuleMetadataLatest;
     ModuleMetadataV10: ModuleMetadataV10;
     ModuleMetadataV11: ModuleMetadataV11;
     ModuleMetadataV12: ModuleMetadataV12;
@@ -774,7 +778,9 @@ declare module '@polkadot/types/types/registry' {
     PoolInfo: PoolInfo;
     PoolInfoV0: PoolInfoV0;
     PortableRegistry: PortableRegistry;
+    PortableRegistryV14: PortableRegistryV14;
     PortableType: PortableType;
+    PortableTypeV14: PortableTypeV14;
     Position: Position;
     Precommits: Precommits;
     PrefabWasmModule: PrefabWasmModule;
@@ -835,6 +841,7 @@ declare module '@polkadot/types/types/registry' {
     RegistrarInfo: RegistrarInfo;
     Registration: Registration;
     RegistrationJudgement: RegistrationJudgement;
+    RegistrationTo198: RegistrationTo198;
     RelayBlockNumber: RelayBlockNumber;
     RelaychainAccountId: RelaychainAccountId;
     RelayChainBlockNumber: RelayChainBlockNumber;
@@ -922,6 +929,21 @@ declare module '@polkadot/types/types/registry' {
     Si0TypeDefVariant: Si0TypeDefVariant;
     Si0TypeParameter: Si0TypeParameter;
     Si0Variant: Si0Variant;
+    Si1Field: Si1Field;
+    Si1LookupTypeId: Si1LookupTypeId;
+    Si1Path: Si1Path;
+    Si1Type: Si1Type;
+    Si1TypeDef: Si1TypeDef;
+    Si1TypeDefArray: Si1TypeDefArray;
+    Si1TypeDefBitSequence: Si1TypeDefBitSequence;
+    Si1TypeDefCompact: Si1TypeDefCompact;
+    Si1TypeDefComposite: Si1TypeDefComposite;
+    Si1TypeDefPrimitive: Si1TypeDefPrimitive;
+    Si1TypeDefSequence: Si1TypeDefSequence;
+    Si1TypeDefTuple: Si1TypeDefTuple;
+    Si1TypeDefVariant: Si1TypeDefVariant;
+    Si1TypeParameter: Si1TypeParameter;
+    Si1Variant: Si1Variant;
     SiField: SiField;
     Signature: Signature;
     SignedAvailabilityBitfield: SignedAvailabilityBitfield;
@@ -964,6 +986,7 @@ declare module '@polkadot/types/types/registry' {
     SolutionSupports: SolutionSupports;
     SpanIndex: SpanIndex;
     SpanRecord: SpanRecord;
+    SpecVersion: SpecVersion;
     Sr25519Signature: Sr25519Signature;
     StableAssetPoolId: StableAssetPoolId;
     StakingLedger: StakingLedger;
@@ -1005,7 +1028,6 @@ declare module '@polkadot/types/types/registry' {
     StorageKey: StorageKey;
     StorageKeyBytes: StorageKeyBytes;
     StorageKind: StorageKind;
-    StorageMetadataLatest: StorageMetadataLatest;
     StorageMetadataV10: StorageMetadataV10;
     StorageMetadataV11: StorageMetadataV11;
     StorageMetadataV12: StorageMetadataV12;
@@ -1131,8 +1153,12 @@ declare module '@polkadot/types/types/registry' {
     WeightPerClass: WeightPerClass;
     WeightToFeeCoefficient: WeightToFeeCoefficient;
     WildFungibility: WildFungibility;
+    WildFungibilityV0: WildFungibilityV0;
+    WildFungibilityV1: WildFungibilityV1;
+    WildFungibilityV2: WildFungibilityV2;
     WildMultiAsset: WildMultiAsset;
     WildMultiAssetV1: WildMultiAssetV1;
+    WildMultiAssetV2: WildMultiAssetV2;
     WinnersData: WinnersData;
     WinnersDataTuple: WinnersDataTuple;
     WinningData: WinningData;
@@ -1147,6 +1173,7 @@ declare module '@polkadot/types/types/registry' {
     XcmOrder: XcmOrder;
     XcmOrderV0: XcmOrderV0;
     XcmOrderV1: XcmOrderV1;
+    XcmOrderV2: XcmOrderV2;
     XcmOrigin: XcmOrigin;
     XcmOriginKind: XcmOriginKind;
     XcmpMessageFormat: XcmpMessageFormat;

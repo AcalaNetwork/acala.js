@@ -1,9 +1,9 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { Enum } from '@polkadot/types';
 import type { CurrencyId } from '@acala-network/types/interfaces/primitives';
 import type { AccountId } from '@acala-network/types/interfaces/runtime';
+import type { Enum } from '@polkadot/types';
 
 /** @name PoolId */
 export interface PoolId extends Enum {

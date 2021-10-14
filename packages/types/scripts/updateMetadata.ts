@@ -4,7 +4,7 @@ import fs from 'fs';
 import { w3cwebsocket as WebSocket } from 'websocket';
 
 const main = (): void => {
-  const endpoint = 'ws://localhost:9944';
+  const endpoint = 'wss://karura-rpc-0.aca-api.network';
   console.log('Connecting to ', endpoint);
   const ws = new WebSocket(endpoint);
   ws.onopen = (): void => {

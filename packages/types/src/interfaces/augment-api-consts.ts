@@ -1,14 +1,15 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-import type { Vec, u32 } from '@polkadot/types';
-import type { Codec, ITuple } from '@polkadot/types/types';
+import type { EvmAddress } from '@acala-network/types/interfaces/evm';
 import type { CurrencyId } from '@acala-network/types/interfaces/primitives';
-import type { AccountId, Balance, BlockNumber, PalletId, TransactionPriority, Weight } from '@acala-network/types/interfaces/runtime';
+import type { AccountId, Balance, BalanceOf, BlockNumber, PalletId, Permill, TransactionPriority, Weight } from '@acala-network/types/interfaces/runtime';
 import type { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
 import type { Price } from '@open-web3/orml-types/interfaces/traits';
-import type { MultiLocation } from '@polkadot/types/interfaces/xcm';
 import type { ApiTypes } from '@polkadot/api/types';
+import type { Vec, u32, u64 } from '@polkadot/types';
+import type { MultiLocation } from '@polkadot/types/interfaces/xcm';
+import type { Codec, ITuple } from '@polkadot/types/types';
 
 declare module '@polkadot/api/types/consts' {
   export interface AugmentedConsts<ApiType> {
@@ -117,6 +118,40 @@ declare module '@polkadot/api/types/consts' {
        **/
       [key: string]: Codec;
     };
+    collatorSelection: {
+      /**
+       * Will be kicked if block is not produced in threshold.
+       **/
+      collatorKickThreshold: Permill & AugmentedConst<ApiType>;
+      /**
+       * The Kicked candidate cannot register candidate or withdraw bond until
+       * `KickPenaltySessionLength` ends.
+       **/
+      kickPenaltySessionLength: u32 & AugmentedConst<ApiType>;
+      /**
+       * Maximum number of candidates that we should have. This is used for benchmarking and is
+       * not enforced.
+       * 
+       * This does not take into account the invulnerables.
+       **/
+      maxCandidates: u32 & AugmentedConst<ApiType>;
+      /**
+       * Maximum number of invulnerables.
+       **/
+      maxInvulnerables: u32 & AugmentedConst<ApiType>;
+      /**
+       * Minimum number of candidates.
+       **/
+      minCandidates: u32 & AugmentedConst<ApiType>;
+      /**
+       * Account Identifier from which the internal Pot is generated.
+       **/
+      potId: PalletId & AugmentedConst<ApiType>;
+      /**
+       * Generic const
+       **/
+      [key: string]: Codec;
+    };
     currencies: {
       /**
        * The native currency id
@@ -159,6 +194,72 @@ declare module '@polkadot/api/types/consts' {
        **/
       [key: string]: Codec;
     };
+    evm: {
+      /**
+       * Chain ID of EVM.
+       **/
+      chainId: u64 & AugmentedConst<ApiType>;
+      /**
+       * The fee for deploying the contract.
+       **/
+      deploymentFee: BalanceOf & AugmentedConst<ApiType>;
+      /**
+       * Deposit for the developer.
+       **/
+      developerDeposit: BalanceOf & AugmentedConst<ApiType>;
+      /**
+       * The EVM address for creating system contract.
+       **/
+      networkContractSource: EvmAddress & AugmentedConst<ApiType>;
+      /**
+       * Charge extra bytes for creating a contract, would be reserved until
+       * the contract deleted.
+       **/
+      newContractExtraBytes: u32 & AugmentedConst<ApiType>;
+      /**
+       * Storage required for per byte.
+       **/
+      storageDepositPerByte: BalanceOf & AugmentedConst<ApiType>;
+      treasuryAccount: AccountId & AugmentedConst<ApiType>;
+      /**
+       * Generic const
+       **/
+      [key: string]: Codec;
+    };
+    homaLite: {
+      /**
+       * The default exchange rate for liquid currency to staking currency.
+       **/
+      defaultExchangeRate: ExchangeRate & AugmentedConst<ApiType>;
+      /**
+       * The Currency ID for the Liquid asset
+       **/
+      liquidCurrencyId: CurrencyId & AugmentedConst<ApiType>;
+      /**
+       * The maximum rewards that are earned on the relaychain.
+       **/
+      maxRewardPerEra: Permill & AugmentedConst<ApiType>;
+      /**
+       * The minimal amount of Staking currency to be locked
+       **/
+      minimumMintThreshold: Balance & AugmentedConst<ApiType>;
+      /**
+       * The fixed cost of transaction fee for XCM transfers.
+       **/
+      mintFee: Balance & AugmentedConst<ApiType>;
+      /**
+       * The sovereign sub-account for where the staking currencies are sent to.
+       **/
+      sovereignSubAccountLocation: MultiLocation & AugmentedConst<ApiType>;
+      /**
+       * The Currency ID for the Staking asset
+       **/
+      stakingCurrencyId: CurrencyId & AugmentedConst<ApiType>;
+      /**
+       * Generic const
+       **/
+      [key: string]: Codec;
+    };
     honzon: {
       /**
        * Reserved amount per authorization.
@@ -169,9 +270,57 @@ declare module '@polkadot/api/types/consts' {
        **/
       [key: string]: Codec;
     };
+    incentives: {
+      /**
+       * The period to accumulate rewards
+       **/
+      accumulatePeriod: BlockNumber & AugmentedConst<ApiType>;
+      /**
+       * The module id, keep DexShare LP.
+       **/
+      palletId: PalletId & AugmentedConst<ApiType>;
+      /**
+       * The source account for native token rewards.
+       **/
+      rewardsSource: AccountId & AugmentedConst<ApiType>;
+      /**
+       * The reward type for dex saving.
+       **/
+      stableCurrencyId: CurrencyId & AugmentedConst<ApiType>;
+      /**
+       * Generic const
+       **/
+      [key: string]: Codec;
+    };
     loans: {
       /**
        * The loan's module id, keep all collaterals of CDPs.
+       **/
+      palletId: PalletId & AugmentedConst<ApiType>;
+      /**
+       * Generic const
+       **/
+      [key: string]: Codec;
+    };
+    nft: {
+      /**
+       * The minimum balance to create class
+       **/
+      createClassDeposit: BalanceOf & AugmentedConst<ApiType>;
+      /**
+       * The minimum balance to create token
+       **/
+      createTokenDeposit: BalanceOf & AugmentedConst<ApiType>;
+      /**
+       * Deposit required for per byte.
+       **/
+      dataDepositPerByte: BalanceOf & AugmentedConst<ApiType>;
+      /**
+       * Maximum number of bytes in attributes
+       **/
+      maxAttributesBytes: u32 & AugmentedConst<ApiType>;
+      /**
+       * The NFT's module id
        **/
       palletId: PalletId & AugmentedConst<ApiType>;
       /**

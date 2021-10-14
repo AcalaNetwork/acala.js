@@ -1,13 +1,13 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { Bytes, Compact, DoNotConstruct, Enum, GenericAccountId, GenericAccountIndex, GenericBlock, GenericCall, GenericConsensusEngineId, GenericEthereumAccountId, GenericLookupSource, GenericMultiAddress, Int, Null, Option, StorageKey, Struct, U8aFixed, UInt, Vec, u128, u16, u32, u64, u8 } from '@polkadot/types';
-import type { ITuple } from '@polkadot/types/types';
 import type { AuthoritysOriginId, CurrencyId } from '@acala-network/types/interfaces/primitives';
 import type { Price } from '@open-web3/orml-types/interfaces/traits';
+import type { Bytes, Compact, DoNotConstruct, Enum, GenericAccountId, GenericAccountIndex, GenericBlock, GenericCall, GenericConsensusEngineId, GenericEthereumAccountId, GenericLookupSource, GenericMultiAddress, Int, Null, Option, StorageKey, Struct, U8aFixed, UInt, Vec, u128, u16, u32, u64, u8 } from '@polkadot/types';
 import type { AuthorityId } from '@polkadot/types/interfaces/consensus';
 import type { Signature } from '@polkadot/types/interfaces/extrinsics';
 import type { SystemOrigin } from '@polkadot/types/interfaces/system';
+import type { ITuple } from '@polkadot/types/types';
 
 /** @name AccountId */
 export interface AccountId extends AccountId32 {}
@@ -107,6 +107,7 @@ export interface DigestItem extends Enum {
   readonly asPreRuntime: PreRuntime;
   readonly isChangesTrieSignal: boolean;
   readonly asChangesTrieSignal: ChangesTrieSignal;
+  readonly isRuntimeEnvironmentUpdated: boolean;
 }
 
 /** @name EncodedJustification */

@@ -23,7 +23,7 @@ const KNOWN_ORIGINS = {
 function getOriginCallerDef(): void {
   const registry = new TypeRegistry();
   const metadata = new Metadata(registry, metaHex);
-  const modules = metadata.asLatest.modules;
+  const modules = metadata.asLatest.pallets;
 
   const isIndexed = modules.some(({ index }) => !index.eqn(255));
 

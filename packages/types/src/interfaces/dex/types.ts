@@ -1,9 +1,9 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
+import type { Balance, BlockNumber } from '@acala-network/types/interfaces/runtime';
 import type { Enum, Struct } from '@polkadot/types';
 import type { ITuple } from '@polkadot/types/types';
-import type { Balance, BlockNumber } from '@acala-network/types/interfaces/runtime';
 
 /** @name BalanceRequest */
 export interface BalanceRequest extends Struct {

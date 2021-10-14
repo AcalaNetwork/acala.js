@@ -1,15 +1,15 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-import type { Compact, Option, Vec, bool } from '@polkadot/types';
-import type { AnyNumber } from '@polkadot/types/types';
 import type { ChangeBalance, ChangeOptionRate, ChangeOptionRatio } from '@acala-network/types/interfaces/cdpEngine';
 import type { Amount, AmountOf, AuctionId, CurrencyId, CurrencyIdOf } from '@acala-network/types/interfaces/primitives';
 import type { AccountId, Balance, BalanceOf, BlockNumber, Call, LookupSource, Weight } from '@acala-network/types/interfaces/runtime';
 import type { Rate } from '@acala-network/types/interfaces/support';
+import type { ApiTypes, SubmittableExtrinsic } from '@polkadot/api/types';
+import type { Compact, Option, Vec, bool } from '@polkadot/types';
 import type { Extrinsic } from '@polkadot/types/interfaces/extrinsics';
 import type { MultiAsset, MultiLocation } from '@polkadot/types/interfaces/xcm';
-import type { ApiTypes, SubmittableExtrinsic } from '@polkadot/api/types';
+import type { AnyNumber } from '@polkadot/types/types';
 
 declare module '@polkadot/api/types/submittable' {
   export interface AugmentedSubmittables<ApiType> {
@@ -107,6 +107,7 @@ declare module '@polkadot/api/types/submittable' {
       [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
     currencies: {
+      sweepDust: AugmentedSubmittable<(currencyId: CurrencyIdOf | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | string | Uint8Array, accounts: Vec<AccountId> | (AccountId | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [CurrencyIdOf, Vec<AccountId>]>;
       /**
        * Transfer some balance to another account under `currency_id`.
        * 
@@ -249,6 +250,56 @@ declare module '@polkadot/api/types/submittable' {
        **/
       [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
+    homaLite: {
+      /**
+       * Adjusts the total_staking_currency by the given difference.
+       * Requires `T::GovernanceOrigin`
+       * 
+       * Parameters:
+       * - `adjustment`: The difference in amount the total_staking_currency should be adjusted
+       * by.
+       **/
+      adjustTotalStakingCurrency: AugmentedSubmittable<(byAmount: AmountOf | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AmountOf]>;
+      /**
+       * Mint some Liquid currency, by locking up the given amount of Staking currency.
+       * The exchange rate is calculated using the ratio of the total amount of the staking and
+       * liquid currency. A portion is reducted (defined as T::MaxRewardPerEra) to make up for
+       * the fact that staking is only effective from the next era on (on the relaychain).
+       * 
+       * Parameters:
+       * - `amount`: The amount of Staking currency to be exchanged.
+       **/
+      mint: AugmentedSubmittable<(amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Balance]>;
+      /**
+       * Updates the cap for how much Staking currency can be used to Mint liquid currency.
+       * Requires `T::GovernanceOrigin`
+       * 
+       * Parameters:
+       * - `new_cap`: The new cap for staking currency.
+       **/
+      setMintingCap: AugmentedSubmittable<(newCap: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Balance]>;
+      /**
+       * Sets the total amount of the Staking currency that are currently on the relaychain.
+       * Requires `T::GovernanceOrigin`
+       * 
+       * Parameters:
+       * - `staking_total`: The current amount of the Staking currency. Used to calculate
+       * conversion rate.
+       **/
+      setTotalStakingCurrency: AugmentedSubmittable<(stakingTotal: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Balance]>;
+      /**
+       * Sets the xcm_dest_weight for XCM transfers.
+       * Requires `T::GovernanceOrigin`
+       * 
+       * Parameters:
+       * - `xcm_dest_weight`: The new weight for XCM transfers.
+       **/
+      setXcmDestWeight: AugmentedSubmittable<(xcmDestWeight: Weight | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Weight]>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
+    };
     honzon: {
       /**
        * Adjust the loans of `currency_id` by specific
@@ -299,6 +350,12 @@ declare module '@polkadot/api/types/submittable' {
        * Cancel all authorization of caller
        **/
       unauthorizeAll: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
+    };
+    loans: {
       /**
        * Generic tx
        **/
