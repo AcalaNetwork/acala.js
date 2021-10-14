@@ -1,9 +1,9 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { Compact, Struct } from '@polkadot/types';
 import type { CurrencyId } from '@acala-network/types/interfaces/primitives';
 import type { AccountId, Balance, BlockNumber } from '@acala-network/types/interfaces/runtime';
+import type { Compact, Struct } from '@polkadot/types';
 
 /** @name CollateralAuctionItem */
 export interface CollateralAuctionItem extends Struct {

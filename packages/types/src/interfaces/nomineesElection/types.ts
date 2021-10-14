@@ -1,8 +1,8 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { Struct, Vec } from '@polkadot/types';
 import type { AccountId, Balance } from '@acala-network/types/interfaces/runtime';
+import type { Struct, Vec } from '@polkadot/types';
 import type { EraIndex } from '@polkadot/types/interfaces/staking';
 
 /** @name BondingLedger */

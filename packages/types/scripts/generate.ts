@@ -13,7 +13,7 @@ import {
   generateDefaultRpc
 } from '@polkadot/typegen/generate';
 import { registerDefinitions } from '@polkadot/typegen/util';
-import generateMobx from '@open-web3/api-mobx/scripts/mobx';
+// import generateMobx from '@open-web3/api-mobx/scripts/mobx';
 import metaHex from '../src/metadata/static-latest';
 
 import * as defaultDefinations from '@polkadot/types/interfaces/definitions';
@@ -34,6 +34,7 @@ function filterModules(names: string[], defs: any): string {
 
   const filtered = metadata.toJSON() as any;
 
+  // console.log(filtered.metadata.v13.modules.map(x => x.name))
   filtered.metadata.v13.modules = filtered.metadata.v13.modules.filter(({ name }: any) => names.includes(name));
 
   return new Metadata(registry, filtered).toHex();
@@ -53,31 +54,41 @@ const definations = {
 
 const metadata = filterModules(
   [
-    'Accounts',
-    'AirDrop',
+    'AcalaOracle',
     'Auction',
     'AuctionManager',
+    'Authority',
     'CdpEngine',
     'CdpTreasury',
+    'CollatorSelection',
     'Currencies',
     'Dex',
     'EmergencyShutdown',
-    'Evm',
-    'Homa',
-    'HomaValidatorListModule',
-    'HomaTreasury',
+    'EVM',
+    'EvmAccounts',
+    'EVMBridge',
+    'EvmManager',
+    'FinancialCouncil',
+    'FinancialCouncilMembership',
+    'GeneralCouncil',
+    'GeneralCouncilMembership',
+    'HomaCouncil',
+    'HomaCouncilMembership',
+    'HomaLite',
     'Honzon',
+    'Incentives',
     'Loans',
-    'NomineesElection',
-    'Oracle',
-    'PolkadotBridge',
+    'NFT',
+    'OperatorMembershipAcala',
+    'OrmlNFT',
+    'OrmlXcm',
     'Prices',
-    'ScheduleUpdate',
-    'StakingPool',
+    'Rewards',
+    'SessionManager',
     'Tokens',
+    'TransactionPause',
+    'UnknownTokens',
     'XTokens',
-    'ChainSafeTransfer',
-    'ChainBridge'
     // 'Vesting' Conflicts with pallet-vesting https://github.com/polkadot-js/api/issues/2338
   ],
   definations
@@ -87,7 +98,8 @@ generateTsDef(definations, 'packages/types/src/interfaces', '@acala-network/type
 generateInterfaceTypes(definations, 'packages/types/src/interfaces/augment-types.ts');
 generateDefaultConsts('packages/types/src/interfaces/augment-api-consts.ts', metadata, definations);
 
-generateDefaultTx('packages/types/src/interfaces/augment-api-tx.ts', metadata, definations);
+// TODO: figure out why this failed
+// generateDefaultTx('packages/types/src/interfaces/augment-api-tx.ts', metadata, definations);
 generateDefaultQuery('packages/types/src/interfaces/augment-api-query.ts', metadata, definations);
 generateDefaultRpc('packages/types/src/interfaces/augment-api-rpc.ts', definations);
-generateMobx('packages/types/src/interfaces/augment-api-mobx.ts', metaHex, definations);
+// generateMobx('packages/types/src/interfaces/augment-api-mobx.ts', metaHex, definations);

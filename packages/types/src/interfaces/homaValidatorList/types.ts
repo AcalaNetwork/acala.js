@@ -1,9 +1,9 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
+import type { AccountId, Balance, BlockNumber } from '@acala-network/types/interfaces/runtime';
 import type { Option, Struct, bool } from '@polkadot/types';
 import type { ITuple } from '@polkadot/types/types';
-import type { AccountId, Balance, BlockNumber } from '@acala-network/types/interfaces/runtime';
 
 /** @name Guarantee */
 export interface Guarantee extends Struct {

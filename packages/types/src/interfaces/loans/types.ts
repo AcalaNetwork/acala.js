@@ -1,8 +1,8 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { Struct } from '@polkadot/types';
 import type { Balance } from '@acala-network/types/interfaces/runtime';
+import type { Struct } from '@polkadot/types';
 
 /** @name Position */
 export interface Position extends Struct {
