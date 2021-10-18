@@ -21,6 +21,7 @@ import renvmBridge from './renvmBridge';
 
 import runtime from './runtime';
 import { signedExtensions as acalaSignedExtensions } from './signedExtensions';
+import stableAsset from './stableAsset';
 import stakingPool from './stakingPool';
 import support from './support';
 
@@ -53,7 +54,8 @@ const acalaDefs = {
   support,
 
   // ecosystem
-  renvmBridge
+  renvmBridge,
+  stableAsset
 };
 
 export const types = {

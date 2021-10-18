@@ -384,5 +384,7 @@
     "Ratio": "FixedU128",
     "PublicKey": "[u8; 20]",
     "DestAddress": "Vec<u8>",
+    "PoolTokenIndex": "u32",
+    "AssetId": "CurrencyId",
     "Keys": "SessionKeys1"
 }
