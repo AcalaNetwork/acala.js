@@ -23,7 +23,7 @@ import { WsProvider } from '@polkadot/rpc-provider';
 import { options } from '@acala-network/api';
 
 async function main() {
-    const provider = new WsProvider('wss://testnet-node-1.acala.laminar.one/ws');
+    const provider = new WsProvider('wss://karura.api.onfinality.io/public-ws');
     const api = new ApiPromise(options({ provider }));
     await api.isReady;
 
