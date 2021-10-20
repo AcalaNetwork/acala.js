@@ -7,7 +7,7 @@ import type { AccountId, Balance, BalanceOf, BlockNumber, PalletId, Permill, Tra
 import type { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
 import type { Price } from '@open-web3/orml-types/interfaces/traits';
 import type { ApiTypes } from '@polkadot/api/types';
-import type { Vec, u32, u64 } from '@polkadot/types';
+import type { Vec, u16, u32, u64 } from '@polkadot/types';
 import type { MultiLocation } from '@polkadot/types/interfaces/xcm';
 import type { Codec, ITuple } from '@polkadot/types/types';
 
@@ -228,6 +228,10 @@ declare module '@polkadot/api/types/consts' {
     };
     homaLite: {
       /**
+       * Equivalent to the loss of % staking reward from unbonding on the RelayChain.
+       **/
+      baseWithdrawFee: Permill & AugmentedConst<ApiType>;
+      /**
        * The default exchange rate for liquid currency to staking currency.
        **/
       defaultExchangeRate: ExchangeRate & AugmentedConst<ApiType>;
@@ -236,25 +240,54 @@ declare module '@polkadot/api/types/consts' {
        **/
       liquidCurrencyId: CurrencyId & AugmentedConst<ApiType>;
       /**
+       * The maximum number of redeem requests to match in "Mint" extrinsic.
+       **/
+      maximumRedeemRequestMatchesForMint: u32 & AugmentedConst<ApiType>;
+      /**
        * The maximum rewards that are earned on the relaychain.
        **/
       maxRewardPerEra: Permill & AugmentedConst<ApiType>;
+      /**
+       * Maximum number of scheduled unbonds allowed
+       **/
+      maxScheduledUnbonds: u32 & AugmentedConst<ApiType>;
       /**
        * The minimal amount of Staking currency to be locked
        **/
       minimumMintThreshold: Balance & AugmentedConst<ApiType>;
       /**
+       * The minimal amount of Liquid currency to be Redeemed
+       **/
+      minimumRedeemThreshold: Balance & AugmentedConst<ApiType>;
+      /**
        * The fixed cost of transaction fee for XCM transfers.
        **/
       mintFee: Balance & AugmentedConst<ApiType>;
       /**
-       * The sovereign sub-account for where the staking currencies are sent to.
+       * The account ID to redeem from on the relaychain.
+       **/
+      parachainAccount: AccountId & AugmentedConst<ApiType>;
+      /**
+       * Unbonding slashing spans for unbonding on the relaychain.
+       **/
+      relayChainUnbondingSlashingSpans: u32 & AugmentedConst<ApiType>;
+      /**
+       * The MultiLocation of the sovereign sub-account for where the staking currencies are sent
+       * to.
        **/
       sovereignSubAccountLocation: MultiLocation & AugmentedConst<ApiType>;
       /**
        * The Currency ID for the Staking asset
        **/
       stakingCurrencyId: CurrencyId & AugmentedConst<ApiType>;
+      /**
+       * The Index to the Homa Lite Sub-account
+       **/
+      subAccountIndex: u16 & AugmentedConst<ApiType>;
+      /**
+       * The fixed cost of withdrawing Staking currency via redeem. In Staking currency.
+       **/
+      xcmUnbondFee: Balance & AugmentedConst<ApiType>;
       /**
        * Generic const
        **/
