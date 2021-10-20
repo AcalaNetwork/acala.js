@@ -9,7 +9,7 @@ import type { PoolId } from '@acala-network/types/interfaces/incentives';
 import type { Position } from '@acala-network/types/interfaces/loans';
 import type { ClassInfoOf, TokenId, TokenInfoOf } from '@acala-network/types/interfaces/nft';
 import type { AuctionId, CurrencyId, TradingPair } from '@acala-network/types/interfaces/primitives';
-import type { AccountId, Balance, BalanceOf, BlockNumber, H256, Hash, OracleKey, Weight } from '@acala-network/types/interfaces/runtime';
+import type { AccountId, Balance, BalanceOf, BlockNumber, H256, Hash, OracleKey, Permill, RelayChainBlockNumberOf, Weight } from '@acala-network/types/interfaces/runtime';
 import type { ExchangeRate, Rate } from '@acala-network/types/interfaces/support';
 import type { CallOf, ScheduleTaskIndex } from '@open-web3/orml-types/interfaces/authority';
 import type { OrderedSet, TimestampedValueOf } from '@open-web3/orml-types/interfaces/oracle';
@@ -460,6 +460,21 @@ declare module '@polkadot/api/types/storage' {
       [key: string]: QueryableStorageEntry<ApiType>;
     };
     homaLite: {
+      /**
+       * The amount of staking currency that is available to be redeemed.
+       * AvailableStakingBalance: value: Balance
+       **/
+      availableStakingBalance: AugmentedQuery<ApiType, () => Observable<Balance>, []> & QueryableStorageEntry<ApiType, []>;
+      /**
+       * Requests to redeem staked currencies.
+       * RedeemRequests: Map: AccountId => Option<(liquid_amount: Balance, addtional_fee: Permill)>
+       **/
+      redeemRequests: AugmentedQuery<ApiType, (arg: AccountId | string | Uint8Array) => Observable<Option<ITuple<[Balance, Permill]>>>, [AccountId]> & QueryableStorageEntry<ApiType, [AccountId]>;
+      /**
+       * Funds that will be unbonded in the future
+       * ScheduledUnbond: Vec<(staking_amount: Balance, unbond_at: RelayChainBlockNumber>
+       **/
+      scheduledUnbond: AugmentedQuery<ApiType, () => Observable<Vec<ITuple<[Balance, RelayChainBlockNumberOf]>>>, []> & QueryableStorageEntry<ApiType, []>;
       /**
        * The cap on the total amount of staking currency allowed to mint Liquid currency.
        * StakingCurrencyMintCap: value: Balance

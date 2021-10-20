@@ -8,6 +8,7 @@ export default {
       _enum: ['Any', 'CancelProxy', 'Governance', 'Auction', 'Swap', 'Loan']
     },
     AtLeast64BitUnsigned: 'u128',
-    StableAssetPoolId: 'u32'
+    StableAssetPoolId: 'u32',
+    RelayChainBlockNumberOf: 'RelayChainBlockNumber'
   }
 };
