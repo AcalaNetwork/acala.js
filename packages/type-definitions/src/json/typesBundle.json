@@ -510,6 +510,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -910,6 +911,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -1320,6 +1322,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -1732,6 +1735,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -2138,6 +2142,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -2544,6 +2549,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -2952,6 +2958,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -3356,6 +3363,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -3760,6 +3768,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -4359,6 +4368,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -4759,6 +4769,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -5169,6 +5180,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -5581,6 +5593,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -5987,6 +6000,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -6393,6 +6407,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -6801,6 +6816,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -7205,6 +7221,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -7609,6 +7626,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -8208,6 +8226,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -8608,6 +8627,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -9018,6 +9038,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -9430,6 +9451,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -9836,6 +9858,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -10242,6 +10265,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -10650,6 +10674,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -11054,6 +11079,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
@@ -11458,6 +11484,7 @@
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
+                        "RelayChainBlockNumberOf": "RelayChainBlockNumber",
                         "SubAccountStatus": {
                             "bonded": "Balance",
                             "available": "Balance",
