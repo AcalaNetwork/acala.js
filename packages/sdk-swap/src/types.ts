@@ -20,10 +20,12 @@ export interface MiddleResult {
 export interface SwapResult {
   midPrice: FixedPointNumber;
   priceImpact: FixedPointNumber;
+  naturalPriceImpact: FixedPointNumber;
   path: Token[];
   input: TokenBalance;
   output: TokenBalance;
   exchangeFee: FixedPointNumber;
+  exchangeRate: FixedPointNumber;
 }
 
 export type SwapTradeMode = 'EXACT_INPUT' | 'EXACT_OUTPUT';

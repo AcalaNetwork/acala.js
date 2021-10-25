@@ -58,8 +58,6 @@ export class TradeGraph {
       }
     }
 
-    return result.filter((item) =>
-      lengthLimit && typeof lengthLimit === 'number' ? item.length <= lengthLimit : true
-    );
+    return result.filter((item) => (lengthLimit ? item.length <= lengthLimit : true));
   }
 }
