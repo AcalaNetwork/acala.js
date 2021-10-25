@@ -27,3 +27,13 @@ export class AmountTooSmall extends Error {
     this.message = 'Amount Too Samll';
   }
 }
+
+/* no trading path found for the swap */
+export class NoTradingPathError extends Error {
+  constructor() {
+    super();
+
+    this.name = 'NoTradingPath';
+    this.message = 'No Trading Path';
+  }
+}

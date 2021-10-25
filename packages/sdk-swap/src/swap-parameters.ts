@@ -1,37 +1,28 @@
 import { Token, FixedPointNumber, TokenBalance } from '@acala-network/sdk-core';
 
-import { SwapTradeMode } from './types';
+import { SwapResult, SwapTradeMode } from './types';
 
-interface Config {
-  input: TokenBalance;
-  output: TokenBalance;
-  path: Token[];
-  priceImpact: FixedPointNumber;
-  midPrice: FixedPointNumber;
-  mode: SwapTradeMode;
-  exchangeFee: FixedPointNumber;
-  // exhcangeRate: FixedPointNumber;
-}
-
-export class SwapParameters {
+export class SwapParameters implements SwapResult {
+  public mode: SwapTradeMode;
+  public midPrice: FixedPointNumber;
+  public priceImpact: FixedPointNumber;
+  public naturalPriceImpact: FixedPointNumber;
+  public path: Token[];
   public input: TokenBalance;
   public output: TokenBalance;
-  public path: Token[];
-  public priceImpact: FixedPointNumber;
-  public midPrice: FixedPointNumber;
-  public mode: SwapTradeMode;
   public exchangeFee: FixedPointNumber;
-  // public exchangeRate: FixedPointNumber;
+  public exchangeRate: FixedPointNumber;
 
-  constructor(config: Config) {
+  constructor(mode: SwapTradeMode, config: SwapResult) {
+    this.mode = mode;
+    this.midPrice = config.midPrice;
+    this.priceImpact = config.priceImpact;
+    this.naturalPriceImpact = config.naturalPriceImpact;
+    this.path = config.path;
     this.input = config.input;
     this.output = config.output;
-    this.path = config.path;
-    this.priceImpact = config.priceImpact;
-    this.midPrice = config.midPrice;
-    this.mode = config.mode;
     this.exchangeFee = config.exchangeFee;
-    // this.exchangeRate = config.exhcangeRate;
+    this.exchangeRate = config.exchangeRate;
   }
 
   public toChainData(): [{ Token: string }[], string, string] {
