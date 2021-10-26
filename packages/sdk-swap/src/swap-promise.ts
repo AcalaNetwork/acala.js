@@ -107,9 +107,14 @@ export class SwapPromise extends SwapBase<ApiPromise> {
   }
 
   private swapper = memoize((inputToken: Token, outputToken: Token) => {
-    return this.getTradingPathes(inputToken, outputToken).pipe(
-      switchMap((paths) => this.getLiquidityPoolsByPath(paths).pipe(withLatestFrom(of(paths)))),
-      shareReplay(1)
+    return this.enableTradingPairs$.pipe(
+      filter((i) => i.length !== 0),
+      switchMap(() => {
+        return this.getTradingPathes(inputToken, outputToken).pipe(
+          switchMap((paths) => this.getLiquidityPoolsByPath(paths).pipe(withLatestFrom(of(paths)))),
+          shareReplay(1)
+        );
+      })
     );
   });
 
