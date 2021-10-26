@@ -85,6 +85,13 @@ export interface Consensus extends ITuple<[ConsensusEngineId, Bytes]> {}
 /** @name ConsensusEngineId */
 export interface ConsensusEngineId extends GenericConsensusEngineId {}
 
+/** @name CrateVersion */
+export interface CrateVersion extends Struct {
+  readonly major: u16;
+  readonly minor: u8;
+  readonly patch: u8;
+}
+
 /** @name Digest */
 export interface Digest extends Struct {
   readonly logs: Vec<DigestItem>;
