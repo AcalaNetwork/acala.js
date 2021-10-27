@@ -17,8 +17,8 @@
   "dependencies": {
     "@acala-network/api-derive": "3.0.2-6",
     "@acala-network/sdk-core": "3.0.2-6",
-    "@polkadot/api": "^6.3.1",
-    "@polkadot/types": "^6.3.1",
+    "@polkadot/api": "^6.5.2",
+    "@polkadot/types": "^6.5.2",
     "lodash": "^4.17.20",
     "rxjs": "^7.4.0"
   },
