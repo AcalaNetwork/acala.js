@@ -50,8 +50,8 @@ export class TokenPair {
     return [this.token1, this.token2];
   }
 
-  public isEqual(pair: TokenPair, compair?: (token1: Token, token2: Token) => boolean): boolean {
-    return pair.token1.isEqual(this.token1, compair) && pair.token2.isEqual(this.token2, compair);
+  public isEqual(pair: TokenPair, compare?: (token1: Token, token2: Token) => boolean): boolean {
+    return pair.token1.isEqual(this.token1, compare) && pair.token2.isEqual(this.token2, compare);
   }
 
   public toChainData(): [{ Token: string }, { Token: string }] {

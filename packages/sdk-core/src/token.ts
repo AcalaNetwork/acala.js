@@ -12,6 +12,7 @@ interface TokenOpts {
   isDexShare?: boolean;
   isTokenSymbol?: boolean;
   isERC20?: boolean;
+  isStableAssetPoolToken?: boolean;
   chain?: string;
 }
 
@@ -21,6 +22,7 @@ export class Token {
   readonly isDexShare: boolean;
   readonly isTokenSymbol: boolean;
   readonly isERC20: boolean;
+  readonly isStableAssetPoolToken: boolean;
   readonly chain: string | undefined;
 
   constructor(name: string, options?: TokenOpts) {
@@ -29,38 +31,40 @@ export class Token {
     this.isDexShare = options?.isDexShare || false;
     this.isTokenSymbol = options?.isTokenSymbol || false;
     this.isERC20 = options?.isERC20 || false;
+    this.isStableAssetPoolToken = options?.isStableAssetPoolToken || false;
     this.chain = options?.chain;
   }
 
   static fromCurrencyId(currency: CurrencyId, decimal?: number): Token {
     if (currency.isDexShare) {
-      // resort the Currencies of DexShare, for some CurrencyId may created manually.
+      // resort the Currencies of DexShare
       const name = forceToCurrencyIdName(currency);
       const [token1, token2] = Token.sortTokenNames(...getLPCurrenciesFormName(name));
 
       return new Token(createLPCurrencyName(token1, token2), {
         decimal: decimal,
-        isDexShare: true,
-        isTokenSymbol: false,
-        isERC20: false
+        isDexShare: true
       });
     }
 
     if (currency.isToken) {
       return new Token(forceToCurrencyIdName(currency), {
         decimal: decimal,
-        isDexShare: false,
-        isTokenSymbol: true,
-        isERC20: false
+        isTokenSymbol: true
       });
     }
 
     if (currency.isErc20) {
       return new Token(forceToCurrencyIdName(currency), {
         decimal: decimal,
-        isDexShare: false,
-        isTokenSymbol: false,
         isERC20: true
+      });
+    }
+
+    if (currency.isStableAssetPoolToken) {
+      return new Token(forceToCurrencyIdName(currency), {
+        decimal: decimal,
+        isStableAssetPoolToken: true
       });
     }
 
@@ -70,9 +74,7 @@ export class Token {
   static fromTokenSymbol(token: TokenSymbol, decimal?: number): Token {
     return new Token(token.toString(), {
       decimal,
-      isDexShare: false,
-      isTokenSymbol: true,
-      isERC20: false
+      isTokenSymbol: true
     });
   }
 
@@ -84,14 +86,12 @@ export class Token {
   static fromTokens(token1: Token, token2: Token, decimal?: number): Token {
     const [_token1, _token2] = this.sort(token1, token2);
 
-    // set decimal as token1 decimal;
+    // set token1 decimal as decimal;
     const _decimal = decimal || _token1.decimal;
 
     return new Token(createLPCurrencyName(_token1.name, _token2.name), {
       decimal: _decimal,
-      isDexShare: true,
-      isTokenSymbol: false,
-      isERC20: false
+      isDexShare: true
     });
   }
 
@@ -144,7 +144,7 @@ export class Token {
     try {
       return api.createType('CurrencyId', this.toChainData());
     } catch (e) {
-      throw new Error(`can't convert to CurrencyId`);
+      throw new Error(`can't convert ${this.toChainData()} to Currency Id`);
     }
   }
 
@@ -156,7 +156,7 @@ export class Token {
         Token.sortTokenNames(...getLPCurrenciesFormName(this.name)).map((i) => ({ token: i }))
       ]);
     } catch (e) {
-      throw new Error(`can't convert to TradingPair`);
+      throw new Error(`can't convert ${this.toChainData()} to Trading Pair`);
     }
   }
 
@@ -166,7 +166,7 @@ export class Token {
 
       return api.createType('DexShare', this.toChainData());
     } catch (e) {
-      throw new Error(`can't convert to DexShare`);
+      throw new Error(`can't convert ${this.toChainData()} to DexShare`);
     }
   }
 
@@ -176,29 +176,27 @@ export class Token {
 
       return api.createType('TokenSymbol', this.name);
     } catch (e) {
-      throw new Error(`can't convert to DexShare`);
+      throw new Error(`can't convert ${this.toChainData()} to Token Symbol`);
     }
   }
 
   public clone(): Token {
-    return new Token(this.name, {
-      decimal: this.decimal,
-      isTokenSymbol: this.isTokenSymbol,
-      isERC20: this.isERC20,
-      isDexShare: this.isDexShare,
-      chain: this.chain
-    });
+    return new Token(this.name, { ...this });
   }
 
-  public isEqual(target: Token, compair?: (token1: Token, token2: Token) => boolean): boolean {
-    if (compair) {
-      return compair(this, target);
+  public isEqual(target: Token, compare?: (token1: Token, token2: Token) => boolean): boolean {
+    if (compare) {
+      return compare(this, target);
     }
 
-    return JSON.stringify(this) === JSON.stringify(target);
+    return this.name === target.name;
   }
 
-  public toChainData(): { Token: string } | { DexShare: [{ Token: string }, { Token: string }] } | { ERC20: string } {
+  public toChainData():
+    | { Token: string }
+    | { DexShare: [{ Token: string }, { Token: string }] }
+    | { ERC20: string }
+    | { StableAssetPoolToken: string } {
     if (this.isDexShare) {
       return {
         DexShare: (
@@ -209,6 +207,10 @@ export class Token {
 
     if (this.isERC20) {
       return { ERC20: this.name };
+    }
+
+    if (this.isStableAssetPoolToken) {
+      return { StableAssetPoolToken: this.name };
     }
 
     return { Token: this.name };

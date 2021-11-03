@@ -21,10 +21,6 @@ function calculateExchangeFeeRate(path: Token[], fee: FixedPointNumber) {
   );
 }
 
-function isTokenEqual(token1: Token, token2: Token) {
-  return token1.name === token2.name;
-}
-
 export abstract class SwapBase<T extends ApiPromise | ApiRx> {
   protected api: T;
 
@@ -81,7 +77,7 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
   protected isTradingPairEnable(currency1: Token, currency2: Token, enablePairs: TokenPair[]): boolean {
     const temp = new TokenPair(currency1, currency2);
 
-    return !!enablePairs.find((item) => item.isEqual(temp, isTokenEqual));
+    return !!enablePairs.find((item) => item.isEqual(temp));
   }
 
   // check all token pairs is enable which used by the path
@@ -113,7 +109,7 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
   }
 
   protected sortLiquidityPoolWithTokenOrder(pool: LiquidityPool, token1: Token): [FixedPointNumber, FixedPointNumber] {
-    return pool.token1.isEqual(token1, isTokenEqual) ? [pool.balance1, pool.balance2] : [pool.balance2, pool.balance1];
+    return pool.token1.isEqual(token1) ? [pool.balance1, pool.balance2] : [pool.balance2, pool.balance1];
   }
 
   protected getOutputAmountWithExactInput(
@@ -135,9 +131,7 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
     for (let i = 0; i < path.length - 1; i++) {
       const pair = new TokenPair(path[i], path[i + 1]);
       const [token1, token2] = pair.getPair();
-      const pool = liquidityPools.find(
-        (item) => item.token1.isEqual(token1, isTokenEqual) && item.token2.isEqual(token2, isTokenEqual)
-      );
+      const pool = liquidityPools.find((item) => item.token1.isEqual(token1) && item.token2.isEqual(token2));
 
       if (!pool) throw new NoLiquidityPoolError();
 
@@ -189,9 +183,7 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
     for (let i = path.length - 1; i > 0; i--) {
       const pair = new TokenPair(path[i], path[i - 1]);
       const [token1, token2] = pair.getPair();
-      const pool = liquidityPools.find(
-        (item) => item.token1.isEqual(token1, isTokenEqual) && item.token2.isEqual(token2, isTokenEqual)
-      );
+      const pool = liquidityPools.find((item) => item.token1.isEqual(token1) && item.token2.isEqual(token2));
 
       if (!pool) throw new NoLiquidityPoolError();
 
@@ -247,9 +239,7 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
     for (let i = 0; i < path.length - 1; i++) {
       const pair = new TokenPair(path[i], path[i + 1]);
       const [token1, token2] = pair.getPair();
-      const pool = pools.find(
-        (item) => item.token1.isEqual(token1, isTokenEqual) && item.token2.isEqual(token2, isTokenEqual)
-      );
+      const pool = pools.find((item) => item.token1.isEqual(token1) && item.token2.isEqual(token2));
 
       if (!pool) throw new NoLiquidityPoolError();
 
