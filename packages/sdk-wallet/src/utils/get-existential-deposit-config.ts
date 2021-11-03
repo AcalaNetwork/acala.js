@@ -12,18 +12,18 @@ type ExistentialDepositConfig = {
  */
 const EXISTENTIAL_DEPOSIT: ExistentialDepositConfig = {
   acala: {
-    KAR: ZERO,
-    KUSD: ZERO,
-    KSM: ZERO,
-    LKSM: ZERO,
-    ACA: ZERO,
-    AUSD: ZERO,
-    DOT: ZERO,
-    LDOT: ZERO,
-    RENBTC: ZERO,
-    CASH: ZERO,
-    BNC: ZERO,
-    VSKSM: ZERO
+    KAR: MAX,
+    KUSD: MAX,
+    KSM: MAX,
+    LKSM: MAX,
+    ACA: new FixedPointNumber(0.1, 12),
+    AUSD: new FixedPointNumber(0.1, 12),
+    DOT: new FixedPointNumber(0.01, 12),
+    LDOT: new FixedPointNumber(0.05, 12),
+    RENBTC: MAX,
+    CASH: MAX,
+    BNC: MAX,
+    VSKSM: MAX
   },
   karura: {
     KAR: new FixedPointNumber(0.1, 12),
