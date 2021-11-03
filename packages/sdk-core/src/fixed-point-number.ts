@@ -36,11 +36,13 @@ function genFnFromBigNumber<T extends keyof BigNumber, U extends boolean>(
   }
 
   return function (right: FixedPointNumber) {
+    const temp = right.clone();
+
     /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/ban-ts-comment */
     // @ts-ignore
-    this.alignPrecision(right);
+    this.alignPrecision(temp);
     // @ts-ignore
-    return this.inner[fn](right._getInner());
+    return this.inner[fn](temp._getInner());
     /* eslint-enable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/ban-ts-comment */
   } as any;
 }
@@ -234,10 +236,12 @@ export class FixedPointNumber {
    * @description return a FixedPointNumber whose value is origin value plus right value
    */
   public plus(right: FixedPointNumber): FixedPointNumber {
-    this.alignPrecision(right);
+    const temp = right.clone();
+
+    this.alignPrecision(temp);
     this.setMode();
 
-    return FixedPointNumber._fromBN(this.inner.plus(right.inner), this.precision);
+    return FixedPointNumber._fromBN(this.inner.plus(temp.inner), this.precision);
   }
 
   /**
@@ -245,10 +249,12 @@ export class FixedPointNumber {
    * @description return a FixedPointNumber whose value is origin value minus right value
    */
   public minus(right: FixedPointNumber): FixedPointNumber {
-    this.alignPrecision(right);
+    const temp = right.clone();
+
+    this.alignPrecision(temp);
     this.setMode();
 
-    return FixedPointNumber._fromBN(this.inner.minus(right.inner), this.precision);
+    return FixedPointNumber._fromBN(this.inner.minus(temp.inner), this.precision);
   }
 
   /**
@@ -256,10 +262,12 @@ export class FixedPointNumber {
    * @description return a FixedPointNumber whose value is origin value times right value
    */
   public times(right: FixedPointNumber): FixedPointNumber {
-    this.alignPrecision(right);
+    const temp = right.clone();
+
+    this.alignPrecision(temp);
     this.setMode();
 
-    return FixedPointNumber._fromBN(this.inner.times(right.inner).shiftedBy(-this.precision), this.precision);
+    return FixedPointNumber._fromBN(this.inner.times(temp.inner).shiftedBy(-this.precision), this.precision);
   }
 
   /**
@@ -267,10 +275,12 @@ export class FixedPointNumber {
    * @description return a FixedPointNumber whose value is origin value div right value
    */
   public div(right: FixedPointNumber): FixedPointNumber {
-    this.alignPrecision(right);
+    const temp = right.clone();
+
+    this.alignPrecision(temp);
     this.setMode();
 
-    return FixedPointNumber._fromBN(this.inner.shiftedBy(this.precision).div(right.inner), this.precision);
+    return FixedPointNumber._fromBN(this.inner.shiftedBy(this.precision).div(temp.inner), this.precision);
   }
 
   /**
@@ -341,10 +351,12 @@ export class FixedPointNumber {
    * @name min
    */
   public min(...targets: FixedPointNumber[]): FixedPointNumber {
-    targets.forEach((item) => this.alignPrecision(item));
+    const temp = targets.map((item) => item.clone());
+
+    temp.forEach((item) => this.alignPrecision(item));
 
     return FixedPointNumber._fromBN(
-      BigNumber.min.apply(null, [this.inner, ...targets.map((i) => i._getInner())]),
+      BigNumber.min.apply(null, [this.inner, ...temp.map((i) => i._getInner())]),
       this.precision
     );
   }
@@ -353,10 +365,12 @@ export class FixedPointNumber {
    * @name max
    */
   public max(...targets: FixedPointNumber[]): FixedPointNumber {
-    targets.forEach((item) => this.alignPrecision(item));
+    const temp = targets.map((item) => item.clone());
+
+    temp.forEach((item) => this.alignPrecision(item));
 
     return FixedPointNumber._fromBN(
-      BigNumber.max.apply(null, [this.inner, ...targets.map((i) => i._getInner())]),
+      BigNumber.max.apply(null, [this.inner, ...temp.map((i) => i._getInner())]),
       this.precision
     );
   }
