@@ -18,8 +18,8 @@ const EXISTENTIAL_DEPOSIT: ExistentialDepositConfig = {
     LKSM: MAX,
     ACA: new FixedPointNumber(0.1, 12),
     AUSD: new FixedPointNumber(0.1, 12),
-    DOT: new FixedPointNumber(0.01, 12),
-    LDOT: new FixedPointNumber(0.05, 12),
+    DOT: new FixedPointNumber(0.01, 10),
+    LDOT: new FixedPointNumber(0.05, 10),
     RENBTC: MAX,
     CASH: MAX,
     BNC: MAX,
@@ -44,10 +44,10 @@ const EXISTENTIAL_DEPOSIT: ExistentialDepositConfig = {
     KUSD: new FixedPointNumber(0.01, 12),
     KSM: new FixedPointNumber(10 * 0.00001, 12),
     LKSM: new FixedPointNumber(50 * 0.00001, 12),
-    ACA: MAX,
-    AUSD: MAX,
-    DOT: MAX,
-    LDOT: MAX,
+    ACA: new FixedPointNumber(0.1, 12),
+    AUSD: new FixedPointNumber(0.1, 12),
+    DOT: new FixedPointNumber(0.01, 10),
+    LDOT: new FixedPointNumber(0.05, 10),
     RENBTC: MAX,
     CASH: MAX,
     BNC: new FixedPointNumber(800 * 0.00001, 12),
@@ -55,10 +55,12 @@ const EXISTENTIAL_DEPOSIT: ExistentialDepositConfig = {
   }
 };
 
+const normalizeNetwokrName = (name: string) => name.toLowerCase();
+const normalizeCurrencyName = (name: string) => name.toUpperCase();
+
 // get ed config, return 0 if the config doesn't set.
 export const getExistentialDepositConfig = (network: string, currency: string): FixedPointNumber => {
-  // use dev config as default
-  const config = EXISTENTIAL_DEPOSIT?.[network.toLocaleUpperCase()] || EXISTENTIAL_DEPOSIT.dev;
+  const config = EXISTENTIAL_DEPOSIT?.[normalizeNetwokrName(network)] || EXISTENTIAL_DEPOSIT.dev;
 
-  return config?.[currency.toUpperCase()].clone() || ZERO.clone();
+  return config?.[normalizeCurrencyName(currency)].clone() || ZERO.clone();
 };

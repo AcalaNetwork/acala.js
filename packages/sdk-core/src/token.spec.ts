@@ -35,7 +35,7 @@ describe('token', () => {
     const t4 = new Token('AUSD', { decimal: 18 });
 
     expect(t1.isEqual(t2)).toEqual(true);
-    expect(t1.isEqual(t3)).toEqual(false);
+    expect(t1.isEqual(t3, (i, j) => i.name === j.name && i.decimal === j.decimal)).toEqual(false);
     expect(t1.isEqual(t4)).toEqual(false);
   });
 
