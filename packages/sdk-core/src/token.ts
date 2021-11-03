@@ -22,7 +22,7 @@ export class Token {
   readonly isDexShare: boolean;
   readonly isTokenSymbol: boolean;
   readonly isERC20: boolean;
-  readonly isStableAssetPoolToken?: boolean;
+  readonly isStableAssetPoolToken: boolean;
   readonly chain: string | undefined;
 
   constructor(name: string, options?: TokenOpts) {
