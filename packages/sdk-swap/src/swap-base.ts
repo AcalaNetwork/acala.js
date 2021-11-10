@@ -296,7 +296,7 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
     liquidityPools: LiquidityPool[],
     baseParams: [Token, Token, FixedPointNumber, FixedPointNumber]
   ): SwapParameters {
-    const swapResult = paths.map((path): SwapResult => {
+    const swapResult = paths.map((path): [Error | null, SwapResult | null] => {
       const params = [...baseParams, path, liquidityPools] as [
         Token,
         Token,
@@ -306,19 +306,37 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
         LiquidityPool[]
       ];
 
-      return mode === 'EXACT_INPUT'
-        ? this.getOutputAmountWithExactInput(...params)
-        : this.getInputAmountWithExactOutput(...params);
+      try {
+        return [
+          null,
+          mode === 'EXACT_INPUT'
+            ? this.getOutputAmountWithExactInput(...params)
+            : this.getInputAmountWithExactOutput(...params)
+        ];
+      } catch (e) {
+        return [e, null];
+      }
     });
 
-    const result = swapResult.reduce((acc, cur) => {
-      if (mode === 'EXACT_INPUT' && acc.output.balance.isGreaterThanOrEqualTo(cur.output.balance)) return acc;
+    const swapResultsLen = swapResult.length;
 
-      if (mode === 'EXACT_OUTPUT' && acc.input.balance.isLessOrEqualTo(cur.input.balance)) return acc;
+    const result = swapResult.reduce((preResult, [error, result], i) => {
+      if (!preResult && error && i === swapResultsLen - 1) {
+        throw error;
+      }
 
-      return cur;
-    }, swapResult[0]);
+      if (!result) return preResult;
 
-    return new SwapParameters(mode, result);
+      if (result && preResult) {
+        if (mode === 'EXACT_INPUT' && preResult.output.balance.gt(result.output.balance)) return preResult;
+
+        if (mode === 'EXACT_OUTPUT' && preResult.input.balance.lt(result.input.balance)) return preResult;
+      }
+
+      return result;
+    }, swapResult?.[0]?.[1]);
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return new SwapParameters(mode, result!);
   }
 }
