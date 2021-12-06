@@ -22,7 +22,8 @@ export class ConvertToCurrencyIdNameFailed extends Error {
 
 export const forceToTokenSymbolCurrencyId = (api: AnyApi, target: string | Token | CurrencyId): CurrencyId => {
   try {
-    if (typeof target === 'string') return api.createType('CurrencyId', { token: target as string });
+    if (typeof target === 'string')
+      return api.createType('AcalaPrimitivesCurrencyCurrencyId', { token: target as string });
 
     if (target instanceof Token) return target.toCurrencyId(api);
 
@@ -38,7 +39,7 @@ export const forceToTokenSymbolCurrencyId = (api: AnyApi, target: string | Token
 export const forceToDexShareCurrencyId = (api: AnyApi, target: [string, string] | CurrencyId): CurrencyId => {
   try {
     if (Array.isArray(target))
-      return api.createType('CurrencyId', { dexShare: target.map((item) => ({ token: item })) });
+      return api.createType('AcalaPrimitivesCurrencyCurrencyId', { dexShare: target.map((item) => ({ token: item })) });
 
     if (target?.isToken || target?.isDexShare || target?.isErc20 || target?.isStableAssetPoolToken)
       return target as CurrencyId;
@@ -51,7 +52,8 @@ export const forceToDexShareCurrencyId = (api: AnyApi, target: [string, string] 
 
 export const forceToStableAssetCurrencyId = (api: AnyApi, target: number | CurrencyId): CurrencyId => {
   try {
-    if (typeof target === 'number') return api.createType('CurrencyId', { stableAssetPoolToken: target });
+    if (typeof target === 'number')
+      return api.createType('AcalaPrimitivesCurrencyCurrencyId', { stableAssetPoolToken: target });
 
     if (target?.isToken || target?.isDexShare || target?.isErc20 || target?.isStableAssetPoolToken)
       return target as CurrencyId;

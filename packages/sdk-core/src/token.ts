@@ -142,7 +142,7 @@ export class Token {
 
   public toCurrencyId(api: AnyApi): CurrencyId {
     try {
-      return api.createType('CurrencyId', this.toChainData());
+      return api.createType('AcalaPrimitivesCurrencyCurrencyId', this.toChainData());
     } catch (e) {
       throw new Error(`can't convert ${this.toChainData()} to Currency Id`);
     }
