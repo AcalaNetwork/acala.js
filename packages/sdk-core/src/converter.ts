@@ -22,7 +22,8 @@ export class ConvertToCurrencyIdNameFailed extends Error {
 
 export const forceToTokenSymbolCurrencyId = (api: AnyApi, target: string | Token | CurrencyId): CurrencyId => {
   try {
-    if (typeof target === 'string') return api.createType('AcalaPrimitivesCurrencyCurrencyId', { token: target as string });
+    if (typeof target === 'string')
+      return api.createType('AcalaPrimitivesCurrencyCurrencyId', { token: target as string });
 
     if (target instanceof Token) return target.toCurrencyId(api);
 
@@ -51,7 +52,8 @@ export const forceToDexShareCurrencyId = (api: AnyApi, target: [string, string] 
 
 export const forceToStableAssetCurrencyId = (api: AnyApi, target: number | CurrencyId): CurrencyId => {
   try {
-    if (typeof target === 'number') return api.createType('AcalaPrimitivesCurrencyCurrencyId', { stableAssetPoolToken: target });
+    if (typeof target === 'number')
+      return api.createType('AcalaPrimitivesCurrencyCurrencyId', { stableAssetPoolToken: target });
 
     if (target?.isToken || target?.isDexShare || target?.isErc20 || target?.isStableAssetPoolToken)
       return target as CurrencyId;
