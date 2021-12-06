@@ -108,7 +108,7 @@ export const forceToCurrencyIdName = (target: MaybeCurrency): string => {
     if ((target as CurrencyId).isErc20) return (target as CurrencyId).asErc20.toString();
 
     if ((target as CurrencyId).isStableAssetPoolToken) return createStableAssetName(
-      (target as CurrencyId).asStableAssetPoolToken as number
+      (target as CurrencyId).asStableAssetPoolToken as unknown as number
     );
   } catch (e) {
     throw new ConvertToCurrencyIdNameFailed();
