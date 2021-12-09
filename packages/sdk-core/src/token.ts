@@ -14,6 +14,8 @@ interface TokenOpts {
   isERC20?: boolean;
   isStableAssetPoolToken?: boolean;
   chain?: string;
+  token1?: Token;
+  token2?: Token;
 }
 
 export class Token {
@@ -24,6 +26,8 @@ export class Token {
   readonly isERC20: boolean;
   readonly isStableAssetPoolToken: boolean;
   readonly chain: string | undefined;
+  readonly token1: Token | undefined; // for dex share
+  readonly token2: Token | undefined; // for dex share
 
   constructor(name: string, options?: TokenOpts) {
     this.name = name;
@@ -33,6 +37,8 @@ export class Token {
     this.isERC20 = options?.isERC20 || false;
     this.isStableAssetPoolToken = options?.isStableAssetPoolToken || false;
     this.chain = options?.chain;
+    this.token1 = options?.token1;
+    this.token2 = options?.token2;
   }
 
   static fromCurrencyId(currency: CurrencyId, decimal?: number): Token {
@@ -91,7 +97,9 @@ export class Token {
 
     return new Token(createLPCurrencyName(_token1.name, _token2.name), {
       decimal: _decimal,
-      isDexShare: true
+      isDexShare: true,
+      token1: _token1,
+      token2: _token2
     });
   }
 

@@ -1,4 +1,4 @@
-import { ApiRx } from '@polkadot/api';
+import { ApiPromise, ApiRx } from '@polkadot/api';
 import { Vec } from '@polkadot/types';
 import { EventRecord } from '@polkadot/types/interfaces';
 import { from, Observable } from 'rxjs';
@@ -24,10 +24,10 @@ export const eventsFilter = (data: { section: string; method: string }[]) => {
   return (event: EventRecord): boolean => {
     return data.reduce((acc, cur) => {
       // eslint-disable-next-line prettier/prettier
-      const isSectionMatch = cur.section === '*' ? true : (cur.section === event.event.section);
+      const isSectionMatch = cur.section === '*' ? true : cur.section === event.event.section;
 
       // eslint-disable-next-line prettier/prettier
-      const isMethodMatch = cur.method === '*' ? true : (cur.method === event.event.method);
+      const isMethodMatch = cur.method === '*' ? true : cur.method === event.event.method;
 
       return acc || (isSectionMatch && isMethodMatch);
     }, false as boolean);
@@ -49,4 +49,18 @@ export const eventsFilterRx = (
     filter(eventsFilter(configs)),
     shareReplay(1)
   );
+};
+
+export const eventsFilterCallback = (
+  api: ApiPromise,
+  configs: { section: string; method: string }[],
+  immediately: boolean,
+  callback: () => void
+): void => {
+  if (immediately) callback();
+
+  api.query.system.events((events) => {
+    // eslint-disable-next-line no-unused-expressions
+    eventsFilter(configs)(events as unknown as EventRecord) ? callback() : undefined;
+  });
 };
