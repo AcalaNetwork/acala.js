@@ -4,6 +4,25 @@ import { assert } from '@polkadot/util';
 
 import { AnyApi } from './types';
 import { createLPCurrencyName, forceToCurrencyIdName, getLPCurrenciesFormName } from './converter';
+import { createStableAssetName } from '.';
+
+export interface StableAsset {
+  poolId: number;
+  name: string;
+  decimal: number;
+  assets: string[];
+}
+
+export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
+  'Mandala Dev': [
+    {
+      poolId: 0,
+      name: 'Taiga DOT-Liquid DOT',
+      decimal: 10,
+      assets: ['DOT', 'LDOT']
+    }
+  ]
+};
 
 const TOKEN_SORT: Record<string, number> = primitivesConfig.types.TokenSymbol._enum;
 
@@ -63,7 +82,7 @@ export class Token {
 
     if (currency.isStableAssetPoolToken) {
       return new Token(forceToCurrencyIdName(currency), {
-        decimal: decimal,
+        decimal,
         isStableAssetPoolToken: true
       });
     }
@@ -115,6 +134,14 @@ export class Token {
     const token2 = Token.fromTokenSymbol(currency2, decimal2);
 
     return Token.fromTokens(token1, token2);
+  }
+
+  /** Create StableAssetPoolToken by stable asset pool ID. Chain must be provided/ */
+  static fromStableAssetPool(chain: string, poolId: number): Token {
+    return new Token(createStableAssetName(poolId), {
+      decimal: STABLE_ASSET_POOLS[chain][poolId].decimal,
+      isStableAssetPoolToken: true
+    });
   }
 
   static sortTokenNames(...names: string[]): string[] {
