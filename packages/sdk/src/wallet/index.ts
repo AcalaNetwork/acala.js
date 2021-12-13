@@ -17,28 +17,38 @@ import { AccountInfo, Balance, RuntimeDispatchInfo } from '@polkadot/types/inter
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { Storage } from '../storage';
+import { Storage, StorageManager } from '../storage';
 import { CurrenciesRecord, CurrencyType, WalletConsts, BalanceData, TransferConfig, PresetTokens } from './type';
 import { CurrencyNotFound } from '..';
 import { getExistentialDepositConfig } from './utils/get-ed-config';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 
+type Keys = 'trading-pairs' | 'native-balance' | 'non-native-balance';
+
+type StorageConfigs = {
+  'trading-pairs': () => Storage<[StorageKey<TradingPair>, TradingPairStatus][]>;
+  'native-balance': ([address]: [string]) => Storage<AccountInfo>;
+  'non-native-balance': ([token, address]: [Token, string]) => Storage<OrmlAccountData>;
+  [k: Keys]: any;
+};
+
+
 export class Wallet {
   private api: AnyApi;
   private basicCurrencies: CurrenciesRecord;
   private lpCurrencies$: BehaviorSubject<CurrenciesRecord>;
-  private cachedStorage: Record<string, Storage<any>>;
+  private storages: StorageManager<Keys, StorageConfigs>;
   public consts!: WalletConsts;
 
   public constructor(api: AnyApi) {
     this.api = api;
     this.basicCurrencies = {};
     this.lpCurrencies$ = new BehaviorSubject<CurrenciesRecord>({});
-    this.cachedStorage = {};
+    this.storages = new StorageManager(this.storageFetchers);
 
     this.initConsts();
     this.initBasicCurrencies();
-    this.initLpCurrencies();
+    this.getLpCurrencies$();
   }
 
   private initConsts() {
@@ -48,12 +58,27 @@ export class Wallet {
     };
   }
 
-  private getStorage<T = any>(name: string, getStorage?: () => Storage<T>): Storage<T> {
-    if (!this.cachedStorage[name] && getStorage) {
-      this.cachedStorage[name] = getStorage();
-    }
-
-    return this.cachedStorage[name];
+  private get storageFetchers() {
+    return {
+      'trading-pairs': () =>
+        new Storage<[StorageKey<TradingPair>, TradingPairStatus][]>({
+          api: this.api,
+          path: 'query.dex.tradingPairStatuses.entries',
+          params: []
+        }),
+      'native-balance': ([address]: [string]) =>
+        new Storage<AccountInfo>({
+          api: this.api,
+          path: 'query.system.account',
+          params: [address]
+        }),
+      'non-native-balance': ([token, address]: [Token, string]) =>
+        new Storage<OrmlAccountData>({
+          api: this.api,
+          path: 'query.tokens.accounts',
+          params: [address, token.toChainData()]
+        })
+    } as StorageConfigs;
   }
 
   private initBasicCurrencies() {
@@ -73,20 +98,10 @@ export class Wallet {
     );
   }
 
-  private initLpCurrencies() {
-    const storage = this.getStorage(
-      'trading-pair',
-      () =>
-        new Storage<[StorageKey<TradingPair>, TradingPairStatus][]>('trading-pair', {
-          api: this.api,
-          path: 'query.dex.tradingPairStatuses.entries',
-          params: []
-        })
-    );
+  private getLpCurrencies$() {
+    const storage$ = this.storages.get();
 
-    this.cachedStorage['trading-pair'] = storage;
-
-    storage.observable.subscribe({
+    storage$.subscribe({
       next: (data) => {
         const enabled = data.filter((item) => [item[1].isEnabled]);
 
