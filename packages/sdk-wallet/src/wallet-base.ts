@@ -6,7 +6,9 @@ import {
   forceToTokenSymbolCurrencyId,
   forceToCurrencyIdName,
   getLPCurrenciesFormName,
+  getStableAssetPoolIdForName,
   isDexShare,
+  isStableAsset,
   FixedPointNumber as FN
 } from '@acala-network/sdk-core';
 import { CurrencyId } from '@acala-network/types/interfaces';
@@ -90,6 +92,10 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
       const _token2 = this.getToken(token2);
 
       return Token.fromTokens(_token1, _token2);
+    } else if (isStableAsset(currencyName)) {
+      const poolId = getStableAssetPoolIdForName(currencyName);
+
+      return Token.fromStableAssetPool(this.api.runtimeChain.toString(), poolId);
     }
 
     // FIXME: need handle erc20
