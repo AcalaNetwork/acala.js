@@ -20,6 +20,10 @@ export class Storage<T = unknown> {
     });
   }
 
+  static create<T = unknown>(configs: StorageConfigs): Storage<T> {
+    return new Storage<T>(configs);
+  }
+
   private process() {
     const { api } = this.configs;
 

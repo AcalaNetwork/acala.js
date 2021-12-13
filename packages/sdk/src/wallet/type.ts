@@ -1,11 +1,11 @@
 import { FixedPointNumber as FN, Token } from '@acala-network/sdk-core';
 
 export enum CurrencyType {
-  'all',
-  'basic',
-  'lp',
+  'ALL',
+  'BASIC',
+  'LP',
   'stableAssetPool',
-  'regist'
+  'ForeignAsset'
 }
 
 export type CurrenciesRecord = Record<string, Token>;

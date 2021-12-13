@@ -17,38 +17,40 @@ import { AccountInfo, Balance, RuntimeDispatchInfo } from '@polkadot/types/inter
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { Storage, StorageManager } from '../storage';
+import { Storage } from '../storage';
 import { CurrenciesRecord, CurrencyType, WalletConsts, BalanceData, TransferConfig, PresetTokens } from './type';
 import { CurrencyNotFound } from '..';
 import { getExistentialDepositConfig } from './utils/get-ed-config';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
+import { MarketPriceProvider } from './price-provider/MarketPriceProvider';
+import { OraclePriceProvider } from './price-provider/OraclePriceProvider';
+import { PriceProvider, PriceProviderType } from './price-provider/types';
 
-type Keys = 'trading-pairs' | 'native-balance' | 'non-native-balance';
-
-type StorageConfigs = {
-  'trading-pairs': () => Storage<[StorageKey<TradingPair>, TradingPairStatus][]>;
-  'native-balance': ([address]: [string]) => Storage<AccountInfo>;
-  'non-native-balance': ([token, address]: [Token, string]) => Storage<OrmlAccountData>;
-  [k: Keys]: any;
-};
-
+type PriceProviders = Partial<
+  {
+    [k in PriceProviderType]: PriceProvider;
+  }
+>;
 
 export class Wallet {
   private api: AnyApi;
   private basicCurrencies: CurrenciesRecord;
   private lpCurrencies$: BehaviorSubject<CurrenciesRecord>;
-  private storages: StorageManager<Keys, StorageConfigs>;
+  private priceProviders: PriceProviders;
   public consts!: WalletConsts;
 
-  public constructor(api: AnyApi) {
+  public constructor(api: AnyApi, priceProviders?: Record<PriceProviderType, PriceProvider>) {
     this.api = api;
     this.basicCurrencies = {};
     this.lpCurrencies$ = new BehaviorSubject<CurrenciesRecord>({});
-    this.storages = new StorageManager(this.storageFetchers);
 
+    this.priceProviders = {
+      ...this.defaultPriceProviders,
+      ...priceProviders
+    };
     this.initConsts();
     this.initBasicCurrencies();
-    this.getLpCurrencies$();
+    this.subscribeLPCurrencies();
   }
 
   private initConsts() {
@@ -58,27 +60,43 @@ export class Wallet {
     };
   }
 
-  private get storageFetchers() {
+  private get storages() {
     return {
       'trading-pairs': () =>
-        new Storage<[StorageKey<TradingPair>, TradingPairStatus][]>({
+        Storage.create<[StorageKey<TradingPair>, TradingPairStatus][]>({
           api: this.api,
           path: 'query.dex.tradingPairStatuses.entries',
           params: []
         }),
-      'native-balance': ([address]: [string]) =>
-        new Storage<AccountInfo>({
+      'native-balance': (address: string) =>
+        Storage.create<AccountInfo>({
           api: this.api,
           path: 'query.system.account',
           params: [address]
         }),
-      'non-native-balance': ([token, address]: [Token, string]) =>
-        new Storage<OrmlAccountData>({
+      'non-native-balance': (token: Token, address: string) =>
+        Storage.create<OrmlAccountData>({
           api: this.api,
           path: 'query.tokens.accounts',
           params: [address, token.toChainData()]
-        })
-    } as StorageConfigs;
+        }),
+      issuance: (token: Token) => {
+        const isNativeToken = forceToCurrencyIdName(this.consts.nativeCurrency) === forceToCurrencyIdName(token);
+
+        return Storage.create<Balance>({
+          api: this.api,
+          path: isNativeToken ? 'query.balances.totalIssuance' : 'query.tokens.totalIssuance',
+          params: isNativeToken ? [] : [token.toChainData()]
+        });
+      }
+    } as const;
+  }
+
+  private get defaultPriceProviders(): PriceProviders {
+    return {
+      [PriceProviderType.MARKET]: new MarketPriceProvider(),
+      [PriceProviderType.ORACLE]: new OraclePriceProvider(this.api)
+    };
   }
 
   private initBasicCurrencies() {
@@ -98,10 +116,10 @@ export class Wallet {
     );
   }
 
-  private getLpCurrencies$() {
-    const storage$ = this.storages.get();
+  private subscribeLPCurrencies() {
+    const storage$ = this.storages['trading-pairs']();
 
-    storage$.subscribe({
+    storage$.observable.subscribe({
       next: (data) => {
         const enabled = data.filter((item) => [item[1].isEnabled]);
 
@@ -118,49 +136,18 @@ export class Wallet {
     });
   }
 
-  private getNativeBalanceStorage(token: Token, address: string) {
-    const key = `balance-${token.name}-${address}`;
-
-    return this.getStorage(
-      key,
-      () =>
-        new Storage<AccountInfo>(key, {
-          api: this.api,
-          path: 'query.system.account',
-          params: [address]
-        })
-    );
-  }
-
-  private getNonNativeBalanceStorage(token: Token, address: string) {
-    const key = `balance-${token.name}-${address}`;
-
-    return this.getStorage(
-      key,
-      () =>
-        new Storage<OrmlAccountData>(key, {
-          api: this.api,
-          path: 'query.tokens.accounts',
-          params: [address, token.toChainData()]
-        })
-    );
-  }
-
   /**
    *  @name subscribeCurrencies
    *  @param type
    *  @description subscirbe the currency list of `type`
    */
-  public subscribeCurrencies = memoize((type: CurrencyType = CurrencyType.basic): Observable<CurrenciesRecord> => {
-    if (type === CurrencyType.basic) return of(this.basicCurrencies);
+  public subscribeCurrencies = memoize((type: CurrencyType = CurrencyType.BASIC): Observable<CurrenciesRecord> => {
+    if (type === CurrencyType.BASIC) return of(this.basicCurrencies);
 
-    if (type === CurrencyType.lp) return this.lpCurrencies$.asObservable();
+    if (type === CurrencyType.LP) return this.lpCurrencies$.asObservable();
 
-    return combineLatest([of(this.basicCurrencies), this.lpCurrencies$]).pipe(
-      map(([a, b]) => {
-        return { ...a, ...b };
-      })
-    );
+    // get all currencies
+    return combineLatest([of(this.basicCurrencies), this.lpCurrencies$]).pipe(map(([a, b]) => ({ ...a, ...b })));
   });
 
   /**
@@ -170,7 +157,7 @@ export class Wallet {
   public subscribeCurrency = memoize((target: MaybeCurrency): Observable<Token> => {
     const name = forceToCurrencyIdName(target);
 
-    return this.subscribeCurrencies(CurrencyType.all).pipe(
+    return this.subscribeCurrencies(CurrencyType.ALL).pipe(
       map((all) => {
         const result = Object.values(all).find((item) => item.name === name);
 
@@ -187,40 +174,44 @@ export class Wallet {
    * @param token
    * @param address
    */
-  public subscribeBalance = memoize((token: Token, address: string): Observable<BalanceData> => {
-    const { nativeCurrency } = this.consts;
-    const isNativeToken = nativeCurrency === token.name;
+  public subscribeBalance = memoize((token: MaybeCurrency, address: string): Observable<BalanceData> => {
+    return this.subscribeCurrency(token).pipe(
+      switchMap((token) => {
+        const { nativeCurrency } = this.consts;
+        const isNativeToken = nativeCurrency === token.name;
 
-    const handleNative = (data: AccountInfo, token: Token) => {
-      const free = FN.fromInner(data.data.free.toString(), token.decimal);
-      const locked = FN.fromInner(data.data.miscFrozen.toString(), token.decimal).max(
-        FN.fromInner(data.data.feeFrozen.toString(), token.decimal)
-      );
-      const reserved = FN.fromInner(data.data.reserved.toString(), token.decimal);
-      const available = free.sub(locked).max(FN.ZERO);
+        const handleNative = (data: AccountInfo, token: Token) => {
+          const free = FN.fromInner(data.data.free.toString(), token.decimal);
+          const locked = FN.fromInner(data.data.miscFrozen.toString(), token.decimal).max(
+            FN.fromInner(data.data.feeFrozen.toString(), token.decimal)
+          );
+          const reserved = FN.fromInner(data.data.reserved.toString(), token.decimal);
+          const available = free.sub(locked).max(FN.ZERO);
 
-      return { available, token, free, locked, reserved };
-    };
+          return { available, token, free, locked, reserved };
+        };
 
-    const handleNonNative = (data: OrmlAccountData, token: Token) => {
-      const free = FN.fromInner(data.free.toString(), token.decimal);
-      const locked = FN.fromInner(data.frozen.toString(), token.decimal);
-      const reserved = FN.fromInner(data.reserved.toString(), token.decimal);
-      const available = free.sub(locked).max(FN.ZERO);
+        const handleNonNative = (data: OrmlAccountData, token: Token) => {
+          const free = FN.fromInner(data.free.toString(), token.decimal);
+          const locked = FN.fromInner(data.frozen.toString(), token.decimal);
+          const reserved = FN.fromInner(data.reserved.toString(), token.decimal);
+          const available = free.sub(locked).max(FN.ZERO);
 
-      return { available, token, free, locked, reserved };
-    };
+          return { available, token, free, locked, reserved };
+        };
 
-    if (isNativeToken) {
-      const storage = this.getNativeBalanceStorage(token, address);
+        if (isNativeToken) {
+          const storage = this.storages['native-balance'](address);
 
-      return storage.observable.pipe(map((data) => handleNative(data, token)));
-    }
+          return storage.observable.pipe(map((data) => handleNative(data, token)));
+        }
 
-    // non-native token
-    const storage = this.getNonNativeBalanceStorage(token, address);
+        // non-native token
+        const storage = this.storages['non-native-balance'](token, address);
 
-    return storage.observable.pipe(map((data) => handleNonNative(data, token)));
+        return storage.observable.pipe(map((data) => handleNonNative(data, token)));
+      })
+    );
   });
 
   /**
@@ -228,24 +219,15 @@ export class Wallet {
    * @description subscribe `token` issuance amount
    * @param token
    */
-  public subscribeIssuance = memoize((token: Token): Observable<FN> => {
-    const { nativeCurrency } = this.consts;
-    const key = `issuance-${token.name}`;
-    const isNativeToken = nativeCurrency === token.name;
+  public subscribeIssuance = memoize((token: MaybeCurrency): Observable<FN> => {
+    return this.subscribeCurrency(token).pipe(
+      switchMap((token) => {
+        const storage = this.storages.issuance(token);
+        const handleIssuance = (data: Balance, token: Token) => FN.fromInner(data.toString(), token.decimal);
 
-    const storage = this.getStorage(
-      key,
-      () =>
-        new Storage<Balance>(key, {
-          api: this.api,
-          path: isNativeToken ? 'query.balances.totalIssuance' : 'query.tokens.totalIssuance',
-          params: [token.toChainData()]
-        })
+        return storage.observable.pipe(map((data) => handleIssuance(data, token)));
+      })
     );
-
-    const handleIssuance = (data: Balance, token: Token) => FN.fromInner(data.toString(), token.decimal);
-
-    return storage.observable.pipe(map((data) => handleIssuance(data, token)));
   });
 
   /**
@@ -256,14 +238,14 @@ export class Wallet {
    */
   public subscribeSuggestInput = memoize(
     (
-      _token: MaybeCurrency,
+      token: MaybeCurrency,
       address: string,
       isAllowDeath: boolean,
       paymentInfo: RuntimeDispatchInfo,
       feeFactor = 1
     ): Observable<FN> => {
       const nativeToken = this.basicCurrencies[this.consts.nativeCurrency] as Token;
-      const isNativeToken = forceToCurrencyIdName(_token) === nativeToken.name;
+      const isNativeToken = forceToCurrencyIdName(token) === nativeToken.name;
 
       const handleNativeResult = (accountInfo: AccountInfo, token: Token) => {
         const providers = accountInfo.providers.toNumber();
@@ -317,20 +299,20 @@ export class Wallet {
         });
       };
 
-      const inner = (token: Token) => {
-        if (isNativeToken) {
-          return this.getNativeBalanceStorage(token, address).observable.pipe(
-            map((data) => handleNativeResult(data, token))
-          );
-        }
+      return this.subscribeCurrency(token).pipe(
+        switchMap((token) => {
+          if (isNativeToken) {
+            return this.storages['native-balance'](address).observable.pipe(
+              map((data) => handleNativeResult(data, token))
+            );
+          }
 
-        return combineLatest({
-          accountInfo: this.getNativeBalanceStorage(nativeToken, address).observable,
-          tokenInfo: this.getNonNativeBalanceStorage(token, address).observable
-        }).pipe(map(({ accountInfo, tokenInfo }) => handleNonNativeResult(accountInfo, tokenInfo, token)));
-      };
-
-      return this.subscribeCurrency(_token).pipe(switchMap((token) => inner(token)));
+          return combineLatest({
+            accountInfo: this.storages['native-balance'](address).observable,
+            tokenInfo: this.storages['non-native-balance'](token, address).observable
+          }).pipe(map(({ accountInfo, tokenInfo }) => handleNonNativeResult(accountInfo, tokenInfo, token)));
+        })
+      );
     }
   );
 
@@ -374,5 +356,22 @@ export class Wallet {
     }
 
     return data;
+  }
+
+  public subscribePrice(token: MaybeCurrency, type = PriceProviderType.MARKET): Observable<FN> {
+    let priceProvider: PriceProvider | undefined;
+
+    if (type === PriceProviderType.MARKET) {
+      priceProvider = this.priceProviders?.[PriceProviderType.MARKET];
+    }
+
+    if (type === PriceProviderType.ORACLE) {
+      priceProvider = this.priceProviders?.[PriceProviderType.ORACLE];
+    }
+
+    if (!priceProvider) return of(FN.ZERO);
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.subscribeCurrency(token).pipe(switchMap((token) => priceProvider!.subscribe(token.name)));
   }
 }
