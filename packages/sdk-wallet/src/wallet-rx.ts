@@ -1,7 +1,7 @@
 import { ApiRx } from '@polkadot/api';
 
 import { map, shareReplay, switchMap, take } from 'rxjs/operators';
-import { memoize, bnMax } from '@polkadot/util';
+import { memoize, bnMax, hexToString } from '@polkadot/util';
 import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { u16, Vec } from '@polkadot/types';
 import { TimestampedValue, VestingScheduleOf, OrmlAccountData } from '@open-web3/orml-types/interfaces';
@@ -11,6 +11,7 @@ import {
   FixedPointNumber as FN,
   getSubscribeOrAtQuery,
   isDexShareName,
+  isForeignAssetName,
   Token,
   TokenBalance
 } from '@acala-network/sdk-core';
@@ -30,7 +31,7 @@ import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 const queryFN = getSubscribeOrAtQuery;
 export class WalletRx extends WalletBase<ApiRx> {
   private readonly oracleFeed$: BehaviorSubject<PriceDataWithTimestamp[]>;
-  private readonly assetMetadatas$: BehaviorSubject<Map<string, Token>>;
+  public readonly assetMetadatas$: BehaviorSubject<Map<string, Token>>;
 
   constructor(api: ApiRx) {
     super(api);
@@ -54,7 +55,7 @@ export class WalletRx extends WalletBase<ApiRx> {
 
         const token = Token.fromCurrencyName(name, {
           decimal,
-          symbol: data.symbol.toString(),
+          symbol: hexToString(data.symbol.toHex()),
           minimalBalance: FN.fromInner(data.minimalBalance.toString(), decimal)
         });
 
@@ -63,6 +64,18 @@ export class WalletRx extends WalletBase<ApiRx> {
 
       this.assetMetadatas$.next(new Map(result));
     });
+  }
+
+  public getToken(currency: MaybeCurrency): Token {
+    const currencyName = forceToCurrencyName(currency);
+
+    // FIXME: this should cause undefined error, pls. await wallet init
+    if (isForeignAssetName(currencyName)) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return this.assetMetadatas$.value.get(currencyName)!;
+    }
+
+    return super.getToken(currencyName);
   }
 
   // query price info

@@ -37,7 +37,7 @@ export function isDexShareName(name: string): boolean {
 export function unzipDexShareName(name: string): [string, string] {
   if (!isDexShareName(name)) throw new NotDexShareName(name);
 
-  const reg = /^lp:\/\/(.*)?\/(.*)$/;
+  const reg = /^lp:\/\/([^/]*)?\/([^/]*)$/;
 
   const result = reg.exec(name);
 
