@@ -97,7 +97,7 @@ export function getStableAssetCurrencyObject(name: string): CurrencyObject {
 }
 
 export function getForeignAssetCurrencyObject(name: string): CurrencyObject {
-  return { StableAssetPoolToken: getForeignAssetIdFromName(name) };
+  return { ForeignAsset: getForeignAssetIdFromName(name) };
 }
 
 export function getDexShareCurrencyObject(name: string): CurrencyObject {
