@@ -2,9 +2,17 @@
 /* eslint-disable */
 
 import type { EvmAddress } from '@acala-network/types/interfaces/evm';
-import type { StableAssetPoolId } from '@acala-network/types/interfaces/runtime';
-import type { Enum, i128, u32, u8 } from '@polkadot/types';
+import type { Balance } from '@acala-network/types/interfaces/runtime';
+import type { Bytes, Enum, Struct, i128, u32, u8 } from '@polkadot/types';
 import type { ITuple } from '@polkadot/types/types';
+
+/** @name AcalaAssetMetadata */
+export interface AcalaAssetMetadata extends Struct {
+  readonly name: Bytes;
+  readonly symbol: Bytes;
+  readonly decimals: u8;
+  readonly minimalBalance: Balance;
+}
 
 /** @name AcalaDataProviderId */
 export interface AcalaDataProviderId extends Enum {
@@ -52,7 +60,11 @@ export interface CurrencyId extends Enum {
   readonly isErc20: boolean;
   readonly asErc20: EvmAddress;
   readonly isStableAssetPoolToken: boolean;
-  readonly asStableAssetPoolToken: StableAssetPoolId;
+  readonly asStableAssetPoolToken: u32;
+  readonly isLiquidCroadloan: boolean;
+  readonly asLiquidCroadloan: u32;
+  readonly isForeignAsset: boolean;
+  readonly asForeignAsset: u32;
 }
 
 /** @name CurrencyIdOf */

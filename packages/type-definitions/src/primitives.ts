@@ -40,7 +40,9 @@ export default {
         Token: 'TokenSymbol',
         DEXShare: '(DexShare, DexShare)',
         ERC20: 'EvmAddress',
-        StableAssetPoolToken: 'StableAssetPoolId'
+        StableAssetPoolToken: 'u32',
+        LiquidCroadloan: 'u32',
+        ForeignAsset: 'u32'
       }
     },
     CurrencyIdOf: 'CurrencyId',
@@ -55,7 +57,13 @@ export default {
     },
     TradingPair: '(CurrencyId,  CurrencyId)',
     OrmlCurrencyId: 'CurrencyId',
-    ChainBridgeChainId: 'u8'
+    ChainBridgeChainId: 'u8',
+    AcalaAssetMetadata: {
+      name: 'Vec<u8>',
+      symbol: 'Vec<u8>',
+      decimals: 'u8',
+      minimalBalance: 'Balance'
+    }
   },
   typesAlias: {
     rewards: {
