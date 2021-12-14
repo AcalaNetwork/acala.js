@@ -1,14 +1,9 @@
 import { ApiPromise } from '@polkadot/api';
 
 import { TimestampedValue, OrmlAccountData } from '@open-web3/orml-types/interfaces';
-import { FixedPointNumber as FN, getPromiseOrAtQuery, Token } from '@acala-network/sdk-core';
+import { FixedPointNumber as FN, getPromiseOrAtQuery, isDexShareName, Token } from '@acala-network/sdk-core';
 import { Balance, CurrencyId, OracleKey, Ledger } from '@acala-network/types/interfaces';
-import {
-  forceToCurrencyId,
-  forceToCurrencyIdName,
-  getLPCurrenciesFormName,
-  isDexShare
-} from '@acala-network/sdk-core/converter';
+import { forceToCurrencyId, forceToCurrencyName, unzipDexShareName } from '@acala-network/sdk-core/converter';
 import { MaybeAccount, MaybeCurrency } from '@acala-network/sdk-core/types';
 import { BalanceData, PriceData, PriceDataWithTimestamp } from './types';
 import type { ISubmittableResult, ITuple } from '@polkadot/types/types';
@@ -29,16 +24,16 @@ export class WalletPromise extends WalletBase<ApiPromise> {
 
   // query price info, support specify data source
   public queryPrice = async (currency: MaybeCurrency, at?: number): Promise<PriceData> => {
-    const currencyName = forceToCurrencyIdName(currency);
+    const currencyName = forceToCurrencyName(currency);
     const liquidCurrencyId = this.api.consts?.homaLite?.liquidCurrencyId;
 
     // get liquid currency price from staking pool exchange rate
-    if (liquidCurrencyId && forceToCurrencyIdName(currency) === forceToCurrencyIdName(liquidCurrencyId)) {
+    if (liquidCurrencyId && forceToCurrencyName(currency) === forceToCurrencyName(liquidCurrencyId)) {
       return this.queryLiquidPriceFromHomaLite(at);
     }
 
     // get dex share price
-    if (isDexShare(currencyName)) {
+    if (isDexShareName(currencyName)) {
       return this.queryDexSharePriceFormDex(currency, at);
     }
 
@@ -62,7 +57,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
   };
 
   public queryDexSharePriceFormDex = async (currency: MaybeCurrency, at?: number): Promise<PriceData> => {
-    const [key1, key2] = getLPCurrenciesFormName(forceToCurrencyIdName(currency));
+    const [key1, key2] = unzipDexShareName(forceToCurrencyName(currency));
     const dexShareCurrency = forceToCurrencyId(this.api, currency);
     const currency1 = forceToCurrencyId(this.api, key1);
     const currency2 = forceToCurrencyId(this.api, key2);
@@ -191,7 +186,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
         const fixedPoint1 = FN.fromInner(balance1.toString(), this.getToken(sorted1).decimal);
         const fixedPoint2 = FN.fromInner(balance2.toString(), this.getToken(sorted2).decimal);
 
-        if (forceToCurrencyIdName(sorted1) === forceToCurrencyIdName(token1)) {
+        if (forceToCurrencyName(sorted1) === forceToCurrencyName(token1)) {
           return [fixedPoint1, fixedPoint2];
         } else {
           return [fixedPoint2, fixedPoint1];
@@ -201,12 +196,12 @@ export class WalletPromise extends WalletBase<ApiPromise> {
   };
 
   public queryPriceFromDex = (currency: MaybeCurrency, at?: number): Promise<PriceData> => {
-    const target = this.tokenMap.get(forceToCurrencyIdName(currency));
+    const target = this.tokenMap.get(forceToCurrencyName(currency));
     const usd = this.tokenMap.get('AUSD') || this.tokenMap.get('KUSD');
 
     if (!target || !usd)
       return Promise.resolve({
-        token: new Token(forceToCurrencyIdName(currency)),
+        token: new Token(forceToCurrencyName(currency)),
         price: FN.ZERO
       });
 
@@ -227,7 +222,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
 
     try {
       currencyId = forceToCurrencyId(this.api, currency);
-      currencyName = forceToCurrencyIdName(currency);
+      currencyName = forceToCurrencyName(currency);
       token = this.getToken(currency);
     } catch (e) {
       return FN.ZERO;
@@ -245,7 +240,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
   };
 
   public queryBalance = async (account: MaybeAccount, currency: MaybeCurrency, at?: number): Promise<BalanceData> => {
-    const tokenName = forceToCurrencyIdName(currency);
+    const tokenName = forceToCurrencyName(currency);
     const currencyId = forceToCurrencyId(this.api, currency);
     const isNativeToken = tokenName === this.nativeToken;
 
@@ -312,7 +307,8 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     return (this.api.rpc as any).oracle.getAllValues(oracleProvider).then((result: [[OracleKey, TimestampedValue]]) => {
       return result.map((item) => {
-        const token = this.tokenMap.get(item[0].asToken.toString()) || Token.fromTokenName(item[0].asToken.toString());
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const token = this.tokenMap.get(item[0].asToken.toString())!;
         const price = FN.fromInner(
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           (item[1]?.value as any)?.value.toString() || '0'
@@ -335,7 +331,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     direction: 'from' | 'to' = 'to'
   ): Promise<boolean> {
     const transferConfig = this.getTransferConfig(currency);
-    const tokenName = forceToCurrencyIdName(currency);
+    const tokenName = forceToCurrencyName(currency);
     const isNativeToken = tokenName === this.nativeToken;
     const accountInfo = (await this.api.query.system.account(account)) as unknown as AccountInfo;
     const balance = await this.queryBalance(account, currency);

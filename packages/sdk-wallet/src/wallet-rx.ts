@@ -3,22 +3,19 @@ import { ApiRx } from '@polkadot/api';
 import { map, shareReplay, switchMap, take } from 'rxjs/operators';
 import { memoize, bnMax } from '@polkadot/util';
 import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
-import { Vec } from '@polkadot/types';
+import { u16, Vec } from '@polkadot/types';
 import { TimestampedValue, VestingScheduleOf, OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import {
+  createForeignAssetName,
   eventsFilterRx,
   FixedPointNumber as FN,
   getSubscribeOrAtQuery,
+  isDexShareName,
   Token,
   TokenBalance
 } from '@acala-network/sdk-core';
-import { Balance, CurrencyId, Ledger, OracleKey } from '@acala-network/types/interfaces';
-import {
-  forceToCurrencyId,
-  forceToCurrencyIdName,
-  getLPCurrenciesFormName,
-  isDexShare
-} from '@acala-network/sdk-core/converter';
+import { AcalaAssetMetadata, Balance, CurrencyId, Ledger, OracleKey } from '@acala-network/types/interfaces';
+import { forceToCurrencyId, forceToCurrencyName, unzipDexShareName } from '@acala-network/sdk-core/converter';
 import { MaybeAccount, MaybeCurrency } from '@acala-network/sdk-core/types';
 import { PriceData, PriceDataWithTimestamp, NativeAllBalance, BalanceData } from './types';
 import type { ISubmittableResult, ITuple } from '@polkadot/types/types';
@@ -33,28 +30,53 @@ import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 const queryFN = getSubscribeOrAtQuery;
 export class WalletRx extends WalletBase<ApiRx> {
   private readonly oracleFeed$: BehaviorSubject<PriceDataWithTimestamp[]>;
+  private readonly assetMetadatas$: BehaviorSubject<Map<string, Token>>;
 
   constructor(api: ApiRx) {
     super(api);
 
     this.oracleFeed$ = new BehaviorSubject<PriceDataWithTimestamp[]>([]);
+    this.assetMetadatas$ = new BehaviorSubject<Map<string, Token>>(new Map());
 
     // subscribe oracle feed
     this.subscribeInnerOracleFeed();
+    this.subscribeAssetMetadata();
+  }
+
+  private subscribeAssetMetadata() {
+    this.api.query.assetRegistry.assetMetadatas.entries().subscribe((data) => {
+      const result = data.map((item) => {
+        const id = (item[0]?.args[0] as u16).toNumber();
+        const data = (item[1] as Option<AcalaAssetMetadata>).unwrapOrDefault();
+
+        const name = createForeignAssetName(id);
+        const decimal = data.decimals.toNumber();
+
+        const token = Token.fromCurrencyName(name, {
+          decimal,
+          symbol: data.symbol.toString(),
+          minimalBalance: FN.fromInner(data.minimalBalance.toString(), decimal)
+        });
+
+        return [name, token] as const;
+      });
+
+      this.assetMetadatas$.next(new Map(result));
+    });
   }
 
   // query price info
   public queryPrice = memoize((currency: MaybeCurrency, at?: number): Observable<PriceData> => {
-    const tokenName = forceToCurrencyIdName(currency);
+    const tokenName = forceToCurrencyName(currency);
     const liquidCurrencyId = this.api.consts?.homaLite?.liquidCurrencyId;
 
     // get liquid currency price from staking pool exchange rate
-    if (liquidCurrencyId && forceToCurrencyIdName(currency) === forceToCurrencyIdName(liquidCurrencyId)) {
+    if (liquidCurrencyId && forceToCurrencyName(currency) === forceToCurrencyName(liquidCurrencyId)) {
       return this.queryLiquidPriceFromHomaLite(at);
     }
 
     // get dex share price
-    if (isDexShare(tokenName)) {
+    if (isDexShareName(tokenName)) {
       return this.queryDexSharePriceFormDex(currency, at);
     }
 
@@ -78,7 +100,7 @@ export class WalletRx extends WalletBase<ApiRx> {
   });
 
   public queryDexSharePriceFormDex = memoize((currency: MaybeCurrency, at?: number): Observable<PriceData> => {
-    const [key1, key2] = getLPCurrenciesFormName(forceToCurrencyIdName(currency));
+    const [key1, key2] = unzipDexShareName(forceToCurrencyName(currency));
     const dexShareCurrency = forceToCurrencyId(this.api, currency);
     const currency1 = forceToCurrencyId(this.api, key1);
     const currency2 = forceToCurrencyId(this.api, key2);
@@ -113,7 +135,7 @@ export class WalletRx extends WalletBase<ApiRx> {
     return of(at).pipe(
       switchMap(() => {
         if (!at) {
-          const tokenName = forceToCurrencyIdName(token);
+          const tokenName = forceToCurrencyName(token);
 
           return this.oracleFeed$.pipe(
             map((data): PriceData => {
@@ -236,7 +258,7 @@ export class WalletRx extends WalletBase<ApiRx> {
             const fixedPoint1 = FN.fromInner(balance1.toString(), this.getToken(sorted1).decimal);
             const fixedPoint2 = FN.fromInner(balance2.toString(), this.getToken(sorted2).decimal);
 
-            if (forceToCurrencyIdName(sorted1) === forceToCurrencyIdName(token1)) {
+            if (forceToCurrencyName(sorted1) === forceToCurrencyName(token1)) {
               return [fixedPoint1, fixedPoint2];
             } else {
               return [fixedPoint2, fixedPoint1];
@@ -249,12 +271,12 @@ export class WalletRx extends WalletBase<ApiRx> {
   });
 
   public queryPriceFromDex = memoize((currency: MaybeCurrency, at?: number): Observable<PriceData> => {
-    const target = this.tokenMap.get(forceToCurrencyIdName(currency));
+    const target = this.tokenMap.get(forceToCurrencyName(currency));
     const usd = this.tokenMap.get('AUSD') || this.tokenMap.get('KUSD');
 
     if (!target || !usd)
       return of({
-        token: new Token(forceToCurrencyIdName(currency)),
+        token: new Token(forceToCurrencyName(currency)),
         price: FN.ZERO
       });
 
@@ -279,8 +301,8 @@ export class WalletRx extends WalletBase<ApiRx> {
       }),
       map((result) => {
         return result.map((item) => {
-          const token =
-            this.tokenMap.get(item[0].asToken.toString()) || Token.fromTokenName(item[0].asToken.toString());
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          const token = this.tokenMap.get(item[0].asToken.toString())!;
           const price = FN.fromInner(
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             (item[1]?.value as any)?.value.toString() || '0'
@@ -305,7 +327,7 @@ export class WalletRx extends WalletBase<ApiRx> {
 
     try {
       currencyId = forceToCurrencyId(this.api, currency);
-      tokenName = forceToCurrencyIdName(currency);
+      tokenName = forceToCurrencyName(currency);
       token = this.getToken(currency);
     } catch (e) {
       return of(FN.ZERO);
@@ -326,7 +348,7 @@ export class WalletRx extends WalletBase<ApiRx> {
 
   public queryBalance = memoize(
     (account: MaybeAccount, currency: MaybeCurrency, at?: number): Observable<BalanceData> => {
-      const tokenName = forceToCurrencyIdName(currency);
+      const tokenName = forceToCurrencyName(currency);
       const currencyId = forceToCurrencyId(this.api, currency);
       const isNativeToken = tokenName === this.nativeToken;
 
@@ -442,7 +464,7 @@ export class WalletRx extends WalletBase<ApiRx> {
     direction: 'from' | 'to' = 'to'
   ): Observable<boolean> {
     const transferConfig = this.getTransferConfig(currency);
-    const tokenName = forceToCurrencyIdName(currency);
+    const tokenName = forceToCurrencyName(currency);
 
     const isNativeToken = tokenName === this.nativeToken;
 
