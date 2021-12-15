@@ -65,5 +65,5 @@ const normalizeCurrencyName = (name: string) => name.toUpperCase();
 export const getExistentialDepositConfig = (network: string, currency: string): FixedPointNumber => {
   const config = EXISTENTIAL_DEPOSIT?.[normalizeNetwokrName(network)] || EXISTENTIAL_DEPOSIT.dev;
 
-  return config?.[normalizeCurrencyName(currency)].clone() || ZERO.clone();
+  return config?.[normalizeCurrencyName(currency)]?.clone() || ZERO.clone();
 };

@@ -4,10 +4,12 @@ import {
   MaybeCurrency,
   ObOrPromiseResult,
   forceToTokenSymbolCurrencyId,
-  forceToCurrencyIdName,
-  getLPCurrenciesFormName,
-  isDexShare,
-  FixedPointNumber as FN
+  forceToCurrencyName,
+  unzipDexShareName,
+  getStableAssetPoolIdFromName,
+  FixedPointNumber as FN,
+  isDexShareName,
+  isStableAssetName
 } from '@acala-network/sdk-core';
 import { CurrencyId } from '@acala-network/types/interfaces';
 
@@ -51,7 +53,7 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
 
         this.decimalMap.set(key, Number(tokenDecimals?.[index]) || defaultTokenDecimal);
         this.currencyIdMap.set(key, currencyId);
-        this.tokenMap.set(key, Token.fromCurrencyId(currencyId, decimal));
+        this.tokenMap.set(key, Token.fromCurrencyId(currencyId, { decimal }));
       } catch (e) {
         // ignore eorror
       }
@@ -59,7 +61,7 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
   }
 
   public isNativeToken(currency: MaybeCurrency): boolean {
-    return forceToCurrencyIdName(currency) === forceToCurrencyIdName(this.nativeToken);
+    return forceToCurrencyName(currency) === forceToCurrencyName(this.nativeToken);
   }
 
   /**
@@ -81,15 +83,19 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
    * @description get the currency
    */
   public getToken(currency: MaybeCurrency): Token {
-    const currencyName = forceToCurrencyIdName(currency);
+    const currencyName = forceToCurrencyName(currency);
 
-    if (isDexShare(currencyName)) {
-      const [token1, token2] = getLPCurrenciesFormName(currencyName);
+    if (isDexShareName(currencyName)) {
+      const [token1, token2] = unzipDexShareName(currencyName);
 
       const _token1 = this.getToken(token1);
       const _token2 = this.getToken(token2);
 
       return Token.fromTokens(_token1, _token2);
+    } else if (isStableAssetName(currencyName)) {
+      const poolId = getStableAssetPoolIdFromName(currencyName);
+
+      return Token.fromStableAssetPool(this.api.runtimeChain.toString(), poolId);
     }
 
     // FIXME: need handle erc20
@@ -98,17 +104,18 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
   }
 
   public getTransferConfig(currency: MaybeCurrency): TransferConfig {
-    const name = forceToCurrencyIdName(currency);
+    const name = forceToCurrencyName(currency);
 
-    if (isDexShare(name)) {
-      const [token1] = Token.sortTokenNames(...getLPCurrenciesFormName(name));
+    if (isDexShareName(name)) {
+      // if the token is dex, use the first token config after sort
+      const [token1] = Token.sortTokenNames(...unzipDexShareName(name));
 
       return {
         existentialDeposit: getExistentialDepositConfig(this.runtimeChain, token1)
       };
     }
 
-    const existentialDeposit = getExistentialDepositConfig(this.runtimeChain, forceToCurrencyIdName(currency));
+    const existentialDeposit = getExistentialDepositConfig(this.runtimeChain, forceToCurrencyName(currency));
 
     return { existentialDeposit };
   }

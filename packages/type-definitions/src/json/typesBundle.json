@@ -274,7 +274,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -302,6 +304,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -675,7 +683,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -703,6 +713,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -1114,6 +1130,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -1526,6 +1548,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -1905,7 +1933,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -1933,6 +1963,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -2312,7 +2348,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -2340,6 +2378,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -2721,7 +2765,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -2749,6 +2795,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -3129,7 +3181,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -3157,6 +3211,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -3534,7 +3594,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -3562,6 +3624,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -3939,7 +4007,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -3967,6 +4037,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -4531,7 +4607,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -4559,6 +4637,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -4932,7 +5016,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -4960,6 +5046,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -5371,6 +5463,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -5783,6 +5881,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -6162,7 +6266,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -6190,6 +6296,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -6569,7 +6681,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -6597,6 +6711,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -6978,7 +7098,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -7006,6 +7128,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -7386,7 +7514,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -7414,6 +7544,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -7791,7 +7927,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -7819,6 +7957,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -8196,7 +8340,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -8224,6 +8370,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -8788,7 +8940,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -8816,6 +8970,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -9189,7 +9349,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -9217,6 +9379,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -9628,6 +9796,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -10040,6 +10214,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -10419,7 +10599,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -10447,6 +10629,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -10826,7 +11014,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -10854,6 +11044,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -11235,7 +11431,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -11263,6 +11461,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -11643,7 +11847,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -11671,6 +11877,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -12048,7 +12260,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -12076,6 +12290,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -12453,7 +12673,9 @@
                                 "Token": "TokenSymbol",
                                 "DEXShare": "(DexShare, DexShare)",
                                 "ERC20": "EvmAddress",
-                                "StableAssetPoolToken": "StableAssetPoolId"
+                                "StableAssetPoolToken": "u32",
+                                "LiquidCroadloan": "u32",
+                                "ForeignAsset": "u32"
                             }
                         },
                         "CurrencyIdOf": "CurrencyId",
@@ -12481,6 +12703,12 @@
                         },
                         "TradingPair": "(CurrencyId,  CurrencyId)",
                         "ChainBridgeChainId": "u8",
+                        "AcalaAssetMetadata": {
+                            "name": "Vec<u8>",
+                            "symbol": "Vec<u8>",
+                            "decimals": "u8",
+                            "minimalBalance": "Balance"
+                        },
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",

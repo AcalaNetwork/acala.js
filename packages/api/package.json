@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/api",
-  "version": "3.0.3-7",
+  "version": "3.0.3-10",
   "description": "Acala JS API",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
@@ -15,8 +15,8 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
-    "@acala-network/api-derive": "3.0.3-7",
-    "@acala-network/types": "3.0.3-7",
+    "@acala-network/api-derive": "3.0.3-10",
+    "@acala-network/types": "3.0.3-10",
     "@babel/runtime": "^7.10.2",
     "@open-web3/orml-api-derive": "^1.0.2-0",
     "@polkadot/api": "^6.5.2",
