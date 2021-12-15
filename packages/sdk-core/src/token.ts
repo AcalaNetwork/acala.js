@@ -30,7 +30,7 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
       assets: ['DOT', 'LDOT']
     }
   ],
-  'Karura': [
+  Karura: [
     {
       poolId: 0,
       name: 'taiKSM',
