@@ -25,9 +25,17 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
   'Mandala Dev': [
     {
       poolId: 0,
-      name: 'Taiga DOT-Liquid DOT',
+      name: 'taplDOT',
       decimal: 10,
       assets: ['DOT', 'LDOT']
+    }
+  ],
+  'Karura': [
+    {
+      poolId: 0,
+      name: 'taiKSM',
+      decimal: 12,
+      assets: ['KSM', 'LKSM']
     }
   ]
 };
