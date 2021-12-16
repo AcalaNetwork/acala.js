@@ -1,5 +1,5 @@
-import { Observable, BehaviorSubject, timer, switchMap, from, lastValueFrom } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, BehaviorSubject, timer, switchMap, from, lastValueFrom, combineLatest } from 'rxjs';
+import { map, debounceTime } from 'rxjs/operators';
 import fetch from 'axios';
 import { PriceProvider } from './types';
 import { FixedPointNumber as FN, forceToCurrencyName, MaybeCurrency } from '@acala-network/sdk-core';
@@ -10,18 +10,24 @@ export class MarketPriceProvider implements PriceProvider {
   private interval: number;
   private trackedCurrencies: string[];
   private subject: BehaviorSubject<Record<string, FN>>;
+  private forceUpdate: BehaviorSubject<number>;
 
   constructor(init?: string[], interval = 60 * 1000) {
     this.interval = interval;
     this.trackedCurrencies = init?.slice() || [];
     this.subject = new BehaviorSubject({});
+    this.forceUpdate = new BehaviorSubject(0);
 
     this.run();
   }
 
   private run = () => {
-    timer(0, this.interval)
+    combineLatest({
+      timer: timer(0, this.interval),
+      force: this.forceUpdate
+    })
       .pipe(
+        debounceTime(500),
         switchMap(() =>
           from(
             (async () => {
@@ -54,11 +60,7 @@ export class MarketPriceProvider implements PriceProvider {
     // if doesn't track this token, fetch it immediately
     if (this.trackedCurrencies.findIndex((i) => i === name) === -1) {
       this.trackedCurrencies.push(name);
-      from(this.updatePrice(name))
-        .subscribe({
-          next: (data) => this.subject.next({ ...this.subject.value, [name]: data })
-        })
-        .unsubscribe();
+      this.forceUpdate.next(this.forceUpdate.value + 1);
     }
 
     return this.subject.pipe(map((data) => data[name]));
