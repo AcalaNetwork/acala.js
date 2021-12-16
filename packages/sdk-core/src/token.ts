@@ -30,6 +30,15 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
       assets: ['DOT', 'LDOT']
     }
   ],
+  // Karura testnet
+  'Acala Karura Dev': [
+    {
+      poolId: 0,
+      name: 'taiKSM',
+      decimal: 12,
+      assets: ['KSM', 'LKSM']
+    }
+  ],
   Karura: [
     {
       poolId: 0,
