@@ -1,18 +1,18 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-import type { EvmAddress } from '@acala-network/types/interfaces/evm';
-import type { CurrencyId } from '@acala-network/types/interfaces/primitives';
-import type { AccountId, Balance, BalanceOf, BlockNumber, PalletId, Permill, TransactionPriority, Weight } from '@acala-network/types/interfaces/runtime';
-import type { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
-import type { Price } from '@open-web3/orml-types/interfaces/traits';
-import type { ApiTypes } from '@polkadot/api/types';
-import type { Vec, u16, u32, u64 } from '@polkadot/types';
-import type { MultiLocation } from '@polkadot/types/interfaces/xcm';
-import type { Codec, ITuple } from '@polkadot/types/types';
-
 declare module '@polkadot/api/types/consts' {
-  export interface AugmentedConsts<ApiType> {
+  import type { EvmAddress } from '@acala-network/types/interfaces/evm';
+  import type { CurrencyId } from '@acala-network/types/interfaces/primitives';
+  import type { AccountId, Balance, BalanceOf, BlockNumber, PalletId, Permill, TransactionPriority, Weight } from '@acala-network/types/interfaces/runtime';
+  import type { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
+  import type { Price } from '@open-web3/orml-types/interfaces/traits';
+  import type { ApiTypes, AugmentedConst, QueryableModuleConsts } from '@polkadot/api/types';
+  import type { Vec, u16, u32, u64 } from '@polkadot/types';
+  import type { MultiLocation } from '@polkadot/types/interfaces/xcm';
+  import type { Codec, ITuple } from '@polkadot/types/types';
+
+  export interface AugmentedConsts<ApiType  extends ApiTypes> {
     auctionManager: {
       /**
        * When the total duration of the auction exceeds this soft cap, push
@@ -407,9 +407,10 @@ declare module '@polkadot/api/types/consts' {
        **/
       [key: string]: Codec;
     };
-  }
+  } // AugmentedConsts
 
   export interface QueryableConsts<ApiType extends ApiTypes> extends AugmentedConsts<ApiType> {
     [key: string]: QueryableModuleConsts;
-  }
-}
+  } // QueryableConsts
+
+} // declare module

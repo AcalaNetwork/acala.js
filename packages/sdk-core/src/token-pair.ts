@@ -10,9 +10,9 @@ export class TokenPair {
   private origin: [Token, Token];
 
   static fromCurrencyId(currency: CurrencyId): TokenPair {
-    assert(currency.isDexShare, 'TokenPair.fromCurrencyId should receive CurrencyId which is DexShare');
+    assert(currency.isDEXShare, 'TokenPair.fromCurrencyId should receive CurrencyId which is DexShare');
 
-    const [currency1, currency2] = currency.asDexShare;
+    const [currency1, currency2] = currency.asDEXShare;
 
     return new TokenPair(Token.fromTokenSymbol(currency1 as any), Token.fromTokenSymbol(currency2 as any));
   }

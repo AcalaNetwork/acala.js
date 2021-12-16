@@ -2,7 +2,7 @@ import { Observable, BehaviorSubject, lastValueFrom, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PriceProvider } from './types';
 import { TimestampedValue } from '@open-web3/orml-types/interfaces';
-import { AnyApi, FixedPointNumber as FN, forceToCurrencyIdName } from '@acala-network/sdk-core';
+import { AnyApi, FixedPointNumber as FN, forceToCurrencyName } from '@acala-network/sdk-core';
 import { OracleKey } from '@acala-network/types/interfaces';
 import { Storage } from '../../storage';
 
@@ -36,7 +36,7 @@ export class OraclePriceProvider implements PriceProvider {
       next: (result) => {
         const formated = Object.fromEntries(
           result.map((item) => {
-            const currency = forceToCurrencyIdName(item[0]);
+            const currency = forceToCurrencyName(item[0]);
             const price = FN.fromInner(
               // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
               (item[1]?.value as any)?.value.toString() || '0'

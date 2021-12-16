@@ -1,34 +1,35 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-import type { BalanceRequest, BalanceWrapper } from '@acala-network/types/interfaces/dex';
-import type { CallRequest, EstimateResourcesResponse } from '@acala-network/types/interfaces/evm';
-import type { CurrencyId } from '@acala-network/types/interfaces/primitives';
-import type { AccountId, BlockNumber, H160, H256, H64, Hash, Header, Index, Justification, KeyValue, OracleKey, SignedBlock, StorageData } from '@acala-network/types/interfaces/runtime';
-import type { BalanceInfo } from '@acala-network/types/interfaces/stakingPool';
-import type { ExchangeRate } from '@acala-network/types/interfaces/support';
-import type { RpcDataProviderId, TimestampedValue } from '@open-web3/orml-types/interfaces/oracle';
-import type { Bytes, HashMap, Json, Metadata, Null, Option, Raw, StorageKey, Text, U256, U64, Vec, bool, u32, u64 } from '@polkadot/types';
-import type { ExtrinsicOrHash, ExtrinsicStatus } from '@polkadot/types/interfaces/author';
-import type { EpochAuthorship } from '@polkadot/types/interfaces/babe';
-import type { BeefySignedCommitment } from '@polkadot/types/interfaces/beefy';
-import type { BlockHash } from '@polkadot/types/interfaces/chain';
-import type { PrefixedStorageKey } from '@polkadot/types/interfaces/childstate';
-import type { AuthorityId } from '@polkadot/types/interfaces/consensus';
-import type { ContractCallRequest, ContractExecResult, ContractInstantiateResult, InstantiateRequest } from '@polkadot/types/interfaces/contracts';
-import type { CreatedBlock } from '@polkadot/types/interfaces/engine';
-import type { EthAccount, EthCallRequest, EthFilter, EthFilterChanges, EthLog, EthReceipt, EthRichBlock, EthSubKind, EthSubParams, EthSyncStatus, EthTransaction, EthTransactionRequest, EthWork } from '@polkadot/types/interfaces/eth';
-import type { Extrinsic } from '@polkadot/types/interfaces/extrinsics';
-import type { EncodedFinalityProofs, JustificationNotification, ReportedRoundStates } from '@polkadot/types/interfaces/grandpa';
-import type { MmrLeafProof } from '@polkadot/types/interfaces/mmr';
-import type { StorageKind } from '@polkadot/types/interfaces/offchain';
-import type { FeeDetails, RuntimeDispatchInfo } from '@polkadot/types/interfaces/payment';
-import type { RpcMethods } from '@polkadot/types/interfaces/rpc';
-import type { ReadProof, RuntimeVersion, TraceBlockResponse } from '@polkadot/types/interfaces/state';
-import type { ApplyExtrinsicResult, ChainProperties, ChainType, Health, NetworkState, NodeRole, PeerInfo, SyncState } from '@polkadot/types/interfaces/system';
-import type { AnyNumber, Codec, IExtrinsic, ITuple, Observable } from '@polkadot/types/types';
-
 declare module '@polkadot/rpc-core/types.jsonrpc' {
+  import type { BalanceRequest, BalanceWrapper } from '@acala-network/types/interfaces/dex';
+  import type { CallRequest, EstimateResourcesResponse } from '@acala-network/types/interfaces/evm';
+  import type { CurrencyId } from '@acala-network/types/interfaces/primitives';
+  import type { AccountId, BlockNumber, H160, H256, H64, Hash, Header, Index, Justification, KeyValue, OracleKey, SignedBlock, StorageData } from '@acala-network/types/interfaces/runtime';
+  import type { BalanceInfo } from '@acala-network/types/interfaces/stakingPool';
+  import type { ExchangeRate } from '@acala-network/types/interfaces/support';
+  import type { RpcDataProviderId, TimestampedValue } from '@open-web3/orml-types/interfaces/oracle';
+  import type { AugmentedRpc } from '@polkadot/api/types';
+  import type { Bytes, HashMap, Json, Metadata, Null, Option, Raw, StorageKey, Text, U256, U64, Vec, bool, u32, u64 } from '@polkadot/types';
+  import type { ExtrinsicOrHash, ExtrinsicStatus } from '@polkadot/types/interfaces/author';
+  import type { EpochAuthorship } from '@polkadot/types/interfaces/babe';
+  import type { BeefySignedCommitment } from '@polkadot/types/interfaces/beefy';
+  import type { BlockHash } from '@polkadot/types/interfaces/chain';
+  import type { PrefixedStorageKey } from '@polkadot/types/interfaces/childstate';
+  import type { AuthorityId } from '@polkadot/types/interfaces/consensus';
+  import type { ContractCallRequest, ContractExecResult, ContractInstantiateResult, InstantiateRequest } from '@polkadot/types/interfaces/contracts';
+  import type { CreatedBlock } from '@polkadot/types/interfaces/engine';
+  import type { EthAccount, EthCallRequest, EthFilter, EthFilterChanges, EthLog, EthReceipt, EthRichBlock, EthSubKind, EthSubParams, EthSyncStatus, EthTransaction, EthTransactionRequest, EthWork } from '@polkadot/types/interfaces/eth';
+  import type { Extrinsic } from '@polkadot/types/interfaces/extrinsics';
+  import type { EncodedFinalityProofs, JustificationNotification, ReportedRoundStates } from '@polkadot/types/interfaces/grandpa';
+  import type { MmrLeafProof } from '@polkadot/types/interfaces/mmr';
+  import type { StorageKind } from '@polkadot/types/interfaces/offchain';
+  import type { FeeDetails, RuntimeDispatchInfo } from '@polkadot/types/interfaces/payment';
+  import type { RpcMethods } from '@polkadot/types/interfaces/rpc';
+  import type { ReadProof, RuntimeVersion, TraceBlockResponse } from '@polkadot/types/interfaces/state';
+  import type { ApplyExtrinsicResult, ChainProperties, ChainType, Health, NetworkState, NodeRole, PeerInfo, SyncState } from '@polkadot/types/interfaces/system';
+  import type { AnyNumber, Codec, IExtrinsic, ITuple, Observable } from '@polkadot/types/types';
+
   export interface RpcInterface {
     author: {
       /**
@@ -506,7 +507,7 @@ declare module '@polkadot/rpc-core/types.jsonrpc' {
       /**
        * Provides a way to trace the re-execution of a single block
        **/
-      traceBlock: AugmentedRpc<(block: Hash | string | Uint8Array, targets: Option<Text> | null | object | string | Uint8Array, storageKeys: Option<Text> | null | object | string | Uint8Array) => Observable<TraceBlockResponse>>;
+      traceBlock: AugmentedRpc<(block: Hash | string | Uint8Array, targets: Option<Text> | null | object | string | Uint8Array, storageKeys: Option<Text> | null | object | string | Uint8Array, methods: Option<Text> | null | object | string | Uint8Array) => Observable<TraceBlockResponse>>;
     };
     syncstate: {
       /**
@@ -602,5 +603,6 @@ declare module '@polkadot/rpc-core/types.jsonrpc' {
        **/
       sha3: AugmentedRpc<(data: Bytes | string | Uint8Array) => Observable<H256>>;
     };
-  }
-}
+  } // RpcInterface
+
+} // declare module

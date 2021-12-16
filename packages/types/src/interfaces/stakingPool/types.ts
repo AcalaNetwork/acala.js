@@ -17,6 +17,7 @@ export interface ChangeRate extends Enum {
   readonly isNoChange: boolean;
   readonly isNewValue: boolean;
   readonly asNewValue: Rate;
+  readonly type: 'NoChange' | 'NewValue';
 }
 
 /** @name ChangeRatio */
@@ -24,6 +25,7 @@ export interface ChangeRatio extends Enum {
   readonly isNoChange: boolean;
   readonly isNewValue: boolean;
   readonly asNewValue: Ratio;
+  readonly type: 'NoChange' | 'NewValue';
 }
 
 /** @name Ledger */
@@ -55,6 +57,7 @@ export interface StakingPoolPhase extends Enum {
   readonly isRelaychainUpdated: boolean;
   readonly isLedgerUpdated: boolean;
   readonly isFinished: boolean;
+  readonly type: 'Started' | 'RelaychainUpdated' | 'LedgerUpdated' | 'Finished';
 }
 
 /** @name SubAccountStatus */

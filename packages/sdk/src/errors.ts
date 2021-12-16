@@ -21,3 +21,12 @@ export class CurrencyNotFound extends Error {
     this.name = 'MethodNotFound';
   }
 }
+
+export class SDKNotReady extends Error {
+  constructor(name: string) {
+    super();
+
+    this.message = `SDK ${name} is not ready`;
+    this.name = 'SDKNotReady';
+  }
+}

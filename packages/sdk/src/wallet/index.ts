@@ -1,56 +1,69 @@
 /**
- * wallet sdk support user to query info about token list, token balance, token price and token value
+ * wallet sdk support to query info about token list, token balance, token price and token value
  */
 
 import { memoize } from '@polkadot/util';
 import {
   FixedPointNumber as FN,
   AnyApi,
-  forceToCurrencyIdName,
   Token,
   MaybeCurrency,
-  getLPCurrenciesFormName
+  forceToCurrencyName,
+  unzipDexShareName,
+  TokenType
 } from '@acala-network/sdk-core';
-import { TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
-import { StorageKey } from '@polkadot/types';
+import { AcalaAssetMetadata, TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
+import { Option, StorageKey, u16 } from '@polkadot/types';
 import { AccountInfo, Balance, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { Storage } from '../storage';
-import { CurrenciesRecord, CurrencyType, WalletConsts, BalanceData, TransferConfig, PresetTokens } from './type';
-import { CurrencyNotFound } from '..';
+import { TokenRecord, WalletConsts, BalanceData, TransferConfig, PresetTokens } from './type';
+import { CurrencyNotFound, SDKNotReady } from '..';
 import { getExistentialDepositConfig } from './utils/get-ed-config';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 import { MarketPriceProvider } from './price-provider/MarketPriceProvider';
 import { OraclePriceProvider } from './price-provider/OraclePriceProvider';
 import { PriceProvider, PriceProviderType } from './price-provider/types';
+import { createTokenList } from './utils/create-token-list';
 
-type PriceProviders = Partial<
-  {
-    [k in PriceProviderType]: PriceProvider;
-  }
->;
+type PriceProviders = Partial<{
+  [k in PriceProviderType]: PriceProvider;
+}>;
 
 export class Wallet {
   private api: AnyApi;
-  private basicCurrencies: CurrenciesRecord;
-  private lpCurrencies$: BehaviorSubject<CurrenciesRecord>;
   private priceProviders: PriceProviders;
+  // readed from chain information
+  private tokens$: BehaviorSubject<TokenRecord>;
+  // FIXME: also need tokens from nuts
+  private isReady$: BehaviorSubject<boolean>;
   public consts!: WalletConsts;
 
   public constructor(api: AnyApi, priceProviders?: Record<PriceProviderType, PriceProvider>) {
     this.api = api;
-    this.basicCurrencies = {};
-    this.lpCurrencies$ = new BehaviorSubject<CurrenciesRecord>({});
+
+    this.isReady$ = new BehaviorSubject<boolean>(false);
+    this.tokens$ = new BehaviorSubject<TokenRecord>({});
 
     this.priceProviders = {
       ...this.defaultPriceProviders,
       ...priceProviders
     };
+
+    this.init();
+  }
+
+  public get isReady(): Observable<boolean> {
+    return this.isReady$.asObservable();
+  }
+
+  private init() {
+    // 1. init constants
     this.initConsts();
-    this.initBasicCurrencies();
-    this.subscribeLPCurrencies();
+    // 2. init tokens information
+    this.initTokens();
   }
 
   private initConsts() {
@@ -62,8 +75,14 @@ export class Wallet {
 
   private get storages() {
     return {
+      'foreign-assets': () =>
+        Storage.create<[StorageKey<u16[]>, Option<AcalaAssetMetadata>][]>({
+          api: this.api,
+          path: 'query.assetRegistry.assetMetadatas.entries',
+          params: []
+        }),
       'trading-pairs': () =>
-        Storage.create<[StorageKey<TradingPair>, TradingPairStatus][]>({
+        Storage.create<[StorageKey<[TradingPair]>, TradingPairStatus][]>({
           api: this.api,
           path: 'query.dex.tradingPairStatuses.entries',
           params: []
@@ -81,7 +100,7 @@ export class Wallet {
           params: [address, token.toChainData()]
         }),
       issuance: (token: Token) => {
-        const isNativeToken = forceToCurrencyIdName(this.consts.nativeCurrency) === forceToCurrencyIdName(token);
+        const isNativeToken = forceToCurrencyName(this.consts.nativeCurrency) === forceToCurrencyName(token);
 
         return Storage.create<Balance>({
           api: this.api,
@@ -99,65 +118,65 @@ export class Wallet {
     };
   }
 
-  private initBasicCurrencies() {
+  private initTokens() {
     const chainDecimals = this.api.registry.chainDecimals;
     const chainTokens = this.api.registry.chainTokens;
+    const tradingPairs$ = this.storages['trading-pairs']().observable;
+    const foreignAssets$ = this.storages['foreign-assets']().observable;
 
-    this.basicCurrencies = Object.fromEntries(
+    const basicTokens = Object.fromEntries(
       chainTokens.map((token, i) => {
         return [
           token,
           new Token(token, {
-            isTokenSymbol: true,
-            decimal: chainDecimals[i] ?? 12
+            type: TokenType.BASIC,
+            decimal: chainDecimals[i] ?? 12,
+            symbol: token
           })
         ];
       })
     );
-  }
 
-  private subscribeLPCurrencies() {
-    const storage$ = this.storages['trading-pairs']();
+    return combineLatest({
+      tradingPairs: tradingPairs$,
+      foreignAssets: foreignAssets$
+    }).subscribe({
+      next: ({ tradingPairs, foreignAssets }) => {
+        const list = createTokenList(basicTokens, tradingPairs, foreignAssets);
 
-    storage$.observable.subscribe({
-      next: (data) => {
-        const enabled = data.filter((item) => [item[1].isEnabled]);
-
-        const enabledTradingPair = enabled.map((item) =>
-          this.api.createType('AcalaPrimitivesTradingPair' as any, item[0].args[0])
-        ) as TradingPair[];
-
-        const lpCurrencies = enabledTradingPair.map((item) => {
-          return Token.fromCurrencies(item[0], item[1]);
-        });
-
-        this.lpCurrencies$.next(Object.fromEntries(lpCurrencies.map((item) => [forceToCurrencyIdName(item), item])));
+        this.tokens$.next(list);
+        this.isReady$.next(true);
       }
     });
   }
 
   /**
-   *  @name subscribeCurrencies
+   *  @name subscribeTokens
    *  @param type
-   *  @description subscirbe the currency list of `type`
+   *  @description subscirbe the token list, can filter by type
    */
-  public subscribeCurrencies = memoize((type: CurrencyType = CurrencyType.BASIC): Observable<CurrenciesRecord> => {
-    if (type === CurrencyType.BASIC) return of(this.basicCurrencies);
+  public subscribeTokens = memoize((type?: TokenType): Observable<TokenRecord> => {
+    return this.tokens$.pipe(
+      map((data) => {
+        if (!type) return data;
 
-    if (type === CurrencyType.LP) return this.lpCurrencies$.asObservable();
-
-    // get all currencies
-    return combineLatest([of(this.basicCurrencies), this.lpCurrencies$]).pipe(map(([a, b]) => ({ ...a, ...b })));
+        return Object.fromEntries(
+          Object.entries(data).filter(([, value]) => {
+            return value.type === type;
+          })
+        );
+      })
+    );
   });
 
   /**
-   *  @name subscribeCurrency
-   *  @description subscirbe the currency info
+   *  @name subscribeToken
+   *  @description subscirbe the token info
    */
-  public subscribeCurrency = memoize((target: MaybeCurrency): Observable<Token> => {
-    const name = forceToCurrencyIdName(target);
+  public subscribeToken = memoize((target: MaybeCurrency): Observable<Token> => {
+    const name = forceToCurrencyName(target);
 
-    return this.subscribeCurrencies(CurrencyType.ALL).pipe(
+    return this.subscribeTokens().pipe(
       map((all) => {
         const result = Object.values(all).find((item) => item.name === name);
 
@@ -175,7 +194,7 @@ export class Wallet {
    * @param address
    */
   public subscribeBalance = memoize((token: MaybeCurrency, address: string): Observable<BalanceData> => {
-    return this.subscribeCurrency(token).pipe(
+    return this.subscribeToken(token).pipe(
       switchMap((token) => {
         const { nativeCurrency } = this.consts;
         const isNativeToken = nativeCurrency === token.name;
@@ -220,7 +239,7 @@ export class Wallet {
    * @param token
    */
   public subscribeIssuance = memoize((token: MaybeCurrency): Observable<FN> => {
-    return this.subscribeCurrency(token).pipe(
+    return this.subscribeToken(token).pipe(
       switchMap((token) => {
         const storage = this.storages.issuance(token);
         const handleIssuance = (data: Balance, token: Token) => FN.fromInner(data.toString(), token.decimal);
@@ -244,10 +263,7 @@ export class Wallet {
       paymentInfo: RuntimeDispatchInfo,
       feeFactor = 1
     ): Observable<FN> => {
-      const nativeToken = this.basicCurrencies[this.consts.nativeCurrency] as Token;
-      const isNativeToken = forceToCurrencyIdName(token) === nativeToken.name;
-
-      const handleNativeResult = (accountInfo: AccountInfo, token: Token) => {
+      const handleNativeResult = (accountInfo: AccountInfo, token: Token, nativeToken: Token) => {
         const providers = accountInfo.providers.toNumber();
         const consumers = accountInfo.consumers.toNumber();
         const nativeFreeBalance = FN.fromInner(accountInfo.data.free.toString(), nativeToken.decimal);
@@ -259,7 +275,7 @@ export class Wallet {
         const fee = FN.fromInner(paymentInfo.partialFee.toString(), nativeToken.decimal).mul(new FN(feeFactor));
 
         return getMaxAvailableBalance({
-          isNativeToken,
+          isNativeToken: true,
           isAllowDeath,
           providers,
           consumers,
@@ -272,7 +288,12 @@ export class Wallet {
         });
       };
 
-      const handleNonNativeResult = (accountInfo: AccountInfo, tokenInfo: OrmlAccountData, token: Token) => {
+      const handleNonNativeResult = (
+        accountInfo: AccountInfo,
+        tokenInfo: OrmlAccountData,
+        token: Token,
+        nativeToken: Token
+      ) => {
         const providers = accountInfo.providers.toNumber();
         const consumers = accountInfo.consumers.toNumber();
         const nativeFreeBalance = FN.fromInner(accountInfo.data.free.toString(), nativeToken.decimal);
@@ -286,7 +307,7 @@ export class Wallet {
         const fee = FN.fromInner(paymentInfo.partialFee.toString(), nativeToken.decimal).mul(new FN(feeFactor));
 
         return getMaxAvailableBalance({
-          isNativeToken,
+          isNativeToken: false,
           isAllowDeath,
           providers,
           consumers,
@@ -299,18 +320,25 @@ export class Wallet {
         });
       };
 
-      return this.subscribeCurrency(token).pipe(
-        switchMap((token) => {
+      return combineLatest({
+        token: this.subscribeToken(token),
+        nativeToken: this.subscribeToken(this.consts.nativeCurrency)
+      }).pipe(
+        switchMap(({ token, nativeToken }) => {
+          const isNativeToken = forceToCurrencyName(token) === nativeToken.name;
+
           if (isNativeToken) {
             return this.storages['native-balance'](address).observable.pipe(
-              map((data) => handleNativeResult(data, token))
+              map((data) => handleNativeResult(data, token, nativeToken))
             );
           }
 
           return combineLatest({
             accountInfo: this.storages['native-balance'](address).observable,
             tokenInfo: this.storages['non-native-balance'](token, address).observable
-          }).pipe(map(({ accountInfo, tokenInfo }) => handleNonNativeResult(accountInfo, tokenInfo, token)));
+          }).pipe(
+            map(({ accountInfo, tokenInfo }) => handleNonNativeResult(accountInfo, tokenInfo, token, nativeToken))
+          );
         })
       );
     }
@@ -326,7 +354,7 @@ export class Wallet {
     const { runtimeChain } = this.consts;
 
     if (token.isDexShare) {
-      const [token1] = Token.sortTokenNames(...getLPCurrenciesFormName(token.name));
+      const [token1] = Token.sortTokenNames(...unzipDexShareName(token.name));
 
       return {
         ed: getExistentialDepositConfig(runtimeChain, token1)
@@ -337,28 +365,36 @@ export class Wallet {
   }
 
   public getPresetTokens(): PresetTokens {
-    const { basicCurrencies } = this;
+    if (this.isReady$.value === false) {
+      throw new SDKNotReady('wallet');
+    }
+
+    const tokens = this.tokens$.value;
 
     const data: PresetTokens = {
-      nativeToken: basicCurrencies[this.consts.nativeCurrency]
+      nativeToken: tokens[forceToCurrencyName(this.consts.nativeCurrency)]
     };
 
     if (this.api.consts?.cdpEngine.getStableCurrencyId) {
-      data.stableToken = basicCurrencies[forceToCurrencyIdName(this.api.consts.cdpEngine.getStableCurrencyId)];
+      data.stableToken = tokens[forceToCurrencyName(this.api.consts.cdpEngine.getStableCurrencyId)];
     }
 
     if (this.api.consts?.homaLite.liquidCurrencyId) {
-      data.liquidToken = basicCurrencies[forceToCurrencyIdName(this.api.consts.homaLite.liquidCurrencyId)];
+      data.liquidToken = tokens[forceToCurrencyName(this.api.consts.homaLite.liquidCurrencyId)];
     }
 
     if (this.api.consts?.homaLite.stakingCurrencyId) {
-      data.stakingToken = basicCurrencies[forceToCurrencyIdName(this.api.consts.homaLite.stakingCurrencyId)];
+      data.stakingToken = tokens[forceToCurrencyName(this.api.consts.homaLite.stakingCurrencyId)];
     }
 
     return data;
   }
 
-  public subscribePrice(token: MaybeCurrency, type = PriceProviderType.MARKET): Observable<FN> {
+  /**
+   * @name subscribePrice
+   * @description subscirbe the price of `token`
+   */
+  public subscribePrice = memoize((token: MaybeCurrency, type = PriceProviderType.MARKET): Observable<FN> => {
     let priceProvider: PriceProvider | undefined;
 
     if (type === PriceProviderType.MARKET) {
@@ -372,6 +408,6 @@ export class Wallet {
     if (!priceProvider) return of(FN.ZERO);
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.subscribeCurrency(token).pipe(switchMap((token) => priceProvider!.subscribe(token.name)));
-  }
+    return this.subscribeToken(token).pipe(switchMap((token) => priceProvider!.subscribe(token.name)));
+  });
 }

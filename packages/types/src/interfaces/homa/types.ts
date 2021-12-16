@@ -10,6 +10,7 @@ export interface RedeemStrategy extends Enum {
   readonly isTarget: boolean;
   readonly asTarget: EraIndex;
   readonly isWaitForUnbonding: boolean;
+  readonly type: 'Immediately' | 'Target' | 'WaitForUnbonding';
 }
 
 export type PHANTOM_HOMA = 'homa';

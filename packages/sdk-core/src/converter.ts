@@ -153,10 +153,10 @@ export function forceToCurrencyName(target: MaybeCurrency): string {
 
     if ((target as CurrencyId).isToken) return (target as CurrencyId).asToken.toString();
 
-    if ((target as CurrencyId).isDexShare) {
+    if ((target as CurrencyId).isDEXShare) {
       return createDexShareName(
-        forceToCurrencyName((target as CurrencyId).asDexShare[0] as CurrencyId),
-        forceToCurrencyName((target as CurrencyId).asDexShare[1] as CurrencyId)
+        forceToCurrencyName((target as CurrencyId).asDEXShare[0] as CurrencyId),
+        forceToCurrencyName((target as CurrencyId).asDEXShare[1] as CurrencyId)
       );
     }
 

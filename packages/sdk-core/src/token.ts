@@ -35,10 +35,11 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
 const TOKEN_SORT: Record<string, number> = primitivesConfig.types.TokenSymbol._enum;
 
 interface Configs {
-  decimal?: number;
-  type?: TokenType;
+  display?: string; // namae for display
+  decimal?: number; // token decimal
+  type?: TokenType; // token type
+  symbol?: string; // token symbol
   chain?: string;
-  symbol?: string;
   minimalBalance?: FixedPointNumber;
 }
 
@@ -49,6 +50,7 @@ export class Token {
   readonly minimalBalance: FixedPointNumber;
   readonly chain: string | undefined;
   readonly type: TokenType;
+  readonly display: string;
 
   constructor(name: string, configs?: Configs) {
     this.name = name;
@@ -57,6 +59,7 @@ export class Token {
     this.chain = configs?.chain;
     this.type = configs?.type || TokenType.BASIC;
     this.symbol = configs?.symbol || name;
+    this.display = configs?.display || name;
   }
 
   get isTokenSymbol(): boolean {

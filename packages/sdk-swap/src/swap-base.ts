@@ -314,7 +314,7 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
             : this.getInputAmountWithExactOutput(...params)
         ];
       } catch (e) {
-        return [e, null];
+        return [e, null] as [Error, null];
       }
     });
 
