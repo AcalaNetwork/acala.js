@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/type-definitions",
-  "version": "3.0.3-11",
+  "version": "3.0.3-12",
   "description": "Polkadot.js type definations for Acala Network",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
