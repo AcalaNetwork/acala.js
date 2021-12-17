@@ -1,6 +1,6 @@
 import { CurrencyId, TokenSymbol } from '@acala-network/types/interfaces';
 import { isArray } from 'lodash';
-import { TokenType } from '.';
+import { STABLE_ASSET_POOLS, TokenType } from '.';
 import {
   ConvertToCurrencyIdFailed,
   ConvertToCurrencyNameFailed,
@@ -53,6 +53,13 @@ export function createStableAssetName(id: number): string {
 
 export function isStableAssetName(name: string): boolean {
   return name.startsWith('sa://');
+}
+
+export function getStableAssetTokenName(api: AnyApi, name: string): string {
+  const chain = api.runtimeChain.toString();
+  const poolId = getStableAssetPoolIdFromName(name);
+
+  return STABLE_ASSET_POOLS[chain][poolId].name;
 }
 
 export function getStableAssetPoolIdFromName(name: string): number {
