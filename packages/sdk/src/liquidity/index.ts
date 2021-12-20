@@ -1,56 +1,198 @@
-// import { AnyApi, Token } from '@acala-network/sdk-core';
-// import { TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
-// import { Observable, of } from 'rxjs';
-// import { Wallet } from '..';
-// import { StorageManager } from '../storage';
-// import { LiquidityDetail, LiquidityPoolStatus, PoolType, UserLiquidity } from './types';
+import { AnyApi, FixedPointNumber, forceToCurrencyName, MaybeCurrency, Token } from '@acala-network/sdk-core';
+import { TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
+import { StorageKey } from '@polkadot/types';
+import { memoize } from '@polkadot/util';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { TradingPairNotFound } from '..';
+import { TokenProvider } from '../base-provider/types';
+import { BaseSDK } from '../types';
+import { createStorages } from './storage';
+import { LiquidityDetail, LiquidityPoolStatus, PoolInfo, UserLiquidity } from './types';
 
-// export class Liquidity {
-//   private api: AnyApi;
-//   private storages: StorageManager;
-//   private wallet: Wallet;
+export class Liquidity implements BaseSDK {
+  private api: AnyApi;
+  private storages: ReturnType<typeof createStorages>;
+  private tokenProvider: TokenProvider;
+  private isReady$: BehaviorSubject<boolean>;
 
-//   constructor(api: AnyApi, wallet: Wallet) {
-//     this.api = api;
-//     this.wallet = wallet;
-//     this.storages = new StorageManager({});
-//   }
+  constructor(api: AnyApi, tokenProvider: TokenProvider) {
+    this.api = api;
+    this.storages = createStorages(this.api);
+    this.tokenProvider = tokenProvider;
+    this.isReady$ = new BehaviorSubject<boolean>(false);
+  }
 
-//   get initStorages () {
-//     return {
+  public get isReady(): Observable<boolean> {
+    return this.isReady$.asObservable();
+  }
 
-//     }
-//   }
+  /**
+   * @name subscribePoolListByStatus
+   * @description get pool list which filtered by status
+   */
+  public subscribePoolListByStatus = memoize(
+    (status: LiquidityPoolStatus = LiquidityPoolStatus.ENABLED): Observable<PoolInfo[]> => {
+      const filterByPoolInfos = (
+        list: [StorageKey<[TradingPair]>, TradingPairStatus, LiquidityPoolStatus][]
+      ): [StorageKey<[TradingPair]>, TradingPairStatus, LiquidityPoolStatus][] => {
+        return list.filter((item) => {
+          if (status === LiquidityPoolStatus.ALL) {
+            return true;
+          }
 
-//   /**
-//    * @name subscribeTokens
-//    * @description get all pool
-//    */
-//   public subscribePoolTypes (status: LiquidityPoolStatus = LiquidityPoolStatus.enable): Observable<PoolType> {
+          return item[2] === status;
+        });
+      };
 
-//   }
+      const mapStatusToData = (list: [StorageKey<[TradingPair]>, TradingPairStatus][]) => {
+        return list.map((item) => {
+          const rawStatus = item[1];
+          const status = rawStatus.isEnabled
+            ? LiquidityPoolStatus.ENABLED
+            : (rawStatus as any).isDisabled
+            ? LiquidityPoolStatus.DISABLED
+            : rawStatus.isProvisioning
+            ? LiquidityPoolStatus.PROVISION
+            : LiquidityPoolStatus.PROVISION;
 
-//   /**
-//    * @name subscribePool
-//    * @description get pool information of `token`
-//    */
-//   public subscribePool(token: Token): Observable<LiquidityDetail> {
+          return [...item, status] as [StorageKey<[TradingPair]>, TradingPairStatus, LiquidityPoolStatus];
+        });
+      };
 
-//   }
+      const tokenCollections = new Set<string>();
 
-//   public subscribeAllPools (): Observable<LiquidityDetail[]> {}
-//  /**
-//   * @name subscribeUserPool
-//   * @description get `address` pool of `token`
-//   */
-//  public subscribeUserPool (token: Token, address: string): Observable<UserLiquidity> {
-//  }
+      return this.storages.tradingPairs().observable.pipe(
+        map(mapStatusToData),
+        map(filterByPoolInfos),
+        switchMap((data) => {
+          // collection all useable token to currencyId
+          data.forEach((item) => {
+            tokenCollections.add(forceToCurrencyName(item[0][0]));
+            tokenCollections.add(forceToCurrencyName(item[0][1]));
+          });
 
-//  /**
-//   * @name subscribeAllUserPool
-//   * @description get all user pool information
-//   */
-//  public subscribeAllUserPool (address: string): Observable<UserLiquidity[]> {
+          return combineLatest(
+            Object.fromEntries(
+              Array.from(tokenCollections).map((item) => {
+                return [item, this.tokenProvider.subscribeToken(item)];
+              })
+            )
+          ).pipe(
+            map((tokens) => {
+              return data.map((item) => {
+                const token1 = tokens[forceToCurrencyName(item[0][0])];
+                const token2 = tokens[forceToCurrencyName(item[0][1])];
 
-//  }
-// }
+                return {
+                  token: Token.fromTokens(token1, token2),
+                  pair: [token1, token2] as [Token, Token],
+                  status: item[2]
+                };
+              });
+            })
+          );
+        })
+      );
+    }
+  );
+
+  /**
+   * @name subscribePoolInfo
+   * @description get
+   */
+  public subscribePoolInfo = memoize((token: MaybeCurrency): Observable<PoolInfo> => {
+    const targetName = forceToCurrencyName(token);
+
+    return this.subscribePoolListByStatus(LiquidityPoolStatus.ALL).pipe(
+      map((list) => {
+        const target = list.find((item) => forceToCurrencyName(item.token) === targetName);
+
+        if (target) return target;
+
+        throw new TradingPairNotFound(targetName);
+      })
+    );
+  });
+
+  /**
+   * @name subscribePoolDetail
+   * @description get pool information of `token`
+   */
+  public subscribePoolDetail = memoize((token: MaybeCurrency): Observable<LiquidityDetail> => {
+    const detail$ = (info: PoolInfo) => {
+      const issuance$ = this.storages
+        .issuance(info.token)
+        .observable.pipe(map((data) => FixedPointNumber.fromInner(data.toString(), info.token.decimal)));
+      const poolSize$ = this.storages.liquidityPool(info.token).observable.pipe(
+        map((data) => {
+          return [
+            FixedPointNumber.fromInner(data[0].toString(), info.pair[0].decimal),
+            FixedPointNumber.fromInner(data[1].toString(), info.pair[1].decimal)
+          ] as [FixedPointNumber, FixedPointNumber];
+        })
+      );
+
+      return combineLatest({
+        issuance: issuance$,
+        poolSize: poolSize$
+      }).pipe(
+        map(({ issuance, poolSize }) => {
+          return { share: issuance, info, amounts: poolSize };
+        })
+      );
+    };
+
+    return this.subscribePoolInfo(token).pipe(switchMap(detail$));
+  });
+
+  public subscribeAllEnabledPools(): Observable<Record<string, LiquidityDetail>> {
+    return this.subscribePoolListByStatus(LiquidityPoolStatus.ENABLED).pipe(
+      switchMap((data) => {
+        return combineLatest(
+          Object.fromEntries(
+            data.map((item) => [forceToCurrencyName(item.token), this.subscribePoolDetail(item.token)])
+          )
+        );
+      })
+    );
+  }
+
+  public subscribeUserPool = memoize((address: string, token: MaybeCurrency): Observable<UserLiquidity> => {
+    const getUserLiquidity$ = (poolDetail: LiquidityDetail) => {
+      return this.storages.balance(address, poolDetail.info.token).observable.pipe(
+        map((balance) => {
+          // only handle free part
+          const userShare = FixedPointNumber.fromInner(balance.free.toString(), poolDetail.info.token.decimal);
+
+          const ratio = userShare.div(poolDetail.share);
+
+          const owned = [poolDetail.amounts[0].mul(ratio), poolDetail.amounts[1].mul(ratio)] as [
+            FixedPointNumber,
+            FixedPointNumber
+          ];
+
+          return {
+            share: userShare,
+            ratio,
+            poolDetail,
+            owned
+          };
+        })
+      );
+    };
+    return this.subscribePoolDetail(token).pipe(switchMap(getUserLiquidity$));
+  });
+
+  public subscribeAllUserPools = memoize((address: string): Observable<Record<string, UserLiquidity>> => {
+    return this.subscribePoolListByStatus(LiquidityPoolStatus.ENABLED).pipe(
+      switchMap((data) => {
+        return combineLatest(
+          Object.fromEntries(
+            data.map((item) => [forceToCurrencyName(item.token), this.subscribeUserPool(address, item.token)])
+          )
+        );
+      })
+    );
+  });
+}

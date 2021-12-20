@@ -1,3 +1,6 @@
+/* eslint-disable */
+// @ts-nocheck
+
 /**
  * The vault sdk providers some usefull query, and create calls to manipulte user valult
  */

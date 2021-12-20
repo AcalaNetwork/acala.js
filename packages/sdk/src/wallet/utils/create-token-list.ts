@@ -41,6 +41,7 @@ export function createTokenList(
   // insert foreign tokens to temp
   temp = { ...temp, ...foreignTokens };
 
+  // handle dex share at latest
   const dexShareTokens = Object.fromEntries(
     tradingPairs
       .filter((item) => [item[1].isEnabled])

@@ -1,23 +1,27 @@
 import { FixedPointNumber, Token } from '@acala-network/sdk-core';
 
 export enum LiquidityPoolStatus {
-  'enable',
-  'bootstrap',
-  'close'
+  'ALL',
+  'ENABLED',
+  'PROVISION',
+  'DISABLED'
 }
 
-export interface PoolType {
+export interface PoolInfo {
   token: Token;
-  pare: [Token, Token];
+  pair: [Token, Token];
+  status: LiquidityPoolStatus;
 }
 
 export interface LiquidityDetail {
   share: FixedPointNumber;
-  type: PoolType;
+  info: PoolInfo;
   amounts: [FixedPointNumber, FixedPointNumber];
 }
 
 export interface UserLiquidity {
+  share: FixedPointNumber;
   ratio: FixedPointNumber;
-  detail: LiquidityDetail;
+  poolDetail: LiquidityDetail;
+  owned: [FixedPointNumber, FixedPointNumber];
 }

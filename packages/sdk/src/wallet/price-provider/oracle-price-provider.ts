@@ -4,7 +4,7 @@ import { PriceProvider } from './types';
 import { TimestampedValue } from '@open-web3/orml-types/interfaces';
 import { AnyApi, FixedPointNumber as FN, forceToCurrencyName } from '@acala-network/sdk-core';
 import { OracleKey } from '@acala-network/types/interfaces';
-import { Storage } from '../../storage';
+import { Storage } from '../../utils/storage';
 
 export class OraclePriceProvider implements PriceProvider {
   private api: AnyApi;

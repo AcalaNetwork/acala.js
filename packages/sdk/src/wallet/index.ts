@@ -18,21 +18,22 @@ import { AccountInfo, Balance, RuntimeDispatchInfo } from '@polkadot/types/inter
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { Storage } from '../storage';
+import { Storage } from '../utils/storage';
 import { TokenRecord, WalletConsts, BalanceData, TransferConfig, PresetTokens } from './type';
 import { CurrencyNotFound, SDKNotReady } from '..';
 import { getExistentialDepositConfig } from './utils/get-ed-config';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
-import { MarketPriceProvider } from './price-provider/MarketPriceProvider';
-import { OraclePriceProvider } from './price-provider/OraclePriceProvider';
+import { MarketPriceProvider } from './price-provider/market-price-provider';
+import { OraclePriceProvider } from './price-provider/oracle-price-provider';
 import { PriceProvider, PriceProviderType } from './price-provider/types';
 import { createTokenList } from './utils/create-token-list';
+import { BaseSDK } from '../types';
 
 type PriceProviders = Partial<{
   [k in PriceProviderType]: PriceProvider;
 }>;
 
-export class Wallet {
+export class Wallet implements BaseSDK {
   private api: AnyApi;
   private priceProviders: PriceProviders;
   // readed from chain information
@@ -75,25 +76,25 @@ export class Wallet {
 
   private get storages() {
     return {
-      'foreign-assets': () =>
+      foreignAssets: () =>
         Storage.create<[StorageKey<u16[]>, Option<AcalaAssetMetadata>][]>({
           api: this.api,
           path: 'query.assetRegistry.assetMetadatas.entries',
           params: []
         }),
-      'trading-pairs': () =>
+      tradingPairs: () =>
         Storage.create<[StorageKey<[TradingPair]>, TradingPairStatus][]>({
           api: this.api,
           path: 'query.dex.tradingPairStatuses.entries',
           params: []
         }),
-      'native-balance': (address: string) =>
+      nativeBalance: (address: string) =>
         Storage.create<AccountInfo>({
           api: this.api,
           path: 'query.system.account',
           params: [address]
         }),
-      'non-native-balance': (token: Token, address: string) =>
+      nonNativeBalance: (token: Token, address: string) =>
         Storage.create<OrmlAccountData>({
           api: this.api,
           path: 'query.tokens.accounts',
@@ -121,8 +122,8 @@ export class Wallet {
   private initTokens() {
     const chainDecimals = this.api.registry.chainDecimals;
     const chainTokens = this.api.registry.chainTokens;
-    const tradingPairs$ = this.storages['trading-pairs']().observable;
-    const foreignAssets$ = this.storages['foreign-assets']().observable;
+    const tradingPairs$ = this.storages.tradingPairs().observable;
+    const foreignAssets$ = this.storages.foreignAssets().observable;
 
     const basicTokens = Object.fromEntries(
       chainTokens.map((token, i) => {
@@ -220,13 +221,13 @@ export class Wallet {
         };
 
         if (isNativeToken) {
-          const storage = this.storages['native-balance'](address);
+          const storage = this.storages.nativeBalance(address);
 
           return storage.observable.pipe(map((data) => handleNative(data, token)));
         }
 
-        // non-native token
-        const storage = this.storages['non-native-balance'](token, address);
+        // nonNative token
+        const storage = this.storages.nonNativeBalance(token, address);
 
         return storage.observable.pipe(map((data) => handleNonNative(data, token)));
       })
@@ -328,14 +329,14 @@ export class Wallet {
           const isNativeToken = forceToCurrencyName(token) === nativeToken.name;
 
           if (isNativeToken) {
-            return this.storages['native-balance'](address).observable.pipe(
-              map((data) => handleNativeResult(data, token, nativeToken))
-            );
+            return this.storages
+              .nativeBalance(address)
+              .observable.pipe(map((data) => handleNativeResult(data, token, nativeToken)));
           }
 
           return combineLatest({
-            accountInfo: this.storages['native-balance'](address).observable,
-            tokenInfo: this.storages['non-native-balance'](token, address).observable
+            accountInfo: this.storages.nativeBalance(address).observable,
+            tokenInfo: this.storages.nonNativeBalance(token, address).observable
           }).pipe(
             map(({ accountInfo, tokenInfo }) => handleNonNativeResult(accountInfo, tokenInfo, token, nativeToken))
           );
