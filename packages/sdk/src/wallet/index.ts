@@ -12,13 +12,10 @@ import {
   unzipDexShareName,
   TokenType
 } from '@acala-network/sdk-core';
-import { AcalaAssetMetadata, TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
-import { Option, StorageKey, u16 } from '@polkadot/types';
 import { AccountInfo, Balance, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { Storage } from '../utils/storage';
 import { TokenRecord, WalletConsts, BalanceData, TransferConfig, PresetTokens } from './type';
 import { CurrencyNotFound, SDKNotReady } from '..';
 import { getExistentialDepositConfig } from './utils/get-ed-config';
@@ -28,6 +25,7 @@ import { OraclePriceProvider } from './price-provider/oracle-price-provider';
 import { PriceProvider, PriceProviderType } from './price-provider/types';
 import { createTokenList } from './utils/create-token-list';
 import { BaseSDK } from '../types';
+import { createStorages } from './storages';
 
 type PriceProviders = Partial<{
   [k in PriceProviderType]: PriceProvider;
@@ -41,6 +39,7 @@ export class Wallet implements BaseSDK {
   // FIXME: also need tokens from nuts
   private isReady$: BehaviorSubject<boolean>;
   public consts!: WalletConsts;
+  private storages: ReturnType<typeof createStorages>;
 
   public constructor(api: AnyApi, priceProviders?: Record<PriceProviderType, PriceProvider>) {
     this.api = api;
@@ -52,6 +51,7 @@ export class Wallet implements BaseSDK {
       ...this.defaultPriceProviders,
       ...priceProviders
     };
+    this.storages = createStorages(this.api);
 
     this.init();
   }
@@ -72,44 +72,6 @@ export class Wallet implements BaseSDK {
       runtimeChain: this.api.runtimeChain.toString(),
       nativeCurrency: this.api.registry.chainTokens[0].toString()
     };
-  }
-
-  private get storages() {
-    return {
-      foreignAssets: () =>
-        Storage.create<[StorageKey<u16[]>, Option<AcalaAssetMetadata>][]>({
-          api: this.api,
-          path: 'query.assetRegistry.assetMetadatas.entries',
-          params: []
-        }),
-      tradingPairs: () =>
-        Storage.create<[StorageKey<[TradingPair]>, TradingPairStatus][]>({
-          api: this.api,
-          path: 'query.dex.tradingPairStatuses.entries',
-          params: []
-        }),
-      nativeBalance: (address: string) =>
-        Storage.create<AccountInfo>({
-          api: this.api,
-          path: 'query.system.account',
-          params: [address]
-        }),
-      nonNativeBalance: (token: Token, address: string) =>
-        Storage.create<OrmlAccountData>({
-          api: this.api,
-          path: 'query.tokens.accounts',
-          params: [address, token.toChainData()]
-        }),
-      issuance: (token: Token) => {
-        const isNativeToken = forceToCurrencyName(this.consts.nativeCurrency) === forceToCurrencyName(token);
-
-        return Storage.create<Balance>({
-          api: this.api,
-          path: isNativeToken ? 'query.balances.totalIssuance' : 'query.tokens.totalIssuance',
-          params: isNativeToken ? [] : [token.toChainData()]
-        });
-      }
-    } as const;
   }
 
   private get defaultPriceProviders(): PriceProviders {
