@@ -23,7 +23,7 @@ export function createTokenList(
       const key = item[0].args[0].toNumber();
       const value = item[1].unwrapOrDefault();
       const name = createForeignAssetName(key);
-      const decimal = value.decimals.toNumber();
+      const decimals = value.decimals.toNumber();
 
       return [
         name,
@@ -31,8 +31,8 @@ export function createTokenList(
           type: TokenType.FOREIGN_ASSET,
           symbol: hexToString(value.symbol.toHex()),
           display: hexToString(value.name.toHex()),
-          decimal,
-          minimalBalance: FN.fromInner(value.minimalBalance.toString(), decimal)
+          decimals,
+          ed: FN.fromInner(value.minimalBalance.toString(), decimals)
         })
       ];
     })

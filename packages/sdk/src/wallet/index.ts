@@ -18,7 +18,6 @@ import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { TokenRecord, WalletConsts, BalanceData, TransferConfig, PresetTokens } from './type';
 import { CurrencyNotFound, SDKNotReady } from '..';
-import { getExistentialDepositConfig } from './utils/get-ed-config';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 import { MarketPriceProvider } from './price-provider/market-price-provider';
 import { OraclePriceProvider } from './price-provider/oracle-price-provider';
@@ -26,6 +25,7 @@ import { PriceProvider, PriceProviderType } from './price-provider/types';
 import { createTokenList } from './utils/create-token-list';
 import { BaseSDK } from '../types';
 import { createStorages } from './storages';
+import tokenList from '../configs/token-list';
 
 type PriceProviders = Partial<{
   [k in PriceProviderType]: PriceProvider;
@@ -89,12 +89,14 @@ export class Wallet implements BaseSDK {
 
     const basicTokens = Object.fromEntries(
       chainTokens.map((token, i) => {
+        const config = tokenList.getToken(token, this.consts.runtimeChain);
+
         return [
           token,
           new Token(token, {
+            ...config,
             type: TokenType.BASIC,
-            decimal: chainDecimals[i] ?? 12,
-            symbol: token
+            decimals: chainDecimals[i] ?? 12
           })
         ];
       })
@@ -163,20 +165,20 @@ export class Wallet implements BaseSDK {
         const isNativeToken = nativeCurrency === token.name;
 
         const handleNative = (data: AccountInfo, token: Token) => {
-          const free = FN.fromInner(data.data.free.toString(), token.decimal);
-          const locked = FN.fromInner(data.data.miscFrozen.toString(), token.decimal).max(
-            FN.fromInner(data.data.feeFrozen.toString(), token.decimal)
+          const free = FN.fromInner(data.data.free.toString(), token.decimals);
+          const locked = FN.fromInner(data.data.miscFrozen.toString(), token.decimals).max(
+            FN.fromInner(data.data.feeFrozen.toString(), token.decimals)
           );
-          const reserved = FN.fromInner(data.data.reserved.toString(), token.decimal);
+          const reserved = FN.fromInner(data.data.reserved.toString(), token.decimals);
           const available = free.sub(locked).max(FN.ZERO);
 
           return { available, token, free, locked, reserved };
         };
 
         const handleNonNative = (data: OrmlAccountData, token: Token) => {
-          const free = FN.fromInner(data.free.toString(), token.decimal);
-          const locked = FN.fromInner(data.frozen.toString(), token.decimal);
-          const reserved = FN.fromInner(data.reserved.toString(), token.decimal);
+          const free = FN.fromInner(data.free.toString(), token.decimals);
+          const locked = FN.fromInner(data.frozen.toString(), token.decimals);
+          const reserved = FN.fromInner(data.reserved.toString(), token.decimals);
           const available = free.sub(locked).max(FN.ZERO);
 
           return { available, token, free, locked, reserved };
@@ -205,7 +207,7 @@ export class Wallet implements BaseSDK {
     return this.subscribeToken(token).pipe(
       switchMap((token) => {
         const storage = this.storages.issuance(token);
-        const handleIssuance = (data: Balance, token: Token) => FN.fromInner(data.toString(), token.decimal);
+        const handleIssuance = (data: Balance, token: Token) => FN.fromInner(data.toString(), token.decimals);
 
         return storage.observable.pipe(map((data) => handleIssuance(data, token)));
       })
@@ -229,13 +231,13 @@ export class Wallet implements BaseSDK {
       const handleNativeResult = (accountInfo: AccountInfo, token: Token, nativeToken: Token) => {
         const providers = accountInfo.providers.toNumber();
         const consumers = accountInfo.consumers.toNumber();
-        const nativeFreeBalance = FN.fromInner(accountInfo.data.free.toString(), nativeToken.decimal);
+        const nativeFreeBalance = FN.fromInner(accountInfo.data.free.toString(), nativeToken.decimals);
         // native locked balance = max(accountInfo.data.miscFrozen, accountInfo.data.feeFrozen)
-        const nativeLockedBalance = FN.fromInner(accountInfo.data.miscFrozen.toString(), nativeToken.decimal).max(
-          FN.fromInner(accountInfo.data.feeFrozen.toString(), nativeToken.decimal)
+        const nativeLockedBalance = FN.fromInner(accountInfo.data.miscFrozen.toString(), nativeToken.decimals).max(
+          FN.fromInner(accountInfo.data.feeFrozen.toString(), nativeToken.decimals)
         );
         const ed = this.getTransferConfig(token).ed;
-        const fee = FN.fromInner(paymentInfo.partialFee.toString(), nativeToken.decimal).mul(new FN(feeFactor));
+        const fee = FN.fromInner(paymentInfo.partialFee.toString(), nativeToken.decimals).mul(new FN(feeFactor));
 
         return getMaxAvailableBalance({
           isNativeToken: true,
@@ -259,15 +261,15 @@ export class Wallet implements BaseSDK {
       ) => {
         const providers = accountInfo.providers.toNumber();
         const consumers = accountInfo.consumers.toNumber();
-        const nativeFreeBalance = FN.fromInner(accountInfo.data.free.toString(), nativeToken.decimal);
+        const nativeFreeBalance = FN.fromInner(accountInfo.data.free.toString(), nativeToken.decimals);
         // native locked balance = max(accountInfo.data.miscFrozen, accountInfo.data.feeFrozen)
-        const nativeLockedBalance = FN.fromInner(accountInfo.data.miscFrozen.toString(), nativeToken.decimal).max(
-          FN.fromInner(accountInfo.data.feeFrozen.toString(), nativeToken.decimal)
+        const nativeLockedBalance = FN.fromInner(accountInfo.data.miscFrozen.toString(), nativeToken.decimals).max(
+          FN.fromInner(accountInfo.data.feeFrozen.toString(), nativeToken.decimals)
         );
-        const targetFreeBalance = FN.fromInner(tokenInfo.free.toString(), token.decimal);
-        const targetLockedBalance = FN.fromInner(tokenInfo.frozen.toString(), token.decimal);
+        const targetFreeBalance = FN.fromInner(tokenInfo.free.toString(), token.decimals);
+        const targetLockedBalance = FN.fromInner(tokenInfo.frozen.toString(), token.decimals);
         const ed = this.getTransferConfig(token).ed;
-        const fee = FN.fromInner(paymentInfo.partialFee.toString(), nativeToken.decimal).mul(new FN(feeFactor));
+        const fee = FN.fromInner(paymentInfo.partialFee.toString(), nativeToken.decimals).mul(new FN(feeFactor));
 
         return getMaxAvailableBalance({
           isNativeToken: false,
@@ -314,17 +316,7 @@ export class Wallet implements BaseSDK {
    * @returns
    */
   public getTransferConfig(token: Token): TransferConfig {
-    const { runtimeChain } = this.consts;
-
-    if (token.isDexShare) {
-      const [token1] = Token.sortTokenNames(...unzipDexShareName(token.name));
-
-      return {
-        ed: getExistentialDepositConfig(runtimeChain, token1)
-      };
-    }
-
-    return { ed: getExistentialDepositConfig(runtimeChain, token.name) };
+    return { ed: token.ed };
   }
 
   public getPresetTokens(): PresetTokens {
