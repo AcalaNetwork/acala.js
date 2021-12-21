@@ -415,12 +415,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -824,12 +825,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -1241,12 +1243,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -1659,12 +1662,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -2074,12 +2078,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -2489,12 +2494,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -2906,12 +2912,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -3322,12 +3329,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -3735,12 +3743,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -4148,12 +4157,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -4748,12 +4758,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -5157,12 +5168,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -5574,12 +5586,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -5992,12 +6005,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -6407,12 +6421,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -6822,12 +6837,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -7239,12 +7255,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -7655,12 +7672,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -8068,12 +8086,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -8481,12 +8500,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -9081,12 +9101,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -9490,12 +9511,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -9907,12 +9929,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -10325,12 +10348,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -10740,12 +10764,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -11155,12 +11180,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -11572,12 +11598,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -11988,12 +12015,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -12401,12 +12429,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {
@@ -12814,12 +12843,13 @@
                             "value": "Option<U128>",
                             "data": "Option<Bytes>"
                         },
-                        "RedeemStrategy": {
-                            "_enum": {
-                                "Immediately": "Null",
-                                "Target": "EraIndex",
-                                "WaitForUnbonding": "Null"
-                            }
+                        "AcalaStakingLedge": {
+                            "bonded": "Compact<Balance>",
+                            "unlocking": "Vec<UnlockChunk>"
+                        },
+                        "AcalaUnlockChunk": {
+                            "value": "Compact<Balance>",
+                            "era": "Compact<EraIndex>"
                         },
                         "RelaychainAccountId": "AccountId",
                         "SlashInfo": {

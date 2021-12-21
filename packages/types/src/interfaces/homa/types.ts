@@ -1,16 +1,20 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { Enum } from '@polkadot/types';
-import type { EraIndex } from '@polkadot/types/interfaces/staking';
+import type { Balance } from '@acala-network/types/interfaces/runtime';
+import type { Compact, Struct, Vec } from '@polkadot/types';
+import type { EraIndex, UnlockChunk } from '@polkadot/types/interfaces/staking';
 
-/** @name RedeemStrategy */
-export interface RedeemStrategy extends Enum {
-  readonly isImmediately: boolean;
-  readonly isTarget: boolean;
-  readonly asTarget: EraIndex;
-  readonly isWaitForUnbonding: boolean;
-  readonly type: 'Immediately' | 'Target' | 'WaitForUnbonding';
+/** @name AcalaStakingLedge */
+export interface AcalaStakingLedge extends Struct {
+  readonly bonded: Compact<Balance>;
+  readonly unlocking: Vec<UnlockChunk>;
+}
+
+/** @name AcalaUnlockChunk */
+export interface AcalaUnlockChunk extends Struct {
+  readonly value: Compact<Balance>;
+  readonly era: Compact<EraIndex>;
 }
 
 export type PHANTOM_HOMA = 'homa';

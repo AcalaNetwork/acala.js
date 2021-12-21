@@ -9,7 +9,6 @@ import {
   Token,
   MaybeCurrency,
   forceToCurrencyName,
-  unzipDexShareName,
   TokenType
 } from '@acala-network/sdk-core';
 import { AccountInfo, Balance, RuntimeDispatchInfo } from '@polkadot/types/interfaces';

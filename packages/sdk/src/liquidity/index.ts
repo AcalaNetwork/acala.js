@@ -123,12 +123,12 @@ export class Liquidity implements BaseSDK {
     const detail$ = (info: PoolInfo) => {
       const issuance$ = this.storages
         .issuance(info.token)
-        .observable.pipe(map((data) => FixedPointNumber.fromInner(data.toString(), info.token.decimal)));
+        .observable.pipe(map((data) => FixedPointNumber.fromInner(data.toString(), info.token.decimals)));
       const poolSize$ = this.storages.liquidityPool(info.token).observable.pipe(
         map((data) => {
           return [
-            FixedPointNumber.fromInner(data[0].toString(), info.pair[0].decimal),
-            FixedPointNumber.fromInner(data[1].toString(), info.pair[1].decimal)
+            FixedPointNumber.fromInner(data[0].toString(), info.pair[0].decimals),
+            FixedPointNumber.fromInner(data[1].toString(), info.pair[1].decimals)
           ] as [FixedPointNumber, FixedPointNumber];
         })
       );
@@ -163,7 +163,7 @@ export class Liquidity implements BaseSDK {
       return this.storages.balance(address, poolDetail.info.token).observable.pipe(
         map((balance) => {
           // only handle free part
-          const userShare = FixedPointNumber.fromInner(balance.free.toString(), poolDetail.info.token.decimal);
+          const userShare = FixedPointNumber.fromInner(balance.free.toString(), poolDetail.info.token.decimals);
 
           const ratio = userShare.div(poolDetail.share);
 

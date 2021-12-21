@@ -269,14 +269,14 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
     const _inputAmount = inputAmount.clone();
     const _outputAmount = outputAmount.clone();
 
-    _inputAmount.forceSetPrecision(inputToken.decimal);
-    _outputAmount.forceSetPrecision(outputToken.decimal);
+    _inputAmount.forceSetPrecision(inputToken.decimals);
+    _outputAmount.forceSetPrecision(outputToken.decimals);
 
     const { fee: exchangeFee, rate: exchangeRate } = this.calculateExchangeFee(
       path,
       inputAmount,
       this.config.fee,
-      inputToken.decimal
+      inputToken.decimals
     );
 
     return {

@@ -8,7 +8,7 @@ declare module '@polkadot/types/types/registry' {
   import type { CandidateInfoOf } from '@acala-network/types/interfaces/collatorSelection';
   import type { BalanceRequest, BalanceWrapper, TradingPairProvisionParameters, TradingPairStatus } from '@acala-network/types/interfaces/dex';
   import type { CallRequest, CodeInfo, Erc20Info, EstimateResourcesResponse, EvmAccountInfo, EvmAddress, EvmContractInfo } from '@acala-network/types/interfaces/evm';
-  import type { RedeemStrategy } from '@acala-network/types/interfaces/homa';
+  import type { AcalaStakingLedge, AcalaUnlockChunk } from '@acala-network/types/interfaces/homa';
   import type { Guarantee, RelaychainAccountId, SlashInfo, ValidatorBacking } from '@acala-network/types/interfaces/homaValidatorList';
   import type { PoolId, PoolIdV0 } from '@acala-network/types/interfaces/incentives';
   import type { Position } from '@acala-network/types/interfaces/loans';
@@ -89,6 +89,8 @@ declare module '@polkadot/types/types/registry' {
     AbridgedHrmpChannel: AbridgedHrmpChannel;
     AcalaAssetMetadata: AcalaAssetMetadata;
     AcalaDataProviderId: AcalaDataProviderId;
+    AcalaStakingLedge: AcalaStakingLedge;
+    AcalaUnlockChunk: AcalaUnlockChunk;
     AccountData: AccountData;
     AccountId: AccountId;
     AccountId20: AccountId20;
@@ -857,7 +859,6 @@ declare module '@polkadot/types/types/registry' {
     ReadySolution: ReadySolution;
     Reasons: Reasons;
     RecoveryConfig: RecoveryConfig;
-    RedeemStrategy: RedeemStrategy;
     RefCount: RefCount;
     RefCountTo259: RefCountTo259;
     ReferendumIndex: ReferendumIndex;
