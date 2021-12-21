@@ -30,6 +30,14 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
       assets: ['DOT', 'LDOT']
     }
   ],
+  'Acala Mandala TC7': [
+    {
+      poolId: 0,
+      name: 'taiKSM',
+      decimal: 12,
+      assets: ['KSM', 'LKSM']
+    }
+  ],
   // Karura testnet
   'Acala Karura Dev': [
     {
