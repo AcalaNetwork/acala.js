@@ -1,5 +1,6 @@
 import { FixedPointNumber } from '@acala-network/sdk-core';
 import { ChainType } from '../types';
+import { getChainType } from '../utils/get-chain-type';
 
 interface TokenConfig {
   readonly decimals: number;
@@ -60,7 +61,7 @@ const DEFAULT_TOKEN_LIST: TokenListConfig = {
 
 class TokenList {
   public getToken(name: string, chain: string) {
-    const chainType = this.getChainType(chain);
+    const chainType = getChainType(chain);
 
     // unsopport chain
     if (!chainType) return;
@@ -76,21 +77,6 @@ class TokenList {
     };
 
     return data;
-  }
-
-  private getChainType(type: string): ChainType | undefined {
-    const tests = new Map([
-      [/acala/i, ChainType.ACALA],
-      [/karura/i, ChainType.KARURA],
-      [/mandala/i, ChainType.MANDALA],
-      [/^dev$/i, ChainType.MANDALA]
-    ]);
-
-    for (const [test, chainTyep] of tests.entries()) {
-      if (test.test(type)) return chainTyep;
-    }
-
-    return undefined;
   }
 }
 

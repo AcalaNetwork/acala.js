@@ -1,11 +1,12 @@
 import { AnyApi, FixedPointNumber, forceToCurrencyName, MaybeCurrency, Token } from '@acala-network/sdk-core';
+import { LiquidityPoolHelper } from './utils/liquidity-pool-helper';
 import { TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
 import { StorageKey } from '@polkadot/types';
 import { memoize } from '@polkadot/util';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { TradingPairNotFound } from '..';
-import { TokenProvider } from '../base-provider/types';
+import { TokenProvider } from '../base-provider';
 import { BaseSDK } from '../types';
 import { createStorages } from './storage';
 import { LiquidityDetail, LiquidityPoolStatus, PoolInfo, UserLiquidity } from './types';
@@ -50,7 +51,7 @@ export class Liquidity implements BaseSDK {
           const rawStatus = item[1];
           const status = rawStatus.isEnabled
             ? LiquidityPoolStatus.ENABLED
-            : (rawStatus as any).isDisabled
+            : rawStatus.isDisabled
             ? LiquidityPoolStatus.DISABLED
             : rawStatus.isProvisioning
             ? LiquidityPoolStatus.PROVISION
@@ -67,9 +68,13 @@ export class Liquidity implements BaseSDK {
         map(filterByPoolInfos),
         switchMap((data) => {
           // collection all useable token to currencyId
+
           data.forEach((item) => {
-            tokenCollections.add(forceToCurrencyName(item[0][0]));
-            tokenCollections.add(forceToCurrencyName(item[0][1]));
+            const token1 = item[0].args[0][0];
+            const token2 = item[0].args[0][1];
+
+            tokenCollections.add(forceToCurrencyName(token1));
+            tokenCollections.add(forceToCurrencyName(token2));
           });
 
           return combineLatest(
@@ -81,8 +86,8 @@ export class Liquidity implements BaseSDK {
           ).pipe(
             map((tokens) => {
               return data.map((item) => {
-                const token1 = tokens[forceToCurrencyName(item[0][0])];
-                const token2 = tokens[forceToCurrencyName(item[0][1])];
+                const token1 = tokens[forceToCurrencyName(item[0].args[0][0])];
+                const token2 = tokens[forceToCurrencyName(item[0].args[0][1])];
 
                 return {
                   token: Token.fromTokens(token1, token2),
@@ -181,6 +186,7 @@ export class Liquidity implements BaseSDK {
         })
       );
     };
+
     return this.subscribePoolDetail(token).pipe(switchMap(getUserLiquidity$));
   });
 
@@ -195,4 +201,30 @@ export class Liquidity implements BaseSDK {
       })
     );
   });
+
+  public estimateAddLiquidityResult = memoize(
+    (tokenA: Token, tokenB: Token, inputA: FixedPointNumber, inputB: FixedPointNumber, slippage = 0) => {
+      const dexShareToken = Token.fromTokens(tokenA, tokenB);
+
+      return this.subscribePoolDetail(dexShareToken).pipe(
+        map((data) => {
+          const helper = new LiquidityPoolHelper({
+            token0: data.info.pair[0],
+            token1: data.info.pair[1],
+            pool0: data.amounts[0],
+            pool1: data.amounts[1]
+          });
+
+          return helper.estimateAddLiquidity({
+            tokenA,
+            tokenB,
+            maxAmountA: inputA,
+            maxAmountB: inputB,
+            totalShare: data.share,
+            slippage
+          });
+        })
+      );
+    }
+  );
 }

@@ -14,7 +14,7 @@ import {
 import { AccountInfo, Balance, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, shareReplay, filter } from 'rxjs/operators';
 import { TokenRecord, WalletConsts, BalanceData, TransferConfig, PresetTokens } from './type';
 import { CurrencyNotFound, SDKNotReady } from '..';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
@@ -25,12 +25,13 @@ import { createTokenList } from './utils/create-token-list';
 import { BaseSDK } from '../types';
 import { createStorages } from './storages';
 import tokenList from '../configs/token-list';
+import { TokenProvider } from '../base-provider';
 
 type PriceProviders = Partial<{
   [k in PriceProviderType]: PriceProvider;
 }>;
 
-export class Wallet implements BaseSDK {
+export class Wallet implements BaseSDK, TokenProvider {
   private api: AnyApi;
   private priceProviders: PriceProviders;
   // readed from chain information
@@ -120,14 +121,20 @@ export class Wallet implements BaseSDK {
    *  @description subscirbe the token list, can filter by type
    */
   public subscribeTokens = memoize((type?: TokenType): Observable<TokenRecord> => {
-    return this.tokens$.pipe(
-      map((data) => {
-        if (!type) return data;
+    return this.isReady$.pipe(
+      filter((i) => i),
+      switchMap(() => {
+        return this.tokens$.pipe(
+          map((data) => {
+            if (!type) return data;
 
-        return Object.fromEntries(
-          Object.entries(data).filter(([, value]) => {
-            return value.type === type;
-          })
+            return Object.fromEntries(
+              Object.entries(data).filter(([, value]) => {
+                return value.type === type;
+              })
+            );
+          }),
+          shareReplay(1)
         );
       })
     );

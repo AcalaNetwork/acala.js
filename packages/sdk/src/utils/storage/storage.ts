@@ -1,7 +1,7 @@
 import { eventsFilterCallback, eventsFilterRx } from '@acala-network/sdk-core';
 import { ApiPromise, ApiRx } from '@polkadot/api';
 import { BlockHash } from '@polkadot/types/interfaces';
-import { BehaviorSubject, Observable, Subject, Subscription, of, from, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription, of, from, firstValueFrom, shareReplay } from 'rxjs';
 import { switchMap, filter } from 'rxjs/operators';
 import { NoQueryPath } from './error';
 import { StorageConfigs } from './types';
@@ -79,7 +79,8 @@ export class Storage<T = unknown> {
       return eventsFilterRx(api, triggleEvents, true).pipe(
         switchMap(() => {
           return this.getBlockHash(api, at).pipe(switchMap((hash) => inner(hash.toString())));
-        })
+        }),
+        shareReplay(1)
       );
     }
 
