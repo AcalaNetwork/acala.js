@@ -54,6 +54,7 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
         this.decimalMap.set(key, Number(tokenDecimals?.[index]) || defaultTokenDecimal);
         this.currencyIdMap.set(key, currencyId);
         this.tokenMap.set(key, Token.fromCurrencyId(currencyId, { decimal }));
+        this.tokenMap.set('sa://0', Token.fromStableAssetPool('Acala Mandala TC7', 0));
       } catch (e) {
         // ignore eorror
       }
