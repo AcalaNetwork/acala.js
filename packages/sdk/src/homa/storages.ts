@@ -1,7 +1,7 @@
 import { AnyApi, Token } from '@acala-network/sdk-core';
 import { AcalaStakingLedge } from '@acala-network/types/interfaces';
-import { StorageKey, U16, Option } from '@polkadot/types';
-import { Balance } from '@polkadot/types/interfaces';
+import { StorageKey, U16, Option, Bool } from '@polkadot/types';
+import { Balance, EraIndex } from '@polkadot/types/interfaces';
 import { Storage } from '../utils/storage';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -48,6 +48,24 @@ export const createStorages = (api: AnyApi) => {
         api,
         path: 'query.homa.softBondedCapPerSubAccount',
         params: []
+      }),
+    redeemRequests: (address: string) =>
+      Storage.create<[Balance, Bool]>({
+        api,
+        path: 'query.homa.redeemRequests',
+        params: [address]
+      }),
+    relayChainCurrentEra: () =>
+      Storage.create<EraIndex>({
+        api,
+        path: 'query.homa.relayChainCurrentEra',
+        params: []
+      }),
+    unbondings: (address: string) =>
+      Storage.create<[EraIndex, Balance][]>({
+        api,
+        path: 'query.homa.unbondings',
+        params: [address]
       })
   };
 };

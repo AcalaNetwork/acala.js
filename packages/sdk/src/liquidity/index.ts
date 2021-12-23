@@ -1,5 +1,4 @@
 import { AnyApi, FixedPointNumber, forceToCurrencyName, MaybeCurrency, Token } from '@acala-network/sdk-core';
-import { LiquidityPoolHelper } from './utils/liquidity-pool-helper';
 import { TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
 import { StorageKey } from '@polkadot/types';
 import { memoize } from '@polkadot/util';
@@ -9,7 +8,9 @@ import { TradingPairNotFound } from '..';
 import { TokenProvider } from '../base-provider';
 import { BaseSDK } from '../types';
 import { createStorages } from './storage';
-import { LiquidityDetail, LiquidityPoolStatus, PoolInfo, UserLiquidity } from './types';
+import { PoolDetail, LiquidityPoolStatus, PoolInfo, UserLiquidity } from './types';
+import { getEstimateAddLiquidityResult } from './utils/get-estimate-add-liquidity-result';
+import { getEstimateRemoveLiquidityResult } from './utils/get-estimate-remove-liquidity-result';
 
 export class Liquidity implements BaseSDK {
   private api: AnyApi;
@@ -46,7 +47,7 @@ export class Liquidity implements BaseSDK {
         });
       };
 
-      const mapStatusToData = (list: [StorageKey<[TradingPair]>, TradingPairStatus][]) => {
+      const transformStatus = (list: [StorageKey<[TradingPair]>, TradingPairStatus][]) => {
         return list.map((item) => {
           const rawStatus = item[1];
           const status = rawStatus.isEnabled
@@ -64,7 +65,7 @@ export class Liquidity implements BaseSDK {
       const tokenCollections = new Set<string>();
 
       return this.storages.tradingPairs().observable.pipe(
-        map(mapStatusToData),
+        map(transformStatus),
         map(filterByPoolInfos),
         switchMap((data) => {
           // collection all useable token to currencyId
@@ -104,7 +105,7 @@ export class Liquidity implements BaseSDK {
 
   /**
    * @name subscribePoolInfo
-   * @description get
+   * @description get pool infomation of `token`
    */
   public subscribePoolInfo = memoize((token: MaybeCurrency): Observable<PoolInfo> => {
     const targetName = forceToCurrencyName(token);
@@ -122,9 +123,9 @@ export class Liquidity implements BaseSDK {
 
   /**
    * @name subscribePoolDetail
-   * @description get pool information of `token`
+   * @description get pool detail of `token`
    */
-  public subscribePoolDetail = memoize((token: MaybeCurrency): Observable<LiquidityDetail> => {
+  public subscribePoolDetail = memoize((token: MaybeCurrency): Observable<PoolDetail> => {
     const detail$ = (info: PoolInfo) => {
       const issuance$ = this.storages
         .issuance(info.token)
@@ -151,7 +152,11 @@ export class Liquidity implements BaseSDK {
     return this.subscribePoolInfo(token).pipe(switchMap(detail$));
   });
 
-  public subscribeAllEnabledPools(): Observable<Record<string, LiquidityDetail>> {
+  /**
+   * @name subscribeAllEnabledPools
+   * @description get all enable pool information
+   */
+  public subscribeAllEnabledPools(): Observable<Record<string, PoolDetail>> {
     return this.subscribePoolListByStatus(LiquidityPoolStatus.ENABLED).pipe(
       switchMap((data) => {
         return combineLatest(
@@ -163,8 +168,12 @@ export class Liquidity implements BaseSDK {
     );
   }
 
+  /**
+   * @name subscribeUserPool
+   * @description get `user` `token` pool information
+   */
   public subscribeUserPool = memoize((address: string, token: MaybeCurrency): Observable<UserLiquidity> => {
-    const getUserLiquidity$ = (poolDetail: LiquidityDetail) => {
+    const getUserLiquidity$ = (poolDetail: PoolDetail) => {
       return this.storages.balance(address, poolDetail.info.token).observable.pipe(
         map((balance) => {
           // only handle free part
@@ -190,6 +199,10 @@ export class Liquidity implements BaseSDK {
     return this.subscribePoolDetail(token).pipe(switchMap(getUserLiquidity$));
   });
 
+  /**
+   * @name subscribeAllUserPool
+   * @description subscribe all `user` pools information
+   */
   public subscribeAllUserPools = memoize((address: string): Observable<Record<string, UserLiquidity>> => {
     return this.subscribePoolListByStatus(LiquidityPoolStatus.ENABLED).pipe(
       switchMap((data) => {
@@ -202,29 +215,54 @@ export class Liquidity implements BaseSDK {
     );
   });
 
-  public estimateAddLiquidityResult = memoize(
-    (tokenA: Token, tokenB: Token, inputA: FixedPointNumber, inputB: FixedPointNumber, slippage = 0) => {
+  /**
+   * @name subscribeEstimateAddLiquidityResult
+   * @description estimate add liquidity result
+   */
+  public subscribeEstimateAddLiquidityResult = memoize(
+    (tokenA: Token, tokenB: Token, inputA: FixedPointNumber, inputB: FixedPointNumber, slippage?: number) => {
       const dexShareToken = Token.fromTokens(tokenA, tokenB);
 
       return this.subscribePoolDetail(dexShareToken).pipe(
-        map((data) => {
-          const helper = new LiquidityPoolHelper({
-            token0: data.info.pair[0],
-            token1: data.info.pair[1],
-            pool0: data.amounts[0],
-            pool1: data.amounts[1]
-          });
-
-          return helper.estimateAddLiquidity({
-            tokenA,
-            tokenB,
-            maxAmountA: inputA,
-            maxAmountB: inputB,
-            totalShare: data.share,
-            slippage
-          });
+        map((detail) => {
+          return getEstimateAddLiquidityResult(detail, tokenA, tokenB, inputA, inputB, slippage || 0);
         })
       );
     }
   );
+
+  /**
+   * @name subscribeEstimateRemoveLiquidity
+   * @description subscribe estimate remove liquidity result
+   */
+  public subscribeEstimateRemoveLiquidityResult = memoize(
+    (dexShareToken: Token, removeShare: FixedPointNumber, slippage?: number) => {
+      return this.subscribePoolDetail(dexShareToken).pipe(
+        map((detail) => {
+          return getEstimateRemoveLiquidityResult(detail, removeShare, slippage || 0);
+        })
+      );
+    }
+  );
+
+  /**
+   * @name subscribePoolSizeOfShares
+   * @description subscribe `dexShareToken` pool size of `shares`
+   */
+  public susbscribePoolSizeOfShares = memoize((dexShareToken: Token, share: FixedPointNumber) => {
+    return this.subscribePoolDetail(dexShareToken).pipe(
+      map((detail) => {
+        const { share: totalShare, amounts } = detail;
+
+        const ratio = share.div(totalShare);
+
+        return {
+          share: share,
+          ratio: ratio,
+          amounts: [amounts[0].mul(ratio), amounts[1].mul(ratio)] as [FixedPointNumber, FixedPointNumber],
+          poolDetail: detail
+        };
+      })
+    );
+  });
 }

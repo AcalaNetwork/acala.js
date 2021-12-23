@@ -33,6 +33,12 @@ export interface HomaEnvironment {
 export interface EstimateMintResult {
   pay: FixedPointNumber;
   receive: FixedPointNumber;
+  env: HomaEnvironment;
+}
+
+export interface EstimateRedeemResult {
+  request: FixedPointNumber;
+  receive: FixedPointNumber;
   fee: FixedPointNumber;
-  homa: HomaEnvironment;
+  env: HomaEnvironment;
 }

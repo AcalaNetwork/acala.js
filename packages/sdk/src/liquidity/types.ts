@@ -13,7 +13,7 @@ export interface PoolInfo {
   status: LiquidityPoolStatus;
 }
 
-export interface LiquidityDetail {
+export interface PoolDetail {
   share: FixedPointNumber;
   info: PoolInfo;
   amounts: [FixedPointNumber, FixedPointNumber];
@@ -22,6 +22,22 @@ export interface LiquidityDetail {
 export interface UserLiquidity {
   share: FixedPointNumber;
   ratio: FixedPointNumber;
-  poolDetail: LiquidityDetail;
+  poolDetail: PoolDetail;
   owned: [FixedPointNumber, FixedPointNumber];
+}
+
+export interface EstimateAddLiquidityResult {
+  incrementA: FixedPointNumber;
+  incrementB: FixedPointNumber;
+  incrementShare: FixedPointNumber;
+  incrementShareWithSlippage: FixedPointNumber;
+  slippage: number;
+  poolDetail: PoolDetail;
+}
+
+export interface EstimateRemoveLiquidityResult {
+  removeShare: FixedPointNumber;
+  minReceived: [FixedPointNumber, FixedPointNumber];
+  slippage: number;
+  poolDetail: PoolDetail;
 }

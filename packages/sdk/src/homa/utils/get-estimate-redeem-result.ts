@@ -2,7 +2,7 @@ import { FixedPointNumber } from '@acala-network/sdk-core';
 import { BelowMintThreshold, ExceededStakingCurrencySoftCap } from '../errors';
 import { convertLiquidToStaking } from './exchange-rate';
 
-export function getEstimateMintResult(
+export function getEstimateResultResult(
   amount: FixedPointNumber,
   mintThreshold: FixedPointNumber,
   totalStaking: FixedPointNumber,
