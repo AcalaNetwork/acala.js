@@ -2,8 +2,8 @@
 /* eslint-disable */
 
 import type { Balance, BlockNumber } from '@acala-network/types/interfaces/runtime';
-import type { Enum, Struct } from '@polkadot/types';
-import type { ITuple } from '@polkadot/types/types';
+import type { Enum, Struct } from '@polkadot/types-codec';
+import type { ITuple } from '@polkadot/types-codec/types';
 
 /** @name BalanceRequest */
 export interface BalanceRequest extends Struct {

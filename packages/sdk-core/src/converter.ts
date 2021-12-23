@@ -1,6 +1,6 @@
 import { CurrencyId, TokenSymbol } from '@acala-network/types/interfaces';
 import { isArray } from 'lodash';
-import { TokenType } from '.';
+import { STABLE_ASSET_POOLS, TokenType } from '.';
 import {
   ConvertToCurrencyIdFailed,
   ConvertToCurrencyNameFailed,
@@ -53,6 +53,13 @@ export function createStableAssetName(id: number): string {
 
 export function isStableAssetName(name: string): boolean {
   return name.startsWith('sa://');
+}
+
+export function getStableAssetTokenName(api: AnyApi, name: string): string {
+  const chain = api.runtimeChain.toString();
+  const poolId = getStableAssetPoolIdFromName(name);
+
+  return STABLE_ASSET_POOLS[chain][poolId].name;
 }
 
 export function getStableAssetPoolIdFromName(name: string): number {
@@ -153,10 +160,10 @@ export function forceToCurrencyName(target: MaybeCurrency): string {
 
     if ((target as CurrencyId).isToken) return (target as CurrencyId).asToken.toString();
 
-    if ((target as CurrencyId).isDEXShare) {
+    if ((target as CurrencyId).isDexShare) {
       return createDexShareName(
-        forceToCurrencyName((target as CurrencyId).asDEXShare[0] as CurrencyId),
-        forceToCurrencyName((target as CurrencyId).asDEXShare[1] as CurrencyId)
+        forceToCurrencyName((target as CurrencyId).asDexShare[0] as CurrencyId),
+        forceToCurrencyName((target as CurrencyId).asDexShare[1] as CurrencyId)
       );
     }
 

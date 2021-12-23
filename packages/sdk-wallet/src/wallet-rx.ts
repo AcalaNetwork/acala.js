@@ -45,6 +45,8 @@ export class WalletRx extends WalletBase<ApiRx> {
   }
 
   private subscribeAssetMetadata() {
+    if (!this.api.query?.assetsRegistry?.assetMetadatas) return;
+
     this.api.query.assetRegistry.assetMetadatas.entries().subscribe((data) => {
       const result = data.map((item) => {
         const id = (item[0]?.args[0] as u16).toNumber();

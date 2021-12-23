@@ -43,9 +43,9 @@ export const eventsFilterRx = (
   configs: { section: string; method: string }[],
   immediately: boolean
 ): Observable<EventRecord> => {
-  return api.query.system.events().pipe(
-    startWith(immediately ? mockEventRecord(configs?.[0].section, configs?.[0].method) : undefined),
-    switchMap((events) => from(events || [])),
+  return api.query.system.events<Vec<EventRecord>>().pipe(
+    startWith(immediately ? mockEventRecord(configs?.[0].section, configs?.[0].method) : []),
+    switchMap((events) => from(events as unknown as Vec<EventRecord>)),
     filter(eventsFilter(configs)),
     shareReplay(1)
   );
@@ -59,7 +59,7 @@ export const eventsFilterCallback = (
 ): void => {
   if (immediately) callback();
 
-  api.query.system.events((events) => {
+  api.query.system.events<Vec<EventRecord>>((events: Vec<EventRecord>) => {
     // eslint-disable-next-line no-unused-expressions
     eventsFilter(configs)(events as unknown as EventRecord) ? callback() : undefined;
   });

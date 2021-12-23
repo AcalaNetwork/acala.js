@@ -25,9 +25,34 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
   'Mandala Dev': [
     {
       poolId: 0,
-      name: 'Taiga DOT-Liquid DOT',
+      name: 'taplDOT',
       decimals: 10,
       assets: ['DOT', 'LDOT']
+    }
+  ],
+  'Acala Mandala TC7': [
+    {
+      poolId: 0,
+      name: 'taiKSM',
+      decimals: 12,
+      assets: ['KSM', 'LKSM']
+    }
+  ],
+  // Karura testnet
+  'Acala Karura Dev': [
+    {
+      poolId: 0,
+      name: 'taiKSM',
+      decimals: 12,
+      assets: ['KSM', 'LKSM']
+    }
+  ],
+  Karura: [
+    {
+      poolId: 0,
+      name: 'taiKSM',
+      decimals: 12,
+      assets: ['KSM', 'LKSM']
     }
   ]
 };
@@ -48,6 +73,7 @@ export class Token {
   readonly name: string;
   readonly symbol: string;
   readonly decimals: number;
+  readonly decimal: number;
   readonly ed: FixedPointNumber;
   readonly chain: string | undefined;
   readonly type: TokenType;
@@ -57,6 +83,7 @@ export class Token {
   constructor(name: string, configs?: Configs) {
     this.name = name;
     this.decimals = configs?.decimals || 18;
+    this.decimal = configs?.decimals || 18;
     this.ed = configs?.ed || FixedPointNumber.ZERO;
     this.chain = configs?.chain;
     this.type = configs?.type || TokenType.BASIC;

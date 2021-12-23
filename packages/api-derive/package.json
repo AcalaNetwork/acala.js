@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/api-derive",
-  "version": "3.0.3-10",
+  "version": "3.0.3-15",
   "description": "Additional polkadot.js derives for Acala Network",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
@@ -15,9 +15,9 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
-    "@acala-network/types": "3.0.3-10",
+    "@acala-network/types": "3.0.3-15",
     "@babel/runtime": "^7.10.2",
     "@open-web3/orml-types": "^1.0.2-0",
-    "@polkadot/api-derive": "^6.5.2"
+    "@polkadot/api-derive": "^7.0.3-2"
   }
 }

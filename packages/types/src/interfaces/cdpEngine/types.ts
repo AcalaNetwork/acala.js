@@ -3,7 +3,7 @@
 
 import type { Balance } from '@acala-network/types/interfaces/runtime';
 import type { Rate, Ratio } from '@acala-network/types/interfaces/support';
-import type { Enum, Option, Struct } from '@polkadot/types';
+import type { Enum, Option, Struct } from '@polkadot/types-codec';
 
 /** @name ChangeBalance */
 export interface ChangeBalance extends Enum {

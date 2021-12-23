@@ -3,7 +3,7 @@
 ## 3.0.2 Oct 29, 2021
 Changes:
   - Add StableAsset types
-  - Bump polkadot.js version to 6.5.2
+  - Bump polkadot.js version to 7.0.3-2
   - Remove XCM types overwrite after spec/1019
 
 ## 2.3.1 Sept 17, 2021

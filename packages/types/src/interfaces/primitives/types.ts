@@ -3,8 +3,8 @@
 
 import type { EvmAddress } from '@acala-network/types/interfaces/evm';
 import type { Balance } from '@acala-network/types/interfaces/runtime';
-import type { Bytes, Enum, Struct, i128, u32, u8 } from '@polkadot/types';
-import type { ITuple } from '@polkadot/types/types';
+import type { Bytes, Enum, Struct, i128, u32, u8 } from '@polkadot/types-codec';
+import type { ITuple } from '@polkadot/types-codec/types';
 
 /** @name AcalaAssetMetadata */
 export interface AcalaAssetMetadata extends Struct {
@@ -58,8 +58,8 @@ export interface ChainBridgeChainId extends u8 {}
 export interface CurrencyId extends Enum {
   readonly isToken: boolean;
   readonly asToken: TokenSymbol;
-  readonly isDEXShare: boolean;
-  readonly asDEXShare: ITuple<[DexShare, DexShare]>;
+  readonly isDexShare: boolean;
+  readonly asDexShare: ITuple<[DexShare, DexShare]>;
   readonly isErc20: boolean;
   readonly asErc20: EvmAddress;
   readonly isStableAssetPoolToken: boolean;
@@ -68,7 +68,7 @@ export interface CurrencyId extends Enum {
   readonly asLiquidCroadloan: u32;
   readonly isForeignAsset: boolean;
   readonly asForeignAsset: u32;
-  readonly type: 'Token' | 'DEXShare' | 'Erc20' | 'StableAssetPoolToken' | 'LiquidCroadloan' | 'ForeignAsset';
+  readonly type: 'Token' | 'DexShare' | 'Erc20' | 'StableAssetPoolToken' | 'LiquidCroadloan' | 'ForeignAsset';
 }
 
 /** @name CurrencyIdOf */
