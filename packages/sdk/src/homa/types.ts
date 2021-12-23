@@ -28,6 +28,8 @@ export interface HomaEnvironment {
   mintThreshold: FixedPointNumber;
   // staking soft cap
   stakingSoftCap: FixedPointNumber;
+  // the homa commission rate
+  commissionRate: FixedPointNumber;
 }
 
 export interface EstimateMintResult {
@@ -41,4 +43,14 @@ export interface EstimateRedeemResult {
   receive: FixedPointNumber;
   fee: FixedPointNumber;
   env: HomaEnvironment;
+}
+
+export interface Unbonding {
+  era: number;
+  amount: FixedPointNumber;
+}
+
+export interface HomaConvertor {
+  convertLiquidToStaking: (amount: FixedPointNumber) => FixedPointNumber;
+  convertStakingToLiquid: (amount: FixedPointNumber) => FixedPointNumber;
 }

@@ -1,71 +1,96 @@
 import { AnyApi, Token } from '@acala-network/sdk-core';
-import { AcalaStakingLedge } from '@acala-network/types/interfaces';
+import { AcalaStakingLedge, Rate } from '@acala-network/types/interfaces';
 import { StorageKey, U16, Option, Bool } from '@polkadot/types';
 import { Balance, EraIndex } from '@polkadot/types/interfaces';
+import { memoize } from '@polkadot/util';
 import { Storage } from '../utils/storage';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const createStorages = (api: AnyApi) => {
   return {
-    liquidTokenIssuance: (token: Token) =>
+    issuance: memoize((token: Token) =>
       Storage.create<Balance>({
         api,
         path: 'query.tokens.totalIssuance',
         params: [token.toChainData()]
-      }),
-    stakingLedgers: () =>
+      })
+    ),
+    stakingLedgers: memoize(() =>
       Storage.create<[StorageKey<[U16]>, Option<AcalaStakingLedge>][]>({
         api,
         path: 'query.homa.stakingLedgers.entries',
         params: []
-      }),
-    toBondPool: () =>
+      })
+    ),
+    toBondPool: memoize(() =>
       Storage.create<Balance>({
         api,
         path: 'query.homa.toBondPool',
         params: []
-      }),
-    estimatedRewardRatePerEra: () =>
+      })
+    ),
+    totalVoidliquid: memoize(() =>
+      Storage.create<Balance>({
+        api,
+        path: 'query.homa.totalVoidLiquid',
+        params: []
+      })
+    ),
+    estimatedRewardRatePerEra: memoize(() =>
       Storage.create<Balance>({
         api,
         path: 'query.homa.estimatedRewardRatePerEra',
         params: []
-      }),
-    fastMatchFeeRate: () =>
+      })
+    ),
+    fastMatchFeeRate: memoize(() =>
       Storage.create<Balance>({
         api,
         path: 'query.homa.fastMatchFeeRate',
         params: []
-      }),
-    mintThreshold: () =>
+      })
+    ),
+    mintThreshold: memoize(() =>
       Storage.create<Balance>({
         api,
         path: 'query.homa.mintThreshold',
         params: []
-      }),
-    softBondedCapPerSubAccount: () =>
+      })
+    ),
+    softBondedCapPerSubAccount: memoize(() =>
       Storage.create<Balance>({
         api,
         path: 'query.homa.softBondedCapPerSubAccount',
         params: []
-      }),
-    redeemRequests: (address: string) =>
+      })
+    ),
+    redeemRequests: memoize((address: string) =>
       Storage.create<[Balance, Bool]>({
         api,
         path: 'query.homa.redeemRequests',
         params: [address]
-      }),
-    relayChainCurrentEra: () =>
+      })
+    ),
+    relayChainCurrentEra: memoize(() =>
       Storage.create<EraIndex>({
         api,
         path: 'query.homa.relayChainCurrentEra',
         params: []
-      }),
-    unbondings: (address: string) =>
+      })
+    ),
+    unbondings: memoize((address: string) =>
       Storage.create<[EraIndex, Balance][]>({
         api,
         path: 'query.homa.unbondings',
         params: [address]
       })
+    ),
+    commissionRate: memoize(() =>
+      Storage.create<Rate>({
+        api,
+        path: 'query.homa.commissionRate',
+        params: []
+      })
+    )
   };
 };

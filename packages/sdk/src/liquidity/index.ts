@@ -22,7 +22,7 @@ export class Liquidity implements BaseSDK {
     this.api = api;
     this.storages = createStorages(this.api);
     this.tokenProvider = tokenProvider;
-    this.isReady$ = new BehaviorSubject<boolean>(false);
+    this.isReady$ = new BehaviorSubject<boolean>(true);
   }
 
   public get isReady(): Observable<boolean> {

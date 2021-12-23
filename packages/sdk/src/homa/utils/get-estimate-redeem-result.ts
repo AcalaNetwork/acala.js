@@ -1,22 +1,29 @@
 import { FixedPointNumber } from '@acala-network/sdk-core';
-import { BelowMintThreshold, ExceededStakingCurrencySoftCap } from '../errors';
+import { EstimateRedeemResult, HomaEnvironment } from '../types';
 import { convertLiquidToStaking } from './exchange-rate';
 
-export function getEstimateResultResult(
+export function getEstimateRedeemResult(
+  env: HomaEnvironment,
   amount: FixedPointNumber,
-  mintThreshold: FixedPointNumber,
-  totalStaking: FixedPointNumber,
-  stakingSoftCap: FixedPointNumber,
-  exchangeRate: FixedPointNumber,
-  estimatedRewardRatePerEra: FixedPointNumber
-): FixedPointNumber {
-  if (amount.lt(mintThreshold)) throw new BelowMintThreshold();
+  isFastReddem: boolean
+): EstimateRedeemResult {
+  if (isFastReddem) {
+    const liquidToBurn = amount.mul(new FixedPointNumber(1, 6).sub(env.fastMatchFeeRate));
+    const redeemStaking = convertLiquidToStaking(env.exchangeRate, liquidToBurn);
+    const fee = amount.sub(liquidToBurn);
 
-  if (totalStaking.add(amount).gt(stakingSoftCap)) throw new ExceededStakingCurrencySoftCap();
+    return {
+      request: amount,
+      receive: redeemStaking,
+      fee,
+      env
+    };
+  }
 
-  const liquditAmount = convertLiquidToStaking(exchangeRate, amount);
-
-  const liquidIssueToMinter = FixedPointNumber.ONE.add(estimatedRewardRatePerEra).reciprocal().mul(liquditAmount);
-
-  return liquidIssueToMinter;
+  return {
+    request: amount,
+    receive: convertLiquidToStaking(env.exchangeRate, amount),
+    fee: FixedPointNumber.ZERO,
+    env
+  };
 }
