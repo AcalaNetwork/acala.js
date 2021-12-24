@@ -58,7 +58,7 @@ export class WalletRx extends WalletBase<ApiRx> {
         const token = Token.fromCurrencyName(name, {
           decimal,
           symbol: hexToString(data.symbol.toHex()),
-          minimalBalance: FN.fromInner(data.minimalBalance.toString(), decimal)
+          ed: FN.fromInner(data.minimalBalance.toString(), decimal)
         });
 
         return [name, token] as const;

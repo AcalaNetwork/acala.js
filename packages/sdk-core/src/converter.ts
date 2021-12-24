@@ -5,6 +5,8 @@ import {
   ConvertToCurrencyIdFailed,
   ConvertToCurrencyNameFailed,
   NotDexShareName,
+  NotForeignAssetName,
+  NotLiquidCroadloanName,
   NotStableAssetPoolName
 } from './errors';
 import { Token } from './token';
@@ -21,6 +23,9 @@ import { AnyApi, CurrencyObject, MaybeCurrency } from './types';
  *  e.g.
  *  lp://${encode(lp://KAR/KSM)}/${encode(sa://0)} is { DexShare: [ { DexShare: [{ Token: 'KAR' }, { Token: 'KSM}] }, { stableAsset: 0 } ] }
  */
+export function isBasicToken(name: string): boolean {
+  return name.search('//') < 0;
+}
 
 // for dex share
 export function createDexShareName(name1: string, name2: string): string {
@@ -78,9 +83,24 @@ export function isForeignAssetName(name: string): boolean {
 }
 
 export function getForeignAssetIdFromName(name: string): number {
-  if (!isForeignAssetName(name)) throw new NotStableAssetPoolName(name);
+  if (!isForeignAssetName(name)) throw new NotForeignAssetName(name);
 
   return parseInt(name.replace('fa://', ''));
+}
+
+// for liquid croadloan
+export function createLiquidCroadloanName(id: number): string {
+  return `lc://${id}`;
+}
+
+export function isLiquidCroadloanName(name: string): boolean {
+  return name.startsWith('lc://');
+}
+
+export function getLiquidCroadloanIdFromName(name: string): number {
+  if (!isLiquidCroadloanName(name)) throw new NotLiquidCroadloanName(name);
+
+  return parseInt(name.replace('lc://', ''));
 }
 
 export function getCurrencyTypeByName(name: string): TokenType {
@@ -92,7 +112,9 @@ export function getCurrencyTypeByName(name: string): TokenType {
 
   if (isDexShareName(name)) return TokenType.DEX_SHARE;
 
-  // FIXME: doesn't handle ERC20 and other types
+  if (isLiquidCroadloanName(name)) return TokenType.LIQUID_CROADLOAN;
+
+  // FIXME: need support ERC20
   return TokenType.BASIC;
 }
 
@@ -108,6 +130,10 @@ export function getForeignAssetCurrencyObject(name: string): CurrencyObject {
   return { ForeignAsset: getForeignAssetIdFromName(name) };
 }
 
+export function getLiquidCroadloanObject(name: string): CurrencyObject {
+  return { LiquidCroadloan: getLiquidCroadloanIdFromName(name) };
+}
+
 export function getDexShareCurrencyObject(name: string): CurrencyObject {
   const inner = (name: string): CurrencyObject => {
     if (isDexShareName(name)) {
@@ -116,15 +142,13 @@ export function getDexShareCurrencyObject(name: string): CurrencyObject {
       return { DexShare: [inner(name1), inner(name2)] };
     }
 
-    if (isForeignAssetName(name)) {
-      return getForeignAssetCurrencyObject(name);
-    }
+    if (isForeignAssetName(name)) return getForeignAssetCurrencyObject(name);
 
-    if (isStableAssetName(name)) {
-      return getStableAssetCurrencyObject(name);
-    }
+    if (isStableAssetName(name)) return getStableAssetCurrencyObject(name);
 
-    // FIXME: not handle ERC20 and LiquidCroadloan token
+    if (isLiquidCroadloanName(name)) return getLiquidCroadloanObject(name);
+
+    // FIXME: need support ERC20
     return getBasicCurrencyObject(name);
   };
 
@@ -138,13 +162,11 @@ export function getCurrencyObject(name: string): CurrencyObject {
 
   if (isStableAssetName(name)) return getStableAssetCurrencyObject(name);
 
-  // FIXME: not handle ERC20 and LiquidCroadloan token
+  if (isLiquidCroadloanName(name)) return getLiquidCroadloanObject(name);
+
+  // FIXME: need support ERC20
   return getBasicCurrencyObject(name);
 }
-
-/**
- * we also support some functions with `force` prefix to convert string/number to some specific type
- */
 
 /**
  * @name forceToCurrencyName
@@ -175,6 +197,9 @@ export function forceToCurrencyName(target: MaybeCurrency): string {
 
     if ((target as CurrencyId).isForeignAsset)
       return createForeignAssetName((target as CurrencyId).asForeignAsset.toNumber());
+
+    if ((target as CurrencyId).isLiquidCroadloan)
+      return createLiquidCroadloanName((target as CurrencyId).asLiquidCroadloan.toNumber());
 
     return target.toString();
   } catch (e) {
