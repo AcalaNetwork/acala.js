@@ -5,40 +5,27 @@ import {
   isBasicToken,
   getStableAssetPoolIdFromName,
   getForeignAssetIdFromName,
-  unzipDexShareName
+  unzipDexShareName,
+  getCurrencyTypeByName,
+  isLiquidCroadloanName,
+  getLiquidCroadloanIdFromName
 } from '.';
 import primitivesConfig from '@acala-network/type-definitions/primitives';
+import { TokenType } from './types';
 
 const TOKEN_TYPE_WEIGHTS = {
-  tokenSymbol: 9,
-  dexShare: 8,
-  erc20: 7,
-  stableAssetPool: 6,
-  liquidCroadloan: 5,
-  foreignAsset: 4
+  [TokenType.BASIC]: 9,
+  [TokenType.DEX_SHARE]: 8,
+  [TokenType.ERC20]: 7,
+  [TokenType.STABLE_ASSET_POOL_TOKEN]: 6,
+  [TokenType.LIQUID_CROADLOAN]: 5,
+  [TokenType.FOREIGN_ASSET]: 4
 };
 
 export function getTokenTypeWeight(name: string): number {
-  let weight = 0;
-
-  if (isBasicToken(name)) {
-    weight = TOKEN_TYPE_WEIGHTS.tokenSymbol;
-  }
-
-  if (isDexShareName(name)) {
-    weight = TOKEN_TYPE_WEIGHTS.dexShare;
-  }
-
-  if (isStableAssetName(name)) {
-    weight = TOKEN_TYPE_WEIGHTS.stableAssetPool;
-  }
-
-  if (isForeignAssetName(name)) {
-    weight = TOKEN_TYPE_WEIGHTS.foreignAsset;
-  }
-
-  return 1000 * weight;
+  return 1000 * (TOKEN_TYPE_WEIGHTS[getCurrencyTypeByName(name)] || 0);
 }
+
 const TOKEN_SORT: Record<string, number> = primitivesConfig.types.TokenSymbol._enum;
 
 export function sortTokenByName(a: string, b: string): number {
@@ -64,13 +51,17 @@ export function sortTokenByName(a: string, b: string): number {
     return getForeignAssetIdFromName(a) - getForeignAssetIdFromName(b);
   }
 
+  if (isLiquidCroadloanName(a) && isLiquidCroadloanName(b)) {
+    return getLiquidCroadloanIdFromName(a) - getLiquidCroadloanIdFromName(b);
+  }
+
   if (isDexShareName(a) && isDexShareName(b)) {
     const [a0, a1] = unzipDexShareName(a);
     const [b0, b1] = unzipDexShareName(b);
 
     const [result0, result1] = [sortTokenByName(a0, a1), sortTokenByName(b0, b1)];
 
-    if (a0 === b1) return result1;
+    if (a0 === b0) return result1;
 
     return result0;
   }
