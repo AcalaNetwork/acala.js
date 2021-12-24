@@ -1,5 +1,4 @@
 import { CurrencyId, TokenSymbol, DexShare, TradingPair } from '@acala-network/types/interfaces';
-import primitivesConfig from '@acala-network/type-definitions/primitives';
 import { assert } from '@polkadot/util';
 
 import { AnyApi, TokenType } from './types';
@@ -13,6 +12,7 @@ import {
   getCurrencyTypeByName,
   unzipDexShareName
 } from '.';
+import { sortTokenByName } from './sort-token';
 
 export interface StableAsset {
   poolId: number;
@@ -57,16 +57,14 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
   ]
 };
 
-const TOKEN_SORT: Record<string, number> = primitivesConfig.types.TokenSymbol._enum;
-
 interface Configs {
   display?: string; // namae for display
   decimals?: number; // token decimals
   type?: TokenType; // token type
-  symbol?: string; // token symbol
   chain?: string;
+  symbol?: string;
+  detail?: { id: number };
   ed?: FixedPointNumber;
-  pair?: [Token, Token];
 }
 
 export class Token {
@@ -192,24 +190,27 @@ export class Token {
   static sortTokenNames(...names: string[]): string[] {
     const result = [...names];
 
-    return result.sort((a, b) => TOKEN_SORT[a] - TOKEN_SORT[b]);
+    return result.sort((a, b) => {
+      return sortTokenByName(a, b);
+    });
   }
 
   static sortCurrencies(...currencies: CurrencyId[]): CurrencyId[] {
     const result = [...currencies];
+    const nameMap = Object.fromEntries(result.map((item) => [forceToCurrencyName(item), item]));
 
-    // FIXME: sort currencies should handle ERC20 and DexShare
-    for (const item of currencies) {
-      assert(item.isToken, `sortCurrencies doesn't support ERC20 and DexShare yet.`);
-    }
-
-    return result.sort((a, b) => TOKEN_SORT[a.asToken.toString()] - TOKEN_SORT[b.asToken.toString()]);
+    return Object.keys(nameMap)
+      .sort((a, b) => sortTokenByName(a, b))
+      .map((name) => nameMap[name]);
   }
 
   static sort(...tokens: Token[]): Token[] {
     const result = [...tokens];
+    const nameMap = Object.fromEntries(result.map((item) => [item.name, item]));
 
-    return result.sort((a, b) => TOKEN_SORT[a.name] - TOKEN_SORT[b.name]);
+    return Object.keys(nameMap)
+      .sort((a, b) => sortTokenByName(a, b))
+      .map((name) => nameMap[name]);
   }
 
   public toCurrencyId(api: AnyApi): CurrencyId {

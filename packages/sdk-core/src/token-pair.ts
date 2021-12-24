@@ -18,11 +18,6 @@ export class TokenPair {
   }
 
   static fromCurrencies(currency1: CurrencyId, currency2: CurrencyId): TokenPair {
-    assert(
-      currency1.isToken && currency2.isToken,
-      'TokenPair.fromCurrenciesArray should receive CurrencyId which is TokenSymbol'
-    );
-
     return new TokenPair(Token.fromCurrencyId(currency1), Token.fromCurrencyId(currency2));
   }
 
