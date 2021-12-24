@@ -21,6 +21,9 @@ import { AnyApi, CurrencyObject, MaybeCurrency } from './types';
  *  e.g.
  *  lp://${encode(lp://KAR/KSM)}/${encode(sa://0)} is { DexShare: [ { DexShare: [{ Token: 'KAR' }, { Token: 'KSM}] }, { stableAsset: 0 } ] }
  */
+export function isBasicToken(name: string): boolean {
+  return name.search('//') < 0;
+}
 
 // for dex share
 export function createDexShareName(name1: string, name2: string): string {

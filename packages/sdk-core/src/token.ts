@@ -1,5 +1,4 @@
 import { CurrencyId, TokenSymbol, DexShare, TradingPair } from '@acala-network/types/interfaces';
-import primitivesConfig from '@acala-network/type-definitions/primitives';
 import { assert } from '@polkadot/util';
 
 import { AnyApi, TokenType } from './types';
@@ -13,6 +12,7 @@ import {
   getCurrencyTypeByName,
   unzipDexShareName
 } from '.';
+import { sortTokenByName } from './sort-token';
 
 export interface StableAsset {
   poolId: number;
@@ -57,28 +57,27 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
   ]
 };
 
-const TOKEN_SORT: Record<string, number> = primitivesConfig.types.TokenSymbol._enum;
-
 interface Configs {
   decimal?: number;
   type?: TokenType;
   chain?: string;
   symbol?: string;
-  minimalBalance?: FixedPointNumber;
+  detail?: { id: number };
+  ed?: FixedPointNumber;
 }
 
 export class Token {
   readonly name: string;
   readonly symbol: string;
   readonly decimal: number;
-  readonly minimalBalance: FixedPointNumber;
+  readonly ed: FixedPointNumber;
   readonly chain: string | undefined;
   readonly type: TokenType;
 
   constructor(name: string, configs?: Configs) {
     this.name = name;
     this.decimal = configs?.decimal || 18;
-    this.minimalBalance = configs?.minimalBalance || FixedPointNumber.ZERO;
+    this.ed = configs?.ed || FixedPointNumber.ZERO;
     this.chain = configs?.chain;
     this.type = configs?.type || TokenType.BASIC;
     this.symbol = configs?.symbol || name;
@@ -177,24 +176,27 @@ export class Token {
   static sortTokenNames(...names: string[]): string[] {
     const result = [...names];
 
-    return result.sort((a, b) => TOKEN_SORT[a] - TOKEN_SORT[b]);
+    return result.sort((a, b) => {
+      return sortTokenByName(a, b);
+    });
   }
 
   static sortCurrencies(...currencies: CurrencyId[]): CurrencyId[] {
     const result = [...currencies];
+    const nameMap = Object.fromEntries(result.map((item) => [forceToCurrencyName(item), item]));
 
-    // FIXME: sort currencies should handle ERC20 and DexShare
-    for (const item of currencies) {
-      assert(item.isToken, `sortCurrencies doesn't support ERC20 and DexShare yet.`);
-    }
-
-    return result.sort((a, b) => TOKEN_SORT[a.asToken.toString()] - TOKEN_SORT[b.asToken.toString()]);
+    return Object.keys(nameMap)
+      .sort((a, b) => sortTokenByName(a, b))
+      .map((name) => nameMap[name]);
   }
 
   static sort(...tokens: Token[]): Token[] {
     const result = [...tokens];
+    const nameMap = Object.fromEntries(result.map((item) => [item.name, item]));
 
-    return result.sort((a, b) => TOKEN_SORT[a.name] - TOKEN_SORT[b.name]);
+    return Object.keys(nameMap)
+      .sort((a, b) => sortTokenByName(a, b))
+      .map((name) => nameMap[name]);
   }
 
   public toCurrencyId(api: AnyApi): CurrencyId {
