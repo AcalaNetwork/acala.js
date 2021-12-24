@@ -1,29 +1,31 @@
 import { AnyApi, FixedPointNumber, Token } from '@acala-network/sdk-core';
 import { memoize } from '@polkadot/util';
+import { u16 } from '@polkadot/types';
 import { curry } from 'lodash/fp';
 import { BehaviorSubject, combineLatest, map, Observable, shareReplay } from 'rxjs';
 import { TokenProvider } from '../base-provider';
 import { BaseSDK } from '../types';
 import { getChainType } from '../utils/get-chain-type';
 import { createStorages } from './storages';
-import { EstimateMintResult, HomaConvertor, HomaEnvironment, StakingLedger, Unbonding } from './types';
+import { EstimateMintResult, HomaConvertor, HomaEnvironment, RedeemRequest, StakingLedger, Unbonding } from './types';
 import { convertLiquidToStaking, convertStakingToLiquid, getExchangeRate } from './utils/exchange-rate';
 import { getAPY } from './utils/get-apy';
-import { getClaimableAmount } from './utils/get-claimable-amount';
 import { getEstimateMintResult } from './utils/get-estimate-mint-result';
 import { getEstimateRedeemResult } from './utils/get-estimate-redeem-result';
 import { transformStakingLedger } from './utils/transform-staking-ledger';
+import { getUserLiquidTokenSummary } from './utils/get-user-liquid-token-summary';
 
 export class Homa implements BaseSDK {
   private api: AnyApi;
   private isReady$: BehaviorSubject<boolean>;
   private storages: ReturnType<typeof createStorages>;
   private tokenProvider: TokenProvider;
-  private consts!: {
+  public consts!: {
     liquidToken: Token;
     stakingToken: Token;
     defaultExchangeRate: FixedPointNumber;
     chain: string;
+    activeSubAccountsIndexList: number[];
   };
 
   constructor(api: AnyApi, tokenProvider: TokenProvider) {
@@ -47,7 +49,10 @@ export class Homa implements BaseSDK {
       this.consts = {
         ...data,
         chain: this.api.runtimeChain.toString(),
-        defaultExchangeRate: FixedPointNumber.fromInner(this.api.consts.homa.defaultExchangeRate.toString())
+        defaultExchangeRate: FixedPointNumber.fromInner(this.api.consts.homa.defaultExchangeRate.toString()),
+        activeSubAccountsIndexList: (this.api.consts.homa.activeSubAccountsIndexList as unknown as u16[]).map((item) =>
+          item.toNumber()
+        )
       };
 
       // set isReady to true when consts intizialized
@@ -63,7 +68,7 @@ export class Homa implements BaseSDK {
   });
 
   private totalVoidLiquid$ = memoize((): Observable<FixedPointNumber> => {
-    return this.storages.toBondPool().observable.pipe(
+    return this.storages.totalVoidLiquid().observable.pipe(
       map((data) => FixedPointNumber.fromInner(data.toString(), this.consts.liquidToken.decimals)),
       shareReplay(1)
     );
@@ -83,14 +88,14 @@ export class Homa implements BaseSDK {
 
   private fastMatchFeeRate$ = memoize((): Observable<FixedPointNumber> => {
     return this.storages.fastMatchFeeRate().observable.pipe(
-      map((data) => FixedPointNumber.fromInner(data.toString(), 6)),
+      map((data) => FixedPointNumber.fromInner(data.toString())),
       shareReplay(1)
     );
   });
 
   private commissionRate$ = memoize((): Observable<FixedPointNumber> => {
     return this.storages.commissionRate().observable.pipe(
-      map((data) => FixedPointNumber.fromInner(data.toString(), 6)),
+      map((data) => FixedPointNumber.fromInner(data.toString())),
       shareReplay(1)
     );
   });
@@ -98,6 +103,13 @@ export class Homa implements BaseSDK {
   private mintThreshold$ = memoize((): Observable<FixedPointNumber> => {
     return this.storages.mintThreshold().observable.pipe(
       map((data) => FixedPointNumber.fromInner(data.toString(), this.consts.stakingToken.decimals)),
+      shareReplay(1)
+    );
+  });
+
+  private redeemThreshold$ = memoize((): Observable<FixedPointNumber> => {
+    return this.storages.mintThreshold().observable.pipe(
+      map((data) => FixedPointNumber.fromInner(data.toString(), this.consts.liquidToken.decimals)),
       shareReplay(1)
     );
   });
@@ -127,10 +139,10 @@ export class Homa implements BaseSDK {
     return this.storages.redeemRequests(address).observable.pipe(
       map(
         (data) =>
-          [FixedPointNumber.fromInner(data[0].toString(), this.consts.liquidToken.decimals), data[1].isTrue] as [
-            FixedPointNumber,
-            boolean
-          ]
+          [
+            FixedPointNumber.fromInner(data.unwrapOrDefault()?.[0].toString(), this.consts.liquidToken.decimals),
+            data.unwrapOrDefault()?.[1].isTrue
+          ] as [FixedPointNumber, boolean]
       ),
       shareReplay(1)
     );
@@ -144,8 +156,10 @@ export class Homa implements BaseSDK {
     return this.storages.unbondings(address).observable.pipe(
       map((data) => {
         return data.map((item) => {
+          const era = item[0].args[1].toNumber();
+
           return {
-            era: item[0].toNumber(),
+            era,
             amount: FixedPointNumber.fromInner(item[1].toString(), this.consts.stakingToken.decimals)
           };
         });
@@ -162,6 +176,7 @@ export class Homa implements BaseSDK {
       fastMatchFeeRate: this.fastMatchFeeRate$(),
       commissionRate: this.commissionRate$(),
       mintThreshold: this.mintThreshold$(),
+      redeemThreshold: this.redeemThreshold$(),
       softBondedCapPerSubAccount: this.softBondedCapPerSubAccount$()
     }).pipe(
       map(
@@ -173,6 +188,7 @@ export class Homa implements BaseSDK {
           fastMatchFeeRate,
           commissionRate,
           mintThreshold,
+          redeemThreshold,
           softBondedCapPerSubAccount
         }) => {
           const totalInSubAccount = stakingLedgers.reduce((acc, cur) => {
@@ -190,7 +206,10 @@ export class Homa implements BaseSDK {
             fastMatchFeeRate,
             commissionRate,
             mintThreshold,
-            stakingSoftCap: softBondedCapPerSubAccount.mul(new FixedPointNumber(stakingLedgers.length))
+            redeemThreshold,
+            stakingSoftCap: softBondedCapPerSubAccount.mul(
+              new FixedPointNumber(this.consts.activeSubAccountsIndexList.length)
+            )
           };
         }
       ),
@@ -201,6 +220,10 @@ export class Homa implements BaseSDK {
   public get isReady(): Observable<boolean> {
     return this.isReady$.asObservable();
   }
+
+  public subscribeEnv = (): Observable<HomaEnvironment> => {
+    return this.env$();
+  };
 
   /**
    * @name subscribeConvertor
@@ -216,17 +239,6 @@ export class Homa implements BaseSDK {
   });
 
   /**
-   * @name subscribeClaimableAmount
-   * @description subscribe claimable staking amount
-   */
-  public subscribeClaimableAmount = memoize((address: string): Observable<FixedPointNumber> => {
-    return combineLatest({
-      currentRelayEra: this.relayChainCurrentEra$(),
-      unbondings: this.unbondings$(address)
-    }).pipe(map(({ currentRelayEra, unbondings }) => getClaimableAmount(unbondings, currentRelayEra)));
-  });
-
-  /**
    * @name subscribleEstimateMintResult
    * @description subscrible estimate mint result
    */
@@ -234,11 +246,34 @@ export class Homa implements BaseSDK {
     return this.env$().pipe(map((env) => getEstimateMintResult(amount, env)));
   });
 
-  public subscribeRedeemEstimateResult = memoize((amount: FixedPointNumber, isFastRedeem: boolean) => {
+  public subscribeEstimateRedeemResult = memoize((amount: FixedPointNumber, isFastRedeem: boolean) => {
     return this.env$().pipe(map((env) => getEstimateRedeemResult(env, amount, isFastRedeem)));
   });
 
-  public subscribeUserRedeemRequest = memoize((address: string) => {
-    return this.redeemRequest$(address);
+  public subscribeUserRedeemRequest = memoize((address: string): Observable<RedeemRequest> => {
+    return combineLatest({
+      env: this.env$(),
+      request: this.redeemRequest$(address)
+    }).pipe(
+      map((data) => {
+        return {
+          fastRedeem: data.request[1],
+          amount: data.request[0]
+        };
+      })
+    );
+  });
+
+  public subscribeUserLiquidTokenSummary = memoize((address: string) => {
+    return combineLatest({
+      env: this.env$(),
+      currentEra: this.relayChainCurrentEra$(),
+      redeemRequest: this.subscribeUserRedeemRequest(address),
+      unbondings: this.unbondings$(address)
+    }).pipe(
+      map(({ env, currentEra, redeemRequest, unbondings }) => {
+        return getUserLiquidTokenSummary(env, currentEra, unbondings, redeemRequest);
+      })
+    );
   });
 }

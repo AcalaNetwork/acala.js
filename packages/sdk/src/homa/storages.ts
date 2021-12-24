@@ -1,6 +1,7 @@
 import { AnyApi, Token } from '@acala-network/sdk-core';
-import { AcalaStakingLedge, Rate } from '@acala-network/types/interfaces';
+import { AcalaStakingLedge, AccountId, Rate } from '@acala-network/types/interfaces';
 import { StorageKey, U16, Option, Bool } from '@polkadot/types';
+import { ITuple } from '@polkadot/types/types';
 import { Balance, EraIndex } from '@polkadot/types/interfaces';
 import { memoize } from '@polkadot/util';
 import { Storage } from '../utils/storage';
@@ -29,7 +30,7 @@ export const createStorages = (api: AnyApi) => {
         params: []
       })
     ),
-    totalVoidliquid: memoize(() =>
+    totalVoidLiquid: memoize(() =>
       Storage.create<Balance>({
         api,
         path: 'query.homa.totalVoidLiquid',
@@ -57,6 +58,13 @@ export const createStorages = (api: AnyApi) => {
         params: []
       })
     ),
+    redeemThreshold: memoize(() =>
+      Storage.create<Balance>({
+        api,
+        path: 'query.homa.redeemThreshold',
+        params: []
+      })
+    ),
     softBondedCapPerSubAccount: memoize(() =>
       Storage.create<Balance>({
         api,
@@ -65,7 +73,7 @@ export const createStorages = (api: AnyApi) => {
       })
     ),
     redeemRequests: memoize((address: string) =>
-      Storage.create<[Balance, Bool]>({
+      Storage.create<Option<ITuple<[Balance, Bool]>>>({
         api,
         path: 'query.homa.redeemRequests',
         params: [address]
@@ -79,10 +87,11 @@ export const createStorages = (api: AnyApi) => {
       })
     ),
     unbondings: memoize((address: string) =>
-      Storage.create<[EraIndex, Balance][]>({
+      Storage.create<[StorageKey<[AccountId, EraIndex]>, Balance][]>({
         api,
-        path: 'query.homa.unbondings',
-        params: [address]
+        path: 'query.homa.unbondings.entries',
+        params: [address],
+        triggleEvents: [{ section: 'homa', method: 'RequestedRedeem' }]
       })
     ),
     commissionRate: memoize(() =>

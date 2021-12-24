@@ -6,10 +6,10 @@ const ESTIMATE_ERA_COUNT: Partial<{ [k in ChainType]: number }> = {
   [ChainType.KARURA]: 10000
 };
 
-export function getAPY(preEra: FixedPointNumber, chain?: ChainType): number {
+export function getAPY(rewardRate: FixedPointNumber, chain?: ChainType): number {
   if (!chain) return 0;
 
   const eraCountOneYear = ESTIMATE_ERA_COUNT[chain] || 0;
 
-  return Math.pow(preEra.toNumber(), eraCountOneYear);
+  return Math.pow(rewardRate.toNumber() + 1, eraCountOneYear) - 1;
 }

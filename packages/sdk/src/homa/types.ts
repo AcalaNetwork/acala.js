@@ -26,6 +26,8 @@ export interface HomaEnvironment {
   fastMatchFeeRate: FixedPointNumber;
   // mint threshold
   mintThreshold: FixedPointNumber;
+  // redeem threshold
+  redeemThreshold: FixedPointNumber;
   // staking soft cap
   stakingSoftCap: FixedPointNumber;
   // the homa commission rate
@@ -53,4 +55,17 @@ export interface Unbonding {
 export interface HomaConvertor {
   convertLiquidToStaking: (amount: FixedPointNumber) => FixedPointNumber;
   convertStakingToLiquid: (amount: FixedPointNumber) => FixedPointNumber;
+}
+
+export interface RedeemRequest {
+  amount: FixedPointNumber;
+  fastRedeem: boolean;
+}
+
+export interface UserLiquidityTokenSummary {
+  // total unbonding amount = unbonging + redeem request
+  totalUnbonding: FixedPointNumber;
+  claimable: FixedPointNumber;
+  unbondings: Unbonding[];
+  redeemRequest: RedeemRequest;
 }
