@@ -91,7 +91,11 @@ export const createStorages = (api: AnyApi) => {
         api,
         path: 'query.homa.unbondings.entries',
         params: [address],
-        triggleEvents: [{ section: 'homa', method: 'RequestedRedeem' }]
+        triggleEvents: [
+          { section: 'homa', method: 'RequestedRedeem' },
+          { section: 'homa', method: 'RedeemedByUnbond' },
+          { section: 'homa', method: 'WithdrawRedemption' }
+        ]
       })
     ),
     commissionRate: memoize(() =>
