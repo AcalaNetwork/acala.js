@@ -1,6 +1,6 @@
 import { ChainType } from '../types';
 
-export function getChainType(type: string): ChainType | undefined {
+export function getChainType(type: string): ChainType {
   const tests = new Map([
     [/acala/i, ChainType.ACALA],
     [/karura/i, ChainType.KARURA],
@@ -12,5 +12,5 @@ export function getChainType(type: string): ChainType | undefined {
     if (test.test(type)) return chainTyep;
   }
 
-  return undefined;
+  return ChainType.MANDALA;
 }

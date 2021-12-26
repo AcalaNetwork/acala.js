@@ -87,7 +87,6 @@ export class Token {
     this.type = configs?.type || TokenType.BASIC;
     this.symbol = configs?.symbol || name;
     this.display = configs?.display || name;
-    this.pair = configs?.pair;
   }
 
   get isTokenSymbol(): boolean {
@@ -151,8 +150,7 @@ export class Token {
     return new Token(createDexShareName(_token1.name, _token2.name), {
       decimals,
       type: TokenType.DEX_SHARE,
-      ed,
-      pair: [_token1, _token2]
+      ed
     });
   }
 

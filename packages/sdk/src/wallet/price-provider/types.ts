@@ -8,6 +8,5 @@ export interface PriceProvider {
 
 export enum PriceProviderType {
   'MARKET', // query price form market
-  'ORACLE', // query oracle feed prices
-  'LIQUID' // query liquid token price according to staking token price
+  'ORACLE' // query oracle feed prices
 }

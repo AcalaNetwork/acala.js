@@ -9,13 +9,17 @@ import {
   Token,
   MaybeCurrency,
   forceToCurrencyName,
-  TokenType
+  TokenType,
+  FixedPointNumber,
+  unzipDexShareName,
+  isDexShareName,
+  isLiquidCroadloanName
 } from '@acala-network/sdk-core';
 import { AccountInfo, Balance, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
-import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of } from 'rxjs';
 import { map, switchMap, shareReplay, filter } from 'rxjs/operators';
-import { TokenRecord, WalletConsts, BalanceData, TransferConfig, PresetTokens } from './type';
+import { TokenRecord, WalletConsts, BalanceData, TransferConfig, PresetTokens, TokenPriceFetchSource } from './type';
 import { CurrencyNotFound, SDKNotReady } from '..';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 import { MarketPriceProvider } from './price-provider/market-price-provider';
@@ -26,6 +30,10 @@ import { BaseSDK } from '../types';
 import { createStorages } from './storages';
 import tokenList from '../configs/token-list';
 import { TokenProvider } from '../base-provider';
+import { defaultTokenPriceFetchSource } from './price-provider/default-token-price-fetch-source-config';
+import { LiquidityPoolStatus, PoolDetail, PoolInfo } from '../liquidity/types';
+import { subscribeDexShareTokenPrice } from './utils/get-dex-share-token-price';
+import { getChainType } from '../utils/get-chain-type';
 
 type PriceProviders = Partial<{
   [k in PriceProviderType]: PriceProvider;
@@ -36,17 +44,22 @@ export class Wallet implements BaseSDK, TokenProvider {
   private priceProviders: PriceProviders;
   // readed from chain information
   private tokens$: BehaviorSubject<TokenRecord>;
-  // FIXME: also need tokens from nuts
   private isReady$: BehaviorSubject<boolean>;
-  public consts!: WalletConsts;
   private storages: ReturnType<typeof createStorages>;
+  private tokenPriceFetchSource: TokenPriceFetchSource;
+  public consts!: WalletConsts;
 
-  public constructor(api: AnyApi, priceProviders?: Record<PriceProviderType, PriceProvider>) {
+  public constructor(
+    api: AnyApi,
+    tokenPriceFetchSource = defaultTokenPriceFetchSource,
+    priceProviders?: Record<PriceProviderType, PriceProvider>
+  ) {
     this.api = api;
 
     this.isReady$ = new BehaviorSubject<boolean>(false);
     this.tokens$ = new BehaviorSubject<TokenRecord>({});
 
+    this.tokenPriceFetchSource = tokenPriceFetchSource;
     this.priceProviders = {
       ...this.defaultPriceProviders,
       ...priceProviders
@@ -85,7 +98,7 @@ export class Wallet implements BaseSDK, TokenProvider {
     const chainDecimals = this.api.registry.chainDecimals;
     const chainTokens = this.api.registry.chainTokens;
     const tradingPairs$ = this.storages.tradingPairs().observable;
-    const foreignAssets$ = this.storages.foreignAssets().observable;
+    const assetMetadatas$ = this.storages.assetMetadatas().observable;
 
     const basicTokens = Object.fromEntries(
       chainTokens.map((token, i) => {
@@ -104,16 +117,62 @@ export class Wallet implements BaseSDK, TokenProvider {
 
     return combineLatest({
       tradingPairs: tradingPairs$,
-      foreignAssets: foreignAssets$
+      assetMetadatas: assetMetadatas$
     }).subscribe({
-      next: ({ tradingPairs, foreignAssets }) => {
-        const list = createTokenList(basicTokens, tradingPairs, foreignAssets);
+      next: ({ tradingPairs, assetMetadatas }) => {
+        const list = createTokenList(basicTokens, tradingPairs, assetMetadatas);
 
         this.tokens$.next(list);
         this.isReady$.next(true);
       }
     });
   }
+
+  private subscribePoolDetail = memoize((token: MaybeCurrency): Observable<PoolDetail> => {
+    const detail$ = (token: MaybeCurrency) => {
+      const name = forceToCurrencyName(token);
+      const [token0, token1] = unzipDexShareName(name);
+
+      const poolInfo$ = combineLatest({
+        dexShareToken: this.subscribeToken(name),
+        token0: this.subscribeToken(token0),
+        token1: this.subscribeToken(token1)
+      }).pipe(
+        map(({ dexShareToken, token0, token1 }) => {
+          return {
+            token: dexShareToken,
+            pair: [token0, token1] as [Token, Token],
+            status: LiquidityPoolStatus.ENABLED
+          };
+        })
+      );
+
+      const poolSize$ = (info: PoolInfo) =>
+        this.storages.liquidityPool(info.token).observable.pipe(
+          map((data) => {
+            return [
+              FixedPointNumber.fromInner(data[0].toString(), info.pair[0].decimals),
+              FixedPointNumber.fromInner(data[1].toString(), info.pair[1].decimals)
+            ] as [FixedPointNumber, FixedPointNumber];
+          })
+        );
+
+      return poolInfo$.pipe(
+        switchMap((info) => {
+          return combineLatest({
+            issuance: this.subscribeIssuance(name),
+            poolSize: poolSize$(info)
+          }).pipe(
+            map(({ issuance, poolSize }) => {
+              return { share: issuance, info, amounts: poolSize };
+            })
+          );
+        })
+      );
+    };
+
+    return detail$(token);
+  });
 
   /**
    *  @name subscribeTokens
@@ -122,6 +181,7 @@ export class Wallet implements BaseSDK, TokenProvider {
    */
   public subscribeTokens = memoize((type?: TokenType): Observable<TokenRecord> => {
     return this.isReady$.pipe(
+      // wait sdk isReady
       filter((i) => i),
       switchMap(() => {
         return this.tokens$.pipe(
@@ -157,6 +217,10 @@ export class Wallet implements BaseSDK, TokenProvider {
       })
     );
   });
+
+  public async getToken(target: MaybeCurrency): Promise<Token> {
+    return firstValueFrom(this.subscribeToken(target));
+  }
 
   /**
    * @name subscribeBalance
@@ -355,18 +419,42 @@ export class Wallet implements BaseSDK, TokenProvider {
    * @name subscribePrice
    * @description subscirbe the price of `token`
    */
-  public subscribePrice = memoize((token: MaybeCurrency, type = PriceProviderType.MARKET): Observable<FN> => {
+  public subscribePrice = memoize((token: MaybeCurrency, type?: PriceProviderType): Observable<FN> => {
     let priceProvider: PriceProvider | undefined;
+    const name = forceToCurrencyName(token);
+    const isDexShare = isDexShareName(name);
+    const presetTokens = this.getPresetTokens();
+    const isLiquidToken = presetTokens?.liquidToken?.name === name;
 
-    if (type === PriceProviderType.MARKET) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const _type =
+      type || this.tokenPriceFetchSource?.[getChainType(this.consts.runtimeChain)]?.[name] || PriceProviderType.MARKET;
+
+    if (_type === PriceProviderType.MARKET) {
       priceProvider = this.priceProviders?.[PriceProviderType.MARKET];
     }
 
-    if (type === PriceProviderType.ORACLE) {
+    if (_type === PriceProviderType.ORACLE) {
       priceProvider = this.priceProviders?.[PriceProviderType.ORACLE];
     }
 
     if (!priceProvider) return of(FN.ZERO);
+
+    // should calculate dexShare price
+    if (isDexShare) {
+      const [token0, token1] = unzipDexShareName(name);
+
+      return subscribeDexShareTokenPrice(
+        this.subscribePrice(token0),
+        this.subscribePrice(token1),
+        this.subscribePoolDetail(name)
+      );
+    }
+
+    // should calculate liquidToken price
+    if (isLiquidToken) {
+
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return this.subscribeToken(token).pipe(switchMap((token) => priceProvider!.subscribe(token.name)));

@@ -16,7 +16,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-<<<<<<< HEAD
 "@acala-network/api-derive@npm:3.0.3-7":
   version: 3.0.3-7
   resolution: "@acala-network/api-derive@npm:3.0.3-7"
@@ -28,25 +27,6 @@ __metadata:
   checksum: 5a5a8f500ad6819d0379a06ec41e7f3afbef9a933ae5cc4339d5dd37323acabfec019c1534198940b064bae9cea12d667e64d3c72633a69fba39df7e0bb1a0d5
   languageName: node
   linkType: hard
-
-"@acala-network/api@3.0.3-15, @acala-network/api@workspace:packages/api":
-=======
-"@acala-network/api@3.0.3-16, @acala-network/api@workspace:packages/api":
->>>>>>> master
-  version: 0.0.0-use.local
-  resolution: "@acala-network/api@workspace:packages/api"
-  dependencies:
-    "@acala-network/api-derive": 3.0.3-16
-    "@acala-network/types": 3.0.3-16
-    "@babel/runtime": ^7.10.2
-    "@open-web3/orml-api-derive": ^1.0.2-0
-    "@polkadot/api": ^7.0.3-2
-    "@polkadot/rpc-core": ^7.0.3-2
-  peerDependencies:
-    "@polkadot/api": ^7.0.3-2
-    "@polkadot/types": ^7.0.3-2
-  languageName: unknown
-  linkType: soft
 
 "@acala-network/api@npm:3.0.3-7":
   version: 3.0.3-7
@@ -65,6 +45,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@acala-network/api@workspace:packages/api":
+  version: 0.0.0-use.local
+  resolution: "@acala-network/api@workspace:packages/api"
+  dependencies:
+    "@acala-network/api-derive": 3.0.3-16
+    "@acala-network/types": 3.0.3-16
+    "@babel/runtime": ^7.10.2
+    "@open-web3/orml-api-derive": ^1.0.2-0
+    "@polkadot/api": ^7.0.3-2
+    "@polkadot/rpc-core": ^7.0.3-2
+  peerDependencies:
+    "@polkadot/api": ^7.0.3-2
+    "@polkadot/types": ^7.0.3-2
+  languageName: unknown
+  linkType: soft
+
 "@acala-network/app-util@workspace:packages/app-util":
   version: 0.0.0-use.local
   resolution: "@acala-network/app-util@workspace:packages/app-util"
@@ -78,17 +74,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk-core@workspace:packages/sdk-core"
   dependencies:
-<<<<<<< HEAD
-    "@acala-network/api": 3.0.3-15
-    "@acala-network/type-definitions": 3.0.3-15
     "@polkadot/api": ^7.0.3-2
     "@polkadot/types": ^7.0.3-2
-=======
-    "@acala-network/api": 3.0.3-16
-    "@acala-network/type-definitions": 3.0.3-16
-    "@polkadot/api": ^6.5.2
-    "@polkadot/types": ^6.5.2
->>>>>>> master
     "@types/events": ^3.0.0
     "@types/lodash": ^4.14.161
     bignumber.js: ^9.0.0
@@ -112,17 +99,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk-loan@workspace:packages/sdk-loan"
   dependencies:
-<<<<<<< HEAD
-    "@acala-network/api-derive": 3.0.3-15
-    "@acala-network/sdk-core": 3.0.3-15
     "@polkadot/api": ^7.0.3-2
     "@polkadot/types": ^7.0.3-2
-=======
-    "@acala-network/api-derive": 3.0.3-16
-    "@acala-network/sdk-core": 3.0.3-16
-    "@polkadot/api": ^6.5.2
-    "@polkadot/types": ^6.5.2
->>>>>>> master
     "@types/lodash": ^4.14.161
     lodash: ^4.17.20
     rxjs: ^7.4.0
@@ -133,15 +111,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk-swap@workspace:packages/sdk-swap"
   dependencies:
-<<<<<<< HEAD
-    "@acala-network/sdk-core": 3.0.3-15
     "@polkadot/api": ^7.0.3-2
     "@polkadot/types": ^7.0.3-2
-=======
-    "@acala-network/sdk-core": 3.0.3-16
-    "@polkadot/api": ^6.5.2
-    "@polkadot/types": ^6.5.2
->>>>>>> master
     "@types/lodash": ^4.14.161
     lodash: ^4.17.20
     rxjs: ^7.4.0
@@ -152,22 +123,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk-wallet@workspace:packages/sdk-wallet"
   dependencies:
-<<<<<<< HEAD
-    "@acala-network/sdk-core": 3.0.3-15
     "@polkadot/api": ^7.0.3-2
     "@polkadot/types": ^7.0.3-2
-=======
-    "@acala-network/sdk-core": 3.0.3-16
-    "@polkadot/api": ^6.5.2
-    "@polkadot/types": ^6.5.2
->>>>>>> master
     "@types/lodash": ^4.14.161
     lodash: ^4.17.20
     rxjs: ^7.4.0
   languageName: unknown
   linkType: soft
 
-<<<<<<< HEAD
 "@acala-network/sdk@workspace:packages/sdk":
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk@workspace:packages/sdk"
@@ -187,10 +150,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@acala-network/type-definitions@3.0.3-15, @acala-network/type-definitions@workspace:packages/type-definitions":
-=======
 "@acala-network/type-definitions@3.0.3-16, @acala-network/type-definitions@workspace:packages/type-definitions":
->>>>>>> master
   version: 0.0.0-use.local
   resolution: "@acala-network/type-definitions@workspace:packages/type-definitions"
   dependencies:
@@ -198,7 +158,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-<<<<<<< HEAD
 "@acala-network/type-definitions@npm:3.0.3-7":
   version: 3.0.3-7
   resolution: "@acala-network/type-definitions@npm:3.0.3-7"
@@ -208,10 +167,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@acala-network/types@3.0.3-15, @acala-network/types@workspace:packages/types":
-=======
 "@acala-network/types@3.0.3-16, @acala-network/types@workspace:packages/types":
->>>>>>> master
   version: 0.0.0-use.local
   resolution: "@acala-network/types@workspace:packages/types"
   dependencies:

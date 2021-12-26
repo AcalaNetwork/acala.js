@@ -1,4 +1,6 @@
 import { FixedPointNumber as FN, Token } from '@acala-network/sdk-core';
+import { PriceProviderType } from './price-provider/types';
+import { ChainType } from '../types';
 
 export type TokenRecord = Record<string, Token>;
 
@@ -25,3 +27,9 @@ export interface PresetTokens {
   liquidToken?: Token;
   stakingToken?: Token;
 }
+
+export type TokenPriceFetchSource = {
+  [c in ChainType]: {
+    [t in string]: PriceProviderType;
+  };
+};

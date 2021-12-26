@@ -130,6 +130,7 @@ export class Liquidity implements BaseSDK {
       const issuance$ = this.storages
         .issuance(info.token)
         .observable.pipe(map((data) => FixedPointNumber.fromInner(data.toString(), info.token.decimals)));
+
       const poolSize$ = this.storages.liquidityPool(info.token).observable.pipe(
         map((data) => {
           return [

@@ -1,14 +1,15 @@
 import { AnyApi, Token, forceToCurrencyName } from '@acala-network/sdk-core';
 import { AcalaAssetMetadata, TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
-import { Option, StorageKey, u16 } from '@polkadot/types';
+import { Option, StorageKey, u16, U128 } from '@polkadot/types';
 import { AccountInfo, Balance } from '@polkadot/types/interfaces';
+import { ITuple } from '@polkadot/types/types';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { Storage } from '../utils/storage';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const createStorages = (api: AnyApi) => {
   return {
-    foreignAssets: () =>
+    assetMetadatas: () =>
       Storage.create<[StorageKey<u16[]>, Option<AcalaAssetMetadata>][]>({
         api: api,
         path: 'query.assetRegistry.assetMetadatas.entries',
@@ -42,6 +43,13 @@ export const createStorages = (api: AnyApi) => {
         path: isNativeToken ? 'query.balances.totalIssuance' : 'query.tokens.totalIssuance',
         params: isNativeToken ? [] : [token.toChainData()]
       });
+    },
+    liquidityPool: (dexShareToken: Token) => {
+      return Storage.create<ITuple<[U128, U128]>>({
+        api: api,
+        path: 'query.dex.liquidityPool',
+        params: [dexShareToken.toTradingPair(api)]
+      });
     }
-  } as const;
+  };
 };

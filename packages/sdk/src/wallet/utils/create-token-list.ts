@@ -18,6 +18,7 @@ export function createTokenList(
   // tokens list temp
   let temp: TokenRecord = { ...basicTokens };
 
+  // TODO: need support stable coin assets & erc20
   const foreignTokens = Object.fromEntries(
     foreignAssets.map((item) => {
       const key = item[0].args[0].toNumber();
