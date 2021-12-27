@@ -163,14 +163,16 @@ export class Homa implements BaseSDK {
   private unbondings$ = memoize((address: string): Observable<Unbonding[]> => {
     return this.storages.unbondings(address).observable.pipe(
       map((data) => {
-        return data.map((item) => {
-          const era = item[0].args[1].toNumber();
+        return data
+          .map((item) => {
+            const era = item[0].args[1].toNumber();
 
-          return {
-            era,
-            amount: FixedPointNumber.fromInner(item[1].toString(), this.consts.stakingToken.decimals)
-          };
-        });
+            return {
+              era,
+              amount: FixedPointNumber.fromInner(item[1].toString(), this.consts.stakingToken.decimals)
+            };
+          })
+          .sort((a, b) => a.era - b.era);
       })
     );
   });
@@ -215,7 +217,12 @@ export class Homa implements BaseSDK {
                 exchangeRate: getExchangeRate(totalStaking, totalLiquidity),
                 toBondPool,
                 estimatedRewardRatePerEra,
-                apy: getAPY(estimatedRewardRatePerEra, eraFrequency, getChainType(this.consts.chain)),
+                apy: getAPY(
+                  estimatedRewardRatePerEra.toNumber(),
+                  commissionRate.toNumber(),
+                  eraFrequency,
+                  getChainType(this.consts.chain)
+                ),
                 fastMatchFeeRate,
                 commissionRate,
                 eraFrequency,

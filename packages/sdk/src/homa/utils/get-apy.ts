@@ -1,4 +1,3 @@
-import { FixedPointNumber } from '@acala-network/sdk-core';
 import { ChainType } from '../../types';
 
 const ESTIMATE_BLOCK_TIME: Partial<{ [k in ChainType]: number }> = {
@@ -8,12 +7,12 @@ const ESTIMATE_BLOCK_TIME: Partial<{ [k in ChainType]: number }> = {
 
 const YEAR = 365 * 24 * 60 * 60;
 
-export function getAPY(rewardRate: FixedPointNumber, eraFrequency: number, chain?: ChainType): number {
+export function getAPY(rewardRate: number, commissionRate: number, eraFrequency: number, chain?: ChainType): number {
   if (!chain) return 0;
 
   if (!ESTIMATE_BLOCK_TIME[chain]) return 0;
 
   const eraCountOneYear = Math.floor(YEAR / (ESTIMATE_BLOCK_TIME[chain] || 0) / eraFrequency);
 
-  return Math.pow(rewardRate.toNumber() + 1, eraCountOneYear) - 1;
+  return Math.pow(rewardRate - commissionRate + 1, eraCountOneYear) - 1;
 }
