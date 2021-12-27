@@ -10,17 +10,15 @@ import {
   MaybeCurrency,
   forceToCurrencyName,
   TokenType,
-  FixedPointNumber,
   unzipDexShareName,
-  isDexShareName,
-  isLiquidCroadloanName
+  isDexShareName
 } from '@acala-network/sdk-core';
 import { AccountInfo, Balance, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
-import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { map, switchMap, shareReplay, filter } from 'rxjs/operators';
 import { TokenRecord, WalletConsts, BalanceData, TransferConfig, PresetTokens, TokenPriceFetchSource } from './type';
-import { CurrencyNotFound, SDKNotReady } from '..';
+import { CurrencyNotFound, Homa, Liquidity, SDKNotReady } from '..';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 import { MarketPriceProvider } from './price-provider/market-price-provider';
 import { OraclePriceProvider } from './price-provider/oracle-price-provider';
@@ -31,7 +29,6 @@ import { createStorages } from './storages';
 import tokenList from '../configs/token-list';
 import { TokenProvider } from '../base-provider';
 import { defaultTokenPriceFetchSource } from './price-provider/default-token-price-fetch-source-config';
-import { LiquidityPoolStatus, PoolDetail, PoolInfo } from '../liquidity/types';
 import { subscribeDexShareTokenPrice } from './utils/get-dex-share-token-price';
 import { getChainType } from '../utils/get-chain-type';
 
@@ -128,52 +125,6 @@ export class Wallet implements BaseSDK, TokenProvider {
     });
   }
 
-  private subscribePoolDetail = memoize((token: MaybeCurrency): Observable<PoolDetail> => {
-    const detail$ = (token: MaybeCurrency) => {
-      const name = forceToCurrencyName(token);
-      const [token0, token1] = unzipDexShareName(name);
-
-      const poolInfo$ = combineLatest({
-        dexShareToken: this.subscribeToken(name),
-        token0: this.subscribeToken(token0),
-        token1: this.subscribeToken(token1)
-      }).pipe(
-        map(({ dexShareToken, token0, token1 }) => {
-          return {
-            token: dexShareToken,
-            pair: [token0, token1] as [Token, Token],
-            status: LiquidityPoolStatus.ENABLED
-          };
-        })
-      );
-
-      const poolSize$ = (info: PoolInfo) =>
-        this.storages.liquidityPool(info.token).observable.pipe(
-          map((data) => {
-            return [
-              FixedPointNumber.fromInner(data[0].toString(), info.pair[0].decimals),
-              FixedPointNumber.fromInner(data[1].toString(), info.pair[1].decimals)
-            ] as [FixedPointNumber, FixedPointNumber];
-          })
-        );
-
-      return poolInfo$.pipe(
-        switchMap((info) => {
-          return combineLatest({
-            issuance: this.subscribeIssuance(name),
-            poolSize: poolSize$(info)
-          }).pipe(
-            map(({ issuance, poolSize }) => {
-              return { share: issuance, info, amounts: poolSize };
-            })
-          );
-        })
-      );
-    };
-
-    return detail$(token);
-  });
-
   /**
    *  @name subscribeTokens
    *  @param type
@@ -218,8 +169,11 @@ export class Wallet implements BaseSDK, TokenProvider {
     );
   });
 
-  public async getToken(target: MaybeCurrency): Promise<Token> {
-    return firstValueFrom(this.subscribeToken(target));
+  public getToken(target: MaybeCurrency): Token {
+    const name = forceToCurrencyName(target);
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.tokens$.value[name]!;
   }
 
   /**
@@ -425,6 +379,7 @@ export class Wallet implements BaseSDK, TokenProvider {
     const isDexShare = isDexShareName(name);
     const presetTokens = this.getPresetTokens();
     const isLiquidToken = presetTokens?.liquidToken?.name === name;
+    const stakingToken = presetTokens.stableToken;
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const _type =
@@ -447,13 +402,18 @@ export class Wallet implements BaseSDK, TokenProvider {
       return subscribeDexShareTokenPrice(
         this.subscribePrice(token0),
         this.subscribePrice(token1),
-        this.subscribePoolDetail(name)
+        new Liquidity(this.api, this).subscribePoolDetail(name)
       );
     }
 
     // should calculate liquidToken price
-    if (isLiquidToken) {
-
+    if (isLiquidToken && stakingToken) {
+      // create homa sd for get exchange rate
+      return new Homa(this.api, this).subscribeConvertor().pipe(
+        switchMap((convertor) => {
+          return this.subscribePrice(stakingToken).pipe(map((price) => convertor.convertStakingToLiquid(price)));
+        })
+      );
     }
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

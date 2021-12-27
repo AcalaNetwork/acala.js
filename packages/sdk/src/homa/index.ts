@@ -2,7 +2,8 @@ import { AnyApi, FixedPointNumber, Token } from '@acala-network/sdk-core';
 import { memoize } from '@polkadot/util';
 import { u16 } from '@polkadot/types';
 import { curry } from 'lodash/fp';
-import { BehaviorSubject, combineLatest, map, Observable, shareReplay } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, shareReplay, switchMap } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { TokenProvider } from '../base-provider';
 import { BaseSDK } from '../types';
 import { getChainType } from '../utils/get-chain-type';
@@ -168,52 +169,57 @@ export class Homa implements BaseSDK {
   });
 
   private env$ = memoize((): Observable<HomaEnvironment> => {
-    return combineLatest({
-      stakingLedgers: this.stakingLedgers$(),
-      toBondPool: this.toBondPool$(),
-      totalLiquidity: this.totalLiquidity$(),
-      estimatedRewardRatePerEra: this.estimatedRewardRatePerEra$(),
-      fastMatchFeeRate: this.fastMatchFeeRate$(),
-      commissionRate: this.commissionRate$(),
-      mintThreshold: this.mintThreshold$(),
-      redeemThreshold: this.redeemThreshold$(),
-      softBondedCapPerSubAccount: this.softBondedCapPerSubAccount$()
-    }).pipe(
-      map(
-        ({
-          toBondPool,
-          stakingLedgers,
-          totalLiquidity,
-          estimatedRewardRatePerEra,
-          fastMatchFeeRate,
-          commissionRate,
-          mintThreshold,
-          redeemThreshold,
-          softBondedCapPerSubAccount
-        }) => {
-          const totalInSubAccount = stakingLedgers.reduce((acc, cur) => {
-            return acc.add(cur.bonded);
-          }, new FixedPointNumber(0, this.consts.stakingToken.decimals));
-          const totalStaking = toBondPool.add(totalInSubAccount);
+    return this.isReady$.pipe(
+      filter((i) => i),
+      switchMap(() => {
+        return combineLatest({
+          stakingLedgers: this.stakingLedgers$(),
+          toBondPool: this.toBondPool$(),
+          totalLiquidity: this.totalLiquidity$(),
+          estimatedRewardRatePerEra: this.estimatedRewardRatePerEra$(),
+          fastMatchFeeRate: this.fastMatchFeeRate$(),
+          commissionRate: this.commissionRate$(),
+          mintThreshold: this.mintThreshold$(),
+          redeemThreshold: this.redeemThreshold$(),
+          softBondedCapPerSubAccount: this.softBondedCapPerSubAccount$()
+        }).pipe(
+          map(
+            ({
+              toBondPool,
+              stakingLedgers,
+              totalLiquidity,
+              estimatedRewardRatePerEra,
+              fastMatchFeeRate,
+              commissionRate,
+              mintThreshold,
+              redeemThreshold,
+              softBondedCapPerSubAccount
+            }) => {
+              const totalInSubAccount = stakingLedgers.reduce((acc, cur) => {
+                return acc.add(cur.bonded);
+              }, new FixedPointNumber(0, this.consts.stakingToken.decimals));
+              const totalStaking = toBondPool.add(totalInSubAccount);
 
-          return {
-            totalStaking,
-            totalLiquidity,
-            exchangeRate: getExchangeRate(totalStaking, totalLiquidity),
-            toBondPool,
-            estimatedRewardRatePerEra,
-            apy: getAPY(estimatedRewardRatePerEra, getChainType(this.consts.chain)),
-            fastMatchFeeRate,
-            commissionRate,
-            mintThreshold,
-            redeemThreshold,
-            stakingSoftCap: softBondedCapPerSubAccount.mul(
-              new FixedPointNumber(this.consts.activeSubAccountsIndexList.length)
-            )
-          };
-        }
-      ),
-      shareReplay(1)
+              return {
+                totalStaking,
+                totalLiquidity,
+                exchangeRate: getExchangeRate(totalStaking, totalLiquidity),
+                toBondPool,
+                estimatedRewardRatePerEra,
+                apy: getAPY(estimatedRewardRatePerEra, getChainType(this.consts.chain)),
+                fastMatchFeeRate,
+                commissionRate,
+                mintThreshold,
+                redeemThreshold,
+                stakingSoftCap: softBondedCapPerSubAccount.mul(
+                  new FixedPointNumber(this.consts.activeSubAccountsIndexList.length)
+                )
+              };
+            }
+          ),
+          shareReplay(1)
+        );
+      })
     );
   });
 
