@@ -1,6 +1,6 @@
 import { AnyApi, Token } from '@acala-network/sdk-core';
 import { AcalaStakingLedge, AccountId, Rate } from '@acala-network/types/interfaces';
-import { StorageKey, U16, Option, Bool } from '@polkadot/types';
+import { StorageKey, U16, Option, Bool, u32 } from '@polkadot/types';
 import { ITuple } from '@polkadot/types/types';
 import { Balance, EraIndex } from '@polkadot/types/interfaces';
 import { memoize } from '@polkadot/util';
@@ -102,6 +102,13 @@ export const createStorages = (api: AnyApi) => {
       Storage.create<Rate>({
         api,
         path: 'query.homa.commissionRate',
+        params: []
+      })
+    ),
+    eraFrequency: memoize(() =>
+      Storage.create<u32>({
+        api,
+        path: 'query.homa.bumpEraFrequency',
         params: []
       })
     )

@@ -32,6 +32,8 @@ export interface HomaEnvironment {
   stakingSoftCap: FixedPointNumber;
   // the homa commission rate
   commissionRate: FixedPointNumber;
+  // era frequency
+  eraFrequency: number;
 }
 
 export interface EstimateMintResult {

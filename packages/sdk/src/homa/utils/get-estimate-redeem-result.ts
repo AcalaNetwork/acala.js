@@ -8,7 +8,7 @@ export function getEstimateRedeemResult(
   isFastReddem: boolean
 ): EstimateRedeemResult {
   if (isFastReddem) {
-    const liquidToBurn = amount.mul(new FixedPointNumber(1, 6).sub(env.fastMatchFeeRate));
+    const liquidToBurn = amount.mul(new FixedPointNumber(1).sub(env.fastMatchFeeRate));
     const redeemStaking = convertLiquidToStaking(env.exchangeRate, liquidToBurn);
     const fee = amount.sub(liquidToBurn);
 

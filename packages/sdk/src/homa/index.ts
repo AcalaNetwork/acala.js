@@ -129,6 +129,13 @@ export class Homa implements BaseSDK {
     );
   });
 
+  private eraFrequency$ = memoize((): Observable<number> => {
+    return this.storages.eraFrequency().observable.pipe(
+      map((data) => data.toNumber()),
+      shareReplay(1)
+    );
+  });
+
   private estimatedRewardRatePerEra$ = memoize((): Observable<FixedPointNumber> => {
     return this.storages.estimatedRewardRatePerEra().observable.pipe(
       map((data) => FixedPointNumber.fromInner(data.toString(), 6)),
@@ -181,6 +188,7 @@ export class Homa implements BaseSDK {
           commissionRate: this.commissionRate$(),
           mintThreshold: this.mintThreshold$(),
           redeemThreshold: this.redeemThreshold$(),
+          eraFrequency: this.eraFrequency$(),
           softBondedCapPerSubAccount: this.softBondedCapPerSubAccount$()
         }).pipe(
           map(
@@ -193,6 +201,7 @@ export class Homa implements BaseSDK {
               commissionRate,
               mintThreshold,
               redeemThreshold,
+              eraFrequency,
               softBondedCapPerSubAccount
             }) => {
               const totalInSubAccount = stakingLedgers.reduce((acc, cur) => {
@@ -206,9 +215,10 @@ export class Homa implements BaseSDK {
                 exchangeRate: getExchangeRate(totalStaking, totalLiquidity),
                 toBondPool,
                 estimatedRewardRatePerEra,
-                apy: getAPY(estimatedRewardRatePerEra, getChainType(this.consts.chain)),
+                apy: getAPY(estimatedRewardRatePerEra, eraFrequency, getChainType(this.consts.chain)),
                 fastMatchFeeRate,
                 commissionRate,
+                eraFrequency,
                 mintThreshold,
                 redeemThreshold,
                 stakingSoftCap: softBondedCapPerSubAccount.mul(
