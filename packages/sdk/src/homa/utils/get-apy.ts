@@ -2,7 +2,8 @@ import { ChainType } from '../../types';
 
 const ESTIMATE_BLOCK_TIME: Partial<{ [k in ChainType]: number }> = {
   [ChainType.ACALA]: 6 * 1000,
-  [ChainType.KARURA]: 6 * 1000
+  [ChainType.KARURA]: 6 * 1000,
+  [ChainType.MANDALA]: 6 * 1000
 };
 
 const YEAR = 365 * 24 * 60 * 60;

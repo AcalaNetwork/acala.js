@@ -3,114 +3,109 @@ import { AcalaStakingLedge, AccountId, Rate } from '@acala-network/types/interfa
 import { StorageKey, U16, Option, Bool, u32 } from '@polkadot/types';
 import { ITuple } from '@polkadot/types/types';
 import { Balance, EraIndex } from '@polkadot/types/interfaces';
-import { memoize } from '@polkadot/util';
 import { Storage } from '../utils/storage';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const createStorages = (api: AnyApi) => {
   return {
-    issuance: memoize((token: Token) =>
+    issuance: (token: Token) =>
       Storage.create<Balance>({
         api,
         path: 'query.tokens.totalIssuance',
         params: [token.toChainData()]
-      })
-    ),
-    stakingLedgers: memoize(() =>
+      }),
+    stakingLedgers: () =>
       Storage.create<[StorageKey<[U16]>, Option<AcalaStakingLedge>][]>({
         api,
         path: 'query.homa.stakingLedgers.entries',
-        params: []
-      })
-    ),
-    toBondPool: memoize(() =>
+        params: [],
+        triggleEvents: [
+          { section: 'homa', method: 'LedgerBondedReset' },
+          { section: 'homa', method: 'LedgerUnlockingReset' },
+          { section: 'homa', method: 'CurrentEraBumped' },
+          { section: 'homa', method: 'CurrentEraReset' }
+        ]
+      }),
+    toBondPool: () =>
       Storage.create<Balance>({
         api,
         path: 'query.homa.toBondPool',
         params: []
-      })
-    ),
-    totalVoidLiquid: memoize(() =>
+      }),
+    totalVoidLiquid: () =>
       Storage.create<Balance>({
         api,
         path: 'query.homa.totalVoidLiquid',
         params: []
-      })
-    ),
-    estimatedRewardRatePerEra: memoize(() =>
+      }),
+    estimatedRewardRatePerEra: () =>
       Storage.create<Balance>({
         api,
         path: 'query.homa.estimatedRewardRatePerEra',
         params: []
-      })
-    ),
-    fastMatchFeeRate: memoize(() =>
+      }),
+    fastMatchFeeRate: () =>
       Storage.create<Balance>({
         api,
         path: 'query.homa.fastMatchFeeRate',
         params: []
-      })
-    ),
-    mintThreshold: memoize(() =>
+      }),
+    mintThreshold: () =>
       Storage.create<Balance>({
         api,
         path: 'query.homa.mintThreshold',
         params: []
-      })
-    ),
-    redeemThreshold: memoize(() =>
+      }),
+    redeemThreshold: () =>
       Storage.create<Balance>({
         api,
         path: 'query.homa.redeemThreshold',
         params: []
-      })
-    ),
-    softBondedCapPerSubAccount: memoize(() =>
+      }),
+    softBondedCapPerSubAccount: () =>
       Storage.create<Balance>({
         api,
         path: 'query.homa.softBondedCapPerSubAccount',
         params: []
-      })
-    ),
-    redeemRequests: memoize((address: string) =>
+      }),
+    redeemRequests: (address: string) =>
       Storage.create<Option<ITuple<[Balance, Bool]>>>({
         api,
         path: 'query.homa.redeemRequests',
         params: [address]
-      })
-    ),
-    relayChainCurrentEra: memoize(() =>
+      }),
+    relayChainCurrentEra: () =>
       Storage.create<EraIndex>({
         api,
         path: 'query.homa.relayChainCurrentEra',
         params: []
-      })
-    ),
-    unbondings: memoize((address: string) =>
+      }),
+    unbondings: (address: string) =>
       Storage.create<[StorageKey<[AccountId, EraIndex]>, Balance][]>({
         api,
         path: 'query.homa.unbondings.entries',
         params: [address],
         triggleEvents: [
+          { section: 'homa', method: 'CurrentEraReset' },
+          { section: 'homa', method: 'CurrentEraBumped' },
           { section: 'homa', method: 'RequestedRedeem' },
           { section: 'homa', method: 'RedeemedByUnbond' },
+          { section: 'homa', method: 'RedeemedByFastMatch' },
+          { section: 'homa', method: 'RedeemRequestCancelled' },
           { section: 'homa', method: 'WithdrawRedemption' }
         ]
-      })
-    ),
-    commissionRate: memoize(() =>
+      }),
+    commissionRate: () =>
       Storage.create<Rate>({
         api,
         path: 'query.homa.commissionRate',
         params: []
-      })
-    ),
-    eraFrequency: memoize(() =>
+      }),
+    eraFrequency: () =>
       Storage.create<u32>({
         api,
         path: 'query.homa.bumpEraFrequency',
         params: []
       })
-    )
   };
 };

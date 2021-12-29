@@ -1,7 +1,7 @@
 import { eventsFilterCallback, eventsFilterRx } from '@acala-network/sdk-core';
 import { ApiPromise, ApiRx } from '@polkadot/api';
 import { BlockHash } from '@polkadot/types/interfaces';
-import { BehaviorSubject, Observable, Subject, Subscription, of, from, firstValueFrom, shareReplay } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription, of, from, firstValueFrom } from 'rxjs';
 import { switchMap, filter } from 'rxjs/operators';
 import { NoQueryPath } from './error';
 import { StorageConfigs } from './types';
@@ -9,19 +9,24 @@ import { StorageConfigs } from './types';
 export class Storage<T = unknown> {
   private configs: StorageConfigs;
   private subject: Subject<T>;
-  private subscriber: Subscription;
+  private subscriber!: Subscription;
 
   constructor(configs: StorageConfigs) {
     this.configs = configs;
     this.subject = new BehaviorSubject<T>(undefined as unknown as T);
-
-    this.subscriber = this.process().subscribe({
-      next: (data) => this.subject.next(data)
-    });
+    this.doSubscriber();
   }
 
   static create<T = unknown>(configs: StorageConfigs): Storage<T> {
     return new Storage<T>(configs);
+  }
+
+  private doSubscriber() {
+    this.subscriber = this.process().subscribe({
+      next: (data) => {
+        this.subject.next(data);
+      }
+    });
   }
 
   private process() {
@@ -45,7 +50,8 @@ export class Storage<T = unknown> {
     }, start);
   }
 
-  private getBlockHash = (api: ApiRx | ApiPromise, at?: number | string): Observable<BlockHash> => {
+  private getBlockHash = (at?: number | string): Observable<BlockHash> => {
+    const api = this.configs.api;
     if (!at) return of('' as unknown as BlockHash);
 
     if (at && typeof at === 'string') return of(at as unknown as BlockHash);
@@ -78,13 +84,20 @@ export class Storage<T = unknown> {
     if (triggleEvents) {
       return eventsFilterRx(api, triggleEvents, true).pipe(
         switchMap(() => {
-          return this.getBlockHash(api, at).pipe(switchMap((hash) => inner(hash.toString())));
-        }),
-        shareReplay(1)
+          return this.getBlockHash(at).pipe(
+            switchMap((hash) => {
+              return api.rpc.chain.subscribeFinalizedHeads().pipe(
+                switchMap(() => {
+                  return inner(hash.toString());
+                })
+              );
+            })
+          );
+        })
       );
     }
 
-    return this.getBlockHash(api, at).pipe(switchMap((hash) => inner(hash.toString())));
+    return this.getBlockHash(at).pipe(switchMap((hash) => inner(hash.toString())));
   }
 
   private processWithApiPromise(): Observable<T> {
@@ -102,8 +115,10 @@ export class Storage<T = unknown> {
 
         if (triggleEvents) {
           eventsFilterCallback(api, triggleEvents, true, () => {
-            func(params, (result) => {
-              subscriber.next(result);
+            api.rpc.chain.subscribeFinalizedHeads(() => {
+              func(params, (result) => {
+                subscriber.next(result);
+              });
             });
           });
         } else {

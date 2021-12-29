@@ -70,4 +70,5 @@ export interface UserLiquidityTokenSummary {
   claimable: FixedPointNumber;
   unbondings: Unbonding[];
   redeemRequest: RedeemRequest;
+  currentRelayEra: number;
 }

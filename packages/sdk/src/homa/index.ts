@@ -138,7 +138,7 @@ export class Homa implements BaseSDK {
 
   private estimatedRewardRatePerEra$ = memoize((): Observable<FixedPointNumber> => {
     return this.storages.estimatedRewardRatePerEra().observable.pipe(
-      map((data) => FixedPointNumber.fromInner(data.toString(), 6)),
+      map((data) => FixedPointNumber.fromInner(data.toString())),
       shareReplay(1)
     );
   });
@@ -160,7 +160,7 @@ export class Homa implements BaseSDK {
     return this.storages.relayChainCurrentEra().observable.pipe(map((data) => data.toNumber()));
   });
 
-  private unbondings$ = memoize((address: string): Observable<Unbonding[]> => {
+  private unbondings$ = (address: string): Observable<Unbonding[]> => {
     return this.storages.unbondings(address).observable.pipe(
       map((data) => {
         return data
@@ -175,7 +175,7 @@ export class Homa implements BaseSDK {
           .sort((a, b) => a.era - b.era);
       })
     );
-  });
+  };
 
   private env$ = memoize((): Observable<HomaEnvironment> => {
     return this.isReady$.pipe(

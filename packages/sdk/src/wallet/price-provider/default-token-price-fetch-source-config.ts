@@ -1,4 +1,4 @@
-import { ChainType } from '../..';
+import { ChainType } from '../../types';
 import { TokenPriceFetchSource } from '../type';
 import { PriceProviderType } from './types';
 

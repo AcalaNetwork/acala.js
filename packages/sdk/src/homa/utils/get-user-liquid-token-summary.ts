@@ -27,7 +27,9 @@ export function getUserLiquidTokenSummary(
   return {
     totalUnbonding,
     claimable,
-    unbondings,
+    currentRelayEra,
+    // exclude claimable record
+    unbondings: unbondings.filter((item) => item.era > currentRelayEra),
     redeemRequest
   };
 }
