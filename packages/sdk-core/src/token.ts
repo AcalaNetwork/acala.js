@@ -60,6 +60,7 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
 interface Configs {
   display?: string; // namae for display
   decimals?: number; // token decimals
+  decimal?: number; // token decimals
   type?: TokenType; // token type
   chain?: string;
   symbol?: string;
@@ -80,8 +81,8 @@ export class Token {
 
   constructor(name: string, configs?: Configs) {
     this.name = name;
-    this.decimals = configs?.decimals || 18;
-    this.decimal = configs?.decimals || 18;
+    this.decimals = configs?.decimals || configs?.decimal || 18;
+    this.decimal = this.decimals;
     this.ed = configs?.ed || FixedPointNumber.ZERO;
     this.chain = configs?.chain;
     this.type = configs?.type || TokenType.BASIC;
