@@ -83,7 +83,7 @@ export class WalletRx extends WalletBase<ApiRx> {
   // query price info
   public queryPrice = memoize((currency: MaybeCurrency, at?: number): Observable<PriceData> => {
     const tokenName = forceToCurrencyName(currency);
-    const liquidCurrencyId = this.api.consts?.homaLite?.liquidCurrencyId;
+    const liquidCurrencyId = this.api.consts?.homa?.liquidCurrencyId || this.api.consts?.homaLite?.liquidCurrencyId;
 
     // get liquid currency price from staking pool exchange rate
     if (liquidCurrencyId && forceToCurrencyName(currency) === forceToCurrencyName(liquidCurrencyId)) {
@@ -184,8 +184,9 @@ export class WalletRx extends WalletBase<ApiRx> {
   });
 
   public queryLiquidPriceFromHomaLite = memoize((at?: number) => {
-    const liquidCurrencyId = this.api.consts.homaLite.liquidCurrencyId;
-    const stakingCurrencyId = this.api.consts.homaLite.stakingCurrencyId;
+    // FIXME: need remove homaLite
+    const liquidCurrencyId = this.api.consts.homa?.liquidCurrencyId || this.api.consts.homaLite?.liquidCurrencyId;
+    const stakingCurrencyId = this.api.consts.homa?.stakingCurrencyId || this.api.consts.homaLite?.stakingCurrencyId;
 
     const liquidToken = this.getToken(liquidCurrencyId);
     const stakingToken = this.getToken(stakingCurrencyId);

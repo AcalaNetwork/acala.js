@@ -358,13 +358,19 @@ export class Wallet implements BaseSDK, TokenProvider {
       data.stableToken = tokens[forceToCurrencyName(this.api.consts.cdpEngine.getStableCurrencyId)];
     }
 
-    if (this.api.consts?.homaLite.liquidCurrencyId) {
-      data.liquidToken = tokens[forceToCurrencyName(this.api.consts.homaLite.liquidCurrencyId)];
-    }
+    data.liquidToken =
+      tokens[
+        // FIXME: need remove homaLite
+        forceToCurrencyName(this.api.consts.homa?.liquidCurrencyId || this.api.consts.homaLite?.liquidCurrencyId || '')
+      ];
 
-    if (this.api.consts?.homaLite.stakingCurrencyId) {
-      data.stakingToken = tokens[forceToCurrencyName(this.api.consts.homaLite.stakingCurrencyId)];
-    }
+    data.stakingToken =
+      tokens[
+        forceToCurrencyName(
+          // FIXME: need remove homaLite
+          this.api.consts.homa?.stakingCurrencyId || this.api.consts.homaLite?.stakingCurrencyId || ''
+        )
+      ];
 
     return data;
   }

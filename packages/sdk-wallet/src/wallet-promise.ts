@@ -25,7 +25,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
   // query price info, support specify data source
   public queryPrice = async (currency: MaybeCurrency, at?: number): Promise<PriceData> => {
     const currencyName = forceToCurrencyName(currency);
-    const liquidCurrencyId = this.api.consts?.homaLite?.liquidCurrencyId;
+    const liquidCurrencyId = this.api.consts?.homa?.liquidCurrencyId || this.api.consts?.homaLite?.liquidCurrencyId;
 
     // get liquid currency price from staking pool exchange rate
     if (liquidCurrencyId && forceToCurrencyName(currency) === forceToCurrencyName(liquidCurrencyId)) {
@@ -101,8 +101,9 @@ export class WalletPromise extends WalletBase<ApiPromise> {
   };
 
   public queryLiquidPriceFromHomaLite = (at?: number): Promise<PriceData> => {
-    const liquidCurrencyId = this.api.consts.homaLite.liquidCurrencyId;
-    const stakingCurrencyId = this.api.consts.homaLite.stakingCurrencyId;
+    // FIXME: need remove homaLite
+    const liquidCurrencyId = this.api.consts.homa?.liquidCurrencyId || this.api.consts.homaLite?.liquidCurrencyId;
+    const stakingCurrencyId = this.api.consts.homa?.stakingCurrencyId || this.api.consts.homaLite?.stakingCurrencyId;
 
     const liquidToken = this.getToken(liquidCurrencyId);
     const stakingToken = this.getToken(stakingCurrencyId);

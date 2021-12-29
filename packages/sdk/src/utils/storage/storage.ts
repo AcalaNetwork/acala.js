@@ -108,23 +108,19 @@ export class Storage<T = unknown> {
       (async () => {
         const atHash = at ? await api.rpc.chain.getBlockHash(at) : '';
 
-        const func = this.getQueryFN(api, path, atHash.toString()) as (
-          params: any[],
-          callback: (result: T) => void
-        ) => void;
+        const func = this.getQueryFN(api, path, atHash.toString()) as (...params: any[]) => void;
 
+        params.push((result: T) => {
+          subscriber.next(result);
+        });
         if (triggleEvents) {
           eventsFilterCallback(api, triggleEvents, true, () => {
             api.rpc.chain.subscribeFinalizedHeads(() => {
-              func(params, (result) => {
-                subscriber.next(result);
-              });
+              func(...params);
             });
           });
         } else {
-          func(params, (result) => {
-            subscriber.next(result);
-          });
+          func(...params);
         }
       })();
     });
