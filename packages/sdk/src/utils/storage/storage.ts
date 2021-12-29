@@ -113,6 +113,7 @@ export class Storage<T = unknown> {
         params.push((result: T) => {
           subscriber.next(result);
         });
+
         if (triggleEvents) {
           eventsFilterCallback(api, triggleEvents, true, () => {
             api.rpc.chain.subscribeFinalizedHeads(() => {
