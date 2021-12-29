@@ -58,6 +58,12 @@
       "@acala-network/sdk-loan/*": [
         "packages/sdk-loan/src/*"
       ],
+      "@acala-network/sdk": [
+        "packages/sdk/src"
+      ],
+      "@acala-network/sdk/*": [
+        "packages/sdk/src/*"
+      ],
     },
     "skipLibCheck": true,
     "typeRoots": [
