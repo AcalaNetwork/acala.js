@@ -16,36 +16,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@acala-network/api-derive@npm:3.0.3-7":
-  version: 3.0.3-7
-  resolution: "@acala-network/api-derive@npm:3.0.3-7"
-  dependencies:
-    "@acala-network/types": 3.0.3-7
-    "@babel/runtime": ^7.10.2
-    "@open-web3/orml-types": ^1.0.2-0
-    "@polkadot/api-derive": ^6.5.2
-  checksum: 9576a056663313987c2b533ccf7735838d0f37837efce72409acf951e96ed266f590496d0b905df501202e19eb1f4d93b9726357c8a0d935c637e5455122ff05
-  languageName: node
-  linkType: hard
-
-"@acala-network/api@npm:3.0.3-7":
-  version: 3.0.3-7
-  resolution: "@acala-network/api@npm:3.0.3-7"
-  dependencies:
-    "@acala-network/api-derive": 3.0.3-7
-    "@acala-network/types": 3.0.3-7
-    "@babel/runtime": ^7.10.2
-    "@open-web3/orml-api-derive": ^1.0.2-0
-    "@polkadot/api": ^6.5.2
-    "@polkadot/rpc-core": ^6.5.2
-  peerDependencies:
-    "@polkadot/api": ^6.5.2
-    "@polkadot/types": ^6.5.2
-  checksum: ea1ca85f02e2b376e8d9f089ed0faa1296c3b0969b997d6534f2cf105cd4910039985f3039022981e32de7cf965e215914d0c4811118cef204a608e6508f8ffb
-  languageName: node
-  linkType: hard
-
-"@acala-network/api@workspace:packages/api":
+"@acala-network/api@3.0.3-16, @acala-network/api@workspace:packages/api":
   version: 0.0.0-use.local
   resolution: "@acala-network/api@workspace:packages/api"
   dependencies:
@@ -135,8 +106,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk@workspace:packages/sdk"
   dependencies:
-    "@acala-network/api": 3.0.3-7
-    "@acala-network/type-definitions": 3.0.3-7
+    "@acala-network/api": 3.0.3-16
+    "@acala-network/type-definitions": 3.0.3-16
     "@polkadot/api": ^7.0.3-2
     "@polkadot/types": ^7.0.3-2
     "@types/events": ^3.0.0
@@ -158,15 +129,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@acala-network/type-definitions@npm:3.0.3-7":
-  version: 3.0.3-7
-  resolution: "@acala-network/type-definitions@npm:3.0.3-7"
-  dependencies:
-    "@open-web3/orml-type-definitions": ^1.0.2-0
-  checksum: 7c16f81e88fb0c89d3f7dfcb977e7179d86b710ae915b48a34d6e2f585e2d5cacfd645cc88b380e0e63cf891048c0610aacffa8a3e3e4a8be9ac6c76aa577ae6
-  languageName: node
-  linkType: hard
-
 "@acala-network/types@3.0.3-16, @acala-network/types@workspace:packages/types":
   version: 0.0.0-use.local
   resolution: "@acala-network/types@workspace:packages/types"
@@ -186,25 +148,6 @@ __metadata:
     "@polkadot/types": ^7.0.3-2
   languageName: unknown
   linkType: soft
-
-"@acala-network/types@npm:3.0.3-7":
-  version: 3.0.3-7
-  resolution: "@acala-network/types@npm:3.0.3-7"
-  dependencies:
-    "@acala-network/type-definitions": 3.0.3-7
-    "@babel/runtime": ^7.10.2
-    "@open-web3/api-mobx": ^1.0.2-0
-    "@open-web3/orml-types": ^1.0.2-0
-    "@polkadot/api": ^6.5.2
-    "@polkadot/typegen": ^6.5.2
-    "@polkadot/types": ^6.5.2
-  peerDependencies:
-    "@polkadot/api": ^6.5.2
-    "@polkadot/typegen": ^6.5.2
-    "@polkadot/types": ^6.5.2
-  checksum: b045aca82db4664f0a3c94934d93f29b9ed1efbe642e746c4690e8ba71779dc76d5f5bd91067cbd2f9f7097eb3ca64644641b62ab4c7909644001c7ca0ae84f9
-  languageName: node
-  linkType: hard
 
 "@babel/cli@npm:^7.12.1":
   version: 7.16.0
@@ -258,7 +201,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:7.16.5, @babel/core@npm:^7.1.0, @babel/core@npm:^7.12.3, @babel/core@npm:^7.14.3, @babel/core@npm:^7.16.0, @babel/core@npm:^7.16.5, @babel/core@npm:^7.7.5":
+"@babel/core@npm:7.16.5, @babel/core@npm:^7.1.0, @babel/core@npm:^7.12.3, @babel/core@npm:^7.14.3, @babel/core@npm:^7.16.5, @babel/core@npm:^7.7.5":
   version: 7.16.5
   resolution: "@babel/core@npm:7.16.5"
   dependencies:
@@ -1617,7 +1560,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/register@npm:^7.12.1, @babel/register@npm:^7.13.6, @babel/register@npm:^7.16.0, @babel/register@npm:^7.16.5":
+"@babel/register@npm:^7.12.1, @babel/register@npm:^7.13.6, @babel/register@npm:^7.16.5":
   version: 7.16.5
   resolution: "@babel/register@npm:7.16.5"
   dependencies:
@@ -2231,21 +2174,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/api-derive@npm:^6.5.2":
-  version: 6.12.1
-  resolution: "@polkadot/api-derive@npm:6.12.1"
-  dependencies:
-    "@babel/runtime": ^7.16.3
-    "@polkadot/api": 6.12.1
-    "@polkadot/rpc-core": 6.12.1
-    "@polkadot/types": 6.12.1
-    "@polkadot/util": ^8.1.2
-    "@polkadot/util-crypto": ^8.1.2
-    rxjs: ^7.4.0
-  checksum: c0b30d041cb82573fb962281d8f9ac7af16fccb59a36999e3211d0d4371f6463175f57cc067d3c8b647d846cb478c57ffec0c096672bf3c4435ff7712536f531
-  languageName: node
-  linkType: hard
-
 "@polkadot/api@npm:^7.0.3-2":
   version: 7.1.1
   resolution: "@polkadot/api@npm:7.1.1"
@@ -2307,19 +2235,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/rpc-core@npm:6.12.1, @polkadot/rpc-core@npm:^6.5.2":
-  version: 6.12.1
-  resolution: "@polkadot/rpc-core@npm:6.12.1"
-  dependencies:
-    "@babel/runtime": ^7.16.3
-    "@polkadot/rpc-provider": 6.12.1
-    "@polkadot/types": 6.12.1
-    "@polkadot/util": ^8.1.2
-    rxjs: ^7.4.0
-  checksum: 363dcddcc80e336956269dd65d51e66454593468c3189212230096d07ea669397e237a1f8ee6370cae92dcdc47e484332549f975b8298f8dd58195ace3819236
-  languageName: node
-  linkType: hard
-
 "@polkadot/rpc-core@npm:7.1.1, @polkadot/rpc-core@npm:^7.0.3-2":
   version: 7.1.1
   resolution: "@polkadot/rpc-core@npm:7.1.1"
@@ -2331,22 +2246,6 @@ __metadata:
     "@polkadot/util": ^8.2.2
     rxjs: ^7.4.0
   checksum: 10bc7c5444c4e87d0ba6c7231ee8545ea057e0c46f75c851b2c91411c30db1f27364be8496c5c449af235509f0278ff93136e8e0ce8df79270d6881c1d993ba3
-  languageName: node
-  linkType: hard
-
-"@polkadot/rpc-provider@npm:6.12.1":
-  version: 6.12.1
-  resolution: "@polkadot/rpc-provider@npm:6.12.1"
-  dependencies:
-    "@babel/runtime": ^7.16.3
-    "@polkadot/types": 6.12.1
-    "@polkadot/util": ^8.1.2
-    "@polkadot/util-crypto": ^8.1.2
-    "@polkadot/x-fetch": ^8.1.2
-    "@polkadot/x-global": ^8.1.2
-    "@polkadot/x-ws": ^8.1.2
-    eventemitter3: ^4.0.7
-  checksum: a84f346dfa74acff41f52effa3d769c2edfbbfe5ea55eb6b159f47afe1e5740f4887b7489270184a557b3826a065cca6a36d728f715483c5246fe0dab730a5e7
   languageName: node
   linkType: hard
 
@@ -2367,31 +2266,6 @@ __metadata:
     mock-socket: ^9.0.8
     nock: ^13.2.1
   checksum: f447e230054b5d3c06ce323a098442d3e6d1db845b0faf870c1647984d66e53b5b7b9edf8e5c0cdc222ce6d91dee3ce541ab68653d6ade7185642baf14b557d2
-  languageName: node
-  linkType: hard
-
-"@polkadot/typegen@npm:^6.5.2":
-  version: 6.12.1
-  resolution: "@polkadot/typegen@npm:6.12.1"
-  dependencies:
-    "@babel/core": ^7.16.0
-    "@babel/register": ^7.16.0
-    "@babel/runtime": ^7.16.3
-    "@polkadot/api": 6.12.1
-    "@polkadot/rpc-provider": 6.12.1
-    "@polkadot/types": 6.12.1
-    "@polkadot/types-support": 6.12.1
-    "@polkadot/util": ^8.1.2
-    handlebars: ^4.7.7
-    websocket: ^1.0.34
-    yargs: ^17.3.0
-  bin:
-    polkadot-types-chain-info: scripts/polkadot-types-chain-info.cjs
-    polkadot-types-from-chain: scripts/polkadot-types-from-chain.cjs
-    polkadot-types-from-defs: scripts/polkadot-types-from-defs.cjs
-    polkadot-types-internal-interfaces: scripts/polkadot-types-internal-interfaces.cjs
-    polkadot-types-internal-metadata: scripts/polkadot-types-internal-metadata.cjs
-  checksum: 77a187416dfc18b53d48d3f16b805a1106c44b1750f8fa3f4e3e885c43a2e633b2fa02bbf9291c633dfc186aaa3ac9b5a5750f71ec4be670ca9ecda3cbceead2
   languageName: node
   linkType: hard
 
@@ -2473,16 +2347,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/types-support@npm:6.12.1":
-  version: 6.12.1
-  resolution: "@polkadot/types-support@npm:6.12.1"
-  dependencies:
-    "@babel/runtime": ^7.16.3
-    "@polkadot/util": ^8.1.2
-  checksum: 357ea3a7c6a8f4a1676385a179544a0afb430167b39eb6716d657aa09514b1f6b1b0ceb62d856d6b2776d3745397ad6bb78a8c636828b3247c0eda3306ea1139
-  languageName: node
-  linkType: hard
-
 "@polkadot/types-support@npm:7.1.1":
   version: 7.1.1
   resolution: "@polkadot/types-support@npm:7.1.1"
@@ -2509,7 +2373,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/util-crypto@npm:8.2.2, @polkadot/util-crypto@npm:^8.1.2, @polkadot/util-crypto@npm:^8.2.2":
+"@polkadot/util-crypto@npm:8.2.2, @polkadot/util-crypto@npm:^8.2.2":
   version: 8.2.2
   resolution: "@polkadot/util-crypto@npm:8.2.2"
   dependencies:
@@ -2530,7 +2394,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/util@npm:8.2.2, @polkadot/util@npm:^8.1.2, @polkadot/util@npm:^8.2.2":
+"@polkadot/util@npm:8.2.2, @polkadot/util@npm:^8.2.2":
   version: 8.2.2
   resolution: "@polkadot/util@npm:8.2.2"
   dependencies:
@@ -2588,7 +2452,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/x-fetch@npm:^8.1.2, @polkadot/x-fetch@npm:^8.2.2":
+"@polkadot/x-fetch@npm:^8.2.2":
   version: 8.2.2
   resolution: "@polkadot/x-fetch@npm:8.2.2"
   dependencies:
@@ -2600,7 +2464,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/x-global@npm:8.2.2, @polkadot/x-global@npm:^8.1.2, @polkadot/x-global@npm:^8.2.2":
+"@polkadot/x-global@npm:8.2.2, @polkadot/x-global@npm:^8.2.2":
   version: 8.2.2
   resolution: "@polkadot/x-global@npm:8.2.2"
   dependencies:
@@ -2639,7 +2503,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/x-ws@npm:^8.1.2, @polkadot/x-ws@npm:^8.2.2":
+"@polkadot/x-ws@npm:^8.2.2":
   version: 8.2.2
   resolution: "@polkadot/x-ws@npm:8.2.2"
   dependencies:
@@ -11980,7 +11844,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"yargs@npm:^17.3.0, yargs@npm:^17.3.1":
+"yargs@npm:^17.3.1":
   version: 17.3.1
   resolution: "yargs@npm:17.3.1"
   dependencies:
