@@ -1,18 +1,18 @@
 import { Token } from './token';
 
 describe('token', () => {
-  const t1 = new Token('DOT', { decimal: 18 });
+  const t1 = new Token('DOT', { decimals: 18 });
 
   test('token constructor should work', () => {
     expect(t1.name).toEqual('DOT');
-    expect(t1.decimal).toEqual(18);
+    expect(t1.decimals).toEqual(18);
   });
 
   test('clone tokens should work', () => {
     const t2 = t1.clone();
 
     expect(t2.name).toEqual('DOT');
-    expect(t2.decimal).toEqual(18);
+    expect(t2.decimals).toEqual(18);
   });
 
   test('fromCurrencyId set default token decimal should work', () => {
@@ -31,11 +31,11 @@ describe('token', () => {
 
   test('isEqual should work', () => {
     const t2 = t1.clone();
-    const t3 = new Token('DOT', { decimal: 17 });
-    const t4 = new Token('AUSD', { decimal: 18 });
+    const t3 = new Token('DOT', { decimals: 17 });
+    const t4 = new Token('AUSD', { decimals: 18 });
 
     expect(t1.isEqual(t2)).toEqual(true);
-    expect(t1.isEqual(t3, (i, j) => i.name === j.name && i.decimal === j.decimal)).toEqual(false);
+    expect(t1.isEqual(t3, (i, j) => i.name === j.name && i.decimals === j.decimals)).toEqual(false);
     expect(t1.isEqual(t4)).toEqual(false);
   });
 

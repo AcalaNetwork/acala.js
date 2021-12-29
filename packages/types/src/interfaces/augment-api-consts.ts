@@ -6,13 +6,13 @@ import type { CurrencyId } from '@acala-network/types/interfaces/primitives';
 import type { AccountId, Balance, BalanceOf, BlockNumber, PalletId, Permill, TransactionPriority, Weight } from '@acala-network/types/interfaces/runtime';
 import type { ExchangeRate, Rate, Ratio } from '@acala-network/types/interfaces/support';
 import type { Price } from '@open-web3/orml-types/interfaces/traits';
-import type { ApiTypes } from '@polkadot/api/types';
-import type { Vec, u16, u32, u64 } from '@polkadot/types';
+import type { ApiTypes } from '@polkadot/api-base/types';
+import type { Vec, u16, u32, u64 } from '@polkadot/types-codec';
+import type { Codec, ITuple } from '@polkadot/types-codec/types';
 import type { MultiLocation } from '@polkadot/types/interfaces/xcm';
-import type { Codec, ITuple } from '@polkadot/types/types';
 
-declare module '@polkadot/api/types/consts' {
-  export interface AugmentedConsts<ApiType> {
+declare module '@polkadot/api-base/types/consts' {
+  export interface AugmentedConsts<ApiType extends ApiTypes> {
     auctionManager: {
       /**
        * When the total duration of the auction exceeds this soft cap, push
@@ -407,9 +407,5 @@ declare module '@polkadot/api/types/consts' {
        **/
       [key: string]: Codec;
     };
-  }
-
-  export interface QueryableConsts<ApiType extends ApiTypes> extends AugmentedConsts<ApiType> {
-    [key: string]: QueryableModuleConsts;
-  }
-}
+  } // AugmentedConsts
+} // declare module

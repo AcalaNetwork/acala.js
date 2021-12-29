@@ -3,9 +3,9 @@
 
 import type { AccountId, Balance } from '@acala-network/types/interfaces/runtime';
 import type { Rate, Ratio } from '@acala-network/types/interfaces/support';
-import type { Enum, Struct, Vec } from '@polkadot/types';
+import type { Enum, Struct, Vec } from '@polkadot/types-codec';
+import type { ITuple } from '@polkadot/types-codec/types';
 import type { EraIndex } from '@polkadot/types/interfaces/staking';
-import type { ITuple } from '@polkadot/types/types';
 
 /** @name BalanceInfo */
 export interface BalanceInfo extends Struct {
@@ -17,6 +17,7 @@ export interface ChangeRate extends Enum {
   readonly isNoChange: boolean;
   readonly isNewValue: boolean;
   readonly asNewValue: Rate;
+  readonly type: 'NoChange' | 'NewValue';
 }
 
 /** @name ChangeRatio */
@@ -24,6 +25,7 @@ export interface ChangeRatio extends Enum {
   readonly isNoChange: boolean;
   readonly isNewValue: boolean;
   readonly asNewValue: Ratio;
+  readonly type: 'NoChange' | 'NewValue';
 }
 
 /** @name Ledger */
@@ -55,6 +57,7 @@ export interface StakingPoolPhase extends Enum {
   readonly isRelaychainUpdated: boolean;
   readonly isLedgerUpdated: boolean;
   readonly isFinished: boolean;
+  readonly type: 'Started' | 'RelaychainUpdated' | 'LedgerUpdated' | 'Finished';
 }
 
 /** @name SubAccountStatus */

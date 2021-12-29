@@ -39,11 +39,11 @@ export class WalletPromise extends WalletBase<ApiPromise> {
 
     // get stable coin price
     if (currencyName === 'AUSD' || currencyName === 'KUSD') {
-      const usd = this.tokenMap.get('AUSD') || this.tokenMap.get('KUSD') || new Token('USD', { decimal: 12 });
+      const usd = this.tokenMap.get('AUSD') || this.tokenMap.get('KUSD') || new Token('USD', { decimals: 12 });
 
       return {
         token: usd,
-        price: new FN(1, usd.decimal)
+        price: new FN(1, usd.decimals)
       };
     }
 
@@ -116,7 +116,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
         ]);
       })
       .then(([stakingTokenPrice, stakingBalance, liquidIssuance]) => {
-        const bonded = FN.fromInner(stakingBalance.toString(), stakingToken.decimal);
+        const bonded = FN.fromInner(stakingBalance.toString(), stakingToken.decimals);
 
         const ratio = liquidIssuance.isZero() ? FN.ZERO : bonded.div(liquidIssuance);
 
@@ -156,7 +156,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
           .minus(toUnbindNextEra)
           .max(FN.ZERO);
 
-        totalStakingTokenBalance.forceSetPrecision(stakingToken.decimal);
+        totalStakingTokenBalance.forceSetPrecision(stakingToken.decimals);
 
         const ratio = liquidIssuance.isZero() ? FN.ZERO : totalStakingTokenBalance.div(liquidIssuance);
 
@@ -183,8 +183,8 @@ export class WalletPromise extends WalletBase<ApiPromise> {
         const balance1 = pool[0];
         const balance2 = pool[1];
 
-        const fixedPoint1 = FN.fromInner(balance1.toString(), this.getToken(sorted1).decimal);
-        const fixedPoint2 = FN.fromInner(balance2.toString(), this.getToken(sorted2).decimal);
+        const fixedPoint1 = FN.fromInner(balance1.toString(), this.getToken(sorted1).decimals);
+        const fixedPoint2 = FN.fromInner(balance2.toString(), this.getToken(sorted2).decimals);
 
         if (forceToCurrencyName(sorted1) === forceToCurrencyName(token1)) {
           return [fixedPoint1, fixedPoint2];
@@ -236,7 +236,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
 
         return queryFN(this.api.query.tokens.totalIssuance, hash.toString())(currencyId) as Promise<Balance>;
       })
-      .then((data) => (!data ? new FN(0, token.decimal) : FN.fromInner(data.toString(), token.decimal)));
+      .then((data) => (!data ? new FN(0, token.decimals) : FN.fromInner(data.toString(), token.decimals)));
   };
 
   public queryBalance = async (account: MaybeAccount, currency: MaybeCurrency, at?: number): Promise<BalanceData> => {
@@ -268,17 +268,17 @@ export class WalletPromise extends WalletBase<ApiPromise> {
         if (isNativeToken) {
           data = data as AccountData;
 
-          freeBalance = FN.fromInner(data.free.toString(), token.decimal);
-          lockedBalance = FN.fromInner(data.miscFrozen.toString(), token.decimal).max(
-            FN.fromInner(data.feeFrozen.toString(), token.decimal)
+          freeBalance = FN.fromInner(data.free.toString(), token.decimals);
+          lockedBalance = FN.fromInner(data.miscFrozen.toString(), token.decimals).max(
+            FN.fromInner(data.feeFrozen.toString(), token.decimals)
           );
-          reservedBalance = FN.fromInner(data.reserved.toString(), token.decimal);
+          reservedBalance = FN.fromInner(data.reserved.toString(), token.decimals);
         } else {
           data = data as unknown as OrmlAccountData;
 
-          freeBalance = FN.fromInner(data.free.toString(), token.decimal);
-          lockedBalance = FN.fromInner(data.frozen.toString(), token.decimal);
-          reservedBalance = FN.fromInner(data.reserved.toString(), token.decimal);
+          freeBalance = FN.fromInner(data.free.toString(), token.decimals);
+          lockedBalance = FN.fromInner(data.frozen.toString(), token.decimals);
+          reservedBalance = FN.fromInner(data.reserved.toString(), token.decimals);
         }
 
         availableBalance = freeBalance.sub(lockedBalance).max(FN.ZERO);
@@ -383,15 +383,15 @@ export class WalletPromise extends WalletBase<ApiPromise> {
 
     const providers = accountInfo.providers.toNumber();
     const consumers = accountInfo.consumers.toNumber();
-    const nativeFreeBalance = FN.fromInner(accountInfo.data.free.toString(), nativeToken.decimal);
+    const nativeFreeBalance = FN.fromInner(accountInfo.data.free.toString(), nativeToken.decimals);
     // native locked balance = max(accountInfo.data.miscFrozen, accountInfo.data.feeFrozen)
-    const nativeLockedBalance = FN.fromInner(accountInfo.data.miscFrozen.toString(), nativeToken.decimal).max(
-      FN.fromInner(accountInfo.data.feeFrozen.toString(), nativeToken.decimal)
+    const nativeLockedBalance = FN.fromInner(accountInfo.data.miscFrozen.toString(), nativeToken.decimals).max(
+      FN.fromInner(accountInfo.data.feeFrozen.toString(), nativeToken.decimals)
     );
-    const targetFreeBalance = FN.fromInner(currencyInfo.free.toString(), targetToken.decimal);
-    const targetLockedBalance = FN.fromInner(currencyInfo.frozen.toString(), targetToken.decimal);
+    const targetFreeBalance = FN.fromInner(currencyInfo.free.toString(), targetToken.decimals);
+    const targetLockedBalance = FN.fromInner(currencyInfo.frozen.toString(), targetToken.decimals);
     const ed = this.getTransferConfig(currency).existentialDeposit;
-    const fee = FN.fromInner(paymentInfo.partialFee.toString(), nativeToken.decimal).mul(new FN(feeFactor));
+    const fee = FN.fromInner(paymentInfo.partialFee.toString(), nativeToken.decimals).mul(new FN(feeFactor));
 
     return getMaxAvailableBalance({
       isNativeToken,

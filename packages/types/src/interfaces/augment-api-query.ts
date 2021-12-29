@@ -15,8 +15,9 @@ import type { CallOf, ScheduleTaskIndex } from '@open-web3/orml-types/interfaces
 import type { OrderedSet, TimestampedValueOf } from '@open-web3/orml-types/interfaces/oracle';
 import type { PoolInfo, Share } from '@open-web3/orml-types/interfaces/rewards';
 import type { AuctionInfo, Price } from '@open-web3/orml-types/interfaces/traits';
-import type { ApiTypes } from '@polkadot/api/types';
-import type { BTreeMap, BTreeSet, Bytes, Option, Vec, bool, u128, u32, u64 } from '@polkadot/types';
+import type { ApiTypes } from '@polkadot/api-base/types';
+import type { BTreeMap, BTreeSet, Bytes, Option, Vec, bool, u128, u32, u64 } from '@polkadot/types-codec';
+import type { AnyNumber, ITuple } from '@polkadot/types-codec/types';
 import type { AccountData, BalanceLock } from '@polkadot/types/interfaces/balances';
 import type { Votes } from '@polkadot/types/interfaces/collective';
 import type { Proposal } from '@polkadot/types/interfaces/democracy';
@@ -24,10 +25,10 @@ import type { SessionIndex } from '@polkadot/types/interfaces/session';
 import type { AccountInfo } from '@polkadot/types/interfaces/system';
 import type { ClassId } from '@polkadot/types/interfaces/uniques';
 import type { MultiLocation } from '@polkadot/types/interfaces/xcm';
-import type { AnyNumber, ITuple, Observable } from '@polkadot/types/types';
+import type { Observable } from '@polkadot/types/types';
 
-declare module '@polkadot/api/types/storage' {
-  export interface AugmentedQueries<ApiType> {
+declare module '@polkadot/api-base/types/storage' {
+  export interface AugmentedQueries<ApiType extends ApiTypes> {
     acalaOracle: {
       /**
        * If an oracle operator has feed a value in this block
@@ -573,7 +574,7 @@ declare module '@polkadot/api/types/storage' {
        **/
       [key: string]: QueryableStorageEntry<ApiType>;
     };
-    ormlNft: {
+    ormlNFT: {
       /**
        * Store class info.
        * 
@@ -720,9 +721,5 @@ declare module '@polkadot/api/types/storage' {
        **/
       [key: string]: QueryableStorageEntry<ApiType>;
     };
-  }
-
-  export interface QueryableStorage<ApiType extends ApiTypes> extends AugmentedQueries<ApiType> {
-    [key: string]: QueryableModuleStorage<ApiType>;
-  }
-}
+  } // AugmentedQueries
+} // declare module

@@ -10,6 +10,8 @@ import { ITuple } from '@polkadot/types/types';
 import { SwapParameters } from './swap-parameters';
 import { LiquidityPool, SwapTradeMode } from './types';
 import { SwapBase } from './swap-base';
+import { Vec } from '@polkadot/types-codec';
+import { EventRecord } from '@polkadot/types/interfaces';
 
 export class SwapPromise extends SwapBase<ApiPromise> {
   constructor(api: ApiPromise) {
@@ -93,7 +95,7 @@ export class SwapPromise extends SwapBase<ApiPromise> {
 
     inner();
 
-    this.api.query.system.events((result) => {
+    this.api.query.system.events((result: Vec<EventRecord>) => {
       for (const event of result) {
         if (eventMethodsFilter(['EnableTradingPair', 'ProvisioningToEnabled', 'DisableTradingPair'])(event)) {
           inner();

@@ -10,6 +10,8 @@ import { ITuple } from '@polkadot/types/types';
 import { SwapParameters } from './swap-parameters';
 import { LiquidityPool, SwapTradeMode } from './types';
 import { SwapBase } from './swap-base';
+import { Vec } from '@polkadot/types-codec';
+import { EventRecord } from '@polkadot/types/interfaces';
 
 export class SwapRx extends SwapBase<ApiRx> {
   constructor(api: ApiRx) {
@@ -40,7 +42,7 @@ export class SwapRx extends SwapBase<ApiRx> {
   }
 
   protected getTradingPairs(): Observable<TokenPair[]> {
-    return this.api.query.system.events().pipe(
+    return this.api.query.system.events<Vec<EventRecord>>().pipe(
       startWith(mockEventRecord('', 'EnableTradingPair')),
       switchMap((events) => from(events)),
       filter(eventMethodsFilter(['EnableTradingPair', 'ProvisioningToEnabled', 'DisableTradingPair'])),

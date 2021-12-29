@@ -6,6 +6,7 @@ import { Metadata } from '@polkadot/types';
 import { TypeRegistry } from '@polkadot/types/create';
 import { generateInterfaceTypes } from '@polkadot/typegen/generate/interfaceRegistry';
 import { generateTsDef } from '@polkadot/typegen/generate/tsDef';
+import { generateDefaultLookup } from '@polkadot/typegen/generate/lookup';
 import {
   generateDefaultConsts,
   generateDefaultQuery,
@@ -98,6 +99,7 @@ const metadata = filterModules(
 generateTsDef(definations, 'packages/types/src/interfaces', '@acala-network/types/interfaces');
 generateInterfaceTypes(definations, 'packages/types/src/interfaces/augment-types.ts');
 generateDefaultConsts('packages/types/src/interfaces/augment-api-consts.ts', metadata, definations);
+// generateDefaultLookup('packages/types/src/argument/loopup', metadata);
 
 // TODO: figure out why this failed
 // generateDefaultTx('packages/types/src/interfaces/augment-api-tx.ts', metadata, definations);

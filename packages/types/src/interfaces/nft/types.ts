@@ -2,7 +2,7 @@
 /* eslint-disable */
 
 import type { AccountId, Balance } from '@acala-network/types/interfaces/runtime';
-import type { BTreeMap, Bytes, Set, Struct, u128, u32, u64 } from '@polkadot/types';
+import type { BTreeMap, Bytes, Set, Struct, u128, u32, u64 } from '@polkadot/types-codec';
 import type { ClassId } from '@polkadot/types/interfaces/uniques';
 
 /** @name Attributes */

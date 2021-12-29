@@ -52,7 +52,7 @@ export default {
     },
     TradingPairStatus: {
       _enum: {
-        NotEnabled: 'Null',
+        Disabled: 'Null',
         Provisioning: 'TradingPairProvisionParameters',
         Enabled: 'Null'
       }

@@ -21,7 +21,7 @@ import { getExistentialDepositConfig } from './utils/get-existential-deposit-con
 
 export abstract class WalletBase<T extends ApiRx | ApiPromise> {
   protected api: T;
-  protected decimalMap: Map<string, number>;
+  protected decimalsMap: Map<string, number>;
   protected currencyIdMap: Map<string, CurrencyId>;
   protected tokenMap: Map<string, Token>;
   protected nativeToken!: string;
@@ -29,7 +29,7 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
 
   protected constructor(api: T) {
     this.api = api;
-    this.decimalMap = new Map<string, number>([]);
+    this.decimalsMap = new Map<string, number>([]);
     this.currencyIdMap = new Map<string, CurrencyId>([]);
     this.tokenMap = new Map<string, Token>([]);
 
@@ -49,12 +49,11 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
       try {
         const key = item.toString();
         const currencyId = forceToTokenSymbolCurrencyId(this.api, key);
-        const decimal = Number(tokenDecimals?.[index]) || defaultTokenDecimal;
+        const decimals = Number(tokenDecimals?.[index]) || defaultTokenDecimal;
 
-        this.decimalMap.set(key, Number(tokenDecimals?.[index]) || defaultTokenDecimal);
+        this.decimalsMap.set(key, Number(tokenDecimals?.[index]) || defaultTokenDecimal);
         this.currencyIdMap.set(key, currencyId);
-        this.tokenMap.set(key, Token.fromCurrencyId(currencyId, { decimal }));
-        this.tokenMap.set('sa://0', Token.fromStableAssetPool('Acala Mandala TC7', 0));
+        this.tokenMap.set(key, Token.fromCurrencyId(currencyId, { decimals }));
       } catch (e) {
         // ignore eorror
       }

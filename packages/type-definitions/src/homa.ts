@@ -1,12 +1,13 @@
 export default {
   rpc: {},
   types: {
-    RedeemStrategy: {
-      _enum: {
-        Immediately: 'Null',
-        Target: 'EraIndex',
-        WaitForUnbonding: 'Null'
-      }
+    AcalaStakingLedge: {
+      bonded: 'Compact<Balance>',
+      unlocking: 'Vec<UnlockChunk>'
+    },
+    AcalaUnlockChunk: {
+      value: 'Compact<Balance>',
+      era: 'Compact<EraIndex>'
     }
   }
 };
