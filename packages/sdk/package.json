@@ -17,8 +17,8 @@
   "dependencies": {
     "@acala-network/api": "3.0.3-19",
     "@acala-network/type-definitions": "3.0.3-19",
-    "@polkadot/api": "^7.0.3-2",
-    "@polkadot/types": "^7.0.3-2",
+    "@polkadot/api": "^7.1.1",
+    "@polkadot/types": "^7.1.1",
     "@types/events": "^3.0.0",
     "axios": "^0.24.0",
     "bignumber.js": "^9.0.0",

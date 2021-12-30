@@ -15,8 +15,8 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
-    "@polkadot/api": "^7.0.3-2",
-    "@polkadot/types": "^7.0.3-2",
+    "@polkadot/api": "^7.1.1",
+    "@polkadot/types": "^7.1.1",
     "lodash": "^4.17.20",
     "rxjs": "^7.4.0"
   },
