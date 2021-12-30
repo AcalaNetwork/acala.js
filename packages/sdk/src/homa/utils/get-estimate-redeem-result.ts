@@ -16,6 +16,7 @@ export function getEstimateRedeemResult(
       request: amount,
       receive: redeemStaking,
       fee,
+      canTryFastReddem: env.toBondPool.gt(redeemStaking),
       env
     };
   }
@@ -24,6 +25,7 @@ export function getEstimateRedeemResult(
     request: amount,
     receive: convertLiquidToStaking(env.exchangeRate, amount),
     fee: FixedPointNumber.ZERO,
+    canTryFastReddem: false,
     env
   };
 }

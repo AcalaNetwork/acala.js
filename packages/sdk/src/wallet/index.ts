@@ -11,14 +11,15 @@ import {
   forceToCurrencyName,
   TokenType,
   unzipDexShareName,
-  isDexShareName
+  isDexShareName,
+  createLiquidCroadloanName
 } from '@acala-network/sdk-core';
 import { AccountInfo, Balance, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
 import { map, switchMap, shareReplay, filter } from 'rxjs/operators';
 import { TokenRecord, WalletConsts, BalanceData, TransferConfig, PresetTokens, TokenPriceFetchSource } from './type';
-import { CurrencyNotFound, Homa, Liquidity, SDKNotReady } from '..';
+import { ChainType, CurrencyNotFound, Homa, Liquidity, SDKNotReady } from '..';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 import { MarketPriceProvider } from './price-provider/market-price-provider';
 import { OraclePriceProvider } from './price-provider/oracle-price-provider';
@@ -111,6 +112,15 @@ export class Wallet implements BaseSDK, TokenProvider {
         ];
       })
     );
+
+    // insert LCDOT if chain is acala
+    if (getChainType(this.consts.runtimeChain) === ChainType.ACALA) {
+      const name = createLiquidCroadloanName(13);
+
+      basicTokens[name] = new Token(name, {
+        decimals: basicTokens.DOT.decimals
+      });
+    }
 
     return combineLatest({
       tradingPairs: tradingPairs$,

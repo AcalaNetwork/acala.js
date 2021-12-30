@@ -1,3 +1,4 @@
+import { ChainType } from '@acala-network/sdk';
 import {
   Token,
   MaybeAccount,
@@ -9,8 +10,10 @@ import {
   getStableAssetPoolIdFromName,
   FixedPointNumber as FN,
   isDexShareName,
-  isStableAssetName
+  isStableAssetName,
+  createLiquidCroadloanName
 } from '@acala-network/sdk-core';
+import { getChainType } from '@acala-network/sdk/utils/get-chain-type';
 import { CurrencyId } from '@acala-network/types/interfaces';
 
 import { ApiRx, ApiPromise } from '@polkadot/api';
@@ -58,6 +61,18 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
         // ignore eorror
       }
     });
+
+    // insert LCDOT if chain is acala
+    if (getChainType(this.runtimeChain) === ChainType.ACALA) {
+      const name = createLiquidCroadloanName(13);
+
+      this.tokenMap.set(
+        name,
+        new Token(name, {
+          decimals: this.tokenMap.get('DOT')?.decimals || 12
+        })
+      );
+    }
   }
 
   public isNativeToken(currency: MaybeCurrency): boolean {
