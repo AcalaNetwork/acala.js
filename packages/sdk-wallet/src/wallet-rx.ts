@@ -15,7 +15,7 @@ import {
   Token,
   TokenBalance
 } from '@acala-network/sdk-core';
-import { AcalaAssetMetadata, Balance, CurrencyId, Ledger, OracleKey } from '@acala-network/types/interfaces';
+import { AcalaAssetMetadata, Balance, CurrencyId, OracleKey } from '@acala-network/types/interfaces';
 import { forceToCurrencyId, forceToCurrencyName, unzipDexShareName } from '@acala-network/sdk-core/converter';
 import { MaybeAccount, MaybeCurrency } from '@acala-network/sdk-core/types';
 import { PriceData, PriceDataWithTimestamp, NativeAllBalance, BalanceData } from './types';
@@ -27,6 +27,7 @@ import { BelowExistentialDeposit } from './errors';
 import { ORACLE_FEEDS_TOKEN } from './config';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
+import { Homa } from '@acala-network/sdk';
 
 const queryFN = getSubscribeOrAtQuery;
 export class WalletRx extends WalletBase<ApiRx> {
@@ -87,7 +88,7 @@ export class WalletRx extends WalletBase<ApiRx> {
 
     // get liquid currency price from staking pool exchange rate
     if (liquidCurrencyId && forceToCurrencyName(currency) === forceToCurrencyName(liquidCurrencyId)) {
-      return this.queryLiquidPriceFromHomaLite(at);
+      return this.isHomaEnable() ? this.queryLiquidPriceFromHoma(at) : this.queryLiquidPriceFromHomaLite(at);
     }
 
     // get dex share price
@@ -183,10 +184,20 @@ export class WalletRx extends WalletBase<ApiRx> {
     );
   });
 
+  // check the homa module is enable
+  private isHomaEnable(): boolean {
+    const homaExist = !!this.api.consts.homa;
+    const homaLiteExist = !!this.api.consts.homaLite;
+
+    if (homaLiteExist) return false;
+
+    return homaExist;
+  }
+
   public queryLiquidPriceFromHomaLite = memoize((at?: number) => {
     // FIXME: need remove homaLite
-    const liquidCurrencyId = this.api.consts.homa?.liquidCurrencyId || this.api.consts.homaLite?.liquidCurrencyId;
-    const stakingCurrencyId = this.api.consts.homa?.stakingCurrencyId || this.api.consts.homaLite?.stakingCurrencyId;
+    const liquidCurrencyId = this.api.consts.homaLite?.liquidCurrencyId;
+    const stakingCurrencyId = this.api.consts.homaLite?.stakingCurrencyId;
 
     const liquidToken = this.getToken(liquidCurrencyId);
     const stakingToken = this.getToken(stakingCurrencyId);
@@ -212,42 +223,29 @@ export class WalletRx extends WalletBase<ApiRx> {
     );
   });
 
-  public queryLiquidPriceFromStakingPool = memoize((at?: number) => {
-    const liquidCurrencyId = this.api.consts.stakingPool.liquidCurrencyId;
-    const stakingCurrencyId = this.api.consts.stakingPool.stakingCurrencyId;
+  public subscribeToken = memoize((token: MaybeCurrency) => {
+    return of(this.getToken(token));
+  });
+
+  public queryLiquidPriceFromHoma = memoize((at?: number) => {
+    // FIXME: need remove homaLite
+    const liquidCurrencyId = this.api.consts.homa?.liquidCurrencyId;
+    const stakingCurrencyId = this.api.consts.homa?.stakingCurrencyId;
 
     const liquidToken = this.getToken(liquidCurrencyId);
     const stakingToken = this.getToken(stakingCurrencyId);
 
     return this.getBlockHash(at).pipe(
-      switchMap((hash) => {
-        return combineLatest([
-          this.queryPriceFromOracle(stakingToken, at),
-          queryFN<() => Observable<Ledger>>(this.api.query.stakingPool.stakingPoolLedger, hash)(),
-          this.queryIssuance(liquidToken, at)
-        ]);
+      switchMap(() => {
+        return combineLatest({
+          stakingTokenPrice: this.queryPriceFromOracle(stakingToken, at),
+          env: new Homa(this.api, this).subscribeEnv()
+        });
       }),
-      map(([stakingTokenPrice, ledger, liquidIssuance]) => {
-        const bonded = FN.fromInner(ledger.bonded.toString());
-        const freePool = FN.fromInner(ledger.freePool.toString());
-        const unbindingToFree = FN.fromInner(ledger.unbondingToFree.toString());
-        const toUnbindNextEra = FN.fromInner(
-          !ledger.toUnbondNextEra.isEmpty ? ledger.toUnbondNextEra[0].toString() : '0'
-        );
-
-        const totalStakingTokenBalance = bonded
-          .plus(freePool)
-          .plus(unbindingToFree)
-          .minus(toUnbindNextEra)
-          .max(FN.ZERO);
-
-        totalStakingTokenBalance.forceSetPrecision(stakingToken.decimals);
-
-        const ratio = liquidIssuance.isZero() ? FN.ZERO : totalStakingTokenBalance.div(liquidIssuance);
-
+      map(({ stakingTokenPrice, env }) => {
         return {
           token: liquidToken,
-          price: stakingTokenPrice.price.times(ratio)
+          price: stakingTokenPrice.price.times(env.exchangeRate)
         };
       }),
       shareReplay(1)

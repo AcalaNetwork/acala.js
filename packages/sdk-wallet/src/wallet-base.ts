@@ -166,12 +166,6 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
   public abstract queryPriceFromDex(currency: MaybeCurrency, at?: number): ObOrPromiseResult<T, PriceData>;
 
   /**
-   * @name queryLiquidPriceFromStakingPool
-   * @description get the oracle feed price
-   */
-  public abstract queryLiquidPriceFromStakingPool(at?: number): ObOrPromiseResult<T, PriceData>;
-
-  /**
    * @name queryDexSharePriceFormDex
    * @description get the oracle feed price
    */
