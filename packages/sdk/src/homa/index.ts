@@ -2,7 +2,7 @@ import { AnyApi, FixedPointNumber, Token } from '@acala-network/sdk-core';
 import { memoize } from '@polkadot/util';
 import { u16 } from '@polkadot/types';
 import { curry } from 'lodash/fp';
-import { BehaviorSubject, combineLatest, map, Observable, shareReplay, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, firstValueFrom, map, Observable, shareReplay, switchMap } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { TokenProvider } from '../base-provider';
 import { BaseSDK } from '../types';
@@ -18,7 +18,6 @@ import { getUserLiquidTokenSummary } from './utils/get-user-liquid-token-summary
 
 export class Homa implements BaseSDK {
   private api: AnyApi;
-  private isReady$: BehaviorSubject<boolean>;
   private storages: ReturnType<typeof createStorages>;
   private tokenProvider: TokenProvider;
   public consts!: {
@@ -30,6 +29,8 @@ export class Homa implements BaseSDK {
     mintThreshold: FixedPointNumber;
     redeemThreshold: FixedPointNumber;
   };
+
+  public isReady$: BehaviorSubject<boolean>;
 
   constructor(api: AnyApi, tokenProvider: TokenProvider) {
     this.api = api;
@@ -69,6 +70,10 @@ export class Homa implements BaseSDK {
       // set isReady to true when consts intizialized
       this.isReady$.next(true);
     });
+  }
+
+  public get isReady(): Promise<boolean> {
+    return firstValueFrom(this.isReady$.pipe(filter((i) => i)));
   }
 
   private toBondPool$ = memoize((): Observable<FixedPointNumber> => {
@@ -232,10 +237,6 @@ export class Homa implements BaseSDK {
       })
     );
   });
-
-  public get isReady(): Observable<boolean> {
-    return this.isReady$.asObservable();
-  }
 
   public subscribeEnv = (): Observable<HomaEnvironment> => {
     return this.env$();

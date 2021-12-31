@@ -16,9 +16,9 @@ import {
 } from '@acala-network/sdk-core';
 import { AccountInfo, Balance, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
-import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of, firstValueFrom } from 'rxjs';
 import { map, switchMap, shareReplay, filter } from 'rxjs/operators';
-import { TokenRecord, WalletConsts, BalanceData, TransferConfig, PresetTokens, TokenPriceFetchSource } from './type';
+import { TokenRecord, WalletConsts, BalanceData, PresetTokens, TokenPriceFetchSource } from './type';
 import { ChainType, CurrencyNotFound, Homa, Liquidity, SDKNotReady } from '..';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 import { MarketPriceProvider } from './price-provider/market-price-provider';
@@ -42,9 +42,10 @@ export class Wallet implements BaseSDK, TokenProvider {
   private priceProviders: PriceProviders;
   // readed from chain information
   private tokens$: BehaviorSubject<TokenRecord>;
-  private isReady$: BehaviorSubject<boolean>;
   private storages: ReturnType<typeof createStorages>;
   private tokenPriceFetchSource: TokenPriceFetchSource;
+
+  public isReady$: BehaviorSubject<boolean>;
   public consts!: WalletConsts;
 
   public constructor(
@@ -67,8 +68,8 @@ export class Wallet implements BaseSDK, TokenProvider {
     this.init();
   }
 
-  public get isReady(): Observable<boolean> {
-    return this.isReady$.asObservable();
+  public get isReady(): Promise<boolean> {
+    return firstValueFrom(this.isReady$.asObservable().pipe(filter((i) => i)));
   }
 
   private init() {
@@ -118,7 +119,8 @@ export class Wallet implements BaseSDK, TokenProvider {
       const name = createLiquidCroadloanName(13);
 
       basicTokens[name] = new Token(name, {
-        decimals: basicTokens.DOT.decimals
+        decimals: basicTokens.DOT.decimals,
+        ed: basicTokens.DOT.ed
       });
     }
 
@@ -161,6 +163,10 @@ export class Wallet implements BaseSDK, TokenProvider {
     );
   });
 
+  public async getTokens(type?: TokenType): Promise<TokenRecord> {
+    return firstValueFrom(this.subscribeTokens(type));
+  }
+
   /**
    *  @name subscribeToken
    *  @description subscirbe the token info
@@ -179,11 +185,8 @@ export class Wallet implements BaseSDK, TokenProvider {
     );
   });
 
-  public getToken(target: MaybeCurrency): Token {
-    const name = forceToCurrencyName(target);
-
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.tokens$.value[name]!;
+  public async getToken(target: MaybeCurrency): Promise<Token> {
+    return firstValueFrom(this.subscribeToken(target));
   }
 
   /**
@@ -232,6 +235,10 @@ export class Wallet implements BaseSDK, TokenProvider {
     );
   });
 
+  public async getBalance(token: MaybeCurrency, address: string): Promise<BalanceData> {
+    return firstValueFrom(this.subscribeBalance(token, address));
+  }
+
   /**
    * @name subscribeIssuance
    * @description subscribe `token` issuance amount
@@ -248,6 +255,10 @@ export class Wallet implements BaseSDK, TokenProvider {
     );
   });
 
+  public async getIssuance(token: MaybeCurrency): Promise<FN> {
+    return firstValueFrom(this.subscribeIssuance(token));
+  }
+
   /**
    * @name subscribeSuggestInput
    * @description subscirbe the suggest input amount for `account` `token`
@@ -260,7 +271,7 @@ export class Wallet implements BaseSDK, TokenProvider {
       address: string,
       isAllowDeath: boolean,
       paymentInfo: RuntimeDispatchInfo,
-      feeFactor = 1
+      feeFactor = 1.2
     ): Observable<FN> => {
       const handleNativeResult = (accountInfo: AccountInfo, token: Token, nativeToken: Token) => {
         const providers = accountInfo.providers.toNumber();
@@ -270,7 +281,7 @@ export class Wallet implements BaseSDK, TokenProvider {
         const nativeLockedBalance = FN.fromInner(accountInfo.data.miscFrozen.toString(), nativeToken.decimals).max(
           FN.fromInner(accountInfo.data.feeFrozen.toString(), nativeToken.decimals)
         );
-        const ed = this.getTransferConfig(token).ed;
+        const ed = token.ed;
         const fee = FN.fromInner(paymentInfo.partialFee.toString(), nativeToken.decimals).mul(new FN(feeFactor));
 
         return getMaxAvailableBalance({
@@ -302,7 +313,7 @@ export class Wallet implements BaseSDK, TokenProvider {
         );
         const targetFreeBalance = FN.fromInner(tokenInfo.free.toString(), token.decimals);
         const targetLockedBalance = FN.fromInner(tokenInfo.frozen.toString(), token.decimals);
-        const ed = this.getTransferConfig(token).ed;
+        const ed = token.ed;
         const fee = FN.fromInner(paymentInfo.partialFee.toString(), nativeToken.decimals).mul(new FN(feeFactor));
 
         return getMaxAvailableBalance({
@@ -343,14 +354,14 @@ export class Wallet implements BaseSDK, TokenProvider {
     }
   );
 
-  /**
-   * @name getTransferConfig
-   * @params get `currency` ed config
-   * @param currency
-   * @returns
-   */
-  public getTransferConfig(token: Token): TransferConfig {
-    return { ed: token.ed };
+  public async getSuggestInput(
+    token: MaybeCurrency,
+    address: string,
+    isAllowDeath: boolean,
+    paymentInfo: RuntimeDispatchInfo,
+    feeFactor = 1.2
+  ): Promise<FN> {
+    return firstValueFrom(this.subscribeSuggestInput(token, address, isAllowDeath, paymentInfo, feeFactor));
   }
 
   public getPresetTokens(): PresetTokens {
@@ -435,4 +446,8 @@ export class Wallet implements BaseSDK, TokenProvider {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return this.subscribeToken(token).pipe(switchMap((token) => priceProvider!.subscribe(token.name)));
   });
+
+  public getPrice(token: MaybeCurrency, type?: PriceProviderType): Promise<FN> {
+    return firstValueFrom(this.subscribePrice(token, type));
+  }
 }
