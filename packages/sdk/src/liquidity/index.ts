@@ -2,8 +2,8 @@ import { AnyApi, FixedPointNumber, forceToCurrencyName, MaybeCurrency, Token } f
 import { TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
 import { StorageKey } from '@polkadot/types';
 import { memoize } from '@polkadot/util';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, firstValueFrom, Observable } from 'rxjs';
+import { map, switchMap, filter } from 'rxjs/operators';
 import { TradingPairNotFound } from '..';
 import { TokenProvider } from '../base-provider';
 import { BaseSDK } from '../types';
@@ -16,7 +16,8 @@ export class Liquidity implements BaseSDK {
   private api: AnyApi;
   private storages: ReturnType<typeof createStorages>;
   private tokenProvider: TokenProvider;
-  private isReady$: BehaviorSubject<boolean>;
+
+  public isReady$: BehaviorSubject<boolean>;
 
   constructor(api: AnyApi, tokenProvider: TokenProvider) {
     this.api = api;
@@ -25,8 +26,8 @@ export class Liquidity implements BaseSDK {
     this.isReady$ = new BehaviorSubject<boolean>(true);
   }
 
-  public get isReady(): Observable<boolean> {
-    return this.isReady$.asObservable();
+  public get isReady(): Promise<boolean> {
+    return firstValueFrom(this.isReady$.pipe(filter((i) => i)));
   }
 
   /**

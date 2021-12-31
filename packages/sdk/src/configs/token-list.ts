@@ -12,7 +12,6 @@ interface TokenConfig {
 type TokenMap = Readonly<Record<string, TokenConfig>>;
 
 interface TokenListConfig {
-  readonly common: TokenMap;
   readonly [ChainType.ACALA]: TokenMap;
   readonly [ChainType.MANDALA]: TokenMap;
   readonly [ChainType.KARURA]: TokenMap;
@@ -28,7 +27,6 @@ function createTokenConfig(symbol: string, display: string, decimals: number, ed
 }
 
 const DEFAULT_TOKEN_LIST: TokenListConfig = {
-  common: {},
   [ChainType.ACALA]: {
     ACA: createTokenConfig('ACA', 'ACA', 12, new FixedPointNumber(0.1, 12)),
     AUSD: createTokenConfig('AUSD', 'aUSD', 12, new FixedPointNumber(0.1, 12)),
@@ -66,15 +64,7 @@ class TokenList {
     // unsopport chain
     if (!chainType) return;
 
-    const fromChain = DEFAULT_TOKEN_LIST?.[chainType]?.[name];
-    const fromCommon = DEFAULT_TOKEN_LIST?.common?.[name];
-
-    if (!fromChain && !fromChain) return undefined;
-
-    const data = {
-      ...fromCommon,
-      ...fromChain
-    };
+    const data = DEFAULT_TOKEN_LIST?.[chainType]?.[name];
 
     return data;
   }

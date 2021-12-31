@@ -2,7 +2,7 @@ import { AnyApi, FixedPointNumber, Token } from '@acala-network/sdk-core';
 import { memoize } from '@polkadot/util';
 import { u16 } from '@polkadot/types';
 import { curry } from 'lodash/fp';
-import { BehaviorSubject, combineLatest, map, Observable, shareReplay, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, firstValueFrom, map, Observable, shareReplay, switchMap } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { TokenProvider } from '../base-provider';
 import { BaseSDK } from '../types';
@@ -18,7 +18,6 @@ import { getUserLiquidTokenSummary } from './utils/get-user-liquid-token-summary
 
 export class Homa implements BaseSDK {
   private api: AnyApi;
-  private isReady$: BehaviorSubject<boolean>;
   private storages: ReturnType<typeof createStorages>;
   private tokenProvider: TokenProvider;
   public consts!: {
@@ -27,7 +26,11 @@ export class Homa implements BaseSDK {
     defaultExchangeRate: FixedPointNumber;
     chain: string;
     activeSubAccountsIndexList: number[];
+    mintThreshold: FixedPointNumber;
+    redeemThreshold: FixedPointNumber;
   };
+
+  public isReady$: BehaviorSubject<boolean>;
 
   constructor(api: AnyApi, tokenProvider: TokenProvider) {
     this.api = api;
@@ -53,12 +56,24 @@ export class Homa implements BaseSDK {
         defaultExchangeRate: FixedPointNumber.fromInner(this.api.consts.homa.defaultExchangeRate.toString()),
         activeSubAccountsIndexList: (this.api.consts.homa.activeSubAccountsIndexList as unknown as u16[]).map((item) =>
           item.toNumber()
+        ),
+        mintThreshold: FixedPointNumber.fromInner(
+          this.api.consts.homa.mintThreshold.toString(),
+          data.stakingToken.decimals
+        ),
+        redeemThreshold: FixedPointNumber.fromInner(
+          this.api.consts.homa.redeemThreshold.toString(),
+          data.stakingToken.decimals
         )
       };
 
       // set isReady to true when consts intizialized
       this.isReady$.next(true);
     });
+  }
+
+  public get isReady(): Promise<boolean> {
+    return firstValueFrom(this.isReady$.pipe(filter((i) => i)));
   }
 
   private toBondPool$ = memoize((): Observable<FixedPointNumber> => {
@@ -97,20 +112,6 @@ export class Homa implements BaseSDK {
   private commissionRate$ = memoize((): Observable<FixedPointNumber> => {
     return this.storages.commissionRate().observable.pipe(
       map((data) => FixedPointNumber.fromInner(data.toString())),
-      shareReplay(1)
-    );
-  });
-
-  private mintThreshold$ = memoize((): Observable<FixedPointNumber> => {
-    return this.storages.mintThreshold().observable.pipe(
-      map((data) => FixedPointNumber.fromInner(data.toString(), this.consts.stakingToken.decimals)),
-      shareReplay(1)
-    );
-  });
-
-  private redeemThreshold$ = memoize((): Observable<FixedPointNumber> => {
-    return this.storages.mintThreshold().observable.pipe(
-      map((data) => FixedPointNumber.fromInner(data.toString(), this.consts.liquidToken.decimals)),
       shareReplay(1)
     );
   });
@@ -188,8 +189,6 @@ export class Homa implements BaseSDK {
           estimatedRewardRatePerEra: this.estimatedRewardRatePerEra$(),
           fastMatchFeeRate: this.fastMatchFeeRate$(),
           commissionRate: this.commissionRate$(),
-          mintThreshold: this.mintThreshold$(),
-          redeemThreshold: this.redeemThreshold$(),
           eraFrequency: this.eraFrequency$(),
           softBondedCapPerSubAccount: this.softBondedCapPerSubAccount$()
         }).pipe(
@@ -201,11 +200,10 @@ export class Homa implements BaseSDK {
               estimatedRewardRatePerEra,
               fastMatchFeeRate,
               commissionRate,
-              mintThreshold,
-              redeemThreshold,
               eraFrequency,
               softBondedCapPerSubAccount
             }) => {
+              const { mintThreshold, redeemThreshold } = this.consts;
               const totalInSubAccount = stakingLedgers.reduce((acc, cur) => {
                 return acc.add(cur.bonded);
               }, new FixedPointNumber(0, this.consts.stakingToken.decimals));
@@ -239,10 +237,6 @@ export class Homa implements BaseSDK {
       })
     );
   });
-
-  public get isReady(): Observable<boolean> {
-    return this.isReady$.asObservable();
-  }
 
   public subscribeEnv = (): Observable<HomaEnvironment> => {
     return this.env$();
