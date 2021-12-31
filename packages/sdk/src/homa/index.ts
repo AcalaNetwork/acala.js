@@ -27,6 +27,8 @@ export class Homa implements BaseSDK {
     defaultExchangeRate: FixedPointNumber;
     chain: string;
     activeSubAccountsIndexList: number[];
+    mintThreshold: FixedPointNumber;
+    redeemThreshold: FixedPointNumber;
   };
 
   constructor(api: AnyApi, tokenProvider: TokenProvider) {
@@ -53,6 +55,14 @@ export class Homa implements BaseSDK {
         defaultExchangeRate: FixedPointNumber.fromInner(this.api.consts.homa.defaultExchangeRate.toString()),
         activeSubAccountsIndexList: (this.api.consts.homa.activeSubAccountsIndexList as unknown as u16[]).map((item) =>
           item.toNumber()
+        ),
+        mintThreshold: FixedPointNumber.fromInner(
+          this.api.consts.homa.mintThreshold.toString(),
+          data.stakingToken.decimals
+        ),
+        redeemThreshold: FixedPointNumber.fromInner(
+          this.api.consts.homa.redeemThreshold.toString(),
+          data.stakingToken.decimals
         )
       };
 
@@ -97,20 +107,6 @@ export class Homa implements BaseSDK {
   private commissionRate$ = memoize((): Observable<FixedPointNumber> => {
     return this.storages.commissionRate().observable.pipe(
       map((data) => FixedPointNumber.fromInner(data.toString())),
-      shareReplay(1)
-    );
-  });
-
-  private mintThreshold$ = memoize((): Observable<FixedPointNumber> => {
-    return this.storages.mintThreshold().observable.pipe(
-      map((data) => FixedPointNumber.fromInner(data.toString(), this.consts.stakingToken.decimals)),
-      shareReplay(1)
-    );
-  });
-
-  private redeemThreshold$ = memoize((): Observable<FixedPointNumber> => {
-    return this.storages.mintThreshold().observable.pipe(
-      map((data) => FixedPointNumber.fromInner(data.toString(), this.consts.liquidToken.decimals)),
       shareReplay(1)
     );
   });
@@ -188,8 +184,6 @@ export class Homa implements BaseSDK {
           estimatedRewardRatePerEra: this.estimatedRewardRatePerEra$(),
           fastMatchFeeRate: this.fastMatchFeeRate$(),
           commissionRate: this.commissionRate$(),
-          mintThreshold: this.mintThreshold$(),
-          redeemThreshold: this.redeemThreshold$(),
           eraFrequency: this.eraFrequency$(),
           softBondedCapPerSubAccount: this.softBondedCapPerSubAccount$()
         }).pipe(
@@ -201,11 +195,10 @@ export class Homa implements BaseSDK {
               estimatedRewardRatePerEra,
               fastMatchFeeRate,
               commissionRate,
-              mintThreshold,
-              redeemThreshold,
               eraFrequency,
               softBondedCapPerSubAccount
             }) => {
+              const { mintThreshold, redeemThreshold } = this.consts;
               const totalInSubAccount = stakingLedgers.reduce((acc, cur) => {
                 return acc.add(cur.bonded);
               }, new FixedPointNumber(0, this.consts.stakingToken.decimals));

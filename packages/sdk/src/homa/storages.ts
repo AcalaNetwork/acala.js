@@ -50,18 +50,6 @@ export const createStorages = (api: AnyApi) => {
         path: 'query.homa.fastMatchFeeRate',
         params: []
       }),
-    mintThreshold: () =>
-      Storage.create<Balance>({
-        api,
-        path: 'query.homa.mintThreshold',
-        params: []
-      }),
-    redeemThreshold: () =>
-      Storage.create<Balance>({
-        api,
-        path: 'query.homa.redeemThreshold',
-        params: []
-      }),
     softBondedCapPerSubAccount: () =>
       Storage.create<Balance>({
         api,
