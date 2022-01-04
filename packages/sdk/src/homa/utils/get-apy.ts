@@ -6,7 +6,7 @@ const ESTIMATE_BLOCK_TIME: Partial<{ [k in ChainType]: number }> = {
   [ChainType.MANDALA]: 6 * 1000
 };
 
-const YEAR = 365 * 24 * 60 * 60;
+const YEAR = 365 * 24 * 60 * 60 * 1000;
 
 export function getAPY(rewardRate: number, commissionRate: number, eraFrequency: number, chain?: ChainType): number {
   if (!chain) return 0;
