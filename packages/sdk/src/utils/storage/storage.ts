@@ -40,7 +40,6 @@ export class Storage<T = unknown> {
   }
 
   private getQueryFN(api: ApiRx | ApiPromise, path: string, at?: string): any {
-    // recursion get the call which according to path;
     const arr = path.split('.');
     const start = at ? api.at(at) : api;
 

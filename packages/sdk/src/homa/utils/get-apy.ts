@@ -15,5 +15,5 @@ export function getAPY(rewardRate: number, commissionRate: number, eraFrequency:
 
   const eraCountOneYear = Math.floor(YEAR / (ESTIMATE_BLOCK_TIME[chain] || 0) / eraFrequency);
 
-  return Math.pow(rewardRate - commissionRate + 1, eraCountOneYear) - 1;
+  return Math.pow(rewardRate * (1 - commissionRate) + 1, eraCountOneYear) - 1;
 }
