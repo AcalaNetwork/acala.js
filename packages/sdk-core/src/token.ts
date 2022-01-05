@@ -22,14 +22,16 @@ export interface StableAsset {
 }
 
 export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
+  // Mandala testnet
   'Mandala Dev': [
     {
       poolId: 0,
-      name: 'taplDOT',
-      decimals: 10,
-      assets: ['DOT', 'LDOT']
+      name: 'taiKSM',
+      decimals: 12,
+      assets: ['KSM', 'LKSM']
     }
   ],
+  // Mandala
   'Acala Mandala TC7': [
     {
       poolId: 0,
@@ -47,6 +49,7 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
       assets: ['KSM', 'LKSM']
     }
   ],
+  // Karura
   Karura: [
     {
       poolId: 0,
