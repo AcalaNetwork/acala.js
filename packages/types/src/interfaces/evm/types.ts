@@ -2,7 +2,7 @@
 /* eslint-disable */
 
 import type { H160, H256, Index } from '@acala-network/types/interfaces/runtime';
-import type { Bytes, Option, Struct, U128, bool, i32, u256, u32, u8 } from '@polkadot/types';
+import type { Bytes, Option, Struct, U128, bool, i32, u256, u32, u8 } from '@polkadot/types-codec';
 
 /** @name CallRequest */
 export interface CallRequest extends Struct {

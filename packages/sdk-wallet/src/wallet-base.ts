@@ -1,3 +1,4 @@
+import { ChainType } from '@acala-network/sdk';
 import {
   Token,
   MaybeAccount,
@@ -9,8 +10,10 @@ import {
   getStableAssetPoolIdFromName,
   FixedPointNumber as FN,
   isDexShareName,
-  isStableAssetName
+  isStableAssetName,
+  createLiquidCroadloanName
 } from '@acala-network/sdk-core';
+import { getChainType } from '@acala-network/sdk/utils/get-chain-type';
 import { CurrencyId } from '@acala-network/types/interfaces';
 
 import { ApiRx, ApiPromise } from '@polkadot/api';
@@ -21,7 +24,7 @@ import { getExistentialDepositConfig } from './utils/get-existential-deposit-con
 
 export abstract class WalletBase<T extends ApiRx | ApiPromise> {
   protected api: T;
-  protected decimalMap: Map<string, number>;
+  protected decimalsMap: Map<string, number>;
   protected currencyIdMap: Map<string, CurrencyId>;
   protected tokenMap: Map<string, Token>;
   protected nativeToken!: string;
@@ -29,7 +32,7 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
 
   protected constructor(api: T) {
     this.api = api;
-    this.decimalMap = new Map<string, number>([]);
+    this.decimalsMap = new Map<string, number>([]);
     this.currencyIdMap = new Map<string, CurrencyId>([]);
     this.tokenMap = new Map<string, Token>([]);
 
@@ -49,15 +52,27 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
       try {
         const key = item.toString();
         const currencyId = forceToTokenSymbolCurrencyId(this.api, key);
-        const decimal = Number(tokenDecimals?.[index]) || defaultTokenDecimal;
+        const decimals = Number(tokenDecimals?.[index]) || defaultTokenDecimal;
 
-        this.decimalMap.set(key, Number(tokenDecimals?.[index]) || defaultTokenDecimal);
+        this.decimalsMap.set(key, Number(tokenDecimals?.[index]) || defaultTokenDecimal);
         this.currencyIdMap.set(key, currencyId);
-        this.tokenMap.set(key, Token.fromCurrencyId(currencyId, { decimal }));
+        this.tokenMap.set(key, Token.fromCurrencyId(currencyId, { decimals }));
       } catch (e) {
         // ignore eorror
       }
     });
+
+    // insert LCDOT if chain is acala
+    if (getChainType(this.runtimeChain) === ChainType.ACALA) {
+      const name = createLiquidCroadloanName(13);
+
+      this.tokenMap.set(
+        name,
+        new Token(name, {
+          decimals: this.tokenMap.get('DOT')?.decimals || 12
+        })
+      );
+    }
   }
 
   public isNativeToken(currency: MaybeCurrency): boolean {
@@ -164,12 +179,6 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
    * @description get the oracle feed price
    */
   public abstract queryPriceFromDex(currency: MaybeCurrency, at?: number): ObOrPromiseResult<T, PriceData>;
-
-  /**
-   * @name queryLiquidPriceFromStakingPool
-   * @description get the oracle feed price
-   */
-  public abstract queryLiquidPriceFromStakingPool(at?: number): ObOrPromiseResult<T, PriceData>;
 
   /**
    * @name queryDexSharePriceFormDex

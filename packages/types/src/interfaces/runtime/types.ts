@@ -3,12 +3,13 @@
 
 import type { AuthoritysOriginId, CurrencyId } from '@acala-network/types/interfaces/primitives';
 import type { Price } from '@open-web3/orml-types/interfaces/traits';
-import type { Bytes, Compact, DoNotConstruct, Enum, GenericAccountId, GenericAccountIndex, GenericBlock, GenericCall, GenericConsensusEngineId, GenericEthereumAccountId, GenericLookupSource, GenericMultiAddress, Int, Null, Option, StorageKey, Struct, U8aFixed, UInt, Vec, u128, u16, u32, u64, u8 } from '@polkadot/types';
+import type { GenericAccountId, GenericAccountIndex, GenericBlock, GenericCall, GenericConsensusEngineId, GenericEthereumAccountId, GenericLookupSource, GenericMultiAddress, StorageKey } from '@polkadot/types';
+import type { Bytes, Compact, DoNotConstruct, Enum, Int, Null, Option, Struct, U8aFixed, UInt, Vec, u128, u16, u32, u64, u8 } from '@polkadot/types-codec';
+import type { ITuple } from '@polkadot/types-codec/types';
 import type { AuthorityId } from '@polkadot/types/interfaces/consensus';
 import type { Signature } from '@polkadot/types/interfaces/extrinsics';
 import type { RelayChainBlockNumber } from '@polkadot/types/interfaces/parachains';
 import type { SystemOrigin } from '@polkadot/types/interfaces/system';
-import type { ITuple } from '@polkadot/types/types';
 
 /** @name AccountId */
 export interface AccountId extends AccountId32 {}
@@ -74,6 +75,7 @@ export interface ChangesTrieConfiguration extends Struct {
 export interface ChangesTrieSignal extends Enum {
   readonly isNewConfiguration: boolean;
   readonly asNewConfiguration: Option<ChangesTrieConfiguration>;
+  readonly type: 'NewConfiguration';
 }
 
 /** @name CodecHash */
@@ -116,6 +118,7 @@ export interface DigestItem extends Enum {
   readonly isChangesTrieSignal: boolean;
   readonly asChangesTrieSignal: ChangesTrieSignal;
   readonly isRuntimeEnvironmentUpdated: boolean;
+  readonly type: 'Other' | 'AuthoritiesChange' | 'ChangesTrieRoot' | 'SealV0' | 'Consensus' | 'Seal' | 'PreRuntime' | 'ChangesTrieSignal' | 'RuntimeEnvironmentUpdated';
 }
 
 /** @name EncodedJustification */
@@ -234,6 +237,7 @@ export interface MultiSigner extends Enum {
   readonly asSr25519: U8aFixed;
   readonly isEcdsa: boolean;
   readonly asEcdsa: U8aFixed;
+  readonly type: 'Ed25519' | 'Sr25519' | 'Ecdsa';
 }
 
 /** @name OpaqueCall */
@@ -252,6 +256,7 @@ export interface Origin extends DoNotConstruct {}
 export interface OriginCaller extends Enum {
   readonly isSystem: boolean;
   readonly asSystem: SystemOrigin;
+  readonly type: 'System';
 }
 
 /** @name PalletId */
@@ -271,6 +276,7 @@ export interface PalletVersion extends Struct {
 export interface Pays extends Enum {
   readonly isYes: boolean;
   readonly isNo: boolean;
+  readonly type: 'Yes' | 'No';
 }
 
 /** @name Perbill */
@@ -305,6 +311,7 @@ export interface ProxyType extends Enum {
   readonly isAuction: boolean;
   readonly isSwap: boolean;
   readonly isLoan: boolean;
+  readonly type: 'Any' | 'CancelProxy' | 'Governance' | 'Auction' | 'Swap' | 'Loan';
 }
 
 /** @name RelayChainBlockNumberOf */
@@ -322,6 +329,7 @@ export interface Releases extends Enum {
   readonly isV8: boolean;
   readonly isV9: boolean;
   readonly isV10: boolean;
+  readonly type: 'V1' | 'V2' | 'V3' | 'V4' | 'V5' | 'V6' | 'V7' | 'V8' | 'V9' | 'V10';
 }
 
 /** @name RuntimeDbWeight */

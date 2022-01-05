@@ -3,8 +3,8 @@
 
 import type { EvmAddress } from '@acala-network/types/interfaces/evm';
 import type { Balance } from '@acala-network/types/interfaces/runtime';
-import type { Bytes, Enum, Struct, i128, u32, u8 } from '@polkadot/types';
-import type { ITuple } from '@polkadot/types/types';
+import type { Bytes, Enum, Struct, i128, u32, u8 } from '@polkadot/types-codec';
+import type { ITuple } from '@polkadot/types-codec/types';
 
 /** @name AcalaAssetMetadata */
 export interface AcalaAssetMetadata extends Struct {
@@ -19,12 +19,14 @@ export interface AcalaDataProviderId extends Enum {
   readonly isAggregated: boolean;
   readonly isAcala: boolean;
   readonly isBand: boolean;
+  readonly type: 'Aggregated' | 'Acala' | 'Band';
 }
 
 /** @name AirDropCurrencyId */
 export interface AirDropCurrencyId extends Enum {
   readonly isKar: boolean;
   readonly isAca: boolean;
+  readonly type: 'Kar' | 'Aca';
 }
 
 /** @name Amount */
@@ -46,6 +48,7 @@ export interface AuthoritysOriginId extends Enum {
   readonly isHonzonTreasury: boolean;
   readonly isHomaTreasury: boolean;
   readonly isTreasuryReserve: boolean;
+  readonly type: 'Root' | 'Treasury' | 'HonzonTreasury' | 'HomaTreasury' | 'TreasuryReserve';
 }
 
 /** @name ChainBridgeChainId */
@@ -65,6 +68,7 @@ export interface CurrencyId extends Enum {
   readonly asLiquidCroadloan: u32;
   readonly isForeignAsset: boolean;
   readonly asForeignAsset: u32;
+  readonly type: 'Token' | 'DexShare' | 'Erc20' | 'StableAssetPoolToken' | 'LiquidCroadloan' | 'ForeignAsset';
 }
 
 /** @name CurrencyIdOf */
@@ -76,6 +80,7 @@ export interface DexShare extends Enum {
   readonly asToken: TokenSymbol;
   readonly isErc20: boolean;
   readonly asErc20: EvmAddress;
+  readonly type: 'Token' | 'Erc20';
 }
 
 /** @name OrmlCurrencyId */
@@ -95,6 +100,7 @@ export interface TokenSymbol extends Enum {
   readonly isLksm: boolean;
   readonly isBnc: boolean;
   readonly isVsksm: boolean;
+  readonly type: 'Aca' | 'Ausd' | 'Dot' | 'Ldot' | 'Renbtc' | 'Cash' | 'Kar' | 'Kusd' | 'Ksm' | 'Lksm' | 'Bnc' | 'Vsksm';
 }
 
 /** @name TradingPair */

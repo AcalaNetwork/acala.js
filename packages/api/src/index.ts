@@ -33,6 +33,7 @@ export const options = ({
     ...acalaTypesAlias,
     ...typesAlias
   },
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   derives: {
     ...ormlDerives,
     ...acalaDerives

@@ -1,7 +1,7 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable */
 
-import type { Bytes, U8aFixed } from '@polkadot/types';
+import type { Bytes, U8aFixed } from '@polkadot/types-codec';
 
 /** @name DestAddress */
 export interface DestAddress extends Bytes {}

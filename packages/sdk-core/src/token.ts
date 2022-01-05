@@ -1,5 +1,4 @@
 import { CurrencyId, TokenSymbol, DexShare, TradingPair } from '@acala-network/types/interfaces';
-import primitivesConfig from '@acala-network/type-definitions/primitives';
 import { assert } from '@polkadot/util';
 
 import { AnyApi, TokenType } from './types';
@@ -13,11 +12,12 @@ import {
   getCurrencyTypeByName,
   unzipDexShareName
 } from '.';
+import { sortTokenByName } from './sort-token';
 
 export interface StableAsset {
   poolId: number;
   name: string;
-  decimal: number;
+  decimals: number;
   assets: string[];
 }
 
@@ -27,7 +27,7 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
     {
       poolId: 0,
       name: 'taiKSM',
-      decimal: 12,
+      decimals: 12,
       assets: ['KSM', 'LKSM']
     }
   ],
@@ -36,7 +36,7 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
     {
       poolId: 0,
       name: 'taiKSM',
-      decimal: 12,
+      decimals: 12,
       assets: ['KSM', 'LKSM']
     }
   ],
@@ -45,7 +45,7 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
     {
       poolId: 0,
       name: 'taiKSM',
-      decimal: 12,
+      decimals: 12,
       assets: ['KSM', 'LKSM']
     }
   ],
@@ -54,37 +54,43 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
     {
       poolId: 0,
       name: 'taiKSM',
-      decimal: 12,
+      decimals: 12,
       assets: ['KSM', 'LKSM']
     }
   ]
 };
 
-const TOKEN_SORT: Record<string, number> = primitivesConfig.types.TokenSymbol._enum;
-
 interface Configs {
-  decimal?: number;
-  type?: TokenType;
+  display?: string; // namae for display
+  decimals?: number; // token decimals
+  decimal?: number; // token decimals
+  type?: TokenType; // token type
   chain?: string;
   symbol?: string;
-  minimalBalance?: FixedPointNumber;
+  detail?: { id: number };
+  ed?: FixedPointNumber;
 }
 
 export class Token {
   readonly name: string;
   readonly symbol: string;
+  readonly decimals: number;
   readonly decimal: number;
-  readonly minimalBalance: FixedPointNumber;
+  readonly ed: FixedPointNumber;
   readonly chain: string | undefined;
   readonly type: TokenType;
+  readonly display: string;
+  readonly pair?: [Token, Token];
 
   constructor(name: string, configs?: Configs) {
     this.name = name;
-    this.decimal = configs?.decimal || 18;
-    this.minimalBalance = configs?.minimalBalance || FixedPointNumber.ZERO;
+    this.decimals = configs?.decimals || configs?.decimal || 18;
+    this.decimal = this.decimals;
+    this.ed = configs?.ed || FixedPointNumber.ZERO;
     this.chain = configs?.chain;
     this.type = configs?.type || TokenType.BASIC;
     this.symbol = configs?.symbol || name;
+    this.display = configs?.display || name;
   }
 
   get isTokenSymbol(): boolean {
@@ -141,63 +147,72 @@ export class Token {
   static fromTokens(token1: Token, token2: Token): Token {
     const [_token1, _token2] = this.sort(token1, token2);
 
-    // set token1 decimal as decimal;
-    const decimal = _token1.decimal;
+    // set token1 decimals as decimals;
+    const decimals = _token1.decimals;
+    const ed = _token1.ed;
 
-    return new Token(createDexShareName(_token1.name, _token2.name), { decimal, type: TokenType.DEX_SHARE });
+    return new Token(createDexShareName(_token1.name, _token2.name), {
+      decimals,
+      type: TokenType.DEX_SHARE,
+      ed
+    });
   }
 
   /* create DexShareToken form CurrencyId array */
-  static fromCurrencies(currency1: CurrencyId, currency2: CurrencyId, decimal?: number | [number, number]): Token {
-    const decimal1 = Array.isArray(decimal) ? decimal[0] : decimal;
-    const decimal2 = Array.isArray(decimal) ? decimal[1] : decimal;
+  static fromCurrencies(currency1: CurrencyId, currency2: CurrencyId, decimals?: number | [number, number]): Token {
+    const decimals1 = Array.isArray(decimals) ? decimals[0] : decimals;
+    const decimals2 = Array.isArray(decimals) ? decimals[1] : decimals;
 
-    const token1 = Token.fromCurrencyId(currency1, { decimal: decimal1 });
-    const token2 = Token.fromCurrencyId(currency2, { decimal: decimal2 });
+    const token1 = Token.fromCurrencyId(currency1, { decimals: decimals1 });
+    const token2 = Token.fromCurrencyId(currency2, { decimals: decimals2 });
 
     return Token.fromTokens(token1, token2);
   }
 
   /* create DexShareToken from TokenSymbol array */
-  static fromTokenSymbols(currency1: TokenSymbol, currency2: TokenSymbol, decimal?: number | [number, number]): Token {
-    const decimal1 = Array.isArray(decimal) ? decimal[0] : decimal;
-    const decimal2 = Array.isArray(decimal) ? decimal[1] : decimal;
+  static fromTokenSymbols(currency1: TokenSymbol, currency2: TokenSymbol, decimals?: number | [number, number]): Token {
+    const decimals1 = Array.isArray(decimals) ? decimals[0] : decimals;
+    const decimals2 = Array.isArray(decimals) ? decimals[1] : decimals;
 
-    const token1 = Token.fromTokenSymbol(currency1, { decimal: decimal1 });
-    const token2 = Token.fromTokenSymbol(currency2, { decimal: decimal2 });
+    const token1 = Token.fromTokenSymbol(currency1, { decimals: decimals1 });
+    const token2 = Token.fromTokenSymbol(currency2, { decimals: decimals2 });
 
     return Token.fromTokens(token1, token2);
   }
 
   /** Create StableAssetPoolToken by stable asset pool ID. Chain must be provided/ */
-  static fromStableAssetPool(chain: string, poolId: number): Token {
+  static fromStableAssetPool(chain: string, poolId: number, configs?: Configs): Token {
     return new Token(createStableAssetName(poolId), {
-      decimal: STABLE_ASSET_POOLS[chain][poolId].decimal,
-      type: TokenType.STABLE_ASSET_POOL_TOKEN
+      decimals: STABLE_ASSET_POOLS[chain][poolId].decimals,
+      type: TokenType.STABLE_ASSET_POOL_TOKEN,
+      ...configs
     });
   }
 
   static sortTokenNames(...names: string[]): string[] {
     const result = [...names];
 
-    return result.sort((a, b) => TOKEN_SORT[a] - TOKEN_SORT[b]);
+    return result.sort((a, b) => {
+      return sortTokenByName(a, b);
+    });
   }
 
   static sortCurrencies(...currencies: CurrencyId[]): CurrencyId[] {
     const result = [...currencies];
+    const nameMap = Object.fromEntries(result.map((item) => [forceToCurrencyName(item), item]));
 
-    // FIXME: sort currencies should handle ERC20 and DexShare
-    for (const item of currencies) {
-      assert(item.isToken, `sortCurrencies doesn't support ERC20 and DexShare yet.`);
-    }
-
-    return result.sort((a, b) => TOKEN_SORT[a.asToken.toString()] - TOKEN_SORT[b.asToken.toString()]);
+    return Object.keys(nameMap)
+      .sort((a, b) => sortTokenByName(a, b))
+      .map((name) => nameMap[name]);
   }
 
   static sort(...tokens: Token[]): Token[] {
     const result = [...tokens];
+    const nameMap = Object.fromEntries(result.map((item) => [item.name, item]));
 
-    return result.sort((a, b) => TOKEN_SORT[a.name] - TOKEN_SORT[b.name]);
+    return Object.keys(nameMap)
+      .sort((a, b) => sortTokenByName(a, b))
+      .map((name) => nameMap[name]);
   }
 
   public toCurrencyId(api: AnyApi): CurrencyId {

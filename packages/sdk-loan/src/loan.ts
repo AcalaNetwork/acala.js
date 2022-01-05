@@ -92,10 +92,10 @@ export class LoanRx {
             globalInterestRatePerSec
           } = params;
           // trade debit decimal with stable coin decimal
-          const _debit = FixedPointNumber.fromInner(debit.toString(), this.stableCoinToken.decimal);
+          const _debit = FixedPointNumber.fromInner(debit.toString(), this.stableCoinToken.decimals);
 
           // apply change to collateral and debit
-          const _collateral = FixedPointNumber.fromInner(collateral.toString(), this.collateralToken.decimal).plus(
+          const _collateral = FixedPointNumber.fromInner(collateral.toString(), this.collateralToken.decimals).plus(
             collateralChange
           );
           const debitAmount = _debit.times(debitExchangeRate).plus(debitAmountChange);

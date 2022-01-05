@@ -59,3 +59,12 @@ export class NotForeignAssetName extends Error {
     this.message = `${origin} is not foreign asset name`;
   }
 }
+
+export class NotLiquidCroadloanName extends Error {
+  constructor(origin: string) {
+    super();
+
+    this.name = 'notLiquidCroadloan';
+    this.message = `${origin} is not liquid croadloan asset name`;
+  }
+}

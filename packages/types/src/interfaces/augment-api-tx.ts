@@ -5,7 +5,7 @@ import type { ChangeBalance, ChangeOptionRate, ChangeOptionRatio } from '@acala-
 import type { Amount, AmountOf, AuctionId, CurrencyId, CurrencyIdOf } from '@acala-network/types/interfaces/primitives';
 import type { AccountId, Balance, BalanceOf, BlockNumber, Call, LookupSource, Weight } from '@acala-network/types/interfaces/runtime';
 import type { Rate } from '@acala-network/types/interfaces/support';
-import type { ApiTypes, SubmittableExtrinsic } from '@polkadot/api/types';
+import type { ApiTypes, AugmentedSubmittable, SubmittableExtrinsic, SubmittableExtrinsicFunction, SubmittableModuleExtrinsics } from '@polkadot/api/types';
 import type { Compact, Option, Vec, bool } from '@polkadot/types';
 import type { Extrinsic } from '@polkadot/types/interfaces/extrinsics';
 import type { MultiAsset, MultiLocation } from '@polkadot/types/interfaces/xcm';

@@ -24,7 +24,7 @@ interface StakingPoolConfig {
   bondingDuration: number;
 
   currentEra: number;
-  decimal: number;
+  decimals: number;
 }
 
 class StakingPoolLedger implements StakingPoolLedgerData {
@@ -78,7 +78,7 @@ class StakingPoolLedger implements StakingPoolLedgerData {
 export class StakingPool {
   public params: StakingPoolParams;
   private ledger: StakingPoolLedger;
-  private decimal: number;
+  private decimals: number;
 
   public defaultExchangeRate!: FixedPointNumber;
   public liquidTotalIssuance!: FixedPointNumber;
@@ -93,7 +93,7 @@ export class StakingPool {
     this.currentEra = config.currentEra;
 
     this.liquidTotalIssuance.forceSetPrecision(18);
-    this.decimal = config.decimal;
+    this.decimals = config.decimals;
 
     this.ledger = new StakingPoolLedger(config.ledger);
   }
@@ -101,7 +101,7 @@ export class StakingPool {
   public get total(): FixedPointNumber {
     const result = this.ledger.total.clone();
 
-    result.forceSetPrecision(this.decimal);
+    result.forceSetPrecision(this.decimals);
 
     return result;
   }
@@ -109,7 +109,7 @@ export class StakingPool {
   public get freePool(): FixedPointNumber {
     const result = this.ledger.freePool.clone();
 
-    result.forceSetPrecision(this.decimal);
+    result.forceSetPrecision(this.decimals);
 
     return result;
   }
@@ -117,7 +117,7 @@ export class StakingPool {
   public get totalBelongToLiquidHolders(): FixedPointNumber {
     const result = this.ledger.totalBelongToLiquidHolders.clone();
 
-    result.forceSetPrecision(this.decimal);
+    result.forceSetPrecision(this.decimals);
 
     return result;
   }
@@ -125,7 +125,7 @@ export class StakingPool {
   public get bondedBelongToLiquidHolders(): FixedPointNumber {
     const result = this.ledger.bondedBelongToLiquidHolders.clone();
 
-    result.forceSetPrecision(this.decimal);
+    result.forceSetPrecision(this.decimals);
 
     return result;
   }
@@ -133,7 +133,7 @@ export class StakingPool {
   public get unbondingToFree(): FixedPointNumber {
     const result = this.ledger.unbondingToFree.clone();
 
-    result.forceSetPrecision(this.decimal);
+    result.forceSetPrecision(this.decimals);
 
     return result;
   }

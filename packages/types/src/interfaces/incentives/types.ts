@@ -3,7 +3,7 @@
 
 import type { CurrencyId } from '@acala-network/types/interfaces/primitives';
 import type { AccountId } from '@acala-network/types/interfaces/runtime';
-import type { Enum } from '@polkadot/types';
+import type { Enum } from '@polkadot/types-codec';
 
 /** @name PoolId */
 export interface PoolId extends Enum {
@@ -11,6 +11,7 @@ export interface PoolId extends Enum {
   readonly asLoans: CurrencyId;
   readonly isDex: boolean;
   readonly asDex: CurrencyId;
+  readonly type: 'Loans' | 'Dex';
 }
 
 /** @name PoolIdV0 */
@@ -24,6 +25,7 @@ export interface PoolIdV0 extends Enum {
   readonly asDexSaving: CurrencyId;
   readonly isHomaValidatorAllowance: boolean;
   readonly asHomaValidatorAllowance: AccountId;
+  readonly type: 'LoansIncentive' | 'DexIncentive' | 'HomaIncentive' | 'DexSaving' | 'HomaValidatorAllowance';
 }
 
 export type PHANTOM_INCENTIVES = 'incentives';

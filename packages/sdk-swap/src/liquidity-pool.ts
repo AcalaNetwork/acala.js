@@ -86,9 +86,9 @@ export class LiquidityPoolHelper {
       }
     }
 
-    pool0Increment.forceSetPrecision(this.token0.decimal);
-    pool1Increment.forceSetPrecision(this.token1.decimal);
-    incrementShare.forceSetPrecision(this.token0.decimal);
+    pool0Increment.forceSetPrecision(this.token0.decimals);
+    pool1Increment.forceSetPrecision(this.token1.decimals);
+    incrementShare.forceSetPrecision(this.token0.decimals);
 
     return {
       incrementA: this.token0.isEqual(tokenA) ? pool0Increment : pool1Increment,
