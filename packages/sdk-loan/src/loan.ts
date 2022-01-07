@@ -7,6 +7,7 @@ import { DerivedLoanType } from '@acala-network/api-derive';
 import { ApiRx } from '@polkadot/api';
 import { WalletRx } from '@acala-network/sdk-wallet';
 import { memoize } from 'lodash';
+import { ModuleLoansPosition } from '@polkadot/types/lookup';
 
 export interface LoanParams {
   debitExchangeRate: FixedPointNumber;
@@ -170,7 +171,7 @@ export class LoanRx {
   }
 
   private getLoanPosition() {
-    return this.api.query.loans.positions(this.currency, this.address);
+    return this.api.query.loans.positions(this.currency, this.address) as Observable<ModuleLoansPosition>;
   }
 
   private getCanGenerate(
