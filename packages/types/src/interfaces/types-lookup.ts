@@ -4404,9 +4404,6 @@ declare module '@polkadot/types/lookup' {
   /** @name FrameSupportStorageBoundedBTreeSet (398) */
   export interface FrameSupportStorageBoundedBTreeSet extends BTreeSet {}
 
-  /** @name BTreeSet (399) */
-  export interface BTreeSet extends Vec<AccountId32> {}
-
   /** @name ModuleCollatorSelectionError (400) */
   export interface ModuleCollatorSelectionError extends Enum {
     readonly isMaxCandidatesExceeded: boolean;

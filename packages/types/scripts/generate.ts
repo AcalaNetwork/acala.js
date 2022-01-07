@@ -4,14 +4,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
 import { generateInterfaceTypes } from '@polkadot/typegen/generate/interfaceRegistry';
 import { generateTsDef } from '@polkadot/typegen/generate/tsDef';
-import { generateDefaultLookup } from '@polkadot/typegen/generate/lookup';
+// import { generateDefaultLookup } from '@polkadot/typegen/generate/lookup';
 import {
   generateDefaultConsts,
   generateDefaultQuery,
   generateDefaultTx,
   generateDefaultRpc
 } from '@polkadot/typegen/generate';
-import { registerDefinitions } from '@polkadot/typegen/util';
 // import generateMobx from '@open-web3/api-mobx/scripts/mobx';
 import metadata from '../src/metadata/static-latest';
 
@@ -42,9 +41,9 @@ const customLookupDefinitions = {
 generateTsDef(definations, 'packages/types/src/interfaces', '@acala-network/types/interfaces');
 generateInterfaceTypes(definations, 'packages/types/src/interfaces/augment-types.ts');
 generateDefaultConsts('packages/types/src/interfaces/augment-api-consts.ts', metadata, definations, false, customLookupDefinitions);
-generateDefaultLookup('packages/types/src/interfaces', metadata);
+// generateDefaultLookup('packages/types/src/interfaces', metadata);
 
 generateDefaultTx('packages/types/src/interfaces/augment-api-tx.ts', metadata, definations, false, customLookupDefinitions);
-generateDefaultQuery('packages/types/src/interfaces/augment-api-query.ts', metadata, definations, false, customLookupDefinitions);
+// generateDefaultQuery('packages/types/src/interfaces/augment-api-query.ts', metadata, definations, false, customLookupDefinitions);
 generateDefaultRpc('packages/types/src/interfaces/augment-api-rpc.ts', definations);
 // generateMobx('packages/types/src/interfaces/augment-api-mobx.ts', metaHex, definations);

@@ -1,6 +1,7 @@
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { ApiPromise, ApiRx } from '@polkadot/api';
 import { AccountId } from '@polkadot/types/interfaces';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
 import { Codec, Observable } from '@polkadot/types/types';
 import { Token } from './token';
 
@@ -32,3 +33,5 @@ export type CurrencyObject =
   | { StableAssetPoolToken: number }
   | { ForeignAsset: number }
   | { LiquidCroadloan: number };
+
+export type CombinedCurrencyId = CurrencyId | AcalaPrimitivesCurrencyCurrencyId;

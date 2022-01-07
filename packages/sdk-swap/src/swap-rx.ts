@@ -2,7 +2,7 @@ import { ApiRx } from '@polkadot/api';
 import { memoize } from '@polkadot/util';
 import { Observable, from, of } from 'rxjs';
 import { filter, switchMap, startWith, map, shareReplay, withLatestFrom } from 'rxjs/operators';
-import { Balance, TradingPairStatus } from '@acala-network/types/interfaces';
+import { Balance, CurrencyId, TradingPairStatus } from '@acala-network/types/interfaces';
 import { eventMethodsFilter, mockEventRecord, Token, TokenPair, TokenSet } from '@acala-network/sdk-core';
 import { FixedPointNumber } from '@acala-network/sdk-core/fixed-point-number';
 import { ITuple } from '@polkadot/types/types';
@@ -52,7 +52,9 @@ export class SwapRx extends SwapBase<ApiRx> {
 
         return result
           .filter((item) => _filterFn(item[1]))
-          .map((item) => TokenPair.fromCurrencies(item[0].args[0][0], item[0].args[0][1]));
+          .map((item) =>
+            TokenPair.fromCurrencies(item[0].args[0][0] as any as CurrencyId, item[0].args[0][1] as any as CurrencyId)
+          );
       }),
       shareReplay(1)
     );
