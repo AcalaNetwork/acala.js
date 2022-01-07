@@ -36,7 +36,7 @@ const definations = {
 generateTsDef(definations, 'packages/types/src/interfaces', '@acala-network/types/interfaces');
 generateInterfaceTypes(definations, 'packages/types/src/interfaces/augment-types.ts');
 generateDefaultConsts('packages/types/src/interfaces/augment-api-consts.ts', metadata, definations);
-// generateDefaultLookup('packages/types/src/argument/loopup', metadata);
+generateDefaultLookup('packages/types/src/interfaces', metadata);
 
 generateDefaultTx('packages/types/src/interfaces/augment-api-tx.ts', metadata, definations);
 generateDefaultQuery('packages/types/src/interfaces/augment-api-query.ts', metadata, definations);
