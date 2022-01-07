@@ -381,14 +381,12 @@ export class Wallet implements BaseSDK, TokenProvider {
 
     data.liquidToken =
       tokens[
-        // FIXME: need remove homaLite
         forceToCurrencyName(this.api.consts.homa?.liquidCurrencyId || this.api.consts.homaLite?.liquidCurrencyId || '')
       ];
 
     data.stakingToken =
       tokens[
         forceToCurrencyName(
-          // FIXME: need remove homaLite
           this.api.consts.homa?.stakingCurrencyId || this.api.consts.homaLite?.stakingCurrencyId || ''
         )
       ];

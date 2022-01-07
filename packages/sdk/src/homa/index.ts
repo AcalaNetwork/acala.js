@@ -8,7 +8,16 @@ import { TokenProvider } from '../base-provider';
 import { BaseSDK } from '../types';
 import { getChainType } from '../utils/get-chain-type';
 import { createStorages } from './storages';
-import { EstimateMintResult, HomaConvertor, HomaEnvironment, RedeemRequest, StakingLedger, Unbonding } from './types';
+import {
+  EstimateMintResult,
+  EstimateRedeemResult,
+  HomaConvertor,
+  HomaEnvironment,
+  RedeemRequest,
+  StakingLedger,
+  Unbonding,
+  UserLiquidityTokenSummary
+} from './types';
 import { convertLiquidToStaking, convertStakingToLiquid, getExchangeRate } from './utils/exchange-rate';
 import { getAPY } from './utils/get-apy';
 import { getEstimateMintResult } from './utils/get-estimate-mint-result';
@@ -73,7 +82,7 @@ export class Homa implements BaseSDK {
   }
 
   public get isReady(): Promise<boolean> {
-    return firstValueFrom(this.isReady$.pipe(filter((i) => i)));
+    return firstValueFrom(this.isReady$.asObservable().pipe(filter((i) => i)));
   }
 
   private toBondPool$ = memoize((): Observable<FixedPointNumber> => {
@@ -242,6 +251,10 @@ export class Homa implements BaseSDK {
     return this.env$();
   };
 
+  public getEnv(): Promise<HomaEnvironment> {
+    return firstValueFrom(this.subscribeEnv());
+  }
+
   /**
    * @name subscribeConvertor
    * @description return convertLiquidToStaking and convertStakingToLiquid
@@ -255,6 +268,10 @@ export class Homa implements BaseSDK {
     );
   });
 
+  public getConvertor(): Promise<HomaConvertor> {
+    return firstValueFrom(this.subscribeConvertor());
+  }
+
   /**
    * @name subscribleEstimateMintResult
    * @description subscrible estimate mint result
@@ -263,9 +280,17 @@ export class Homa implements BaseSDK {
     return this.env$().pipe(map((env) => getEstimateMintResult(amount, env)));
   });
 
+  public getEstimateMintResult(amount: FixedPointNumber): Promise<EstimateMintResult> {
+    return firstValueFrom(this.subscribeEstimateMintResult(amount));
+  }
+
   public subscribeEstimateRedeemResult = memoize((amount: FixedPointNumber, isFastRedeem: boolean) => {
     return this.env$().pipe(map((env) => getEstimateRedeemResult(env, amount, isFastRedeem)));
   });
+
+  public getEstimateRedeemResult(amount: FixedPointNumber, isFastRedeem: boolean): Promise<EstimateRedeemResult> {
+    return firstValueFrom(this.subscribeEstimateRedeemResult(amount, isFastRedeem));
+  }
 
   public subscribeUserRedeemRequest = memoize((address: string): Observable<RedeemRequest> => {
     return combineLatest({
@@ -293,4 +318,8 @@ export class Homa implements BaseSDK {
       })
     );
   });
+
+  public getUserLiquidTokenSummary(address: string): Promise<UserLiquidityTokenSummary> {
+    return firstValueFrom(this.subscribeUserLiquidTokenSummary(address));
+  }
 }
