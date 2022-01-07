@@ -33,12 +33,18 @@ const definations = {
   '@acala-network/types/interfaces': acalaDefinations
 } as any;
 
+const customLookupDefinitions = {
+  rpc: {},
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
+  types: require('../src/interfaces/lookup.ts').default
+} as Definitions;
+
 generateTsDef(definations, 'packages/types/src/interfaces', '@acala-network/types/interfaces');
 generateInterfaceTypes(definations, 'packages/types/src/interfaces/augment-types.ts');
-generateDefaultConsts('packages/types/src/interfaces/augment-api-consts.ts', metadata, definations);
+generateDefaultConsts('packages/types/src/interfaces/augment-api-consts.ts', metadata, definations, false, customLookupDefinitions);
 generateDefaultLookup('packages/types/src/interfaces', metadata);
 
-generateDefaultTx('packages/types/src/interfaces/augment-api-tx.ts', metadata, definations);
-generateDefaultQuery('packages/types/src/interfaces/augment-api-query.ts', metadata, definations);
+generateDefaultTx('packages/types/src/interfaces/augment-api-tx.ts', metadata, definations, false, customLookupDefinitions);
+generateDefaultQuery('packages/types/src/interfaces/augment-api-query.ts', metadata, definations, false, customLookupDefinitions);
 generateDefaultRpc('packages/types/src/interfaces/augment-api-rpc.ts', definations);
 // generateMobx('packages/types/src/interfaces/augment-api-mobx.ts', metaHex, definations);

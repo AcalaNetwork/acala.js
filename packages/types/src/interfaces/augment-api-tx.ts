@@ -5,7 +5,7 @@ import type { AccountId32, Call, H160, H256, MultiAddress, Perbill } from '@acal
 import type { ApiTypes } from '@polkadot/api-base/types';
 import type { BTreeMap, Bytes, Compact, Option, U8aFixed, Vec, bool, i128, u128, u16, u32, u64, u8 } from '@polkadot/types-codec';
 import type { AnyNumber, ITuple } from '@polkadot/types-codec/types';
-import type { PalletDemocracyConviction, PalletDemocracyVoteAccountVote, PalletMultisigTimepoint, SpCoreEcdsaSignature, XcmV1MultiLocation, XcmV2WeightLimit, XcmVersionedMultiAssets, XcmVersionedMultiLocation, XcmVersionedXcm } from '@polkadot/types/lookup';
+import type { AcalaPrimitivesAuthoritysOriginId, AcalaPrimitivesCurrencyCurrencyId, CumulusPrimitivesParachainInherentParachainInherentData, EthereumTransactionTransactionAction, FrameSupportScheduleDispatchTime, KaruraRuntimeOriginCaller, KaruraRuntimeScheduledTasks, KaruraRuntimeSessionKeys, ModuleAssetRegistryModuleAssetMetadata, ModuleHomaModuleUnlockChunk, ModuleHomaXcmModuleHomaXcmOperation, ModuleIncentivesPoolId, OrmlTraitsChangeOption, OrmlTraitsChangeU128, OrmlVestingVestingSchedule, PalletDemocracyConviction, PalletDemocracyVoteAccountVote, PalletMultisigTimepoint, RuntimeCommonProxyType, SpCoreEcdsaSignature, XcmV1MultiLocation, XcmV2WeightLimit, XcmVersionedMultiAsset, XcmVersionedMultiAssets, XcmVersionedMultiLocation, XcmVersionedXcm } from '@polkadot/types/lookup';
 
 declare module '@polkadot/api-base/types/submittable' {
   export interface AugmentedSubmittables<ApiType extends ApiTypes> {
