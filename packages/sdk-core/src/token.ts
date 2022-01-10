@@ -221,9 +221,9 @@ export class Token {
 
   public toCurrencyId(api: AnyApi): CombinedCurrencyId {
     try {
-      return api.createType('AcalaPrimitivesCurrencyCombinedCurrencyId', this.toChainData());
+      return api.createType('AcalaPrimitivesCurrencyCurrencyId', this.toChainData());
     } catch (e) {
-      throw new Error(`can't convert ${this.toChainData()} to Currency Id`);
+      throw new Error(`can't convert ${this.toChainData()} to Currency Id. ${e}`);
     }
   }
 
