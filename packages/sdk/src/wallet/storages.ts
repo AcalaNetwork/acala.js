@@ -1,16 +1,19 @@
 import { AnyApi, Token, forceToCurrencyName } from '@acala-network/sdk-core';
-import { AcalaAssetMetadata, TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
-import { Option, StorageKey, u16, U128 } from '@polkadot/types';
+import { TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
+import { StorageKey, U128, Option } from '@polkadot/types';
 import { AccountInfo, Balance } from '@polkadot/types/interfaces';
 import { ITuple } from '@polkadot/types/types';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { Storage } from '../utils/storage';
+import { ModuleAssetRegistryModuleAssetIds, ModuleAssetRegistryModuleAssetMetadata } from '@polkadot/types/lookup';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const createStorages = (api: AnyApi) => {
   return {
     assetMetadatas: () =>
-      Storage.create<[StorageKey<u16[]>, Option<AcalaAssetMetadata>][]>({
+      Storage.create<
+        [StorageKey<[ModuleAssetRegistryModuleAssetIds]>, Option<ModuleAssetRegistryModuleAssetMetadata>][]
+      >({
         api: api,
         path: 'query.assetRegistry.assetMetadatas.entries',
         params: []

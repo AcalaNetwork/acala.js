@@ -50,11 +50,17 @@ export class WalletRx extends WalletBase<ApiRx> {
 
     this.api.query.assetRegistry.assetMetadatas.entries().subscribe((data) => {
       const result = data.map((item) => {
-        const id = item[0]?.args[0].toNumber();
+        const isForeignAssetId = item[0]?.args[0].isForeignAssetId;
         const data = (item[1] as Option<AcalaAssetMetadata>).unwrapOrDefault();
+        let name = '';
+        let decimals = 12;
 
-        const name = createForeignAssetName(id);
-        const decimals = Number(data.decimals.toString());
+        if (isForeignAssetId) {
+          const id = item[0]?.args[0].asForeignAssetId.toNumber();
+
+          name = createForeignAssetName(id);
+          decimals = data.decimals.toNumber();
+        }
 
         const token = Token.fromCurrencyName(name, {
           decimals,

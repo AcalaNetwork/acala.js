@@ -5,38 +5,43 @@ import {
   FixedPointNumber as FN,
   forceToCurrencyName
 } from '@acala-network/sdk-core';
-import { AcalaAssetMetadata, TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
-import { Option, StorageKey, u16 } from '@polkadot/types';
+import { TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
+import { Option, StorageKey } from '@polkadot/types';
+import { ModuleAssetRegistryModuleAssetIds, ModuleAssetRegistryModuleAssetMetadata } from '@polkadot/types/lookup';
 import { hexToString } from '@polkadot/util';
 import { TokenRecord } from '../type';
 
 export function createTokenList(
   basicTokens: TokenRecord,
   tradingPairs: [StorageKey<[TradingPair]>, TradingPairStatus][],
-  foreignAssets: [StorageKey<u16[]>, Option<AcalaAssetMetadata>][]
+  assetMetadata: [StorageKey<[ModuleAssetRegistryModuleAssetIds]>, Option<ModuleAssetRegistryModuleAssetMetadata>][]
 ): TokenRecord {
   // tokens list temp
   let temp: TokenRecord = { ...basicTokens };
 
   // TODO: need support stable coin assets & erc20
   const foreignTokens = Object.fromEntries(
-    foreignAssets.map((item) => {
-      const key = item[0].args[0].toNumber();
-      const value = item[1].unwrapOrDefault();
-      const name = createForeignAssetName(key);
-      const decimals = value.decimals.toNumber();
+    assetMetadata
+      .filter((item) => {
+        return item[0].args[0].isForeignAssetId;
+      })
+      .map((item) => {
+        const key = item[0].args[0].asForeignAssetId.toNumber();
+        const value = item[1].unwrapOrDefault();
+        const name = createForeignAssetName(key);
+        const decimals = value.decimals.toNumber();
 
-      return [
-        name,
-        Token.create(name, {
-          type: TokenType.FOREIGN_ASSET,
-          symbol: hexToString(value.symbol.toHex()),
-          display: hexToString(value.name.toHex()),
-          decimals,
-          ed: FN.fromInner(value.minimalBalance.toString(), decimals)
-        })
-      ];
-    })
+        return [
+          name,
+          Token.create(name, {
+            type: TokenType.FOREIGN_ASSET,
+            symbol: hexToString(value.symbol.toHex()),
+            display: hexToString(value.name.toHex()),
+            decimals,
+            ed: FN.fromInner(value.minimalBalance.toString(), decimals)
+          })
+        ];
+      })
   );
 
   // insert foreign tokens to temp
