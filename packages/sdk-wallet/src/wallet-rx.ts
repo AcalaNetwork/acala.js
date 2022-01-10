@@ -49,27 +49,22 @@ export class WalletRx extends WalletBase<ApiRx> {
     if (!this.api.query?.assetsRegistry?.assetMetadatas) return;
 
     this.api.query.assetRegistry.assetMetadatas.entries().subscribe((data) => {
-      const result = data.map((item) => {
-        const isForeignAssetId = item[0]?.args[0].isForeignAssetId;
-        const data = (item[1] as Option<AcalaAssetMetadata>).unwrapOrDefault();
-        let name = '';
-        let decimals = 12;
-
-        if (isForeignAssetId) {
+      const result = data
+        .filter((item) => item[0].args[0].isForeignAssetId)
+        .map((item) => {
+          const data = (item[1] as Option<AcalaAssetMetadata>).unwrapOrDefault();
           const id = item[0]?.args[0].asForeignAssetId.toNumber();
+          const name = createForeignAssetName(id);
+          const decimals = data.decimals.toNumber();
 
-          name = createForeignAssetName(id);
-          decimals = data.decimals.toNumber();
-        }
+          const token = Token.fromCurrencyName(name, {
+            decimals,
+            symbol: hexToString(data.symbol.toHex()),
+            ed: FN.fromInner(data.minimalBalance.toString(), decimals)
+          });
 
-        const token = Token.fromCurrencyName(name, {
-          decimals,
-          symbol: hexToString(data.symbol.toHex()),
-          ed: FN.fromInner(data.minimalBalance.toString(), decimals)
+          return [name, token] as const;
         });
-
-        return [name, token] as const;
-      });
 
       this.assetMetadatas$.next(new Map(result));
     });
