@@ -3,7 +3,7 @@ import { ApiRx } from '@polkadot/api';
 import { map, shareReplay, switchMap, take } from 'rxjs/operators';
 import { memoize, bnMax, hexToString } from '@polkadot/util';
 import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
-import { u16, Vec } from '@polkadot/types';
+import { Vec } from '@polkadot/types';
 import { TimestampedValue, VestingScheduleOf, OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import {
   createForeignAssetName,
@@ -49,21 +49,22 @@ export class WalletRx extends WalletBase<ApiRx> {
     if (!this.api.query?.assetsRegistry?.assetMetadatas) return;
 
     this.api.query.assetRegistry.assetMetadatas.entries().subscribe((data) => {
-      const result = data.map((item) => {
-        const id = (item[0]?.args[0] as u16).toNumber();
-        const data = (item[1] as Option<AcalaAssetMetadata>).unwrapOrDefault();
+      const result = data
+        .filter((item) => item[0].args[0].isForeignAssetId)
+        .map((item) => {
+          const data = (item[1] as Option<AcalaAssetMetadata>).unwrapOrDefault();
+          const id = item[0]?.args[0].asForeignAssetId.toNumber();
+          const name = createForeignAssetName(id);
+          const decimals = data.decimals.toNumber();
 
-        const name = createForeignAssetName(id);
-        const decimals = data.decimals.toNumber();
+          const token = Token.fromCurrencyName(name, {
+            decimals,
+            symbol: hexToString(data.symbol.toHex()),
+            ed: FN.fromInner(data.minimalBalance.toString(), decimals)
+          });
 
-        const token = Token.fromCurrencyName(name, {
-          decimals,
-          symbol: hexToString(data.symbol.toHex()),
-          ed: FN.fromInner(data.minimalBalance.toString(), decimals)
+          return [name, token] as const;
         });
-
-        return [name, token] as const;
-      });
 
       this.assetMetadatas$.next(new Map(result));
     });

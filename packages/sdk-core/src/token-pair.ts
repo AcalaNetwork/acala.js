@@ -1,6 +1,7 @@
 import { Token } from '@acala-network/sdk-core/token';
-import { CurrencyId, TradingPair } from '@acala-network/types/interfaces';
+import { AcalaPrimitivesTradingPair } from '@polkadot/types/lookup';
 import { assert } from '@polkadot/util';
+import { CombinedCurrencyId } from '.';
 import { AnyApi } from './types';
 
 // class for store token pair
@@ -9,7 +10,7 @@ export class TokenPair {
   private token2: Token;
   private origin: [Token, Token];
 
-  static fromCurrencyId(currency: CurrencyId): TokenPair {
+  static fromCurrencyId(currency: CombinedCurrencyId): TokenPair {
     assert(currency.isDexShare, 'TokenPair.fromCurrencyId should receive CurrencyId which is DexShare');
 
     const [currency1, currency2] = currency.asDexShare;
@@ -17,11 +18,11 @@ export class TokenPair {
     return new TokenPair(Token.fromTokenSymbol(currency1 as any), Token.fromTokenSymbol(currency2 as any));
   }
 
-  static fromCurrencies(currency1: CurrencyId, currency2: CurrencyId): TokenPair {
+  static fromCurrencies(currency1: CombinedCurrencyId, currency2: CombinedCurrencyId): TokenPair {
     return new TokenPair(Token.fromCurrencyId(currency1), Token.fromCurrencyId(currency2));
   }
 
-  static fromTrandingPair(tradingPair: TradingPair): TokenPair {
+  static fromTrandingPair(tradingPair: AcalaPrimitivesTradingPair): TokenPair {
     const [currency1, currency2] = tradingPair;
 
     return TokenPair.fromCurrencies(currency1, currency2);
@@ -53,7 +54,7 @@ export class TokenPair {
     return [this.token1.toChainData() as { Token: string }, this.token2.toChainData() as { Token: string }];
   }
 
-  public toTradingPair(api: AnyApi): TradingPair {
-    return api.createType('TradingPair', this.toChainData());
+  public toTradingPair(api: AnyApi): AcalaPrimitivesTradingPair {
+    return api.createType('AcalaPrimitivesTradingPair', this.toChainData());
   }
 }

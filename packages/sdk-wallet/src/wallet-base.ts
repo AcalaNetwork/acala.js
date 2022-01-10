@@ -120,6 +120,11 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
 
   public getTransferConfig(currency: MaybeCurrency): TransferConfig {
     const name = forceToCurrencyName(currency);
+    const token = this.getToken(name);
+
+    if (token.isForeignAsset) {
+      return { existentialDeposit: token.ed };
+    }
 
     if (isDexShareName(name)) {
       // if the token is dex, use the first token config after sort

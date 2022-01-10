@@ -1,7 +1,7 @@
-import { CurrencyId, TokenSymbol, DexShare, TradingPair } from '@acala-network/types/interfaces';
+import { TokenSymbol, DexShare, TradingPair } from '@acala-network/types/interfaces';
 import { assert } from '@polkadot/util';
 
-import { AnyApi, TokenType } from './types';
+import { AnyApi, CombinedCurrencyId, TokenType } from './types';
 import { forceToCurrencyName } from './converter';
 import {
   createDexShareName,
@@ -135,7 +135,7 @@ export class Token {
    * @name fromCurrencyId
    * @description create token from currency id
    */
-  static fromCurrencyId(currency: CurrencyId, configs?: Configs): Token {
+  static fromCurrencyId(currency: CombinedCurrencyId, configs?: Configs): Token {
     return this.fromCurrencyName(forceToCurrencyName(currency), configs);
   }
 
@@ -158,8 +158,12 @@ export class Token {
     });
   }
 
-  /* create DexShareToken form CurrencyId array */
-  static fromCurrencies(currency1: CurrencyId, currency2: CurrencyId, decimals?: number | [number, number]): Token {
+  /* create DexShareToken form CombinedCurrencyId array */
+  static fromCurrencies(
+    currency1: CombinedCurrencyId,
+    currency2: CombinedCurrencyId,
+    decimals?: number | [number, number]
+  ): Token {
     const decimals1 = Array.isArray(decimals) ? decimals[0] : decimals;
     const decimals2 = Array.isArray(decimals) ? decimals[1] : decimals;
 
@@ -197,7 +201,7 @@ export class Token {
     });
   }
 
-  static sortCurrencies(...currencies: CurrencyId[]): CurrencyId[] {
+  static sortCurrencies(...currencies: CombinedCurrencyId[]): CombinedCurrencyId[] {
     const result = [...currencies];
     const nameMap = Object.fromEntries(result.map((item) => [forceToCurrencyName(item), item]));
 
@@ -215,11 +219,11 @@ export class Token {
       .map((name) => nameMap[name]);
   }
 
-  public toCurrencyId(api: AnyApi): CurrencyId {
+  public toCurrencyId(api: AnyApi): CombinedCurrencyId {
     try {
       return api.createType('AcalaPrimitivesCurrencyCurrencyId', this.toChainData());
     } catch (e) {
-      throw new Error(`can't convert ${this.toChainData()} to Currency Id`);
+      throw new Error(`can't convert ${this.toChainData()} to Currency Id. ${e}`);
     }
   }
 
