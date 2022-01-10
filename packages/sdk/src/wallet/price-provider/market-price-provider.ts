@@ -1,8 +1,8 @@
-import { Observable, BehaviorSubject, timer, switchMap, from, lastValueFrom, combineLatest } from 'rxjs';
+import { Observable, BehaviorSubject, timer, switchMap, from, lastValueFrom, combineLatest, of } from 'rxjs';
 import { map, debounceTime } from 'rxjs/operators';
 import fetch from 'axios';
 import { PriceProvider } from './types';
-import { FixedPointNumber as FN, forceToCurrencyName, MaybeCurrency } from '@acala-network/sdk-core';
+import { FixedPointNumber, FixedPointNumber as FN, forceToCurrencyName, MaybeCurrency } from '@acala-network/sdk-core';
 
 const PRICE_API = 'https://api.polkawallet.io/price-server/';
 
@@ -56,6 +56,11 @@ export class MarketPriceProvider implements PriceProvider {
 
   subscribe(currency: MaybeCurrency): Observable<FN> {
     const name = forceToCurrencyName(currency);
+
+    // set KUSD, AUSD market price to 1 for calculate in system
+    if (name === 'KSUD' || name === 'AUSD') {
+      return of(new FixedPointNumber(1, 12));
+    }
 
     // if doesn't track this token, fetch it immediately
     if (this.trackedCurrencies.findIndex((i) => i === name) === -1) {

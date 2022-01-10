@@ -46,7 +46,7 @@ export class WalletRx extends WalletBase<ApiRx> {
   }
 
   private subscribeAssetMetadata() {
-    if (!this.api.query?.assetsRegistry?.assetMetadatas) return;
+    if (!this.api.query?.assetRegistry?.assetMetadatas) return;
 
     this.api.query.assetRegistry.assetMetadatas.entries().subscribe((data) => {
       const result = data
