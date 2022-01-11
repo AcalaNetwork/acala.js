@@ -29,11 +29,8 @@ export function getTokenTypeWeight(name: string): number {
 const TOKEN_SORT: Record<string, number> = primitivesConfig.types.TokenSymbol._enum;
 
 export function sortTokenByName(a: string, b: string): number {
-  let weightA = 0;
-  let weightB = 0;
-
-  weightA += getTokenTypeWeight(a);
-  weightB += getTokenTypeWeight(b);
+  const weightA = getTokenTypeWeight(a);
+  const weightB = getTokenTypeWeight(b);
 
   if (weightA !== weightB) {
     return weightB - weightA;

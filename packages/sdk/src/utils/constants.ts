@@ -1,0 +1,11 @@
+export const MILLISECONDS_OF_DAY = 24 * 60 * 60 * 1000;
+
+export const SECONDS_OF_DAY = 24 * 60 * 60;
+
+export const MILLISECONDS_OF_YEAR = 365 * MILLISECONDS_OF_DAY;
+
+export const SECONDS_OF_YEAR = 365 * SECONDS_OF_DAY;
+
+export const EXPECTED_BLOCK_TIME = 12 * 1000;
+
+export const EXPECTED_BLOCK_TIME_WITH_DELAY = 12.5 * 1000;
