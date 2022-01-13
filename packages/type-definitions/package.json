@@ -15,6 +15,6 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
-    "@open-web3/orml-type-definitions": "^1.0.2-0"
+    "@open-web3/orml-type-definitions": "^1.0.2-3"
   }
 }
