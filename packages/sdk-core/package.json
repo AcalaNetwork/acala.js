@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk-core",
-  "version": "4.0.2-3",
+  "version": "4.0.2-4",
   "description": "the core of acala network sdk",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
