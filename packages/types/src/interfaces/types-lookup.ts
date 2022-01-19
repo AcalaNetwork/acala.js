@@ -391,7 +391,7 @@ declare module '@polkadot/types/lookup' {
     readonly asErc20: H160;
     readonly isStableAssetPoolToken: boolean;
     readonly asStableAssetPoolToken: u32;
-    readonly isLiquidCroadloan: boolean;
+    readonly isLiquidCrowdloan: boolean;
     readonly asLiquidCroadloan: u32;
     readonly isForeignAsset: boolean;
     readonly asForeignAsset: u16;
@@ -425,7 +425,7 @@ declare module '@polkadot/types/lookup' {
     readonly asToken: AcalaPrimitivesCurrencyTokenSymbol;
     readonly isErc20: boolean;
     readonly asErc20: H160;
-    readonly isLiquidCroadloan: boolean;
+    readonly isLiquidCrowdloan: boolean;
     readonly asLiquidCroadloan: u32;
     readonly isForeignAsset: boolean;
     readonly asForeignAsset: u16;

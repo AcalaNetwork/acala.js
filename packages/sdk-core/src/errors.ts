@@ -28,7 +28,7 @@ export class ConvertToCurrencyNameFailed extends Error {
   constructor(origin: MaybeCurrency) {
     super();
 
-    this.name = 'convertToNameIdFailed';
+    this.name = 'convertToCurrencyNameFailed';
     this.message = `convert to currency name failed ${origin.toString()}`;
   }
 }
@@ -60,11 +60,11 @@ export class NotForeignAssetName extends Error {
   }
 }
 
-export class NotLiquidCroadloanName extends Error {
+export class NotLiquidCrowdloanName extends Error {
   constructor(origin: string) {
     super();
 
-    this.name = 'notLiquidCroadloan';
-    this.message = `${origin} is not liquid croadloan asset name`;
+    this.name = 'notLiquidCrowdloan';
+    this.message = `${origin} is not liquid crowdloan asset name`;
   }
 }

@@ -7,8 +7,8 @@ import {
   getForeignAssetIdFromName,
   unzipDexShareName,
   getCurrencyTypeByName,
-  isLiquidCroadloanName,
-  getLiquidCroadloanIdFromName
+  isLiquidCrowdloanName,
+  getLiquidCrowdloanIdFromName
 } from '.';
 import primitivesConfig from '@acala-network/type-definitions/primitives';
 import { TokenType } from './types';
@@ -18,7 +18,7 @@ const TOKEN_TYPE_WEIGHTS = {
   [TokenType.DEX_SHARE]: 8,
   [TokenType.ERC20]: 7,
   [TokenType.STABLE_ASSET_POOL_TOKEN]: 6,
-  [TokenType.LIQUID_CROADLOAN]: 5,
+  [TokenType.LIQUID_CROWDLOAN]: 5,
   [TokenType.FOREIGN_ASSET]: 4
 };
 
@@ -51,8 +51,8 @@ export function sortTokenByName(a: string, b: string): number {
     return getForeignAssetIdFromName(a) - getForeignAssetIdFromName(b);
   }
 
-  if (isLiquidCroadloanName(a) && isLiquidCroadloanName(b)) {
-    return getLiquidCroadloanIdFromName(a) - getLiquidCroadloanIdFromName(b);
+  if (isLiquidCrowdloanName(a) && isLiquidCrowdloanName(b)) {
+    return getLiquidCrowdloanIdFromName(a) - getLiquidCrowdloanIdFromName(b);
   }
 
   if (isDexShareName(a) && isDexShareName(b)) {

@@ -18,7 +18,7 @@ export enum TokenType {
   'DEX_SHARE',
   'ERC20',
   'STABLE_ASSET_POOL_TOKEN',
-  'LIQUID_CROADLOAN',
+  'LIQUID_CROWDLOAN',
   'FOREIGN_ASSET'
 }
 
