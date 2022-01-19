@@ -32,6 +32,8 @@ export type CurrencyObject =
   | { Erc20: string }
   | { StableAssetPoolToken: number }
   | { ForeignAsset: number }
-  | { LiquidCroadloan: number };
+  // FIXME: need remove if all chain is released
+  | { LiquidCroadloan: number }
+  | { LiquidCrowdloan: number };
 
 export type CombinedCurrencyId = CurrencyId | AcalaPrimitivesCurrencyCurrencyId;

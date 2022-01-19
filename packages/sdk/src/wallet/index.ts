@@ -114,6 +114,11 @@ export class Wallet implements BaseSDK, TokenProvider {
       })
     );
 
+    // FIXME: need remove if all chain is released
+    if (getChainType(this.consts.runtimeChain) === ChainType.MANDALA) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      (window as any).__LIQUID_CROADLOAN = true;
+    }
     // insert LCDOT if chain is acala
     if (getChainType(this.consts.runtimeChain) === ChainType.ACALA) {
       const name = createLiquidCroadloanName(13);
