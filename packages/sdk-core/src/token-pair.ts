@@ -1,7 +1,6 @@
 import { Token } from '@acala-network/sdk-core/token';
-import { AcalaPrimitivesTradingPair } from '@polkadot/types/lookup';
+import { AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesTradingPair } from '@polkadot/types/lookup';
 import { assert } from '@polkadot/util';
-import { CombinedCurrencyId } from '.';
 import { AnyApi } from './types';
 
 // class for store token pair
@@ -10,15 +9,18 @@ export class TokenPair {
   private token2: Token;
   private origin: [Token, Token];
 
-  static fromCurrencyId(currency: CombinedCurrencyId): TokenPair {
+  static fromCurrencyId(currency: AcalaPrimitivesCurrencyCurrencyId): TokenPair {
     assert(currency.isDexShare, 'TokenPair.fromCurrencyId should receive CurrencyId which is DexShare');
 
     const [currency1, currency2] = currency.asDexShare;
 
-    return new TokenPair(Token.fromTokenSymbol(currency1 as any), Token.fromTokenSymbol(currency2 as any));
+    return new TokenPair(Token.fromCurrencyId(currency1 as any), Token.fromCurrencyId(currency2 as any));
   }
 
-  static fromCurrencies(currency1: CombinedCurrencyId, currency2: CombinedCurrencyId): TokenPair {
+  static fromCurrencies(
+    currency1: AcalaPrimitivesCurrencyCurrencyId,
+    currency2: AcalaPrimitivesCurrencyCurrencyId
+  ): TokenPair {
     return new TokenPair(Token.fromCurrencyId(currency1), Token.fromCurrencyId(currency2));
   }
 

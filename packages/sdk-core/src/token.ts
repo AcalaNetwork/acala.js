@@ -109,8 +109,8 @@ export class Token {
     return this.type === TokenType.STABLE_ASSET_POOL_TOKEN;
   }
 
-  get isLiquidCroadloan(): boolean {
-    return this.type === TokenType.LIQUID_CROADLOAN;
+  get isLiquidCrowdloan(): boolean {
+    return this.type === TokenType.LIQUID_CROWDLOAN;
   }
 
   get isForeignAsset(): boolean {

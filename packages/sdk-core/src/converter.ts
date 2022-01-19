@@ -1,4 +1,5 @@
 import { CurrencyId, TokenSymbol } from '@acala-network/types/interfaces';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
 import { isArray } from 'lodash';
 import { STABLE_ASSET_POOLS, TokenType } from '.';
 import {
@@ -6,11 +7,13 @@ import {
   ConvertToCurrencyNameFailed,
   NotDexShareName,
   NotForeignAssetName,
-  NotLiquidCroadloanName,
+  NotLiquidCrowdloanName,
   NotStableAssetPoolName
 } from './errors';
 import { Token } from './token';
 import { AnyApi, CurrencyObject, MaybeCurrency } from './types';
+
+let IS_LIQUID_CROADLOAN = false;
 
 /**
  *  we set a name with a prefix to all types of tokens for easy passing and use.
@@ -88,17 +91,17 @@ export function getForeignAssetIdFromName(name: string): number {
   return parseInt(name.replace('fa://', ''));
 }
 
-// for liquid croadloan
-export function createLiquidCroadloanName(id: number): string {
+// for liquid crowdloan
+export function createLiquidCrowdloanName(id: number): string {
   return `lc://${id}`;
 }
 
-export function isLiquidCroadloanName(name: string): boolean {
+export function isLiquidCrowdloanName(name: string): boolean {
   return name.startsWith('lc://');
 }
 
-export function getLiquidCroadloanIdFromName(name: string): number {
-  if (!isLiquidCroadloanName(name)) throw new NotLiquidCroadloanName(name);
+export function getLiquidCrowdloanIdFromName(name: string): number {
+  if (!isLiquidCrowdloanName(name)) throw new NotLiquidCrowdloanName(name);
 
   return parseInt(name.replace('lc://', ''));
 }
@@ -112,7 +115,7 @@ export function getCurrencyTypeByName(name: string): TokenType {
 
   if (isDexShareName(name)) return TokenType.DEX_SHARE;
 
-  if (isLiquidCroadloanName(name)) return TokenType.LIQUID_CROADLOAN;
+  if (isLiquidCrowdloanName(name)) return TokenType.LIQUID_CROWDLOAN;
 
   // FIXME: need support ERC20
   return TokenType.BASIC;
@@ -130,14 +133,14 @@ export function getForeignAssetCurrencyObject(name: string): CurrencyObject {
   return { ForeignAsset: getForeignAssetIdFromName(name) };
 }
 
-export function getLiquidCroadloanObject(name: string): CurrencyObject {
-  // FIXME: need remove if all chain is released
+export function getLiquidCrowdloanObject(name: string): CurrencyObject {
+  // FIXME: need remove if all chain released
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  if ((window as any).__LIQUID_CROADLOAN) {
-    return { LiquidCroadloan: getLiquidCroadloanIdFromName(name) };
+  if (IS_LIQUID_CROADLOAN) {
+    return { LiquidCroadloan: getLiquidCrowdloanIdFromName(name) };
   }
 
-  return { LiquidCrowdloan: getLiquidCroadloanIdFromName(name) };
+  return { LiquidCrowdloan: getLiquidCrowdloanIdFromName(name) };
 }
 
 export function getDexShareCurrencyObject(name: string): CurrencyObject {
@@ -152,7 +155,7 @@ export function getDexShareCurrencyObject(name: string): CurrencyObject {
 
     if (isStableAssetName(name)) return getStableAssetCurrencyObject(name);
 
-    if (isLiquidCroadloanName(name)) return getLiquidCroadloanObject(name);
+    if (isLiquidCrowdloanName(name)) return getLiquidCrowdloanObject(name);
 
     // FIXME: need support ERC20
     return getBasicCurrencyObject(name);
@@ -168,7 +171,7 @@ export function getCurrencyObject(name: string): CurrencyObject {
 
   if (isStableAssetName(name)) return getStableAssetCurrencyObject(name);
 
-  if (isLiquidCroadloanName(name)) return getLiquidCroadloanObject(name);
+  if (isLiquidCrowdloanName(name)) return getLiquidCrowdloanObject(name);
 
   // FIXME: need support ERC20
   return getBasicCurrencyObject(name);
@@ -204,8 +207,18 @@ export function forceToCurrencyName(target: MaybeCurrency): string {
     if ((target as CurrencyId).isForeignAsset)
       return createForeignAssetName((target as CurrencyId).asForeignAsset.toNumber());
 
-    if ((target as CurrencyId).isLiquidCroadloan)
-      return createLiquidCroadloanName((target as CurrencyId).asLiquidCroadloan.toNumber());
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if ((target as any).isLiquidCrowdloan) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      return createLiquidCrowdloanName((target as any).asLiquidCrowdloan.toNumber());
+    }
+
+    // FIXME: need remove if all chain released
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if ((target as any).isLiquidCroadloan) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      return createLiquidCrowdloanName((target as any).asLiquidCroadloan.toNumber());
+    }
 
     return target.toString();
   } catch (e) {
@@ -217,9 +230,16 @@ export function forceToCurrencyId(api: AnyApi, target: MaybeCurrency): CurrencyI
   try {
     const name = forceToCurrencyName(target);
 
+    const type = api.createType('AcalaPrimitivesCurrencyCurrencyId') as AcalaPrimitivesCurrencyCurrencyId;
+
+    // FIXME: need remove if all chain released
+    if (Reflect.has(type, 'asLiquidCroadloan')) {
+      IS_LIQUID_CROADLOAN = true;
+    }
+
     return api.createType('AcalaPrimitivesCurrencyCurrencyId', getCurrencyObject(name)) as unknown as CurrencyId;
   } catch (e) {
-    throw new ConvertToCurrencyIdFailed(origin);
+    throw new ConvertToCurrencyIdFailed(target);
   }
 }
 

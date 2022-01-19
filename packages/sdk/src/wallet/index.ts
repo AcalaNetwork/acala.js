@@ -12,7 +12,7 @@ import {
   TokenType,
   unzipDexShareName,
   isDexShareName,
-  createLiquidCroadloanName
+  createLiquidCrowdloanName
 } from '@acala-network/sdk-core';
 import { AccountInfo, Balance, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
@@ -114,14 +114,9 @@ export class Wallet implements BaseSDK, TokenProvider {
       })
     );
 
-    // FIXME: need remove if all chain is released
-    if (getChainType(this.consts.runtimeChain) === ChainType.MANDALA) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      (window as any).__LIQUID_CROADLOAN = true;
-    }
     // insert LCDOT if chain is acala
     if (getChainType(this.consts.runtimeChain) === ChainType.ACALA) {
-      const name = createLiquidCroadloanName(13);
+      const name = createLiquidCrowdloanName(13);
 
       basicTokens[name] = new Token(name, {
         decimals: basicTokens.DOT.decimals,

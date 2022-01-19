@@ -18,7 +18,7 @@ export enum TokenType {
   'DEX_SHARE',
   'ERC20',
   'STABLE_ASSET_POOL_TOKEN',
-  'LIQUID_CROADLOAN',
+  'LIQUID_CROWDLOAN',
   'FOREIGN_ASSET'
 }
 
@@ -32,7 +32,7 @@ export type CurrencyObject =
   | { Erc20: string }
   | { StableAssetPoolToken: number }
   | { ForeignAsset: number }
-  // FIXME: need remove if all chain is released
+  // FIXME: need remove if all chain released
   | { LiquidCroadloan: number }
   | { LiquidCrowdloan: number };
 
