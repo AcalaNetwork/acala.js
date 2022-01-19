@@ -1,4 +1,4 @@
-import { createDexShareName, createStableAssetName, getCurrencyObject, unzipDexShareName } from '.';
+import { createDexShareName, createStableAssetName, getCurrencyObject, unzipDexShareName } from './converter';
 
 describe('converter', () => {
   test('dex share name should work', () => {

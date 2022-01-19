@@ -1,18 +1,17 @@
 import { TokenSymbol, DexShare, TradingPair } from '@acala-network/types/interfaces';
 import { assert } from '@polkadot/util';
 
-import { AnyApi, CombinedCurrencyId, TokenType } from './types';
-import { forceToCurrencyName } from './converter';
+import { AnyApi, CombinedCurrencyId, CurrencyObject, TokenType } from './types';
 import {
   createDexShareName,
   createStableAssetName,
-  CurrencyObject,
-  FixedPointNumber,
+  forceToCurrencyName,
   getCurrencyObject,
   getCurrencyTypeByName,
   unzipDexShareName
-} from '.';
+} from './converter';
 import { sortTokenByName } from './sort-token';
+import { FixedPointNumber } from './fixed-point-number';
 
 export interface StableAsset {
   poolId: number;

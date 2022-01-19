@@ -1,16 +1,16 @@
+import primitivesConfig from '@acala-network/type-definitions/primitives';
 import {
+  getCurrencyTypeByName,
+  getForeignAssetIdFromName,
+  getLiquidCrowdloanIdFromName,
+  getStableAssetPoolIdFromName,
+  isBasicToken,
   isDexShareName,
   isForeignAssetName,
-  isStableAssetName,
-  isBasicToken,
-  getStableAssetPoolIdFromName,
-  getForeignAssetIdFromName,
-  unzipDexShareName,
-  getCurrencyTypeByName,
   isLiquidCrowdloanName,
-  getLiquidCrowdloanIdFromName
-} from '.';
-import primitivesConfig from '@acala-network/type-definitions/primitives';
+  isStableAssetName,
+  unzipDexShareName
+} from './converter';
 import { TokenType } from './types';
 
 const TOKEN_TYPE_WEIGHTS = {

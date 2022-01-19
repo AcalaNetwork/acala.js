@@ -1,7 +1,6 @@
 import { CurrencyId, TokenSymbol } from '@acala-network/types/interfaces';
 import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
 import { isArray } from 'lodash';
-import { STABLE_ASSET_POOLS, TokenType } from '.';
 import {
   ConvertToCurrencyIdFailed,
   ConvertToCurrencyNameFailed,
@@ -10,8 +9,8 @@ import {
   NotLiquidCrowdloanName,
   NotStableAssetPoolName
 } from './errors';
-import { Token } from './token';
-import { AnyApi, CurrencyObject, MaybeCurrency } from './types';
+import { STABLE_ASSET_POOLS, Token } from './token';
+import { AnyApi, CurrencyObject, MaybeCurrency, TokenType } from './types';
 
 let IS_LIQUID_CROADLOAN = false;
 
