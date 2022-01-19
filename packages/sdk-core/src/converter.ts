@@ -131,7 +131,13 @@ export function getForeignAssetCurrencyObject(name: string): CurrencyObject {
 }
 
 export function getLiquidCroadloanObject(name: string): CurrencyObject {
-  return { LiquidCroadloan: getLiquidCroadloanIdFromName(name) };
+  // FIXME: need remove if all chain is released
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  if ((window as any).__LIQUID_CROADLOAN) {
+    return { LiquidCroadloan: getLiquidCroadloanIdFromName(name) };
+  }
+
+  return { LiquidCrowdloan: getLiquidCroadloanIdFromName(name) };
 }
 
 export function getDexShareCurrencyObject(name: string): CurrencyObject {

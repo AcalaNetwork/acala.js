@@ -42,6 +42,13 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
   private init() {
     const tokenDecimals = this.api.registry.chainDecimals;
     const tokenSymbol = this.api.registry.chainTokens;
+    const chainName = this.api.runtimeChain.toString();
+
+    // FIXME: need remove if all chain is released
+    if (getChainType(chainName) === ChainType.MANDALA) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      (window as any).__LIQUID_CROADLOAN = true;
+    }
 
     const defaultTokenDecimal = Number(tokenDecimals?.[0]) || 12;
 
