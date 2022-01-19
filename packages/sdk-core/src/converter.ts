@@ -134,7 +134,7 @@ export function getForeignAssetCurrencyObject(name: string): CurrencyObject {
 }
 
 export function getLiquidCrowdloanObject(name: string): CurrencyObject {
-  // FIXME: need remove if all chain is released
+  // FIXME: need remove if all chain released
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   if (IS_LIQUID_CROADLOAN) {
     return { LiquidCroadloan: getLiquidCrowdloanIdFromName(name) };
@@ -213,7 +213,7 @@ export function forceToCurrencyName(target: MaybeCurrency): string {
       return createLiquidCrowdloanName((target as any).asLiquidCrowdloan.toNumber());
     }
 
-    // FIXME: need remove if all chain is released
+    // FIXME: need remove if all chain released
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if ((target as any).isLiquidCroadloan) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -232,7 +232,7 @@ export function forceToCurrencyId(api: AnyApi, target: MaybeCurrency): CurrencyI
 
     const type = api.createType('AcalaPrimitivesCurrencyCurrencyId') as AcalaPrimitivesCurrencyCurrencyId;
 
-    // FIXME: need remove if all chain is released
+    // FIXME: need remove if all chain released
     if (Reflect.has(type, 'asLiquidCroadloan')) {
       IS_LIQUID_CROADLOAN = true;
     }
