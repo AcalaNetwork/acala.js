@@ -20,6 +20,7 @@ const EXISTENTIAL_DEPOSIT: ExistentialDepositConfig = {
     AUSD: new FixedPointNumber(0.1, 12),
     DOT: new FixedPointNumber(0.01, 10),
     LDOT: new FixedPointNumber(0.05, 10),
+    'LC://13': new FixedPointNumber(0.01, 10),
     RENBTC: MAX,
     CASH: MAX,
     BNC: MAX,
