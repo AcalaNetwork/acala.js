@@ -64,7 +64,7 @@ export class OraclePriceProvider implements PriceProvider {
   }
 
   /*
-  The LiquidCrowdloan token price is calculated by DOT orical price and relaychain block
+  The LiquidCrowdloan token price is calculated by DOT oracle price and current relaychain block number
 
   formula: oracle price * (1 / (1 + rewardRate) ** (lease block number - current relaychain block))
   */
