@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 4.0.2-9 Oct 01, 2022
+Change:
+  - Bump polkadot.js version to 7.2.1
+  - Support LCDOT price
 ## 3.0.2 Oct 29, 2021
 Changes:
   - Add StableAsset types
