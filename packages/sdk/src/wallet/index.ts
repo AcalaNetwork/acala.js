@@ -196,7 +196,7 @@ export class Wallet implements BaseSDK, TokenProvider {
     return firstValueFrom(this.subscribeToken(target));
   }
 
-  // get token, must be called after wallet sdk is ready
+  // get token, must be called when wallet sdk is ready
   public __getToken(target: MaybeCurrency): Token | undefined {
     const name = forceToCurrencyName(target);
 
@@ -432,8 +432,6 @@ export class Wallet implements BaseSDK, TokenProvider {
       priceProvider = this.priceProviders?.[PriceProviderType.ORACLE];
     }
 
-    if (!priceProvider) return of(FN.ZERO);
-
     // should calculate dexShare price
     if (isDexShare) {
       const [token0, token1] = unzipDexShareName(name);
@@ -455,8 +453,10 @@ export class Wallet implements BaseSDK, TokenProvider {
       );
     }
 
+    if (!priceProvider) return of(FN.ZERO);
+
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.subscribeToken(token).pipe(switchMap((token) => priceProvider!.subscribe(token.name)));
+    return this.subscribeToken(token).pipe(switchMap((token) => priceProvider!.subscribe(token)));
   });
 
   public getPrice(token: MaybeCurrency, type?: PriceProviderType): Promise<FN> {
