@@ -1,9 +1,9 @@
 import { Observable } from 'rxjs';
-import { FixedPointNumber as FN, Token } from '@acala-network/sdk-core';
+import { FixedPointNumber as FN } from '@acala-network/sdk-core';
 
 export interface PriceProvider {
-  subscribe(currency: Token): Observable<FN>;
-  query(currency: Token): Promise<FN>;
+  subscribe(currency: string): Observable<FN>;
+  query(currency: string): Promise<FN>;
 }
 
 export enum PriceProviderType {

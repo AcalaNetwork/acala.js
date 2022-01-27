@@ -39,3 +39,12 @@ export class TradingPairNotFound extends Error {
     this.name = 'TradingPairNotFound';
   }
 }
+
+export class IncentivePoolNotFound extends Error {
+  constructor(name: string) {
+    super();
+
+    this.message = `can't find ${name} incentive pool in current network`;
+    this.name = 'IncentivePoolNotFond';
+  }
+}
