@@ -74,12 +74,10 @@ export class OraclePriceProvider implements PriceProvider {
     stakingCurrencyPrice: FixedPointNumber
   ): FixedPointNumber {
     const { rewardRatePerRelaychainBlock } = this.consts;
-
     const leaseBlockNumber = this.leaseBlockNumbers[lease];
-
     const discount = FixedPointNumber.ONE.div(
       new FixedPointNumber(
-        (1 + rewardRatePerRelaychainBlock / 10 ** 18) ** (leaseBlockNumber - currentRelayBlockNumber)
+        (1 + rewardRatePerRelaychainBlock / 10 ** 18) ** (Math.max(leaseBlockNumber - currentRelayBlockNumber), 0)
       )
     );
 
