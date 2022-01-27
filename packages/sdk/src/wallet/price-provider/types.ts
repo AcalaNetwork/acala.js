@@ -8,6 +8,5 @@ export interface PriceProvider {
 
 export enum PriceProviderType {
   'MARKET', // query price form market
-  'ORACLE', // query oracle feed prices
-  'LiQUID_CROWDLOAN' // query liquid crowdloan
+  'ORACLE' // query oracle feed prices
 }

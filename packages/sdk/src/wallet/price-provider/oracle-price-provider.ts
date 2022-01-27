@@ -1,5 +1,5 @@
 import { Observable, BehaviorSubject, Subscription, firstValueFrom, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 import { PriceProvider } from './types';
 import { TimestampedValue } from '@open-web3/orml-types/interfaces';
 import {
@@ -161,7 +161,8 @@ export class OraclePriceProvider implements PriceProvider {
         }
 
         return oracle[forceToCurrencyName(currency)] || FixedPointNumber.ZERO;
-      })
+      }),
+      filter((i) => !i.isZero())
     );
   }
 
