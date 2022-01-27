@@ -444,7 +444,7 @@ export class Wallet implements BaseSDK, TokenProvider {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.subscribeToken(token).pipe(switchMap((token) => priceProvider!.subscribe(token.name)));
+    return this.subscribeToken(token).pipe(switchMap((token) => priceProvider!.subscribe(token)));
   });
 
   public getPrice(token: MaybeCurrency, type?: PriceProviderType): Promise<FN> {
