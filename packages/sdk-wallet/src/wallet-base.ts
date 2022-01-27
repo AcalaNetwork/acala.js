@@ -173,12 +173,6 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
   public abstract queryPrice(currency: MaybeCurrency, at?: number): ObOrPromiseResult<T, PriceData>;
 
   /**
-   * @name queryOraclePrice
-   * @description get the oracle feed price
-   */
-  public abstract queryOraclePrice(): ObOrPromiseResult<T, PriceDataWithTimestamp[]>;
-
-  /**
    * @name queryPriceFromDex
    * @description get the oracle feed price
    */

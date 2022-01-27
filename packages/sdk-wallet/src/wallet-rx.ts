@@ -18,7 +18,7 @@ import {
 import { AcalaAssetMetadata, Balance, CurrencyId, OracleKey } from '@acala-network/types/interfaces';
 import { forceToCurrencyId, forceToCurrencyName, unzipDexShareName } from '@acala-network/sdk-core/converter';
 import { MaybeAccount, MaybeCurrency } from '@acala-network/sdk-core/types';
-import { PriceData, PriceDataWithTimestamp, NativeAllBalance, BalanceData } from './types';
+import { PriceData, NativeAllBalance, BalanceData } from './types';
 import type { ISubmittableResult, ITuple } from '@polkadot/types/types';
 import type { Option } from '@polkadot/types';
 import { WalletBase } from './wallet-base';
@@ -28,20 +28,20 @@ import { ORACLE_FEEDS_TOKEN } from './config';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 import { Homa } from '@acala-network/sdk';
+import { OraclePriceProvider } from '@acala-network/sdk/wallet/price-provider/oracle-price-provider';
 
 const queryFN = getSubscribeOrAtQuery;
 export class WalletRx extends WalletBase<ApiRx> {
-  private readonly oracleFeed$: BehaviorSubject<PriceDataWithTimestamp[]>;
+  private readonly oraclePriceProvider: OraclePriceProvider;
   public readonly assetMetadatas$: BehaviorSubject<Map<string, Token>>;
 
   constructor(api: ApiRx) {
     super(api);
 
-    this.oracleFeed$ = new BehaviorSubject<PriceDataWithTimestamp[]>([]);
+    this.oraclePriceProvider = new OraclePriceProvider(api);
     this.assetMetadatas$ = new BehaviorSubject<Map<string, Token>>(new Map());
 
     // subscribe oracle feed
-    this.subscribeInnerOracleFeed();
     this.subscribeAssetMetadata();
   }
 
@@ -89,7 +89,7 @@ export class WalletRx extends WalletBase<ApiRx> {
 
     // get liquid currency price from staking pool exchange rate
     if (liquidCurrencyId && forceToCurrencyName(currency) === forceToCurrencyName(liquidCurrencyId)) {
-      return this.isHomaEnable() ? this.queryLiquidPriceFromHoma(at) : this.queryLiquidPriceFromHomaLite(at);
+      return this.queryLiquidPriceFromHoma(at);
     }
 
     // get dex share price
@@ -109,7 +109,12 @@ export class WalletRx extends WalletBase<ApiRx> {
 
     // get price of ORACLE_FEEDS_TOKEN
     if (ORACLE_FEEDS_TOKEN.includes(tokenName)) {
-      return this.queryPriceFromOracle(currency, at);
+      return this.queryPriceFromOracle(currency, at).pipe(
+        map((price) => ({
+          token: this.getToken(tokenName),
+          price
+        }))
+      );
     }
 
     // get price from dex default
@@ -148,80 +153,9 @@ export class WalletRx extends WalletBase<ApiRx> {
     );
   });
 
-  public queryPriceFromOracle = memoize((token: MaybeCurrency, at?: number) => {
-    return of(at).pipe(
-      switchMap(() => {
-        if (!at) {
-          const tokenName = forceToCurrencyName(token);
-
-          return this.oracleFeed$.pipe(
-            map((data): PriceData => {
-              const maybe = data.find((item) => item.token.name === tokenName);
-
-              return {
-                token: maybe?.token || this.getToken(tokenName),
-                price: (maybe?.price || FN.ZERO).clone()
-              };
-            })
-          ) as Observable<PriceData>;
-        }
-
-        return this.api.rpc.chain.getBlockHash(at).pipe(
-          switchMap((hash) => {
-            const currencyId = forceToCurrencyId(this.api, token);
-
-            return this.api.query.acalaOracle.values.at<Option<TimestampedValue>>(hash, currencyId).pipe(
-              map((data) => {
-                const token = this.getToken(currencyId);
-                const price = data.unwrapOrDefault().value;
-
-                return price.isEmpty ? { token, price: new FN(0) } : { token, price: FN.fromInner(price.toString()) };
-              })
-            );
-          })
-        );
-      }),
-      shareReplay(1)
-    );
-  });
-
-  // check the homa module is enable
-  private isHomaEnable(): boolean {
-    const homaExist = !!this.api.consts.homa;
-    const homaLiteExist = !!this.api.consts.homaLite;
-
-    if (homaLiteExist) return false;
-
-    return homaExist;
-  }
-
-  public queryLiquidPriceFromHomaLite = memoize((at?: number) => {
-    // FIXME: need remove homaLite
-    const liquidCurrencyId = this.api.consts.homaLite?.liquidCurrencyId;
-    const stakingCurrencyId = this.api.consts.homaLite?.stakingCurrencyId;
-
-    const liquidToken = this.getToken(liquidCurrencyId);
-    const stakingToken = this.getToken(stakingCurrencyId);
-
-    return this.getBlockHash(at).pipe(
-      switchMap((hash) => {
-        return combineLatest([
-          this.queryPriceFromOracle(stakingToken, at),
-          queryFN<() => Observable<Balance>>(this.api.query.homaLite.totalStakingCurrency, hash)(),
-          this.queryIssuance(liquidToken, at)
-        ]);
-      }),
-      map(([stakingTokenPrice, stakingBalance, liquidIssuance]) => {
-        const bonded = FN.fromInner(stakingBalance.toString(), stakingToken.decimals);
-        const ratio = liquidIssuance.isZero() ? FN.ZERO : bonded.div(liquidIssuance);
-
-        return {
-          token: liquidToken,
-          price: stakingTokenPrice.price.times(ratio)
-        };
-      }),
-      shareReplay(1)
-    );
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public queryPriceFromOracle = memoize((token: MaybeCurrency, _at?: number) => {
+    return this.oraclePriceProvider.subscribe(token);
   });
 
   public subscribeToken = memoize((token: MaybeCurrency) => {
@@ -246,7 +180,7 @@ export class WalletRx extends WalletBase<ApiRx> {
       map(({ stakingTokenPrice, env }) => {
         return {
           token: liquidToken,
-          price: stakingTokenPrice.price.times(env.exchangeRate)
+          price: stakingTokenPrice.times(env.exchangeRate)
         };
       }),
       shareReplay(1)
@@ -528,18 +462,6 @@ export class WalletRx extends WalletBase<ApiRx> {
 
   public queryPrices(currencies: MaybeCurrency[]): Observable<PriceData[]> {
     return combineLatest(currencies.map((item) => this.queryPrice(item)));
-  }
-
-  public queryOraclePrice(): Observable<PriceDataWithTimestamp[]> {
-    return this.oracleFeed$;
-  }
-
-  private subscribeInnerOracleFeed() {
-    this.subscribeOracleFeed().subscribe({
-      next: (result) => {
-        this.oracleFeed$.next(result);
-      }
-    });
   }
 
   public getMaxInputBalance(
