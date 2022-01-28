@@ -45,6 +45,10 @@ export class Wallet implements BaseSDK, TokenProvider {
   private storages: ReturnType<typeof createStorages>;
   private tokenPriceFetchSource: TokenPriceFetchSource;
 
+  // inject liquidity, homa sdk by default for easy using
+  public readonly liquidity: Liquidity;
+  public readonly homa: Homa;
+
   public isReady$: BehaviorSubject<boolean>;
   public consts!: WalletConsts;
 
@@ -57,6 +61,9 @@ export class Wallet implements BaseSDK, TokenProvider {
 
     this.isReady$ = new BehaviorSubject<boolean>(false);
     this.tokens$ = new BehaviorSubject<TokenRecord>({});
+
+    this.liquidity = new Liquidity(this.api, this);
+    this.homa = new Homa(this.api, this);
 
     this.tokenPriceFetchSource = tokenPriceFetchSource;
     this.priceProviders = {
@@ -156,10 +163,10 @@ export class Wallet implements BaseSDK, TokenProvider {
                 return value.type === type;
               })
             );
-          }),
-          shareReplay(1)
+          })
         );
-      })
+      }),
+      shareReplay(1)
     );
   });
 
@@ -187,6 +194,13 @@ export class Wallet implements BaseSDK, TokenProvider {
 
   public async getToken(target: MaybeCurrency): Promise<Token> {
     return firstValueFrom(this.subscribeToken(target));
+  }
+
+  // get token, must be called when wallet sdk is ready
+  public __getToken(target: MaybeCurrency): Token | undefined {
+    const name = forceToCurrencyName(target);
+
+    return Object.values(this.tokens$.value).find((item) => item.name === name);
   }
 
   /**
@@ -381,14 +395,12 @@ export class Wallet implements BaseSDK, TokenProvider {
 
     data.liquidToken =
       tokens[
-        // FIXME: need remove homaLite
         forceToCurrencyName(this.api.consts.homa?.liquidCurrencyId || this.api.consts.homaLite?.liquidCurrencyId || '')
       ];
 
     data.stakingToken =
       tokens[
         forceToCurrencyName(
-          // FIXME: need remove homaLite
           this.api.consts.homa?.stakingCurrencyId || this.api.consts.homaLite?.stakingCurrencyId || ''
         )
       ];
@@ -420,8 +432,6 @@ export class Wallet implements BaseSDK, TokenProvider {
       priceProvider = this.priceProviders?.[PriceProviderType.ORACLE];
     }
 
-    if (!priceProvider) return of(FN.ZERO);
-
     // should calculate dexShare price
     if (isDexShare) {
       const [token0, token1] = unzipDexShareName(name);
@@ -429,19 +439,21 @@ export class Wallet implements BaseSDK, TokenProvider {
       return subscribeDexShareTokenPrice(
         this.subscribePrice(token0),
         this.subscribePrice(token1),
-        new Liquidity(this.api, this).subscribePoolDetail(name)
+        this.liquidity.subscribePoolDetail(name)
       );
     }
 
     // should calculate liquidToken price
     if (isLiquidToken && stakingToken) {
       // create homa sd for get exchange rate
-      return new Homa(this.api, this).subscribeConvertor().pipe(
+      return this.homa.subscribeConvertor().pipe(
         switchMap((convertor) => {
           return this.subscribePrice(stakingToken).pipe(map((price) => convertor.convertStakingToLiquid(price)));
         })
       );
     }
+
+    if (!priceProvider) return of(FN.ZERO);
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return this.subscribeToken(token).pipe(switchMap((token) => priceProvider!.subscribe(token)));

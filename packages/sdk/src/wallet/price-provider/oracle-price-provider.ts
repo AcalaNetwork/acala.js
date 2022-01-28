@@ -157,7 +157,7 @@ export class OraclePriceProvider implements PriceProvider {
         const name = forceToCurrencyName(currency);
 
         if (isLiquidCrowdloanName(name)) {
-          return liquidCrowdloanPrices[name];
+          return liquidCrowdloanPrices[name] || FixedPointNumber.ZERO;
         }
 
         return oracle[forceToCurrencyName(currency)] || FixedPointNumber.ZERO;
