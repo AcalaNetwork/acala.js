@@ -24,7 +24,7 @@ import { Extrinsic, SignedBlock } from '@polkadot/types/interfaces';
 const CROWDLOAN_TOKEN_LEASE: number[] = [13];
 
 const LEASE_BLOCK_NUMBERS: Record<number, number> = {
-  13: 10_787_650
+  13: 17_856_000
 };
 
 export class OraclePriceProvider implements PriceProvider {
