@@ -1,7 +1,6 @@
 import { AnyApi, FixedPointNumber, Token } from '@acala-network/sdk-core';
 import { memoize } from '@polkadot/util';
 import { u16 } from '@polkadot/types';
-import { curry } from 'lodash/fp';
 import { BehaviorSubject, combineLatest, firstValueFrom, map, Observable, shareReplay, switchMap } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { TokenProvider } from '../base-provider';
@@ -249,8 +248,8 @@ export class Homa implements BaseSDK {
   public subscribeConvertor = memoize((): Observable<HomaConvertor> => {
     return this.env$().pipe(
       map((env) => ({
-        convertLiquidToStaking: curry(convertLiquidToStaking)(env.exchangeRate),
-        convertStakingToLiquid: curry(convertStakingToLiquid)(env.exchangeRate)
+        convertLiquidToStaking: (data: FixedPointNumber) => convertLiquidToStaking(env.exchangeRate, data),
+        convertStakingToLiquid: (data: FixedPointNumber) => convertStakingToLiquid(env.exchangeRate, data)
       }))
     );
   });
