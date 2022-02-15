@@ -127,7 +127,8 @@ export class Wallet implements BaseSDK, TokenProvider {
 
       basicTokens[name] = new Token(name, {
         decimals: basicTokens.DOT.decimals,
-        ed: basicTokens.DOT.ed
+        ed: basicTokens.DOT.ed,
+        type: TokenType.LIQUID_CROWDLOAN
       });
     }
 
@@ -149,18 +150,18 @@ export class Wallet implements BaseSDK, TokenProvider {
    *  @param type
    *  @description subscirbe the token list, can filter by type
    */
-  public subscribeTokens = memoize((type?: TokenType): Observable<TokenRecord> => {
+  public subscribeTokens = memoize((type?: TokenType | TokenType[]): Observable<TokenRecord> => {
     return this.isReady$.pipe(
       // wait sdk isReady
       filter((i) => i),
       switchMap(() => {
         return this.tokens$.pipe(
           map((data) => {
-            if (!type) return data;
+            if (type === undefined) return data;
 
             return Object.fromEntries(
               Object.entries(data).filter(([, value]) => {
-                return value.type === type;
+                return Array.isArray(type) ? type.includes(value.type) : value.type === type;
               })
             );
           })
