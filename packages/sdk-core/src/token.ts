@@ -60,36 +60,53 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
 };
 
 interface Configs {
-  display?: string; // namae for display
+  // basic token informations
+  type?: TokenType; // token type
+  chain?: string; // token's chain
+  display?: string; // for display
+  fullname?: string; // token full name
+  symbol?: string; // token symbol
   decimals?: number; // token decimals
   decimal?: number; // token decimals
-  type?: TokenType; // token type
-  chain?: string;
-  symbol?: string;
-  detail?: { id: number };
   ed?: FixedPointNumber;
+
+  // configs for cross-chain transfer
+  locations?: {
+    paraChainId?: number;
+    generalIndex?: number;
+    palletInstance?: number;
+  };
 }
 
 export class Token {
   readonly name: string;
+  readonly display: string;
+  readonly fullname: string;
   readonly symbol: string;
   readonly decimals: number;
-  readonly decimal: number;
   readonly ed: FixedPointNumber;
   readonly chain: string | undefined;
   readonly type: TokenType;
-  readonly display: string;
   readonly pair?: [Token, Token];
+  readonly locations?: {
+    paraChainId?: number;
+    generalIndex?: number;
+    palletInstance?: number;
+  };
 
   constructor(name: string, configs?: Configs) {
+    // basic token informations
     this.name = name;
+    this.type = configs?.type || TokenType.BASIC;
+    this.display = configs?.display || configs?.symbol || name;
+    this.fullname = configs?.fullname || name;
+    this.symbol = configs?.symbol || name;
     this.decimals = configs?.decimals || configs?.decimal || 18;
-    this.decimal = this.decimals;
     this.ed = configs?.ed || FixedPointNumber.ZERO;
     this.chain = configs?.chain;
-    this.type = configs?.type || TokenType.BASIC;
-    this.symbol = configs?.symbol || name;
-    this.display = configs?.display || name;
+
+    // foreign asset locations
+    this.locations = configs?.locations;
   }
 
   get isTokenSymbol(): boolean {
@@ -114,6 +131,12 @@ export class Token {
 
   get isForeignAsset(): boolean {
     return this.type === TokenType.FOREIGN_ASSET;
+  }
+
+  get decimal(): number {
+    console.warn('decimal is deprecated, please use decimals');
+
+    return this.decimals;
   }
 
   static create(name: string, configs?: Configs): Token {
