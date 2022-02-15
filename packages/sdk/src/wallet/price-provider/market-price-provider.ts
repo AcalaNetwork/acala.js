@@ -1,8 +1,8 @@
 import { Observable, BehaviorSubject, timer, switchMap, from, lastValueFrom, combineLatest, of } from 'rxjs';
-import { map, debounceTime } from 'rxjs/operators';
+import { map, debounceTime, filter } from 'rxjs/operators';
 import fetch from 'axios';
 import { PriceProvider } from './types';
-import { FixedPointNumber, FixedPointNumber as FN, forceToCurrencyName, MaybeCurrency } from '@acala-network/sdk-core';
+import { FixedPointNumber, FixedPointNumber as FN, Token } from '@acala-network/sdk-core';
 
 const PRICE_API = 'https://api.polkawallet.io/price-server/';
 
@@ -31,7 +31,7 @@ export class MarketPriceProvider implements PriceProvider {
         switchMap(() =>
           from(
             (async () => {
-              const data = await Promise.all(this.trackedCurrencies.map(this.updatePrice));
+              const data = await Promise.all(this.trackedCurrencies.map(this.queryBalance));
 
               return Object.fromEntries(this.trackedCurrencies.map((name, i) => [name, data[i]]));
             })()
@@ -43,7 +43,7 @@ export class MarketPriceProvider implements PriceProvider {
       });
   };
 
-  private updatePrice = async (currency: string) => {
+  private queryBalance = async (currency: string) => {
     const result = await fetch.get(`${PRICE_API}?token=${currency}&from=market`);
 
     if (result.status === 200) {
@@ -54,8 +54,8 @@ export class MarketPriceProvider implements PriceProvider {
     return FN.ZERO;
   };
 
-  subscribe(currency: MaybeCurrency): Observable<FN> {
-    const name = forceToCurrencyName(currency);
+  subscribe(currency: Token): Observable<FN> {
+    const name = currency.symbol;
 
     // set KUSD, AUSD market price to 1 for calculate in system
     if (name === 'KSUD' || name === 'AUSD') {
@@ -68,10 +68,13 @@ export class MarketPriceProvider implements PriceProvider {
       this.forceUpdate.next(this.forceUpdate.value + 1);
     }
 
-    return this.subject.pipe(map((data) => data[name]));
+    return this.subject.pipe(
+      filter((data) => data[name] !== undefined),
+      map((data) => data[name])
+    );
   }
 
-  async query(currency: MaybeCurrency): Promise<FN> {
+  async query(currency: Token): Promise<FN> {
     return lastValueFrom(this.subscribe(currency));
   }
 }
