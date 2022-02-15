@@ -414,7 +414,8 @@ export class Wallet implements BaseSDK, TokenProvider {
    * @description subscirbe the price of `token`
    */
   public subscribePrice = memoize((token: MaybeCurrency, type?: PriceProviderType): Observable<FN> => {
-    let priceProvider: PriceProvider | undefined;
+    // use market price provider as default
+    let priceProvider: PriceProvider | undefined = this.priceProviders[PriceProviderType.MARKET];
     const name = forceToCurrencyName(token);
     const isDexShare = isDexShareName(name);
     const presetTokens = this.getPresetTokens();

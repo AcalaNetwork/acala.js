@@ -30,7 +30,7 @@ const LEASE_BLOCK_NUMBERS: Record<number, number> = {
 export class OraclePriceProvider implements PriceProvider {
   private api: AnyApi;
   private oracleProvider: string;
-  private subject: BehaviorSubject<Record<string, FN>>;
+  private subject: BehaviorSubject<Record<string, FN> | undefined>;
   private liquidCrowdloanSubject: BehaviorSubject<Record<string, FN>>;
   private processSubscriber: Subscription;
   private crowdloanPriceProcessSubscriber: Subscription;
@@ -44,7 +44,7 @@ export class OraclePriceProvider implements PriceProvider {
   constructor(api: AnyApi, leaseBlockNumbers = LEASE_BLOCK_NUMBERS, oracleProvider = 'Aggregated') {
     this.api = api;
     this.oracleProvider = oracleProvider;
-    this.subject = new BehaviorSubject({});
+    this.subject = new BehaviorSubject(undefined) as BehaviorSubject<Record<string, FN> | undefined>;
     this.liquidCrowdloanSubject = new BehaviorSubject({});
     this.leaseBlockNumbers = leaseBlockNumbers;
 
@@ -84,6 +84,14 @@ export class OraclePriceProvider implements PriceProvider {
     return stakingCurrencyPrice.mul(discount);
   }
 
+  private oraclePrice$(name: string) {
+    return this.subject.pipe(
+      filter((values) => !!values),
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      map((values) => values![name])
+    );
+  }
+
   private liquidCrowdloanPriceProcess = () => {
     const storage$ = Storage.create<SignedBlock>({
       api: this.api,
@@ -93,7 +101,7 @@ export class OraclePriceProvider implements PriceProvider {
 
     return combineLatest({
       signedBlock: storage$,
-      stakingTokenPrice: this.subject.pipe(map((values) => values[forceToCurrencyName(this.consts.stakingCurrency)]))
+      stakingTokenPrice: this.oraclePrice$(forceToCurrencyName(this.consts.stakingCurrency))
     }).subscribe({
       next: ({ signedBlock, stakingTokenPrice }) => {
         if (!stakingTokenPrice) return;
@@ -153,6 +161,7 @@ export class OraclePriceProvider implements PriceProvider {
       oracle: this.subject,
       liquidCrowdloanPrices: this.liquidCrowdloanSubject
     }).pipe(
+      filter(({ oracle }) => oracle !== undefined),
       map(({ oracle, liquidCrowdloanPrices }) => {
         const name = forceToCurrencyName(currency);
 
@@ -160,9 +169,9 @@ export class OraclePriceProvider implements PriceProvider {
           return liquidCrowdloanPrices[name] || FixedPointNumber.ZERO;
         }
 
-        return oracle[forceToCurrencyName(currency)] || FixedPointNumber.ZERO;
-      }),
-      filter((i) => !i.isZero())
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return oracle![forceToCurrencyName(currency)] || FixedPointNumber.ZERO;
+      })
     );
   }
 

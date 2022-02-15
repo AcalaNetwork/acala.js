@@ -15,6 +15,7 @@ export const defaultTokenPriceFetchSource: TokenPriceFetchSource = {
   [ChainType.MANDALA]: {
     DOT: PriceProviderType.MARKET,
     KAR: PriceProviderType.MARKET,
+    KSM: PriceProviderType.MARKET,
     BNC: PriceProviderType.MARKET
   }
 };
