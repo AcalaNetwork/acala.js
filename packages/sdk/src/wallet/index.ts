@@ -41,7 +41,7 @@ export class Wallet implements BaseSDK, TokenProvider {
   private api: AnyApi;
   private priceProviders: PriceProviders;
   // readed from chain information
-  private tokens$: BehaviorSubject<TokenRecord>;
+  private tokens$: BehaviorSubject<TokenRecord | undefined>;
   private storages: ReturnType<typeof createStorages>;
   private tokenPriceFetchSource: TokenPriceFetchSource;
 
@@ -60,7 +60,7 @@ export class Wallet implements BaseSDK, TokenProvider {
     this.api = api;
 
     this.isReady$ = new BehaviorSubject<boolean>(false);
-    this.tokens$ = new BehaviorSubject<TokenRecord>({});
+    this.tokens$ = new BehaviorSubject<TokenRecord | undefined>(undefined);
 
     this.liquidity = new Liquidity(this.api, this);
     this.homa = new Homa(this.api, this);
@@ -105,6 +105,7 @@ export class Wallet implements BaseSDK, TokenProvider {
     const chainTokens = this.api.registry.chainTokens;
     const tradingPairs$ = this.storages.tradingPairs().observable;
     const assetMetadatas$ = this.storages.assetMetadatas().observable;
+    const foreignAssetLocations$ = this.storages.foreignAssetLocations().observable;
 
     const basicTokens = Object.fromEntries(
       chainTokens.map((token, i) => {
@@ -134,10 +135,11 @@ export class Wallet implements BaseSDK, TokenProvider {
 
     return combineLatest({
       tradingPairs: tradingPairs$,
-      assetMetadatas: assetMetadatas$
+      assetMetadatas: assetMetadatas$,
+      foreignAssetLocations: foreignAssetLocations$
     }).subscribe({
-      next: ({ tradingPairs, assetMetadatas }) => {
-        const list = createTokenList(basicTokens, tradingPairs, assetMetadatas);
+      next: ({ tradingPairs, assetMetadatas, foreignAssetLocations }) => {
+        const list = createTokenList(basicTokens, tradingPairs, assetMetadatas, foreignAssetLocations);
 
         this.tokens$.next(list);
         this.isReady$.next(true);
@@ -156,11 +158,13 @@ export class Wallet implements BaseSDK, TokenProvider {
       filter((i) => i),
       switchMap(() => {
         return this.tokens$.pipe(
+          filter((data) => !!data),
           map((data) => {
-            if (type === undefined) return data;
+            if (type === undefined) return data || {};
 
             return Object.fromEntries(
-              Object.entries(data).filter(([, value]) => {
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              Object.entries(data!).filter(([, value]) => {
                 return Array.isArray(type) ? type.includes(value.type) : value.type === type;
               })
             );
@@ -171,7 +175,7 @@ export class Wallet implements BaseSDK, TokenProvider {
     );
   });
 
-  public async getTokens(type?: TokenType): Promise<TokenRecord> {
+  public async getTokens(type?: TokenType | TokenType[]): Promise<TokenRecord> {
     return firstValueFrom(this.subscribeTokens(type));
   }
 
@@ -184,7 +188,8 @@ export class Wallet implements BaseSDK, TokenProvider {
 
     return this.subscribeTokens().pipe(
       map((all) => {
-        const result = Object.values(all).find((item) => item.name === name);
+        // filter token by name or symbol
+        const result = Object.values(all).find((item) => item.name === name || item.symbol === name);
 
         if (!result) throw new CurrencyNotFound(name);
 
@@ -201,7 +206,7 @@ export class Wallet implements BaseSDK, TokenProvider {
   public __getToken(target: MaybeCurrency): Token | undefined {
     const name = forceToCurrencyName(target);
 
-    return Object.values(this.tokens$.value).find((item) => item.name === name);
+    return Object.values(this.tokens$.value || {}).find((item) => item.name === name);
   }
 
   /**
@@ -384,7 +389,7 @@ export class Wallet implements BaseSDK, TokenProvider {
       throw new SDKNotReady('wallet');
     }
 
-    const tokens = this.tokens$.value;
+    const tokens = this.tokens$.value || {};
 
     const data: PresetTokens = {
       nativeToken: tokens[forceToCurrencyName(this.consts.nativeCurrency)]
@@ -420,7 +425,7 @@ export class Wallet implements BaseSDK, TokenProvider {
     const isDexShare = isDexShareName(name);
     const presetTokens = this.getPresetTokens();
     const isLiquidToken = presetTokens?.liquidToken?.name === name;
-    const stakingToken = presetTokens.stableToken;
+    const stakingToken = presetTokens.stakingToken;
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const _type =
@@ -448,9 +453,14 @@ export class Wallet implements BaseSDK, TokenProvider {
     // should calculate liquidToken price
     if (isLiquidToken && stakingToken) {
       // create homa sd for get exchange rate
-      return this.homa.subscribeConvertor().pipe(
-        switchMap((convertor) => {
-          return this.subscribePrice(stakingToken).pipe(map((price) => convertor.convertStakingToLiquid(price)));
+      return this.homa.subscribeEnv().pipe(
+        filter((env) => !env.exchangeRate.isZero()),
+        switchMap((env) => {
+          return this.subscribePrice(stakingToken).pipe(
+            map((price) => {
+              return price.times(env.exchangeRate);
+            })
+          );
         })
       );
     }

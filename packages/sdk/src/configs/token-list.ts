@@ -30,8 +30,8 @@ const DEFAULT_TOKEN_LIST: TokenListConfig = {
   [ChainType.ACALA]: {
     ACA: createTokenConfig('ACA', 'ACA', 12, new FixedPointNumber(0.1, 12)),
     AUSD: createTokenConfig('AUSD', 'aUSD', 12, new FixedPointNumber(0.1, 12)),
-    DOT: createTokenConfig('DOT', 'DOT', 12, new FixedPointNumber(0.01, 12)),
-    LDOT: createTokenConfig('LDOT', 'LDOT', 12, new FixedPointNumber(0.05, 12))
+    DOT: createTokenConfig('DOT', 'DOT', 10, new FixedPointNumber(0.01, 12)),
+    LDOT: createTokenConfig('LDOT', 'LDOT', 10, new FixedPointNumber(0.05, 12))
   },
   [ChainType.KARURA]: {
     KAR: createTokenConfig('KAR', 'KAR', 12, new FixedPointNumber(0.1, 12)),
@@ -45,8 +45,8 @@ const DEFAULT_TOKEN_LIST: TokenListConfig = {
   [ChainType.MANDALA]: {
     ACA: createTokenConfig('ACA', 'ACA', 12, new FixedPointNumber(0.1, 12)),
     AUSD: createTokenConfig('AUSD', 'aUSD', 12, new FixedPointNumber(0.1, 12)),
-    DOT: createTokenConfig('DOT', 'DOT', 12, new FixedPointNumber(0.01, 12)),
-    LDOT: createTokenConfig('LDOT', 'LDOT', 12, new FixedPointNumber(0.05, 12)),
+    DOT: createTokenConfig('DOT', 'DOT', 10, new FixedPointNumber(0.01, 12)),
+    LDOT: createTokenConfig('LDOT', 'LDOT', 10, new FixedPointNumber(0.05, 12)),
     KAR: createTokenConfig('KAR', 'KAR', 12, new FixedPointNumber(0.1, 12)),
     KUSD: createTokenConfig('KUSD', 'kUSD', 12, new FixedPointNumber(0.01, 12)),
     KSM: createTokenConfig('KSM', 'KSM', 12, new FixedPointNumber(10 * 0.00001, 12)),

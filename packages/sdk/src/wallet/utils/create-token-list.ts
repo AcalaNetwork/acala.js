@@ -6,15 +6,20 @@ import {
   forceToCurrencyName
 } from '@acala-network/sdk-core';
 import { TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
-import { Option, StorageKey } from '@polkadot/types';
-import { ModuleAssetRegistryModuleAssetIds, ModuleAssetRegistryModuleAssetMetadata } from '@polkadot/types/lookup';
+import { Option, StorageKey, u16 } from '@polkadot/types';
+import {
+  ModuleAssetRegistryModuleAssetIds,
+  ModuleAssetRegistryModuleAssetMetadata,
+  XcmV1MultiLocation
+} from '@polkadot/types/lookup';
 import { hexToString } from '@polkadot/util';
 import { TokenRecord } from '../type';
 
 export function createTokenList(
   basicTokens: TokenRecord,
   tradingPairs: [StorageKey<[TradingPair]>, TradingPairStatus][],
-  assetMetadata: [StorageKey<[ModuleAssetRegistryModuleAssetIds]>, Option<ModuleAssetRegistryModuleAssetMetadata>][]
+  assetMetadata: [StorageKey<[ModuleAssetRegistryModuleAssetIds]>, Option<ModuleAssetRegistryModuleAssetMetadata>][],
+  foreignAssetLocations: [StorageKey<[u16]>, Option<XcmV1MultiLocation>][]
 ): TokenRecord {
   // tokens list temp
   let temp: TokenRecord = { ...basicTokens };
@@ -30,15 +35,32 @@ export function createTokenList(
         const value = item[1].unwrapOrDefault();
         const name = createForeignAssetName(key);
         const decimals = value.decimals.toNumber();
+        const locations = foreignAssetLocations.find((item) => item[0].args[0].toNumber() === key);
 
         return [
           name,
           Token.create(name, {
             type: TokenType.FOREIGN_ASSET,
             symbol: hexToString(value.symbol.toHex()),
-            display: hexToString(value.name.toHex()),
             decimals,
-            ed: FN.fromInner(value.minimalBalance.toString(), decimals)
+            ed: FN.fromInner(value.minimalBalance.toString(), decimals),
+            // TODO: should support other locations
+            locations: locations
+              ? {
+                  paraChainId: locations[1]
+                    .unwrapOrDefault()
+                    .interior.asX3.find((item) => item.isParachain)
+                    ?.asParachain.toNumber(),
+                  generalIndex: locations[1]
+                    .unwrapOrDefault()
+                    .interior.asX3.find((item) => item.isGeneralIndex)
+                    ?.asGeneralIndex.toNumber(),
+                  palletInstance: locations[1]
+                    .unwrapOrDefault()
+                    .interior.asX3.find((item) => item.isPalletInstance)
+                    ?.asPalletInstance.toNumber()
+                }
+              : undefined
           })
         ];
       })
