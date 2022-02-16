@@ -215,6 +215,7 @@ export function forceToCurrencyName(target: MaybeCurrency): string {
     // FIXME: need remove if all chain released
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if ((target as any).isLiquidCroadloan) {
+      IS_LIQUID_CROADLOAN = true;
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       return createLiquidCrowdloanName((target as any).asLiquidCroadloan.toNumber());
     }
