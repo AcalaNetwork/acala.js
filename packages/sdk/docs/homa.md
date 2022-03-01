@@ -121,7 +121,7 @@ if (mint.canTryFastReddem) {
 
 ```
 
-4. How to convert DOT/KSM amount to LDOT/KSM amount
+4. How to convert DOT/KSM amount to LDOT/LKSM amount
 ```javascript
 ...init homa sdk
 
