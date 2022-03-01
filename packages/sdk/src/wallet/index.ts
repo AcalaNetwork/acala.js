@@ -32,6 +32,7 @@ import { TokenProvider } from '../base-provider';
 import { defaultTokenPriceFetchSource } from './price-provider/default-token-price-fetch-source-config';
 import { subscribeDexShareTokenPrice } from './utils/get-dex-share-token-price';
 import { getChainType } from '../utils/get-chain-type';
+import { DexPriceProvider } from './price-provider/dex-price-provider';
 
 type PriceProviders = Partial<{
   [k in PriceProviderType]: PriceProvider;
@@ -62,6 +63,7 @@ export class Wallet implements BaseSDK, TokenProvider {
     this.isReady$ = new BehaviorSubject<boolean>(false);
     this.tokens$ = new BehaviorSubject<TokenRecord | undefined>(undefined);
 
+    // we should init sdk before init price provider
     this.liquidity = new Liquidity(this.api, this);
     this.homa = new Homa(this.api, this);
 
@@ -96,7 +98,8 @@ export class Wallet implements BaseSDK, TokenProvider {
   private get defaultPriceProviders(): PriceProviders {
     return {
       [PriceProviderType.MARKET]: new MarketPriceProvider(),
-      [PriceProviderType.ORACLE]: new OraclePriceProvider(this.api)
+      [PriceProviderType.ORACLE]: new OraclePriceProvider(this.api),
+      [PriceProviderType.DEX]: new DexPriceProvider(this.api, this.liquidity)
     };
   }
 
@@ -419,25 +422,18 @@ export class Wallet implements BaseSDK, TokenProvider {
    * @description subscirbe the price of `token`
    */
   public subscribePrice = memoize((token: MaybeCurrency, type?: PriceProviderType): Observable<FN> => {
-    // use market price provider as default
-    let priceProvider: PriceProvider | undefined = this.priceProviders[PriceProviderType.MARKET];
     const name = forceToCurrencyName(token);
     const isDexShare = isDexShareName(name);
     const presetTokens = this.getPresetTokens();
     const isLiquidToken = presetTokens?.liquidToken?.name === name;
     const stakingToken = presetTokens.stakingToken;
 
+    // use market price provider as default
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const _type =
       type || this.tokenPriceFetchSource?.[getChainType(this.consts.runtimeChain)]?.[name] || PriceProviderType.MARKET;
 
-    if (_type === PriceProviderType.MARKET) {
-      priceProvider = this.priceProviders?.[PriceProviderType.MARKET];
-    }
-
-    if (_type === PriceProviderType.ORACLE) {
-      priceProvider = this.priceProviders?.[PriceProviderType.ORACLE];
-    }
+    const priceProvider = this.priceProviders?.[_type];
 
     // should calculate dexShare price
     if (isDexShare) {
@@ -450,8 +446,8 @@ export class Wallet implements BaseSDK, TokenProvider {
       );
     }
 
-    // should calculate liquidToken price
-    if (isLiquidToken && stakingToken) {
+    // should calculate liquidToken price, when price provider type is market
+    if (isLiquidToken && stakingToken && _type === PriceProviderType.MARKET) {
       // create homa sd for get exchange rate
       return this.homa.subscribeEnv().pipe(
         filter((env) => !env.exchangeRate.isZero()),
