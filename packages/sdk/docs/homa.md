@@ -9,7 +9,7 @@ Homa SDK provide
 ## Install **Homa** SDK
 
 ```bash
-yarn add @polkadot/api @acala-network/api@^4.0.2-16 @acala-network/sdk@^4.0.2-15
+yarn add @polkadot/api @acala-network/api@^4.0.2-17 @acala-network/sdk@^4.0.2-17
 ```
 
 ## Usage
@@ -68,7 +68,7 @@ console.log(mint.pay.toString())
 // check receive amount
 console.log(mint.receive.toString())
 
-const { call } = homa.createMintCall(mint.pay)
+const call = homa.createMintCall(mint.pay)
 
 // send call to mint LDOT/LKSM
 await call.signAndSend(account)
