@@ -4,6 +4,7 @@ import { WsProvider } from '@polkadot/rpc-provider';
 import { ApiPromise } from '@polkadot/api';
 import { options } from '@acala-network/api';
 import { TokenType } from '@acala-network/sdk-core';
+import { PriceProviderType } from './price-provider/types';
 
 dotenv.config();
 
@@ -52,12 +53,27 @@ describe('wallet', () => {
     expect(Object.values(tokens3).length).toEqual(Object.values(tokens1).length + Object.values(tokens2).length);
   });
 
-  test('get price should work', async () => {
+  test('get market price should work', async () => {
     const sdk = await initSDK();
 
     const price1 = await sdk.getPrice('KSM');
     const price2 = await sdk.getPrice('RMRK');
     const price3 = await sdk.getPrice('LKSM');
+
+    expect(price1.toString()).not.toBe('0');
+    expect(price1.toString()).not.toBe(undefined);
+    expect(price2.toString()).not.toBe('0');
+    expect(price2.toString()).not.toBe(undefined);
+    expect(price3.toString()).not.toBe('0');
+    expect(price3.toString()).not.toBe(undefined);
+  });
+
+  test('get dex price should work', async () => {
+    const sdk = await initSDK();
+
+    const price1 = await sdk.getPrice('KSM', PriceProviderType.DEX);
+    const price2 = await sdk.getPrice('RMRK', PriceProviderType.DEX);
+    const price3 = await sdk.getPrice('LKSM', PriceProviderType.DEX);
 
     expect(price1.toString()).not.toBe('0');
     expect(price1.toString()).not.toBe(undefined);
