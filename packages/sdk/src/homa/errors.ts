@@ -44,3 +44,12 @@ export class FastMatchIsNotAllowed extends Error {
     this.message = 'Redeem request is not allowed to be fast matched.';
   }
 }
+
+/// Redeem request is not allowed to be fast matched.
+export class RequiredAddressInFastReddem extends Error {
+  constructor() {
+    super();
+    this.name = 'RequiredAddressInFastRedeem';
+    this.message = 'Address is required in fast fast redeem';
+  }
+}
