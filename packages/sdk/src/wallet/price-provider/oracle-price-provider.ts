@@ -4,7 +4,6 @@ import { PriceProvider } from './types';
 import { TimestampedValue } from '@open-web3/orml-types/interfaces';
 import {
   AnyApi,
-  createLiquidCrowdloanName,
   FixedPointNumber,
   FixedPointNumber as FN,
   forceToCurrencyName,
@@ -13,19 +12,9 @@ import {
 } from '@acala-network/sdk-core';
 import { OracleKey } from '@acala-network/types/interfaces';
 import { Storage } from '../../utils/storage';
-import {
-  AcalaPrimitivesCurrencyCurrencyId,
-  CumulusPrimitivesParachainInherentParachainInherentData
-} from '@polkadot/types/lookup';
-import { u128 } from '@polkadot/types-codec';
-import { Extrinsic, SignedBlock } from '@polkadot/types/interfaces';
-
-// current crowdloan token lease
-const CROWDLOAN_TOKEN_LEASE: number[] = [13];
-
-const LEASE_BLOCK_NUMBERS: Record<number, number> = {
-  13: 17_856_000
-};
+import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
+import { SignedBlock } from '@polkadot/types/interfaces';
+import { getAllLiquidCrowdloanTokenPrice } from '../utils/get-liquid-crowdloan-token-price';
 
 export class OraclePriceProvider implements PriceProvider {
   private api: AnyApi;
@@ -34,24 +23,20 @@ export class OraclePriceProvider implements PriceProvider {
   private liquidCrowdloanSubject: BehaviorSubject<Record<string, FN>>;
   private processSubscriber: Subscription;
   private crowdloanPriceProcessSubscriber: Subscription;
-  private leaseBlockNumbers: Record<number, number>;
   private consts: {
     stakingCurrency: AcalaPrimitivesCurrencyCurrencyId;
     liquidCurrency: AcalaPrimitivesCurrencyCurrencyId;
-    rewardRatePerRelaychainBlock: number;
   };
 
-  constructor(api: AnyApi, leaseBlockNumbers = LEASE_BLOCK_NUMBERS, oracleProvider = 'Aggregated') {
+  constructor(api: AnyApi, oracleProvider = 'Aggregated') {
     this.api = api;
     this.oracleProvider = oracleProvider;
     this.subject = new BehaviorSubject(undefined) as BehaviorSubject<Record<string, FN> | undefined>;
     this.liquidCrowdloanSubject = new BehaviorSubject({});
-    this.leaseBlockNumbers = leaseBlockNumbers;
 
     this.consts = {
       stakingCurrency: api.consts.prices.getStakingCurrencyId,
-      liquidCurrency: api.consts.prices.getLiquidCurrencyId,
-      rewardRatePerRelaychainBlock: (api.consts?.prices?.rewardRatePerRelaychainBlock as any as u128)?.toNumber() || 0
+      liquidCurrency: api.consts.prices.getLiquidCurrencyId
     };
 
     this.processSubscriber = this.process();
@@ -61,27 +46,6 @@ export class OraclePriceProvider implements PriceProvider {
   public unsub(): void {
     this.processSubscriber.unsubscribe();
     this.crowdloanPriceProcessSubscriber.unsubscribe();
-  }
-
-  /*
-  The LiquidCrowdloan token price is calculated by DOT oracle price and current relaychain block number
-
-  formula: oracle price * (1 / (1 + rewardRate) ** (lease block number - current relaychain block))
-  */
-  private getLiquidCrowdloanPrice(
-    lease: number,
-    currentRelayBlockNumber: number,
-    stakingCurrencyPrice: FixedPointNumber
-  ): FixedPointNumber {
-    const { rewardRatePerRelaychainBlock } = this.consts;
-    const leaseBlockNumber = this.leaseBlockNumbers[lease];
-    const discount = FixedPointNumber.ONE.div(
-      new FixedPointNumber(
-        (1 + rewardRatePerRelaychainBlock / 10 ** 18) ** Math.max(leaseBlockNumber - currentRelayBlockNumber, 0)
-      )
-    );
-
-    return stakingCurrencyPrice.mul(discount);
   }
 
   private oraclePrice$(name: string) {
@@ -106,25 +70,11 @@ export class OraclePriceProvider implements PriceProvider {
       next: ({ signedBlock, stakingTokenPrice }) => {
         if (!stakingTokenPrice) return;
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const extrinsic = signedBlock.block.extrinsics.find((item) => {
-          return item.method.section === 'parachainSystem' && item.method.method === 'setValidationData';
-        }) as Extrinsic | undefined;
+        const prices = getAllLiquidCrowdloanTokenPrice(this.api, signedBlock, stakingTokenPrice);
 
-        if (extrinsic) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          const args = extrinsic.method.args[0] as any as CumulusPrimitivesParachainInherentParachainInherentData;
-          const relayChainBlockNumber = args?.validationData?.relayParentNumber?.toNumber();
-
-          const prices = CROWDLOAN_TOKEN_LEASE.map((lease) => {
-            return [
-              createLiquidCrowdloanName(lease),
-              this.getLiquidCrowdloanPrice(lease, relayChainBlockNumber, stakingTokenPrice)
-            ];
-          });
-
+        if (prices) {
           // update all crowdloan token price
-          this.liquidCrowdloanSubject.next(Object.fromEntries([...prices]));
+          this.liquidCrowdloanSubject.next(prices);
         }
       }
     });

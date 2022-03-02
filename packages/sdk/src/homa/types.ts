@@ -46,7 +46,7 @@ export interface EstimateRedeemResult {
   request: FixedPointNumber;
   receive: FixedPointNumber;
   fee: FixedPointNumber;
-  canTryFastReddem: boolean;
+  canTryFastRedeem: boolean;
   env: HomaEnvironment;
 }
 

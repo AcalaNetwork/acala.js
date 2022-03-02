@@ -74,7 +74,7 @@ const call = homa.createMintCall(mint.pay)
 await call.signAndSend(account)
 ```
 
-2. How to redeem LDOT/LKSM normally, need wait 1 ERA ()
+2. How to redeem LDOT/LKSM normally, need wait 6 ERA (base on polkaodt/karura chain config)
 ```javascript
 ...init homa sdk
 
@@ -112,10 +112,10 @@ console.log(redeem.request.toString())
 // check receive amount
 console.log(redeem.receive.toString())
 
-if (mint.canTryFastReddem) {
+if (redeem.canTryFastRedeem) {
   const call = homa.createRedeemCall(redeem.request, true, keyring.address)
 
-  // send call to mint LDOT/LKSM
+  // send call to redeem LDOT/LKSM
   await call.signAndSend(account)
 }
 
