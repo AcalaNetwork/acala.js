@@ -23,7 +23,7 @@ export enum TokenType {
 }
 
 /**
- * CurrencyObject is an object which can as parameters in api.createType('CurrencyId', ...).
+ * CurrencyObject is an object which can as parameters in api.registry.createType('CurrencyId', ...).
  * we can simple pass CurrencyObject to any call as CurrencyId type
  */
 export type CurrencyObject =
