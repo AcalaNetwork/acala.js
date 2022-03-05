@@ -230,14 +230,17 @@ export function forceToCurrencyId(api: AnyApi, target: MaybeCurrency): CurrencyI
   try {
     const name = forceToCurrencyName(target);
 
-    const type = api.createType('AcalaPrimitivesCurrencyCurrencyId') as AcalaPrimitivesCurrencyCurrencyId;
+    const type = api.registry.createType('AcalaPrimitivesCurrencyCurrencyId') as AcalaPrimitivesCurrencyCurrencyId;
 
     // FIXME: need remove if all chain released
     if (Reflect.has(type, 'asLiquidCroadloan')) {
       IS_LIQUID_CROADLOAN = true;
     }
 
-    return api.createType('AcalaPrimitivesCurrencyCurrencyId', getCurrencyObject(name)) as unknown as CurrencyId;
+    return api.registry.createType(
+      'AcalaPrimitivesCurrencyCurrencyId',
+      getCurrencyObject(name)
+    ) as unknown as CurrencyId;
   } catch (e) {
     throw new ConvertToCurrencyIdFailed(target);
   }

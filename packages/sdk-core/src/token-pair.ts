@@ -57,6 +57,6 @@ export class TokenPair {
   }
 
   public toTradingPair(api: AnyApi): AcalaPrimitivesTradingPair {
-    return api.createType('AcalaPrimitivesTradingPair', this.toChainData());
+    return api.registry.createType('AcalaPrimitivesTradingPair', this.toChainData());
   }
 }

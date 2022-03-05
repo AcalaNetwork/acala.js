@@ -243,7 +243,7 @@ export class Token {
 
   public toCurrencyId(api: AnyApi): CombinedCurrencyId {
     try {
-      return api.createType('AcalaPrimitivesCurrencyCurrencyId', this.toChainData());
+      return api.registry.createType('AcalaPrimitivesCurrencyCurrencyId', this.toChainData());
     } catch (e) {
       throw new Error(`can't convert ${this.toChainData()} to Currency Id. ${e}`);
     }
@@ -253,7 +253,7 @@ export class Token {
     assert(this.isDexShare, 'the currency is not a dex share');
 
     try {
-      return api.createType('AcalaPrimitivesTradingPair', [
+      return api.registry.createType('AcalaPrimitivesTradingPair', [
         ...unzipDexShareName(this.name).map((i) => getCurrencyObject(i))
       ]);
     } catch (e) {
@@ -265,7 +265,7 @@ export class Token {
     try {
       assert(this.isDexShare, 'the token is not a dexShare');
 
-      return api.createType('DexShare', this.toChainData());
+      return api.registry.createType('DexShare', this.toChainData());
     } catch (e) {
       throw new Error(`can't convert ${this.toChainData()} to DexShare`);
     }
@@ -275,7 +275,7 @@ export class Token {
     try {
       assert(this.isTokenSymbol, 'the currency is not a token symbol');
 
-      return api.createType('TokenSymbol', this.name);
+      return api.registry.createType('TokenSymbol', this.name);
     } catch (e) {
       throw new Error(`can't convert ${this.toChainData()} to Token Symbol`);
     }
