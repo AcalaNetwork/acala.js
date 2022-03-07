@@ -192,7 +192,9 @@ export class Wallet implements BaseSDK, TokenProvider {
     return this.subscribeTokens().pipe(
       map((all) => {
         // filter token by name or symbol
-        const result = Object.values(all).find((item) => item.name === name || item.symbol === name);
+        const result = Object.values(all).find(
+          (item) => item.display === name || item.symbol === name || item.name === name
+        );
 
         if (!result) throw new CurrencyNotFound(name);
 
