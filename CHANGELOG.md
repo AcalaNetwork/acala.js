@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 4.0.2-20 Mar 02, 2022
+Changes:
+  - support query stablecoin type token via wallet sdk
+
 ## 4.0.2-18 Mar 02, 2022
 Changes:
   - fix error spell, canTryFastReddem -> canTryFastRedeem

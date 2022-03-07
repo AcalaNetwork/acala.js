@@ -3,7 +3,8 @@ import {
   Token,
   TokenType,
   FixedPointNumber as FN,
-  forceToCurrencyName
+  forceToCurrencyName,
+  createStableAssetName
 } from '@acala-network/sdk-core';
 import { TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
 import { Option, StorageKey, u16 } from '@polkadot/types';
@@ -24,7 +25,31 @@ export function createTokenList(
   // tokens list temp
   let temp: TokenRecord = { ...basicTokens };
 
-  // TODO: need support stable coin assets & erc20
+  const stableCoinTokens = Object.fromEntries(
+    assetMetadata
+      .filter((item) => {
+        return item[0].args[0].isStableAssetId;
+      })
+      .map((item) => {
+        const key = item[0].args[0].asStableAssetId.toNumber();
+        const value = item[1].unwrapOrDefault();
+        const name = createStableAssetName(key);
+        const decimals = value.decimals.toNumber();
+
+        return [
+          name,
+          Token.create(name, {
+            type: TokenType.STABLE_ASSET_POOL_TOKEN,
+            display: hexToString(value.name.toHex()),
+            symbol: hexToString(value.symbol.toHex()),
+            decimals,
+            ed: FN.fromInner(value.minimalBalance.toString(), decimals)
+          })
+        ];
+      })
+  );
+
+  // TODO: need support erc20
   const foreignTokens = Object.fromEntries(
     assetMetadata
       .filter((item) => {
@@ -41,6 +66,7 @@ export function createTokenList(
           name,
           Token.create(name, {
             type: TokenType.FOREIGN_ASSET,
+            display: hexToString(value.name.toHex()),
             symbol: hexToString(value.symbol.toHex()),
             decimals,
             ed: FN.fromInner(value.minimalBalance.toString(), decimals),
@@ -67,7 +93,7 @@ export function createTokenList(
   );
 
   // insert foreign tokens to temp
-  temp = { ...temp, ...foreignTokens };
+  temp = { ...temp, ...foreignTokens, ...stableCoinTokens };
 
   // handle dex share at latest
   const dexShareTokens = Object.fromEntries(

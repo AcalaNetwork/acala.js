@@ -34,11 +34,20 @@ describe('wallet', () => {
 
     const rmrk1 = await sdk.getToken('RMRK');
     const rmrk2 = await sdk.getToken('fa://0');
+    const taiKSM1 = await sdk.getToken('taiKSM');
+    const taiKSM2 = await sdk.getToken('sa://0');
+    const taiKSM3 = await sdk.getToken('Taiga KSM');
 
     expect(rmrk1.symbol).toEqual('RMRK');
     expect(rmrk2.symbol).toEqual('RMRK');
     expect(rmrk1.decimals).toEqual(10);
     expect(rmrk2.decimals).toEqual(10);
+    expect(taiKSM1.symbol).toEqual('taiKSM');
+    expect(taiKSM2.symbol).toEqual('taiKSM');
+    expect(taiKSM3.symbol).toEqual('taiKSM');
+    expect(taiKSM1.decimals).toEqual(12);
+    expect(taiKSM2.decimals).toEqual(12);
+    expect(taiKSM3.decimals).toEqual(12);
   });
 
   test('get tokens should work', async () => {
