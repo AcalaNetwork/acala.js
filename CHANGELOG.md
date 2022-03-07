@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 4.0.2-21 Mar 02, 2022
+Changes:
+  - support token.queryExistentialDeposit rpc call
+
 ## 4.0.2-20 Mar 02, 2022
 Changes:
   - support query stablecoin type token via wallet sdk
