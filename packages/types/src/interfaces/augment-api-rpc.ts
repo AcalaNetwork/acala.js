@@ -3,7 +3,7 @@
 
 import type { BalanceRequest, BalanceWrapper } from '@acala-network/types/interfaces/dex';
 import type { CallRequest, EstimateResourcesResponse } from '@acala-network/types/interfaces/evm';
-import type { CurrencyId, NumberOrHex } from '@acala-network/types/interfaces/primitives';
+import type { CurrencyId } from '@acala-network/types/interfaces/primitives';
 import type { AccountId, BlockNumber, H160, H256, H64, Hash, Header, Index, Justification, KeyValue, OracleKey, SignedBlock, StorageData } from '@acala-network/types/interfaces/runtime';
 import type { BalanceInfo } from '@acala-network/types/interfaces/stakingPool';
 import type { ExchangeRate } from '@acala-network/types/interfaces/support';
@@ -594,12 +594,6 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
        * Retrieves the version of the node
        **/
       version: AugmentedRpc<() => Observable<Text>>;
-    };
-    tokens: {
-      /**
-       * Query Existential Deposit for a given currency.
-       **/
-      queryExistentialDeposit: AugmentedRpc<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Observable<NumberOrHex>>;
     };
     web3: {
       /**
