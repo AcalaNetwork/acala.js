@@ -48,6 +48,28 @@
                         "section": "oracle"
                     }
                 },
+                "tokens": {
+                    "queryExistentialDeposit": {
+                        "description": "Query Existential Deposit for a given currency.",
+                        "params": [
+                            {
+                                "name": "currencyId",
+                                "type": "CurrencyId"
+                            },
+                            {
+                                "name": "at",
+                                "type": "BlockHash",
+                                "isHistoric": true,
+                                "isOptional": true
+                            }
+                        ],
+                        "type": "NumberOrHex",
+                        "isSubscription": false,
+                        "jsonrpc": "tokens_queryExistentialDeposit",
+                        "method": "queryExistentialDeposit",
+                        "section": "tokens"
+                    }
+                },
                 "dex": {
                     "getSupplyAmount": {
                         "description": "Get supply amount",
@@ -310,6 +332,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -720,6 +743,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -1138,6 +1162,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -1557,6 +1582,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -1973,6 +1999,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -2389,6 +2416,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -2807,6 +2835,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -3224,6 +3253,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -3638,6 +3668,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -4052,6 +4083,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -4391,6 +4423,28 @@
                         "section": "oracle"
                     }
                 },
+                "tokens": {
+                    "queryExistentialDeposit": {
+                        "description": "Query Existential Deposit for a given currency.",
+                        "params": [
+                            {
+                                "name": "currencyId",
+                                "type": "CurrencyId"
+                            },
+                            {
+                                "name": "at",
+                                "type": "BlockHash",
+                                "isHistoric": true,
+                                "isOptional": true
+                            }
+                        ],
+                        "type": "NumberOrHex",
+                        "isSubscription": false,
+                        "jsonrpc": "tokens_queryExistentialDeposit",
+                        "method": "queryExistentialDeposit",
+                        "section": "tokens"
+                    }
+                },
                 "dex": {
                     "getSupplyAmount": {
                         "description": "Get supply amount",
@@ -4653,6 +4707,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -5063,6 +5118,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -5481,6 +5537,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -5900,6 +5957,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -6316,6 +6374,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -6732,6 +6791,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -7150,6 +7210,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -7567,6 +7628,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -7981,6 +8043,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -8395,6 +8458,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -8734,6 +8798,28 @@
                         "section": "oracle"
                     }
                 },
+                "tokens": {
+                    "queryExistentialDeposit": {
+                        "description": "Query Existential Deposit for a given currency.",
+                        "params": [
+                            {
+                                "name": "currencyId",
+                                "type": "CurrencyId"
+                            },
+                            {
+                                "name": "at",
+                                "type": "BlockHash",
+                                "isHistoric": true,
+                                "isOptional": true
+                            }
+                        ],
+                        "type": "NumberOrHex",
+                        "isSubscription": false,
+                        "jsonrpc": "tokens_queryExistentialDeposit",
+                        "method": "queryExistentialDeposit",
+                        "section": "tokens"
+                    }
+                },
                 "dex": {
                     "getSupplyAmount": {
                         "description": "Get supply amount",
@@ -8996,6 +9082,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -9406,6 +9493,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -9824,6 +9912,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -10243,6 +10332,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -10659,6 +10749,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -11075,6 +11166,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -11493,6 +11585,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -11910,6 +12003,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -12324,6 +12418,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",
@@ -12738,6 +12833,7 @@
                             "decimals": "u8",
                             "minimalBalance": "Balance"
                         },
+                        "NumberOrHex": "u128",
                         "PalletBalanceOf": "Balance",
                         "CollateralAuctionItem": {
                             "refundRecipient": "AccountId",

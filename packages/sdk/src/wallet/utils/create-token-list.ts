@@ -16,6 +16,34 @@ import {
 import { hexToString } from '@polkadot/util';
 import { TokenRecord } from '../type';
 
+function extractLocation(key: number, data: [StorageKey<[u16]>, Option<XcmV1MultiLocation>][]) {
+  const location = data.find((item) => item[0].args[0].toNumber() === key)?.[1]?.unwrapOrDefault();
+
+  if (!location) return;
+
+  const paraChainId = location.interior.isX1
+    ? location.interior.asX1.asParachain.toNumber()
+    : location.interior.isX3
+    ? location.interior.asX3.find((item) => item.isParachain)?.asParachain.toNumber()
+    : location.interior.isX2
+    ? location.interior.asX2.find((item) => item.isParachain)?.asParachain.toNumber()
+    : undefined;
+
+  const generalIndex = location.interior.isX3
+    ? location.interior.asX3.find((item) => item.isGeneralIndex)?.asGeneralIndex.toNumber()
+    : undefined;
+
+  const palletInstance = location.interior.isX3
+    ? location.interior.asX3.find((item) => item.isPalletInstance)?.asPalletInstance.toNumber()
+    : undefined;
+
+  return {
+    paraChainId,
+    generalIndex,
+    palletInstance
+  };
+}
+
 export function createTokenList(
   basicTokens: TokenRecord,
   tradingPairs: [StorageKey<[TradingPair]>, TradingPairStatus][],
@@ -60,7 +88,6 @@ export function createTokenList(
         const value = item[1].unwrapOrDefault();
         const name = createForeignAssetName(key);
         const decimals = value.decimals.toNumber();
-        const locations = foreignAssetLocations.find((item) => item[0].args[0].toNumber() === key);
 
         return [
           name,
@@ -71,22 +98,7 @@ export function createTokenList(
             decimals,
             ed: FN.fromInner(value.minimalBalance.toString(), decimals),
             // TODO: should support other locations
-            locations: locations
-              ? {
-                  paraChainId: locations[1]
-                    .unwrapOrDefault()
-                    .interior.asX3.find((item) => item.isParachain)
-                    ?.asParachain.toNumber(),
-                  generalIndex: locations[1]
-                    .unwrapOrDefault()
-                    .interior.asX3.find((item) => item.isGeneralIndex)
-                    ?.asGeneralIndex.toNumber(),
-                  palletInstance: locations[1]
-                    .unwrapOrDefault()
-                    .interior.asX3.find((item) => item.isPalletInstance)
-                    ?.asPalletInstance.toNumber()
-                }
-              : undefined
+            locations: extractLocation(key, foreignAssetLocations)
           })
         ];
       })

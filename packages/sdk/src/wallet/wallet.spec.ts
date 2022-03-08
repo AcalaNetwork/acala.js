@@ -62,6 +62,18 @@ describe('wallet', () => {
     expect(Object.values(tokens3).length).toEqual(Object.values(tokens1).length + Object.values(tokens2).length);
   });
 
+  test('get location should work', async () => {
+    const sdk = await initSDK();
+
+    const rmrk = await sdk.getToken('RMRK');
+    const qtz = await sdk.getToken('QTZ');
+
+    expect(rmrk.locations?.generalIndex).toBe(8);
+    expect(rmrk.locations?.paraChainId).toBe(1000);
+    expect(rmrk.locations?.palletInstance).toBe(50);
+    expect(qtz.locations?.paraChainId).toBe(2095);
+  });
+
   test('get market price should work', async () => {
     const sdk = await initSDK();
 
