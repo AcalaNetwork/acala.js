@@ -137,6 +137,7 @@
         "decimals": "u8",
         "minimalBalance": "Balance"
     },
+    "NumberOrHex": "u128",
     "PalletBalanceOf": "Balance",
     "CollateralAuctionItem": {
         "refundRecipient": "AccountId",
