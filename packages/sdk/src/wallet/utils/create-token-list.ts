@@ -68,7 +68,7 @@ export function createTokenList(
         return [
           name,
           Token.create(name, {
-            type: TokenType.STABLE_ASSET_POOL_TOKEN,
+            type: TokenType.ERC20,
             display: hexToString(value.name.toHex()),
             symbol: hexToString(value.symbol.toHex()),
             decimals,
