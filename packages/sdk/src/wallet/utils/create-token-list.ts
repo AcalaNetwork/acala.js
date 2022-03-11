@@ -4,7 +4,8 @@ import {
   TokenType,
   FixedPointNumber as FN,
   forceToCurrencyName,
-  createStableAssetName
+  createStableAssetName,
+  createERC20Name
 } from '@acala-network/sdk-core';
 import { TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
 import { Option, StorageKey, u16 } from '@polkadot/types';
@@ -53,6 +54,30 @@ export function createTokenList(
   // tokens list temp
   let temp: TokenRecord = { ...basicTokens };
 
+  const erc20Tokens = Object.fromEntries(
+    assetMetadata
+      .filter((item) => {
+        return item[0].args[0].isErc20;
+      })
+      .map((item) => {
+        const key = item[0].args[0].asErc20.toString();
+        const value = item[1].unwrapOrDefault();
+        const name = createERC20Name(key);
+        const decimals = value.decimals.toNumber();
+
+        return [
+          name,
+          Token.create(name, {
+            type: TokenType.STABLE_ASSET_POOL_TOKEN,
+            display: hexToString(value.name.toHex()),
+            symbol: hexToString(value.symbol.toHex()),
+            decimals,
+            ed: FN.fromInner(value.minimalBalance.toString(), decimals)
+          })
+        ];
+      })
+  );
+
   const stableCoinTokens = Object.fromEntries(
     assetMetadata
       .filter((item) => {
@@ -77,7 +102,6 @@ export function createTokenList(
       })
   );
 
-  // TODO: need support erc20
   const foreignTokens = Object.fromEntries(
     assetMetadata
       .filter((item) => {
@@ -105,7 +129,7 @@ export function createTokenList(
   );
 
   // insert foreign tokens to temp
-  temp = { ...temp, ...foreignTokens, ...stableCoinTokens };
+  temp = { ...temp, ...foreignTokens, ...stableCoinTokens, ...erc20Tokens };
 
   // handle dex share at latest
   const dexShareTokens = Object.fromEntries(

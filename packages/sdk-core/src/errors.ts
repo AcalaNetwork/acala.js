@@ -68,3 +68,12 @@ export class NotLiquidCrowdloanName extends Error {
     this.message = `${origin} is not liquid crowdloan asset name`;
   }
 }
+
+export class NotERC20TokenName extends Error {
+  constructor(origin: string) {
+    super();
+
+    this.name = 'notERC20Token';
+    this.message = `${origin} is not erc20 token name`;
+  }
+}
