@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk-loan",
-  "version": "4.0.2-22",
+  "version": "4.0.2-23",
   "description": "the loan sub module in acala network sdk",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
