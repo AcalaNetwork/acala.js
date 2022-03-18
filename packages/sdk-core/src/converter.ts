@@ -116,7 +116,7 @@ export function isERC20Name(name: string): boolean {
 }
 
 export function getERC20TokenAddressFromName(name: string): string {
-  if (!isLiquidCrowdloanName(name)) throw new NotERC20TokenName(name);
+  if (!isERC20Name(name)) throw new NotERC20TokenName(name);
 
   return name.replace('erc20://', '');
 }
