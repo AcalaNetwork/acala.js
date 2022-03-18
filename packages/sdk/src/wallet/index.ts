@@ -127,8 +127,9 @@ export class Wallet implements BaseSDK, TokenProvider {
 
     // insert LCDOT if chain is acala or mandala
     if (
-      getChainType(this.consts.runtimeChain) === ChainType.ACALA ||
-      getChainType(this.consts.runtimeChain) === ChainType.MANDALA
+      (getChainType(this.consts.runtimeChain) === ChainType.ACALA ||
+        getChainType(this.consts.runtimeChain) === ChainType.MANDALA) &&
+      basicTokens.DOT
     ) {
       const name = createLiquidCrowdloanName(13);
 
