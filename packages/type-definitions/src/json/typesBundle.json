@@ -48,6 +48,28 @@
                         "section": "oracle"
                     }
                 },
+                "tokens": {
+                    "queryExistentialDeposit": {
+                        "description": "Query Existential Deposit for a given currency.",
+                        "params": [
+                            {
+                                "name": "currencyId",
+                                "type": "CurrencyId"
+                            },
+                            {
+                                "name": "at",
+                                "type": "BlockHash",
+                                "isHistoric": true,
+                                "isOptional": true
+                            }
+                        ],
+                        "type": "NumberOrHex",
+                        "isSubscription": false,
+                        "jsonrpc": "tokens_queryExistentialDeposit",
+                        "method": "queryExistentialDeposit",
+                        "section": "tokens"
+                    }
+                },
                 "dex": {
                     "getSupplyAmount": {
                         "description": "Get supply amount",
@@ -4401,6 +4423,28 @@
                         "section": "oracle"
                     }
                 },
+                "tokens": {
+                    "queryExistentialDeposit": {
+                        "description": "Query Existential Deposit for a given currency.",
+                        "params": [
+                            {
+                                "name": "currencyId",
+                                "type": "CurrencyId"
+                            },
+                            {
+                                "name": "at",
+                                "type": "BlockHash",
+                                "isHistoric": true,
+                                "isOptional": true
+                            }
+                        ],
+                        "type": "NumberOrHex",
+                        "isSubscription": false,
+                        "jsonrpc": "tokens_queryExistentialDeposit",
+                        "method": "queryExistentialDeposit",
+                        "section": "tokens"
+                    }
+                },
                 "dex": {
                     "getSupplyAmount": {
                         "description": "Get supply amount",
@@ -8752,6 +8796,28 @@
                         "jsonrpc": "oracle_getAllValues",
                         "method": "getAllValues",
                         "section": "oracle"
+                    }
+                },
+                "tokens": {
+                    "queryExistentialDeposit": {
+                        "description": "Query Existential Deposit for a given currency.",
+                        "params": [
+                            {
+                                "name": "currencyId",
+                                "type": "CurrencyId"
+                            },
+                            {
+                                "name": "at",
+                                "type": "BlockHash",
+                                "isHistoric": true,
+                                "isOptional": true
+                            }
+                        ],
+                        "type": "NumberOrHex",
+                        "isSubscription": false,
+                        "jsonrpc": "tokens_queryExistentialDeposit",
+                        "method": "queryExistentialDeposit",
+                        "section": "tokens"
                     }
                 },
                 "dex": {
