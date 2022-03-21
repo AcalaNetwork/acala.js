@@ -125,8 +125,12 @@ export class Wallet implements BaseSDK, TokenProvider {
       })
     );
 
-    // insert LCDOT if chain is acala
-    if (getChainType(this.consts.runtimeChain) === ChainType.ACALA) {
+    // insert LCDOT if chain is acala or mandala
+    if (
+      (getChainType(this.consts.runtimeChain) === ChainType.ACALA ||
+        getChainType(this.consts.runtimeChain) === ChainType.MANDALA) &&
+      basicTokens.DOT
+    ) {
       const name = createLiquidCrowdloanName(13);
 
       basicTokens[name] = new Token(name, {
@@ -182,6 +186,10 @@ export class Wallet implements BaseSDK, TokenProvider {
     return firstValueFrom(this.subscribeTokens(type));
   }
 
+  private tokenEeual(a: string, b: Token): boolean {
+    return b.display === a || b.symbol === a || b.name === a;
+  }
+
   /**
    *  @name subscribeToken
    *  @description subscirbe the token info
@@ -192,9 +200,7 @@ export class Wallet implements BaseSDK, TokenProvider {
     return this.subscribeTokens().pipe(
       map((all) => {
         // filter token by name or symbol
-        const result = Object.values(all).find(
-          (item) => item.display === name || item.symbol === name || item.name === name
-        );
+        const result = Object.values(all).find((item) => this.tokenEeual(name, item));
 
         if (!result) throw new CurrencyNotFound(name);
 
@@ -211,7 +217,7 @@ export class Wallet implements BaseSDK, TokenProvider {
   public __getToken(target: MaybeCurrency): Token | undefined {
     const name = forceToCurrencyName(target);
 
-    return Object.values(this.tokens$.value || {}).find((item) => item.name === name);
+    return Object.values(this.tokens$.value || {}).find((item) => this.tokenEeual(name, item));
   }
 
   /**

@@ -1,22 +1,13 @@
 # CHANGELOG
 
-## 4.0.2-21 Mar 02, 2022
+## 4.0.3 Mar 21, 2022
 Changes:
-  - support token.queryExistentialDeposit rpc call
-
-## 4.0.2-20 Mar 02, 2022
-Changes:
-  - support query stablecoin type token via wallet sdk
-
-## 4.0.2-18 Mar 02, 2022
-Changes:
+  - add new history sdk, support query transfer histories
+  - support query stableCoin, erc20 tokens informations
+  - fix query foreign assets' location
   - fix error spell, canTryFastReddem -> canTryFastRedeem
   - support query LiquidCrowdloanCurrency Price util
   - homa sdk support promise
-
-## 4.0.2-9 Oct 01, 2022
-Change:
-  - Bump polkadot.js version to 7.2.1
   - Support LCDOT price
 
 ## 3.0.2 Oct 29, 2021

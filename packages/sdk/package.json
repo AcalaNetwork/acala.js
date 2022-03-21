@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk",
-  "version": "4.0.2-19",
+  "version": "4.0.2-24",
   "description": "acala network sdk",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
@@ -15,8 +15,8 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
-    "@acala-network/api": "4.0.2-19",
-    "@acala-network/type-definitions": "4.0.2-19",
+    "@acala-network/api": "4.0.2-24",
+    "@acala-network/type-definitions": "4.0.2-24",
     "@polkadot/api": "^7.1.1",
     "@polkadot/types": "^7.1.1",
     "@types/events": "^3.0.0",
@@ -24,6 +24,8 @@
     "bignumber.js": "^9.0.0",
     "cross-fetch": "^3.1.4",
     "events": "^3.2.0",
+    "graphql": "^16.3.0",
+    "graphql-request": "^4.1.0",
     "lodash": "^4.17.20",
     "rxjs": "^7.4.0"
   },
