@@ -43,6 +43,6 @@ describe('history', () => {
       address: 'seorgCZDzP5G3JEbsBjFdpQ4dTUgCWoPjQynyJqHCfXvZVW'
     });
 
-    console.log(transfers);
+    expect(transfers.length).not.toBe(0);
   });
 });
