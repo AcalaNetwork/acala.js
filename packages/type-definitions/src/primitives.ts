@@ -63,7 +63,8 @@ export default {
       symbol: 'Vec<u8>',
       decimals: 'u8',
       minimalBalance: 'Balance'
-    }
+    },
+    NumberOrHex: 'u128'
   },
   typesAlias: {
     rewards: {
