@@ -1,4 +1,4 @@
-import { ChainType } from "../types";
+import { ChainType } from '../types';
 
 export interface HistoryRecord {
   message: string;
@@ -23,3 +23,8 @@ export interface HistoryConfigs {
 }
 
 export type HistoryType = 'transfer' | 'swap' | 'honzon' | 'homa' | 'incentive';
+
+export interface HistoryFetcher {
+  fetch: (...args: any[]) => Promise<any>;
+  transform: (data: any[]) => HistoryRecord[];
+}
