@@ -1,26 +1,18 @@
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
-import { HistoryConfigs, HistoryRecord, HistoryType } from './types';
+import { HistoryConfigs } from './types';
+import { Transfers } from './fetchers/transfers';
 
 export class History {
   readonly configs: HistoryConfigs;
-  private histories: BehaviorSubject<HistoryRecord[]>;
-  private type: HistoryType;
+  readonly transfer: Transfers;
 
   constructor(configs: HistoryConfigs) {
     this.configs = configs;
-    this.histories = new BehaviorSubject<HistoryRecord[]>([]);
-    this.type = 'transfer';
-  }
 
-  private fetchHistory () {
-
-  }
-
-  public subscribeHistories(type: HistoryType) {
-    return this.histories;
-  }
-
-  public async getHistories(type: HistoryType): Promise<HistoryRecord[]> {
-    return firstValueFrom(this.subscribeHistories(type));
+    // initizlize hisotry fetcher
+    this.transfer = new Transfers({
+      endpoint: this.configs.fetchEndpoints.transfer,
+      poolInterval: this.configs.poolInterval,
+      wallet: this.configs.wallet
+    });
   }
 }

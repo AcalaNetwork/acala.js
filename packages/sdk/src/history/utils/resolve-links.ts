@@ -1,10 +1,10 @@
-import { ChainType } from '@acala-network/sdk/types';
 import { ResolveLinks } from '../types';
+import { ChainType } from '../../types';
 
 const ACALA_SUB_SCAN = 'https://acala.subscan.io';
 const KARURA_SUB_SCAN = 'https://karura.subscan.io';
 
-export function resolveLinks(chain: ChainType, extrinsicHash?: string, blockNumber?: number): ResolveLinks {
+export function resolveLinks(chain: ChainType, extrinsicHash?: string, blockNumber?: number | string): ResolveLinks {
   if (chain !== ChainType.ACALA && chain !== ChainType.KARURA) {
     return {
       subscan: ''

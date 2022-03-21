@@ -1,30 +1,29 @@
-import { ChainType } from '../types';
+import { Wallet } from '../wallet';
+
+export interface ResolveLinks {
+  subscan: string;
+}
 
 export interface HistoryRecord {
   message: string;
-  data: Record<string, string>;
+  data: Record<string, any>;
   extrinsicHash?: string;
   blokcNumber?: number;
-  resolveLinks: {
-    subscan: string;
-  };
-}
-
-export interface History {
-  chain: ChainType;
-  history: HistoryRecord[];
+  resolveLinks: ResolveLinks;
 }
 
 export interface HistoryConfigs {
+  wallet: Wallet;
   fetchEndpoints: {
     transfer: string;
   };
   poolInterval: number;
 }
 
-export type HistoryType = 'transfer' | 'swap' | 'honzon' | 'homa' | 'incentive';
-
-export interface HistoryFetcher {
-  fetch: (...args: any[]) => Promise<any>;
-  transform: (data: any[]) => HistoryRecord[];
+export interface HistoryFetcherConfig {
+  endpoint: string;
+  wallet: Wallet;
+  poolInterval: number;
 }
+
+export type BaseFetchParams = Record<string, any>;
