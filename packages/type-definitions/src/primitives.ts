@@ -26,7 +26,10 @@ export default {
         // 150: Reserved for CASH
         // 168 - 255: Kusama parachain tokens
         BNC: 168,
-        VSKSM: 169
+        VSKSM: 169,
+        PHA: 170,
+        KINT: 171,
+        KBTC: 172
       }
     },
     DexShare: {

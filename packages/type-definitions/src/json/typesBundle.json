@@ -2785,7 +2785,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -3203,7 +3206,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -3618,7 +3624,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -4033,7 +4042,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -7160,7 +7172,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -7578,7 +7593,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -7993,7 +8011,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -8408,7 +8429,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -11535,7 +11559,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -11953,7 +11980,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -12368,7 +12398,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -12783,7 +12816,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
