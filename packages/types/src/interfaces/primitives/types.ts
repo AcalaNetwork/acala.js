@@ -103,7 +103,10 @@ export interface TokenSymbol extends Enum {
   readonly isLksm: boolean;
   readonly isBnc: boolean;
   readonly isVsksm: boolean;
-  readonly type: 'Aca' | 'Ausd' | 'Dot' | 'Ldot' | 'Renbtc' | 'Cash' | 'Kar' | 'Kusd' | 'Ksm' | 'Lksm' | 'Bnc' | 'Vsksm';
+  readonly isPha: boolean;
+  readonly isKint: boolean;
+  readonly isKbtc: boolean;
+  readonly type: 'Aca' | 'Ausd' | 'Dot' | 'Ldot' | 'Renbtc' | 'Cash' | 'Kar' | 'Kusd' | 'Ksm' | 'Lksm' | 'Bnc' | 'Vsksm' | 'Pha' | 'Kint' | 'Kbtc';
 }
 
 /** @name TradingPair */

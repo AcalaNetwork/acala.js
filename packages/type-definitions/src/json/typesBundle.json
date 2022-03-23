@@ -48,6 +48,28 @@
                         "section": "oracle"
                     }
                 },
+                "tokens": {
+                    "queryExistentialDeposit": {
+                        "description": "Query Existential Deposit for a given currency.",
+                        "params": [
+                            {
+                                "name": "currencyId",
+                                "type": "CurrencyId"
+                            },
+                            {
+                                "name": "at",
+                                "type": "BlockHash",
+                                "isHistoric": true,
+                                "isOptional": true
+                            }
+                        ],
+                        "type": "NumberOrHex",
+                        "isSubscription": false,
+                        "jsonrpc": "tokens_queryExistentialDeposit",
+                        "method": "queryExistentialDeposit",
+                        "section": "tokens"
+                    }
+                },
                 "dex": {
                     "getSupplyAmount": {
                         "description": "Get supply amount",
@@ -2763,7 +2785,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -3181,7 +3206,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -3596,7 +3624,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -4011,7 +4042,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -4401,6 +4435,28 @@
                         "section": "oracle"
                     }
                 },
+                "tokens": {
+                    "queryExistentialDeposit": {
+                        "description": "Query Existential Deposit for a given currency.",
+                        "params": [
+                            {
+                                "name": "currencyId",
+                                "type": "CurrencyId"
+                            },
+                            {
+                                "name": "at",
+                                "type": "BlockHash",
+                                "isHistoric": true,
+                                "isOptional": true
+                            }
+                        ],
+                        "type": "NumberOrHex",
+                        "isSubscription": false,
+                        "jsonrpc": "tokens_queryExistentialDeposit",
+                        "method": "queryExistentialDeposit",
+                        "section": "tokens"
+                    }
+                },
                 "dex": {
                     "getSupplyAmount": {
                         "description": "Get supply amount",
@@ -7116,7 +7172,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -7534,7 +7593,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -7949,7 +8011,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -8364,7 +8429,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -8754,6 +8822,28 @@
                         "section": "oracle"
                     }
                 },
+                "tokens": {
+                    "queryExistentialDeposit": {
+                        "description": "Query Existential Deposit for a given currency.",
+                        "params": [
+                            {
+                                "name": "currencyId",
+                                "type": "CurrencyId"
+                            },
+                            {
+                                "name": "at",
+                                "type": "BlockHash",
+                                "isHistoric": true,
+                                "isOptional": true
+                            }
+                        ],
+                        "type": "NumberOrHex",
+                        "isSubscription": false,
+                        "jsonrpc": "tokens_queryExistentialDeposit",
+                        "method": "queryExistentialDeposit",
+                        "section": "tokens"
+                    }
+                },
                 "dex": {
                     "getSupplyAmount": {
                         "description": "Get supply amount",
@@ -11469,7 +11559,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -11887,7 +11980,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -12302,7 +12398,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
@@ -12717,7 +12816,10 @@
                                 "KSM": 130,
                                 "LKSM": 131,
                                 "BNC": 168,
-                                "VSKSM": 169
+                                "VSKSM": 169,
+                                "PHA": 170,
+                                "KINT": 171,
+                                "KBTC": 172
                             }
                         },
                         "DexShare": {
