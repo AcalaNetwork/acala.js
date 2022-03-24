@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 4.0.3-2 Mar 21, 2022
+Changes:
+  - support display kusd on karura
+
 ## 4.0.3 Mar 21, 2022
 Changes:
   - add new history sdk, support query transfer histories

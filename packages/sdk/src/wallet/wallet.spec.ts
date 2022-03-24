@@ -5,6 +5,7 @@ import { ApiPromise } from '@polkadot/api';
 import { options } from '@acala-network/api';
 import { TokenType } from '@acala-network/sdk-core';
 import { PriceProviderType } from './price-provider/types';
+import { WalletConfigs } from './type';
 
 dotenv.config();
 
@@ -13,7 +14,7 @@ describe('wallet', () => {
 
   jest.setTimeout(30000);
 
-  const initSDK = async () => {
+  const initSDK = async (configs?: WalletConfigs) => {
     if (sdk) return sdk;
 
     const endpoint = process.env.ENDPOINT || 'wss://karura.api.onfinality.io/public-ws';
@@ -22,7 +23,7 @@ describe('wallet', () => {
 
     await api.isReady;
 
-    const wallet = new Wallet(api);
+    const wallet = new Wallet(api, configs);
 
     await wallet.isReady;
 
@@ -102,5 +103,23 @@ describe('wallet', () => {
     expect(price2.toString()).not.toBe(undefined);
     expect(price3.toString()).not.toBe('0');
     expect(price3.toString()).not.toBe(undefined);
+  });
+
+  test('support ausd should work', async () => {
+    const sdk0 = await initSDK({ supportAUSD: false });
+    const sdk1 = await initSDK();
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const token0 = await sdk0.getToken('AUSD').catch((i) => i.toString());
+    const token1 = await sdk0.getToken('KUSD');
+    const token2 = await sdk1.getToken('AUSD');
+    const token3 = await sdk1.getToken('KUSD');
+
+    expect(token0).toBe("CurrencyNotFound: can't find AUSD currency in current network");
+    expect(token1.display).toBe('kUSD');
+    expect(token2.display).toBe('aUSD');
+    expect(token3.display).toBe('aUSD');
+    expect(token2.symbol).toBe('KUSD');
+    expect(token3.symbol).toBe('KUSD');
   });
 });
