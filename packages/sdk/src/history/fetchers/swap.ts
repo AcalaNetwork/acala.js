@@ -40,7 +40,7 @@ interface FetchResult {
   };
 }
 
-export class Transfers extends BaseHistoryFetcher<SwapFetchParams> {
+export class Swaps extends BaseHistoryFetcher<SwapFetchParams> {
   constructor(configs: HistoryFetcherConfig) {
     super(configs);
   }

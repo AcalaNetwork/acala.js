@@ -33,7 +33,11 @@ describe('history', () => {
 
     const history = new History({
       fetchEndpoints: {
-        transfer: 'https://api.subquery.network/sq/AcalaNetwork/karura-transfer-history'
+        transfer: 'https://api.subquery.network/sq/AcalaNetwork/karura-transfer-history',
+        swap: 'https://api.subquery.network/sq/AcalaNetwork/karura-dex',
+        earn: 'https://api.subquery.network/sq/AcalaNetwork/karura-incentives',
+        loan: 'https://api.subquery.network/sq/AcalaNetwork/karura-loans',
+        homa: 'https://api.subquery.network/sq/AcalaNetwork/karura-homa'
       },
       wallet,
       poolInterval: 5 * 60 * 1000 // every 5 minutes
@@ -43,6 +47,26 @@ describe('history', () => {
       address: 'seorgCZDzP5G3JEbsBjFdpQ4dTUgCWoPjQynyJqHCfXvZVW'
     });
 
+    const swaps = await history.swap.getHistories({
+      address: 'seorgCZDzP5G3JEbsBjFdpQ4dTUgCWoPjQynyJqHCfXvZVW'
+    });
+
+    const earns = await history.earn.getHistories({
+      address: 'seorgCZDzP5G3JEbsBjFdpQ4dTUgCWoPjQynyJqHCfXvZVW'
+    });
+
+    const loans = await history.loan.getHistories({
+      address: 'seorgCZDzP5G3JEbsBjFdpQ4dTUgCWoPjQynyJqHCfXvZVW'
+    });
+
+    const homas = await history.homa.getHistories({
+      address: 'seorgCZDzP5G3JEbsBjFdpQ4dTUgCWoPjQynyJqHCfXvZVW'
+    });
+
     expect(transfers.length).not.toBe(0);
+    expect(swaps.length).not.toBe(0);
+    expect(earns.length).not.toBe(0);
+    expect(loans.length).not.toBe(0);
+    expect(homas.length).not.toBe(0);
   });
 });
