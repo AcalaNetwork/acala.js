@@ -1,18 +1,17 @@
 import { TokenSymbol, DexShare, TradingPair } from '@acala-network/types/interfaces';
 import { assert } from '@polkadot/util';
 
-import { AnyApi, CombinedCurrencyId, TokenType } from './types';
-import { forceToCurrencyName } from './converter';
+import { AnyApi, CombinedCurrencyId, CurrencyObject, TokenType } from './types';
 import {
   createDexShareName,
   createStableAssetName,
-  CurrencyObject,
-  FixedPointNumber,
+  forceToCurrencyName,
   getCurrencyObject,
   getCurrencyTypeByName,
   unzipDexShareName
-} from '.';
+} from './converter';
 import { sortTokenByName } from './sort-token';
+import { FixedPointNumber } from './fixed-point-number';
 
 export interface StableAsset {
   poolId: number;
@@ -61,36 +60,53 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
 };
 
 interface Configs {
-  display?: string; // namae for display
+  // basic token informations
+  type?: TokenType; // token type
+  chain?: string; // token's chain
+  display?: string; // for display
+  fullname?: string; // token full name
+  symbol?: string; // token symbol
   decimals?: number; // token decimals
   decimal?: number; // token decimals
-  type?: TokenType; // token type
-  chain?: string;
-  symbol?: string;
-  detail?: { id: number };
   ed?: FixedPointNumber;
+
+  // configs for cross-chain transfer
+  locations?: {
+    paraChainId?: number;
+    generalIndex?: number;
+    palletInstance?: number;
+  };
 }
 
 export class Token {
   readonly name: string;
+  readonly display: string;
+  readonly fullname: string;
   readonly symbol: string;
   readonly decimals: number;
-  readonly decimal: number;
   readonly ed: FixedPointNumber;
   readonly chain: string | undefined;
   readonly type: TokenType;
-  readonly display: string;
   readonly pair?: [Token, Token];
+  readonly locations?: {
+    paraChainId?: number;
+    generalIndex?: number;
+    palletInstance?: number;
+  };
 
   constructor(name: string, configs?: Configs) {
+    // basic token informations
     this.name = name;
+    this.type = configs?.type || TokenType.BASIC;
+    this.display = configs?.display || configs?.symbol || name;
+    this.fullname = configs?.fullname || this.display;
+    this.symbol = configs?.symbol || name;
     this.decimals = configs?.decimals || configs?.decimal || 18;
-    this.decimal = this.decimals;
     this.ed = configs?.ed || FixedPointNumber.ZERO;
     this.chain = configs?.chain;
-    this.type = configs?.type || TokenType.BASIC;
-    this.symbol = configs?.symbol || name;
-    this.display = configs?.display || name;
+
+    // foreign asset locations
+    this.locations = configs?.locations;
   }
 
   get isTokenSymbol(): boolean {
@@ -109,12 +125,18 @@ export class Token {
     return this.type === TokenType.STABLE_ASSET_POOL_TOKEN;
   }
 
-  get isLiquidCroadloan(): boolean {
-    return this.type === TokenType.LIQUID_CROADLOAN;
+  get isLiquidCrowdloan(): boolean {
+    return this.type === TokenType.LIQUID_CROWDLOAN;
   }
 
   get isForeignAsset(): boolean {
     return this.type === TokenType.FOREIGN_ASSET;
+  }
+
+  get decimal(): number {
+    console.warn('decimal is deprecated, please use decimals');
+
+    return this.decimals;
   }
 
   static create(name: string, configs?: Configs): Token {
@@ -221,7 +243,7 @@ export class Token {
 
   public toCurrencyId(api: AnyApi): CombinedCurrencyId {
     try {
-      return api.createType('AcalaPrimitivesCurrencyCurrencyId', this.toChainData());
+      return api.registry.createType('AcalaPrimitivesCurrencyCurrencyId', this.toChainData());
     } catch (e) {
       throw new Error(`can't convert ${this.toChainData()} to Currency Id. ${e}`);
     }
@@ -231,7 +253,7 @@ export class Token {
     assert(this.isDexShare, 'the currency is not a dex share');
 
     try {
-      return api.createType('AcalaPrimitivesTradingPair', [
+      return api.registry.createType('AcalaPrimitivesTradingPair', [
         ...unzipDexShareName(this.name).map((i) => getCurrencyObject(i))
       ]);
     } catch (e) {
@@ -243,7 +265,7 @@ export class Token {
     try {
       assert(this.isDexShare, 'the token is not a dexShare');
 
-      return api.createType('DexShare', this.toChainData());
+      return api.registry.createType('DexShare', this.toChainData());
     } catch (e) {
       throw new Error(`can't convert ${this.toChainData()} to DexShare`);
     }
@@ -253,7 +275,7 @@ export class Token {
     try {
       assert(this.isTokenSymbol, 'the currency is not a token symbol');
 
-      return api.createType('TokenSymbol', this.name);
+      return api.registry.createType('TokenSymbol', this.name);
     } catch (e) {
       throw new Error(`can't convert ${this.toChainData()} to Token Symbol`);
     }

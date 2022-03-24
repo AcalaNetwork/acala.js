@@ -1,5 +1,5 @@
 import { FixedPointNumber, Token } from '@acala-network/sdk-core';
-import { AcalaPrimitivesCurrencyCurrencyId, ModuleIncentivesPoolId } from '@polkadot/types/lookup';
+import { ModuleIncentivesPoolId } from '@polkadot/types/lookup';
 
 export enum IncentiveType {
   'LOANS',

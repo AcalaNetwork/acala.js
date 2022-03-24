@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## 4.0.3-2 Mar 21, 2022
+Changes:
+  - support display kusd on karura
+
+## 4.0.3 Mar 21, 2022
+Changes:
+  - add new history sdk, support query transfer histories
+  - support query stableCoin, erc20 tokens informations
+  - fix query foreign assets' location
+  - fix error spell, canTryFastReddem -> canTryFastRedeem
+  - support query LiquidCrowdloanCurrency Price util
+  - homa sdk support promise
+  - Support LCDOT price
+
 ## 3.0.2 Oct 29, 2021
 Changes:
   - Add StableAsset types

@@ -11,7 +11,7 @@ import {
   FixedPointNumber as FN,
   isDexShareName,
   isStableAssetName,
-  createLiquidCroadloanName
+  createLiquidCrowdloanName
 } from '@acala-network/sdk-core';
 import { getChainType } from '@acala-network/sdk/utils/get-chain-type';
 import { CurrencyId } from '@acala-network/types/interfaces';
@@ -42,7 +42,6 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
   private init() {
     const tokenDecimals = this.api.registry.chainDecimals;
     const tokenSymbol = this.api.registry.chainTokens;
-
     const defaultTokenDecimal = Number(tokenDecimals?.[0]) || 12;
 
     this.runtimeChain = this.api.runtimeChain.toString();
@@ -63,8 +62,10 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
     });
 
     // insert LCDOT if chain is acala
-    if (getChainType(this.runtimeChain) === ChainType.ACALA) {
-      const name = createLiquidCroadloanName(13);
+    const chainType = getChainType(this.runtimeChain);
+
+    if (chainType === ChainType.ACALA || chainType === ChainType.MANDALA) {
+      const name = createLiquidCrowdloanName(13);
 
       this.tokenMap.set(
         name,
@@ -112,8 +113,6 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
 
       return Token.fromStableAssetPool(this.api.runtimeChain.toString(), poolId);
     }
-
-    // FIXME: need handle erc20
 
     return this.tokenMap.get(currencyName)?.clone() || new Token('EMPTY');
   }
@@ -172,12 +171,6 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
    * @description get the price
    */
   public abstract queryPrice(currency: MaybeCurrency, at?: number): ObOrPromiseResult<T, PriceData>;
-
-  /**
-   * @name queryOraclePrice
-   * @description get the oracle feed price
-   */
-  public abstract queryOraclePrice(): ObOrPromiseResult<T, PriceDataWithTimestamp[]>;
 
   /**
    * @name queryPriceFromDex

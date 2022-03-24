@@ -3,7 +3,7 @@
 
 import type { EvmAddress } from '@acala-network/types/interfaces/evm';
 import type { Balance } from '@acala-network/types/interfaces/runtime';
-import type { Bytes, Enum, Struct, i128, u32, u8 } from '@polkadot/types-codec';
+import type { Bytes, Enum, Struct, i128, u128, u32, u8 } from '@polkadot/types-codec';
 import type { ITuple } from '@polkadot/types-codec/types';
 
 /** @name AcalaAssetMetadata */
@@ -83,6 +83,9 @@ export interface DexShare extends Enum {
   readonly type: 'Token' | 'Erc20';
 }
 
+/** @name NumberOrHex */
+export interface NumberOrHex extends u128 {}
+
 /** @name OrmlCurrencyId */
 export interface OrmlCurrencyId extends CurrencyId {}
 
@@ -100,7 +103,10 @@ export interface TokenSymbol extends Enum {
   readonly isLksm: boolean;
   readonly isBnc: boolean;
   readonly isVsksm: boolean;
-  readonly type: 'Aca' | 'Ausd' | 'Dot' | 'Ldot' | 'Renbtc' | 'Cash' | 'Kar' | 'Kusd' | 'Ksm' | 'Lksm' | 'Bnc' | 'Vsksm';
+  readonly isPha: boolean;
+  readonly isKint: boolean;
+  readonly isKbtc: boolean;
+  readonly type: 'Aca' | 'Ausd' | 'Dot' | 'Ldot' | 'Renbtc' | 'Cash' | 'Kar' | 'Kusd' | 'Ksm' | 'Lksm' | 'Bnc' | 'Vsksm' | 'Pha' | 'Kint' | 'Kbtc';
 }
 
 /** @name TradingPair */

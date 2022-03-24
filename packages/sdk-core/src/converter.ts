@@ -1,16 +1,19 @@
 import { CurrencyId, TokenSymbol } from '@acala-network/types/interfaces';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
 import { isArray } from 'lodash';
-import { STABLE_ASSET_POOLS, TokenType } from '.';
 import {
   ConvertToCurrencyIdFailed,
   ConvertToCurrencyNameFailed,
   NotDexShareName,
+  NotERC20TokenName,
   NotForeignAssetName,
-  NotLiquidCroadloanName,
+  NotLiquidCrowdloanName,
   NotStableAssetPoolName
 } from './errors';
-import { Token } from './token';
-import { AnyApi, CurrencyObject, MaybeCurrency } from './types';
+import { STABLE_ASSET_POOLS, Token } from './token';
+import { AnyApi, CurrencyObject, MaybeCurrency, TokenType } from './types';
+
+let IS_LIQUID_CROADLOAN = false;
 
 /**
  *  we set a name with a prefix to all types of tokens for easy passing and use.
@@ -88,19 +91,34 @@ export function getForeignAssetIdFromName(name: string): number {
   return parseInt(name.replace('fa://', ''));
 }
 
-// for liquid croadloan
-export function createLiquidCroadloanName(id: number): string {
+// for liquid crowdloan
+export function createLiquidCrowdloanName(id: number): string {
   return `lc://${id}`;
 }
 
-export function isLiquidCroadloanName(name: string): boolean {
+export function isLiquidCrowdloanName(name: string): boolean {
   return name.startsWith('lc://');
 }
 
-export function getLiquidCroadloanIdFromName(name: string): number {
-  if (!isLiquidCroadloanName(name)) throw new NotLiquidCroadloanName(name);
+export function getLiquidCrowdloanIdFromName(name: string): number {
+  if (!isLiquidCrowdloanName(name)) throw new NotLiquidCrowdloanName(name);
 
   return parseInt(name.replace('lc://', ''));
+}
+
+// for erc20
+export function createERC20Name(hash: string): string {
+  return `erc20://${hash}`;
+}
+
+export function isERC20Name(name: string): boolean {
+  return name.startsWith('erc20://');
+}
+
+export function getERC20TokenAddressFromName(name: string): string {
+  if (!isERC20Name(name)) throw new NotERC20TokenName(name);
+
+  return name.replace('erc20://', '');
 }
 
 export function getCurrencyTypeByName(name: string): TokenType {
@@ -112,9 +130,10 @@ export function getCurrencyTypeByName(name: string): TokenType {
 
   if (isDexShareName(name)) return TokenType.DEX_SHARE;
 
-  if (isLiquidCroadloanName(name)) return TokenType.LIQUID_CROADLOAN;
+  if (isLiquidCrowdloanName(name)) return TokenType.LIQUID_CROWDLOAN;
 
-  // FIXME: need support ERC20
+  if (isERC20Name(name)) return TokenType.ERC20;
+
   return TokenType.BASIC;
 }
 
@@ -130,8 +149,20 @@ export function getForeignAssetCurrencyObject(name: string): CurrencyObject {
   return { ForeignAsset: getForeignAssetIdFromName(name) };
 }
 
-export function getLiquidCroadloanObject(name: string): CurrencyObject {
-  return { LiquidCroadloan: getLiquidCroadloanIdFromName(name) };
+export function getLiquidCrowdloanObject(name: string): CurrencyObject {
+  // FIXME: need remove if all chain released
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  if (IS_LIQUID_CROADLOAN) {
+    return { LiquidCroadloan: getLiquidCrowdloanIdFromName(name) };
+  }
+
+  return { LiquidCrowdloan: getLiquidCrowdloanIdFromName(name) };
+}
+
+export function getERC20Object(name: string): CurrencyObject {
+  return {
+    Erc20: getERC20TokenAddressFromName(name)
+  };
 }
 
 export function getDexShareCurrencyObject(name: string): CurrencyObject {
@@ -146,9 +177,10 @@ export function getDexShareCurrencyObject(name: string): CurrencyObject {
 
     if (isStableAssetName(name)) return getStableAssetCurrencyObject(name);
 
-    if (isLiquidCroadloanName(name)) return getLiquidCroadloanObject(name);
+    if (isLiquidCrowdloanName(name)) return getLiquidCrowdloanObject(name);
 
-    // FIXME: need support ERC20
+    if (isERC20Name(name)) return getERC20Object(name);
+
     return getBasicCurrencyObject(name);
   };
 
@@ -162,9 +194,10 @@ export function getCurrencyObject(name: string): CurrencyObject {
 
   if (isStableAssetName(name)) return getStableAssetCurrencyObject(name);
 
-  if (isLiquidCroadloanName(name)) return getLiquidCroadloanObject(name);
+  if (isLiquidCrowdloanName(name)) return getLiquidCrowdloanObject(name);
 
-  // FIXME: need support ERC20
+  if (isERC20Name(name)) return getERC20Object(name);
+
   return getBasicCurrencyObject(name);
 }
 
@@ -189,8 +222,7 @@ export function forceToCurrencyName(target: MaybeCurrency): string {
       );
     }
 
-    // FIXME: should handle erc20
-    if ((target as CurrencyId).isErc20) return (target as CurrencyId).asErc20.toString();
+    if ((target as CurrencyId).isErc20) return createERC20Name((target as CurrencyId).asErc20.toString());
 
     if ((target as CurrencyId).isStableAssetPoolToken)
       return createStableAssetName((target as CurrencyId).asStableAssetPoolToken.toNumber());
@@ -198,8 +230,20 @@ export function forceToCurrencyName(target: MaybeCurrency): string {
     if ((target as CurrencyId).isForeignAsset)
       return createForeignAssetName((target as CurrencyId).asForeignAsset.toNumber());
 
-    if ((target as CurrencyId).isLiquidCroadloan)
-      return createLiquidCroadloanName((target as CurrencyId).asLiquidCroadloan.toNumber());
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if ((target as any).isLiquidCrowdloan) {
+      IS_LIQUID_CROADLOAN = false;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      return createLiquidCrowdloanName((target as any).asLiquidCrowdloan.toNumber());
+    }
+
+    // FIXME: need remove if all chain released
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if ((target as any).isLiquidCroadloan) {
+      IS_LIQUID_CROADLOAN = true;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      return createLiquidCrowdloanName((target as any).asLiquidCroadloan.toNumber());
+    }
 
     return target.toString();
   } catch (e) {
@@ -211,9 +255,19 @@ export function forceToCurrencyId(api: AnyApi, target: MaybeCurrency): CurrencyI
   try {
     const name = forceToCurrencyName(target);
 
-    return api.createType('AcalaPrimitivesCurrencyCurrencyId', getCurrencyObject(name)) as unknown as CurrencyId;
+    const type = api.registry.createType('AcalaPrimitivesCurrencyCurrencyId') as AcalaPrimitivesCurrencyCurrencyId;
+
+    // FIXME: need remove if all chain released
+    if (Reflect.has(type, 'asLiquidCroadloan')) {
+      IS_LIQUID_CROADLOAN = true;
+    }
+
+    return api.registry.createType(
+      'AcalaPrimitivesCurrencyCurrencyId',
+      getCurrencyObject(name)
+    ) as unknown as CurrencyId;
   } catch (e) {
-    throw new ConvertToCurrencyIdFailed(origin);
+    throw new ConvertToCurrencyIdFailed(target);
   }
 }
 
@@ -255,6 +309,18 @@ export const forceToForeignAssetCurrencyId = (api: AnyApi, target: number | Curr
 
   if (typeof target === 'number') {
     name = createForeignAssetName(target);
+  } else {
+    name = forceToCurrencyName(target);
+  }
+
+  return forceToCurrencyId(api, name);
+};
+
+export const forceToERC20CurrencyId = (api: AnyApi, target: string | CurrencyId): CurrencyId => {
+  let name = '';
+
+  if (typeof target === 'string') {
+    name = createERC20Name(target);
   } else {
     name = forceToCurrencyName(target);
   }

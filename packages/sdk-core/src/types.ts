@@ -25,12 +25,12 @@ export enum TokenType {
   'DEX_SHARE',
   'ERC20',
   'STABLE_ASSET_POOL_TOKEN',
-  'LIQUID_CROADLOAN',
+  'LIQUID_CROWDLOAN',
   'FOREIGN_ASSET'
 }
 
 /**
- * CurrencyObject is an object which can as parameters in api.createType('CurrencyId', ...).
+ * CurrencyObject is an object which can as parameters in api.registry.createType('CurrencyId', ...).
  * we can simple pass CurrencyObject to any call as CurrencyId type
  */
 export type CurrencyObject =
@@ -39,6 +39,8 @@ export type CurrencyObject =
   | { Erc20: string }
   | { StableAssetPoolToken: number }
   | { ForeignAsset: number }
-  | { LiquidCroadloan: number };
+  // FIXME: need remove if all chain released
+  | { LiquidCroadloan: number }
+  | { LiquidCrowdloan: number };
 
 export type CombinedCurrencyId = CurrencyId | AcalaPrimitivesCurrencyCurrencyId;

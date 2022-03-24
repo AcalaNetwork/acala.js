@@ -12,13 +12,21 @@ import {
   TokenType,
   unzipDexShareName,
   isDexShareName,
-  createLiquidCroadloanName
+  createLiquidCrowdloanName
 } from '@acala-network/sdk-core';
 import { AccountInfo, Balance, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { BehaviorSubject, combineLatest, Observable, of, firstValueFrom } from 'rxjs';
 import { map, switchMap, shareReplay, filter } from 'rxjs/operators';
-import { TokenRecord, WalletConsts, BalanceData, PresetTokens, TokenPriceFetchSource } from './type';
+import {
+  TokenRecord,
+  WalletConsts,
+  BalanceData,
+  PresetTokens,
+  TokenPriceFetchSource,
+  WalletConfigs,
+  PriceProviders
+} from './type';
 import { ChainType, CurrencyNotFound, Homa, Liquidity, SDKNotReady } from '..';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 import { MarketPriceProvider } from './price-provider/market-price-provider';
@@ -32,18 +40,16 @@ import { TokenProvider } from '../base-provider';
 import { defaultTokenPriceFetchSource } from './price-provider/default-token-price-fetch-source-config';
 import { subscribeDexShareTokenPrice } from './utils/get-dex-share-token-price';
 import { getChainType } from '../utils/get-chain-type';
-
-type PriceProviders = Partial<{
-  [k in PriceProviderType]: PriceProvider;
-}>;
+import { DexPriceProvider } from './price-provider/dex-price-provider';
 
 export class Wallet implements BaseSDK, TokenProvider {
   private api: AnyApi;
   private priceProviders: PriceProviders;
   // readed from chain information
-  private tokens$: BehaviorSubject<TokenRecord>;
+  private tokens$: BehaviorSubject<TokenRecord | undefined>;
   private storages: ReturnType<typeof createStorages>;
   private tokenPriceFetchSource: TokenPriceFetchSource;
+  private configs: WalletConfigs;
 
   // inject liquidity, homa sdk by default for easy using
   public readonly liquidity: Liquidity;
@@ -54,21 +60,29 @@ export class Wallet implements BaseSDK, TokenProvider {
 
   public constructor(
     api: AnyApi,
-    tokenPriceFetchSource = defaultTokenPriceFetchSource,
-    priceProviders?: Record<PriceProviderType, PriceProvider>
+    configs?: WalletConfigs
+    // tokenPriceFetchSource = defaultTokenPriceFetchSource,
+    // priceProviders?: Record<PriceProviderType, PriceProvider>
   ) {
     this.api = api;
 
     this.isReady$ = new BehaviorSubject<boolean>(false);
-    this.tokens$ = new BehaviorSubject<TokenRecord>({});
+    this.tokens$ = new BehaviorSubject<TokenRecord | undefined>(undefined);
 
+    this.configs = {
+      supportAUSD: true,
+      tokenPriceFetchSource: defaultTokenPriceFetchSource,
+      ...configs
+    };
+
+    // we should init sdk before init price provider
     this.liquidity = new Liquidity(this.api, this);
     this.homa = new Homa(this.api, this);
 
-    this.tokenPriceFetchSource = tokenPriceFetchSource;
+    this.tokenPriceFetchSource = configs?.tokenPriceFetchSource || defaultTokenPriceFetchSource;
     this.priceProviders = {
       ...this.defaultPriceProviders,
-      ...priceProviders
+      ...this.configs?.priceProviders
     };
     this.storages = createStorages(this.api);
 
@@ -93,10 +107,11 @@ export class Wallet implements BaseSDK, TokenProvider {
     };
   }
 
-  private get defaultPriceProviders(): PriceProviders {
+  private get defaultPriceProviders(): Record<PriceProviderType, PriceProvider> {
     return {
       [PriceProviderType.MARKET]: new MarketPriceProvider(),
-      [PriceProviderType.ORACLE]: new OraclePriceProvider(this.api)
+      [PriceProviderType.ORACLE]: new OraclePriceProvider(this.api),
+      [PriceProviderType.DEX]: new DexPriceProvider(this.api, this.liquidity)
     };
   }
 
@@ -105,10 +120,23 @@ export class Wallet implements BaseSDK, TokenProvider {
     const chainTokens = this.api.registry.chainTokens;
     const tradingPairs$ = this.storages.tradingPairs().observable;
     const assetMetadatas$ = this.storages.assetMetadatas().observable;
+    const foreignAssetLocations$ = this.storages.foreignAssetLocations().observable;
 
     const basicTokens = Object.fromEntries(
       chainTokens.map((token, i) => {
         const config = tokenList.getToken(token, this.consts.runtimeChain);
+
+        if (config?.symbol === 'KUSD' && this.configs.supportAUSD) {
+          return [
+            token,
+            new Token(token, {
+              ...config,
+              display: 'aUSD',
+              type: TokenType.BASIC,
+              decimals: chainDecimals[i] ?? 12
+            })
+          ];
+        }
 
         return [
           token,
@@ -121,22 +149,28 @@ export class Wallet implements BaseSDK, TokenProvider {
       })
     );
 
-    // insert LCDOT if chain is acala
-    if (getChainType(this.consts.runtimeChain) === ChainType.ACALA) {
-      const name = createLiquidCroadloanName(13);
+    // insert LCDOT if chain is acala or mandala
+    if (
+      (getChainType(this.consts.runtimeChain) === ChainType.ACALA ||
+        getChainType(this.consts.runtimeChain) === ChainType.MANDALA) &&
+      basicTokens.DOT
+    ) {
+      const name = createLiquidCrowdloanName(13);
 
       basicTokens[name] = new Token(name, {
         decimals: basicTokens.DOT.decimals,
-        ed: basicTokens.DOT.ed
+        ed: basicTokens.DOT.ed,
+        type: TokenType.LIQUID_CROWDLOAN
       });
     }
 
     return combineLatest({
       tradingPairs: tradingPairs$,
-      assetMetadatas: assetMetadatas$
+      assetMetadatas: assetMetadatas$,
+      foreignAssetLocations: foreignAssetLocations$
     }).subscribe({
-      next: ({ tradingPairs, assetMetadatas }) => {
-        const list = createTokenList(basicTokens, tradingPairs, assetMetadatas);
+      next: ({ tradingPairs, assetMetadatas, foreignAssetLocations }) => {
+        const list = createTokenList(basicTokens, tradingPairs, assetMetadatas, foreignAssetLocations);
 
         this.tokens$.next(list);
         this.isReady$.next(true);
@@ -149,18 +183,20 @@ export class Wallet implements BaseSDK, TokenProvider {
    *  @param type
    *  @description subscirbe the token list, can filter by type
    */
-  public subscribeTokens = memoize((type?: TokenType): Observable<TokenRecord> => {
+  public subscribeTokens = memoize((type?: TokenType | TokenType[]): Observable<TokenRecord> => {
     return this.isReady$.pipe(
       // wait sdk isReady
       filter((i) => i),
       switchMap(() => {
         return this.tokens$.pipe(
+          filter((data) => !!data),
           map((data) => {
-            if (!type) return data;
+            if (type === undefined) return data || {};
 
             return Object.fromEntries(
-              Object.entries(data).filter(([, value]) => {
-                return value.type === type;
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              Object.entries(data!).filter(([, value]) => {
+                return Array.isArray(type) ? type.includes(value.type) : value.type === type;
               })
             );
           })
@@ -170,8 +206,16 @@ export class Wallet implements BaseSDK, TokenProvider {
     );
   });
 
-  public async getTokens(type?: TokenType): Promise<TokenRecord> {
+  public async getTokens(type?: TokenType | TokenType[]): Promise<TokenRecord> {
     return firstValueFrom(this.subscribeTokens(type));
+  }
+
+  private tokenEeual(a: string, b: Token): boolean {
+    if (this.configs.supportAUSD && (a === 'KUSD' || a === 'AUSD')) {
+      return b.display === 'AUSD' || b.display === 'KUSD' || b.symbol === 'AUSD' || b.symbol === 'KUSD';
+    }
+
+    return b.display === a || b.symbol === a || b.name === a;
   }
 
   /**
@@ -183,7 +227,8 @@ export class Wallet implements BaseSDK, TokenProvider {
 
     return this.subscribeTokens().pipe(
       map((all) => {
-        const result = Object.values(all).find((item) => item.name === name);
+        // filter token by name or symbol
+        const result = Object.values(all).find((item) => this.tokenEeual(name, item));
 
         if (!result) throw new CurrencyNotFound(name);
 
@@ -196,11 +241,11 @@ export class Wallet implements BaseSDK, TokenProvider {
     return firstValueFrom(this.subscribeToken(target));
   }
 
-  // get token, must be called after wallet sdk is ready
+  // get token, must be called when wallet sdk is ready
   public __getToken(target: MaybeCurrency): Token | undefined {
     const name = forceToCurrencyName(target);
 
-    return Object.values(this.tokens$.value).find((item) => item.name === name);
+    return Object.values(this.tokens$.value || {}).find((item) => this.tokenEeual(name, item));
   }
 
   /**
@@ -383,7 +428,7 @@ export class Wallet implements BaseSDK, TokenProvider {
       throw new SDKNotReady('wallet');
     }
 
-    const tokens = this.tokens$.value;
+    const tokens = this.tokens$.value || {};
 
     const data: PresetTokens = {
       nativeToken: tokens[forceToCurrencyName(this.consts.nativeCurrency)]
@@ -413,26 +458,18 @@ export class Wallet implements BaseSDK, TokenProvider {
    * @description subscirbe the price of `token`
    */
   public subscribePrice = memoize((token: MaybeCurrency, type?: PriceProviderType): Observable<FN> => {
-    let priceProvider: PriceProvider | undefined;
     const name = forceToCurrencyName(token);
     const isDexShare = isDexShareName(name);
     const presetTokens = this.getPresetTokens();
     const isLiquidToken = presetTokens?.liquidToken?.name === name;
-    const stakingToken = presetTokens.stableToken;
+    const stakingToken = presetTokens.stakingToken;
 
+    // use market price provider as default
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const _type =
       type || this.tokenPriceFetchSource?.[getChainType(this.consts.runtimeChain)]?.[name] || PriceProviderType.MARKET;
 
-    if (_type === PriceProviderType.MARKET) {
-      priceProvider = this.priceProviders?.[PriceProviderType.MARKET];
-    }
-
-    if (_type === PriceProviderType.ORACLE) {
-      priceProvider = this.priceProviders?.[PriceProviderType.ORACLE];
-    }
-
-    if (!priceProvider) return of(FN.ZERO);
+    const priceProvider = this.priceProviders?.[_type];
 
     // should calculate dexShare price
     if (isDexShare) {
@@ -445,18 +482,25 @@ export class Wallet implements BaseSDK, TokenProvider {
       );
     }
 
-    // should calculate liquidToken price
-    if (isLiquidToken && stakingToken) {
+    // should calculate liquidToken price, when price provider type is market
+    if (isLiquidToken && stakingToken && _type === PriceProviderType.MARKET) {
       // create homa sd for get exchange rate
-      return this.homa.subscribeConvertor().pipe(
-        switchMap((convertor) => {
-          return this.subscribePrice(stakingToken).pipe(map((price) => convertor.convertStakingToLiquid(price)));
+      return this.homa.subscribeEnv().pipe(
+        filter((env) => !env.exchangeRate.isZero()),
+        switchMap((env) => {
+          return this.subscribePrice(stakingToken).pipe(
+            map((price) => {
+              return price.times(env.exchangeRate);
+            })
+          );
         })
       );
     }
 
+    if (!priceProvider) return of(FN.ZERO);
+
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.subscribeToken(token).pipe(switchMap((token) => priceProvider!.subscribe(token.name)));
+    return this.subscribeToken(token).pipe(switchMap((token) => priceProvider!.subscribe(token)));
   });
 
   public getPrice(token: MaybeCurrency, type?: PriceProviderType): Promise<FN> {

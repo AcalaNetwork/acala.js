@@ -3,23 +3,105 @@ import {
   Token,
   TokenType,
   FixedPointNumber as FN,
-  forceToCurrencyName
+  forceToCurrencyName,
+  createStableAssetName,
+  createERC20Name
 } from '@acala-network/sdk-core';
 import { TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
-import { Option, StorageKey } from '@polkadot/types';
-import { ModuleAssetRegistryModuleAssetIds, ModuleAssetRegistryModuleAssetMetadata } from '@polkadot/types/lookup';
+import { Option, StorageKey, u16 } from '@polkadot/types';
+import {
+  ModuleAssetRegistryModuleAssetIds,
+  ModuleAssetRegistryModuleAssetMetadata,
+  XcmV1MultiLocation
+} from '@polkadot/types/lookup';
 import { hexToString } from '@polkadot/util';
 import { TokenRecord } from '../type';
+
+function extractLocation(key: number, data: [StorageKey<[u16]>, Option<XcmV1MultiLocation>][]) {
+  const location = data.find((item) => item[0].args[0].toNumber() === key)?.[1]?.unwrapOrDefault();
+
+  if (!location) return;
+
+  const paraChainId = location.interior.isX1
+    ? location.interior.asX1.asParachain.toNumber()
+    : location.interior.isX3
+    ? location.interior.asX3.find((item) => item.isParachain)?.asParachain.toNumber()
+    : location.interior.isX2
+    ? location.interior.asX2.find((item) => item.isParachain)?.asParachain.toNumber()
+    : undefined;
+
+  const generalIndex = location.interior.isX3
+    ? location.interior.asX3.find((item) => item.isGeneralIndex)?.asGeneralIndex.toNumber()
+    : undefined;
+
+  const palletInstance = location.interior.isX3
+    ? location.interior.asX3.find((item) => item.isPalletInstance)?.asPalletInstance.toNumber()
+    : undefined;
+
+  return {
+    paraChainId,
+    generalIndex,
+    palletInstance
+  };
+}
 
 export function createTokenList(
   basicTokens: TokenRecord,
   tradingPairs: [StorageKey<[TradingPair]>, TradingPairStatus][],
-  assetMetadata: [StorageKey<[ModuleAssetRegistryModuleAssetIds]>, Option<ModuleAssetRegistryModuleAssetMetadata>][]
+  assetMetadata: [StorageKey<[ModuleAssetRegistryModuleAssetIds]>, Option<ModuleAssetRegistryModuleAssetMetadata>][],
+  foreignAssetLocations: [StorageKey<[u16]>, Option<XcmV1MultiLocation>][]
 ): TokenRecord {
   // tokens list temp
   let temp: TokenRecord = { ...basicTokens };
 
-  // TODO: need support stable coin assets & erc20
+  const erc20Tokens = Object.fromEntries(
+    assetMetadata
+      .filter((item) => {
+        return item[0].args[0].isErc20;
+      })
+      .map((item) => {
+        const key = item[0].args[0].asErc20.toString();
+        const value = item[1].unwrapOrDefault();
+        const name = createERC20Name(key);
+        const decimals = value.decimals.toNumber();
+
+        return [
+          name,
+          Token.create(name, {
+            type: TokenType.ERC20,
+            display: hexToString(value.name.toHex()),
+            symbol: hexToString(value.symbol.toHex()),
+            decimals,
+            ed: FN.fromInner(value.minimalBalance.toString(), decimals)
+          })
+        ];
+      })
+  );
+
+  const stableCoinTokens = Object.fromEntries(
+    assetMetadata
+      .filter((item) => {
+        return item[0].args[0].isStableAssetId;
+      })
+      .map((item) => {
+        const key = item[0].args[0].asStableAssetId.toNumber();
+        const value = item[1].unwrapOrDefault();
+        const name = createStableAssetName(key);
+        const decimals = value.decimals.toNumber();
+
+        return [
+          name,
+          Token.create(name, {
+            type: TokenType.STABLE_ASSET_POOL_TOKEN,
+            display: hexToString(value.name.toHex()),
+            symbol: hexToString(value.symbol.toHex()),
+            decimals,
+            ed: FN.fromInner(value.minimalBalance.toString(), decimals)
+          })
+        ];
+      })
+  );
+
   const foreignTokens = Object.fromEntries(
     assetMetadata
       .filter((item) => {
@@ -35,17 +117,19 @@ export function createTokenList(
           name,
           Token.create(name, {
             type: TokenType.FOREIGN_ASSET,
-            symbol: hexToString(value.symbol.toHex()),
             display: hexToString(value.name.toHex()),
+            symbol: hexToString(value.symbol.toHex()),
             decimals,
-            ed: FN.fromInner(value.minimalBalance.toString(), decimals)
+            ed: FN.fromInner(value.minimalBalance.toString(), decimals),
+            // TODO: should support other locations
+            locations: extractLocation(key, foreignAssetLocations)
           })
         ];
       })
   );
 
   // insert foreign tokens to temp
-  temp = { ...temp, ...foreignTokens };
+  temp = { ...temp, ...foreignTokens, ...stableCoinTokens, ...erc20Tokens };
 
   // handle dex share at latest
   const dexShareTokens = Object.fromEntries(
