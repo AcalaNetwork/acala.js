@@ -370,35 +370,35 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
 
   private createRequestedRedeemsMessage(amount: string, liquidToken?: Token) {
     return `Request redeem ${FixedPointNumber.fromInner(amount, liquidToken?.decimals).toString(6)} ${
-      liquidToken?.name
+      liquidToken?.display
     }`;
   }
 
   private createMintsMessage(deposit: string, receive: string, liquidToken?: Token, stakingToken?: Token) {
     return `Stake ${FixedPointNumber.fromInner(deposit, stakingToken?.decimals)} ${
-      stakingToken?.name
-    } for ${FixedPointNumber.fromInner(receive, liquidToken?.decimals)} ${liquidToken?.name}`;
+      stakingToken?.display
+    } for ${FixedPointNumber.fromInner(receive, liquidToken?.decimals)} ${liquidToken?.display}`;
   }
 
   private createCamcelledsMessage(amount: string, liquidToken?: Token) {
-    return `Cancel redeem with ${FixedPointNumber.fromInner(amount, liquidToken?.decimals)} ${liquidToken?.name}`;
+    return `Cancel redeem with ${FixedPointNumber.fromInner(amount, liquidToken?.decimals)} ${liquidToken?.display}`;
   }
 
   private createredeemedsMessage(receive: string, deducted: string, liquidToken?: Token, stakingToken?: Token) {
     return `Redeem ${FixedPointNumber.fromInner(receive, stakingToken?.decimals)} ${
-      stakingToken?.name
-    } from ${FixedPointNumber.fromInner(deducted, liquidToken?.decimals)} ${liquidToken?.name}`;
+      stakingToken?.display
+    } from ${FixedPointNumber.fromInner(deducted, liquidToken?.decimals)} ${liquidToken?.display}`;
   }
 
   private createRedeemedByUnbondsMessage(burned: string, receive: string, liquidToken?: Token, stakingToken?: Token) {
     return `UnStake ${FixedPointNumber.fromInner(burned, stakingToken?.decimals)} ${
-      liquidToken?.name
-    } for ${FixedPointNumber.fromInner(receive, liquidToken?.decimals)} ${stakingToken?.name}`;
+      liquidToken?.display
+    } for ${FixedPointNumber.fromInner(receive, liquidToken?.decimals)} ${stakingToken?.display}`;
   }
 
   private createFastMatchesMessage(burned: string, receive: string, liquidToken?: Token, stakingToken?: Token) {
     return `UnStake ${FixedPointNumber.fromInner(burned, liquidToken?.decimals)} ${
-      liquidToken?.name
-    } for ${FixedPointNumber.fromInner(receive, stakingToken?.decimals)} ${stakingToken?.name} By Fastmatch`;
+      liquidToken?.display
+    } for ${FixedPointNumber.fromInner(receive, stakingToken?.decimals)} ${stakingToken?.display} By Fastmatch`;
   }
 }

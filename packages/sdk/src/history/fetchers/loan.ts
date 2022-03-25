@@ -166,11 +166,11 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
     }
 
     if (debit.isGreaterThan(FixedPointNumber.ZERO)) {
-      return `Mint ${debit.toString(6)} ${stableToken?.name}`;
+      return `Mint ${debit.toString(6)} ${stableToken?.display}`;
     }
 
     if (debit.lt(FixedPointNumber.ZERO)) {
-      return `Payback ${FixedPointNumber.ZERO.minus(debit).toString(6)} ${stableToken?.name}`;
+      return `Payback ${FixedPointNumber.ZERO.minus(debit).toString(6)} ${stableToken?.display}`;
     }
 
     return 'parse history data failed';
@@ -183,7 +183,7 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
     const debit = FixedPointNumber.fromInner(data.badDebitVolumeUSD, stableToken?.decimals);
     debit.forceSetPrecision(stableToken?.decimals || 12);
     return `${data.collateralId} position(${collateral.toString(6)} ${data.collateralId}, ${debit.toString(6)} ${
-      stableToken?.name
+      stableToken?.display
     }) had been liquidated through ${data.liquidationStrategy}`;
   }
 }
