@@ -158,11 +158,11 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
     debit.forceSetPrecision(stableToken?.decimals || 12);
 
     if (collateral.lt(FixedPointNumber.ZERO)) {
-      return `Withdraw ${FixedPointNumber.ZERO.minus(collateral).toString(6)} ${data.collateralId}`;
+      return `Withdraw ${FixedPointNumber.ZERO.minus(collateral).toString(6)} ${collateralToken?.display}`;
     }
 
     if (collateral.isGreaterThan(FixedPointNumber.ZERO)) {
-      return `Deposit ${collateral.toString(6)} ${data.collateralId}`;
+      return `Deposit ${collateral.toString(6)} ${collateralToken?.display}`;
     }
 
     if (debit.isGreaterThan(FixedPointNumber.ZERO)) {
@@ -182,8 +182,8 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
     const collateral = FixedPointNumber.fromInner(data.collateralAmount, collateralToken?.decimals);
     const debit = FixedPointNumber.fromInner(data.badDebitVolumeUSD, stableToken?.decimals);
     debit.forceSetPrecision(stableToken?.decimals || 12);
-    return `${data.collateralId} position(${collateral.toString(6)} ${data.collateralId}, ${debit.toString(6)} ${
-      stableToken?.display
-    }) had been liquidated through ${data.liquidationStrategy}`;
+    return `${collateralToken?.display} position(${collateral.toString(6)} ${
+      collateralToken?.display
+    }, ${debit.toString(6)} ${stableToken?.display}) had been liquidated through ${data.liquidationStrategy}`;
   }
 }

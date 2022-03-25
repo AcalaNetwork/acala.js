@@ -1,4 +1,4 @@
-import { FixedPointNumber } from '@acala-network/sdk-core';
+import { FixedPointNumber, forceToCurrencyName } from '@acala-network/sdk-core';
 import { request, gql } from 'graphql-request';
 import { BaseHistoryFetcher } from '../base-history-fetcher';
 import { BaseFetchParams, HistoryFetcherConfig, HistoryRecord } from '../types';
@@ -197,20 +197,20 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
   }
 
   private createMessage(type: string, data: Node) {
-    const token = this.configs.wallet.__getToken(data.tokenId);
+    const token = this.configs.wallet.__getToken(forceToCurrencyName(data.tokenId));
 
     if (type === 'claimRewards') {
       const amount = FixedPointNumber.fromInner(data.actualAmount || '0', token?.decimals || 12).toString(6);
-      return `Claim ${amount} ${data.tokenId} from ${data.pool} earn pool`;
+      return `Claim ${amount} ${token?.display} from ${forceToCurrencyName(data.pool || '')} earn pool`;
     } else if (type === 'payoutRewards') {
       const amount = FixedPointNumber.fromInner(data.actualPayout || '0', token?.decimals || 12).toString(6);
-      return `Claim ${amount} ${data.tokenId} from ${data.pool} earn pool`;
+      return `Claim ${amount} ${token?.display} from ${forceToCurrencyName(data.pool || '')} earn pool`;
     } else if (type === 'depositDexShares') {
       const amount = FixedPointNumber.fromInner(data.amount || '0', token?.decimals || 12).toString(6);
-      return `Add ${amount} shares to ${data.tokenId} earn pool`;
+      return `Add ${amount} shares to ${token?.display} earn pool`;
     } else if (type === 'withdrawDexShares') {
       const amount = FixedPointNumber.fromInner(data.amount || '0', token?.decimals || 12).toString(6);
-      return `Remove ${amount} shares to ${data.tokenId} earn pool`;
+      return `Remove ${amount} shares from ${token?.display} earn pool`;
     } else {
       return 'parse history data failed';
     }
