@@ -52,6 +52,7 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
       account: params.address
     };
 
+    const paramsSchema = `$account: String`;
     const filterSchema = `filter: { addressId: { equalTo: $account } }`;
     const claimRewardsResultShema = `
       nodes {
@@ -94,7 +95,7 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
     const result = await request<FetchResult>(
       this.configs.endpoint,
       gql`
-        query{
+        query(${paramsSchema}){
           claimRewards(
             ${filterSchema}
             first: 20

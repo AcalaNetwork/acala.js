@@ -103,6 +103,7 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
       account: params.address
     };
 
+    const paramsSchema = `$account: String`;
     const filterSchema = `filter: { addressId: { equalTo: $account } }`;
     const requestedRedeemsResultShema = `
       nodes {
@@ -189,7 +190,7 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
     const result = await request<FetchResult>(
       this.configs.endpoint,
       gql`
-        query{
+        query(${paramsSchema}){
           requestedRedeems(
             ${filterSchema}
             first: 20

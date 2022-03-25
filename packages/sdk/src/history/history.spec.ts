@@ -15,7 +15,7 @@ describe('history', () => {
   const initSDK = async () => {
     if (sdk) return sdk;
 
-    const endpoint = process.env.ENDPOINT || 'wss://karura.api.onfinality.io/public-ws';
+    const endpoint = 'wss://karura-rpc-1.aca-api.network/';
     const provider = new WsProvider(endpoint);
     const api = await ApiPromise.create(options({ provider }));
 
@@ -36,7 +36,7 @@ describe('history', () => {
         transfer: 'https://api.subquery.network/sq/AcalaNetwork/karura-transfer-history',
         swap: 'https://api.subquery.network/sq/AcalaNetwork/karura-dex',
         earn: 'https://api.subquery.network/sq/AcalaNetwork/karura-incentives',
-        loan: 'https://api.subquery.network/sq/AcalaNetwork/karura-loans',
+        loan: 'https://api.subquery.network/sq/AcalaNetwork/acala-loans',
         homa: 'https://api.subquery.network/sq/AcalaNetwork/karura-homa'
       },
       wallet,
@@ -56,7 +56,7 @@ describe('history', () => {
     });
 
     const loans = await history.loan.getHistories({
-      address: 'seorgCZDzP5G3JEbsBjFdpQ4dTUgCWoPjQynyJqHCfXvZVW'
+      address: '22UAyzgYDYt1yAF1FKDjBktVvRT4uUTXy5U7vk12mEMgv3pb'
     });
 
     const homas = await history.homa.getHistories({

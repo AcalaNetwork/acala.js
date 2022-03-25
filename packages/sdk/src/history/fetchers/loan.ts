@@ -55,7 +55,8 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
       account: params.address
     };
 
-    const filterSchema = `filter: { addressId: { equalTo: $account } }`;
+    const paramsSchema = `$account: String`;
+    const filterSchema = `filter: { ownerId: { equalTo: $account } }`;
     const updatePositionsResultShema = `
       nodes {
         id
@@ -65,6 +66,7 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
         debitAdjustment
         collateralAdjustmentUSD
         debitAdjustmentUSD
+        debitExchangeRate
         blockId
         extrinsicId
         timestamp
@@ -78,6 +80,7 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
         collateralVolumeUSD
         badDebitVolumeUSD
         liquidationStrategy
+        debitExchangeRate
         blockId
         extrinsicId
         timestamp
@@ -87,7 +90,7 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
     const result = await request<FetchResult>(
       this.configs.endpoint,
       gql`
-        query{
+        query(${paramsSchema}){
           updatePositions(
             ${filterSchema}
             first: 20

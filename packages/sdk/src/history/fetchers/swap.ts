@@ -50,6 +50,7 @@ export class Swaps extends BaseHistoryFetcher<SwapFetchParams> {
       account: params.address
     };
 
+    const paramsSchema = `$account: String`;
     const filterSchema = `filter: { addressId: { equalTo: $account } }`;
     const resultShema = `
       nodes {
@@ -79,7 +80,7 @@ export class Swaps extends BaseHistoryFetcher<SwapFetchParams> {
     const result = await request<FetchResult>(
       this.configs.endpoint,
       gql`
-        query{
+        query(${paramsSchema}){
           swaps(
             ${filterSchema}
             first: 20
@@ -101,7 +102,7 @@ export class Swaps extends BaseHistoryFetcher<SwapFetchParams> {
           ) {
             ${resultShema}
           }
-          addLiquidities(
+          removeLiquidities(
             ${filterSchema}
             first: 20
             orderBy: TIMESTAMP_DESC
