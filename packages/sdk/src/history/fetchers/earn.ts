@@ -196,15 +196,21 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
       .slice(0, 20);
   }
 
+  private getPoolId = (pool?: string) => {
+    return pool?.includes('-') ? this.configs.wallet.__getToken(pool.split('-')[1])?.display : pool;
+  };
+
   private createMessage(type: string, data: Node) {
     const token = this.configs.wallet.__getToken(forceToCurrencyName(data.tokenId));
 
     if (type === 'claimRewards') {
       const amount = FixedPointNumber.fromInner(data.actualAmount || '0', token?.decimals || 12).toString(6);
-      return `Claim ${amount} ${token?.display} from ${forceToCurrencyName(data.pool || '')} earn pool`;
+      const poolId = this.getPoolId(data.pool);
+      return `Claim ${amount} ${token?.display} from ${poolId || ''} earn pool`;
     } else if (type === 'payoutRewards') {
+      const poolId = this.getPoolId(data.pool);
       const amount = FixedPointNumber.fromInner(data.actualPayout || '0', token?.decimals || 12).toString(6);
-      return `Claim ${amount} ${token?.display} from ${forceToCurrencyName(data.pool || '')} earn pool`;
+      return `Claim ${amount} ${token?.display} from ${poolId || ''} earn pool`;
     } else if (type === 'depositDexShares') {
       const amount = FixedPointNumber.fromInner(data.amount || '0', token?.decimals || 12).toString(6);
       return `Add ${amount} shares to ${token?.display} earn pool`;
