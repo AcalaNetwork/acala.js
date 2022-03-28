@@ -18,7 +18,15 @@ import { AccountInfo, Balance, RuntimeDispatchInfo } from '@polkadot/types/inter
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { BehaviorSubject, combineLatest, Observable, of, firstValueFrom } from 'rxjs';
 import { map, switchMap, shareReplay, filter } from 'rxjs/operators';
-import { TokenRecord, WalletConsts, BalanceData, PresetTokens, TokenPriceFetchSource } from './type';
+import {
+  TokenRecord,
+  WalletConsts,
+  BalanceData,
+  PresetTokens,
+  TokenPriceFetchSource,
+  WalletConfigs,
+  PriceProviders
+} from './type';
 import { ChainType, CurrencyNotFound, Homa, Liquidity, SDKNotReady } from '..';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 import { MarketPriceProvider } from './price-provider/market-price-provider';
@@ -34,10 +42,6 @@ import { subscribeDexShareTokenPrice } from './utils/get-dex-share-token-price';
 import { getChainType } from '../utils/get-chain-type';
 import { DexPriceProvider } from './price-provider/dex-price-provider';
 
-type PriceProviders = Partial<{
-  [k in PriceProviderType]: PriceProvider;
-}>;
-
 export class Wallet implements BaseSDK, TokenProvider {
   private api: AnyApi;
   private priceProviders: PriceProviders;
@@ -45,6 +49,7 @@ export class Wallet implements BaseSDK, TokenProvider {
   private tokens$: BehaviorSubject<TokenRecord | undefined>;
   private storages: ReturnType<typeof createStorages>;
   private tokenPriceFetchSource: TokenPriceFetchSource;
+  private configs: WalletConfigs;
 
   // inject liquidity, homa sdk by default for easy using
   public readonly liquidity: Liquidity;
@@ -55,22 +60,29 @@ export class Wallet implements BaseSDK, TokenProvider {
 
   public constructor(
     api: AnyApi,
-    tokenPriceFetchSource = defaultTokenPriceFetchSource,
-    priceProviders?: Record<PriceProviderType, PriceProvider>
+    configs?: WalletConfigs
+    // tokenPriceFetchSource = defaultTokenPriceFetchSource,
+    // priceProviders?: Record<PriceProviderType, PriceProvider>
   ) {
     this.api = api;
 
     this.isReady$ = new BehaviorSubject<boolean>(false);
     this.tokens$ = new BehaviorSubject<TokenRecord | undefined>(undefined);
 
+    this.configs = {
+      supportAUSD: true,
+      tokenPriceFetchSource: defaultTokenPriceFetchSource,
+      ...configs
+    };
+
     // we should init sdk before init price provider
     this.liquidity = new Liquidity(this.api, this);
     this.homa = new Homa(this.api, this);
 
-    this.tokenPriceFetchSource = tokenPriceFetchSource;
+    this.tokenPriceFetchSource = configs?.tokenPriceFetchSource || defaultTokenPriceFetchSource;
     this.priceProviders = {
       ...this.defaultPriceProviders,
-      ...priceProviders
+      ...this.configs?.priceProviders
     };
     this.storages = createStorages(this.api);
 
@@ -95,7 +107,7 @@ export class Wallet implements BaseSDK, TokenProvider {
     };
   }
 
-  private get defaultPriceProviders(): PriceProviders {
+  private get defaultPriceProviders(): Record<PriceProviderType, PriceProvider> {
     return {
       [PriceProviderType.MARKET]: new MarketPriceProvider(),
       [PriceProviderType.ORACLE]: new OraclePriceProvider(this.api),
@@ -113,6 +125,18 @@ export class Wallet implements BaseSDK, TokenProvider {
     const basicTokens = Object.fromEntries(
       chainTokens.map((token, i) => {
         const config = tokenList.getToken(token, this.consts.runtimeChain);
+
+        if (config?.symbol === 'KUSD' && this.configs.supportAUSD) {
+          return [
+            token,
+            new Token(token, {
+              ...config,
+              display: 'aUSD',
+              type: TokenType.BASIC,
+              decimals: chainDecimals[i] ?? 12
+            })
+          ];
+        }
 
         return [
           token,
@@ -187,6 +211,10 @@ export class Wallet implements BaseSDK, TokenProvider {
   }
 
   private tokenEeual(a: string, b: Token): boolean {
+    if (this.configs.supportAUSD && (a === 'KUSD' || a === 'AUSD')) {
+      return b.display === 'AUSD' || b.display === 'KUSD' || b.symbol === 'AUSD' || b.symbol === 'KUSD';
+    }
+
     return b.display === a || b.symbol === a || b.name === a;
   }
 

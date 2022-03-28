@@ -1,12 +1,22 @@
 import { FixedPointNumber as FN, Token } from '@acala-network/sdk-core';
-import { PriceProviderType } from './price-provider/types';
+import { PriceProvider, PriceProviderType } from './price-provider/types';
 import { ChainType } from '../types';
 
 export type TokenRecord = Record<string, Token>;
 
+export type PriceProviders = Partial<{
+  [k in PriceProviderType]: PriceProvider;
+}>;
+
 export interface WalletConsts {
   readonly runtimeChain: string;
   readonly nativeCurrency: string;
+}
+
+export interface WalletConfigs {
+  supportAUSD?: boolean;
+  tokenPriceFetchSource?: TokenPriceFetchSource;
+  priceProviders?: PriceProviders;
 }
 
 export interface BalanceData {

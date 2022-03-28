@@ -99,7 +99,7 @@ export class Token {
     this.name = name;
     this.type = configs?.type || TokenType.BASIC;
     this.display = configs?.display || configs?.symbol || name;
-    this.fullname = configs?.fullname || name;
+    this.fullname = configs?.fullname || this.display;
     this.symbol = configs?.symbol || name;
     this.decimals = configs?.decimals || configs?.decimal || 18;
     this.ed = configs?.ed || FixedPointNumber.ZERO;
