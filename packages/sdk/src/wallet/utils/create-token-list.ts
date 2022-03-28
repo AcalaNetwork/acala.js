@@ -142,7 +142,9 @@ export function createTokenList(
         const token1 = temp[token1Name];
         const token2 = temp[token2Name];
 
-        const token = Token.fromTokens(token1, token2);
+        const token = Token.fromTokens(token1, token2, {
+          display: `LP: ${token1.display}-${token2.display}`
+        });
 
         return [token.name, token];
       })
