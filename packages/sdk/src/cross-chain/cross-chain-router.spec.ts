@@ -87,8 +87,8 @@ describe('cross-chain-router-manager', () => {
     expect(r1[0].name).toEqual('Kusama');
     expect(r1[1].name).toEqual('Phala');
     expect(r2.length).toEqual(3);
-    expect(r2[0].name).toEqual('Kusama');
-    expect(r2[1].name).toEqual('Phala');
+    expect(r2[0].name).toEqual('Phala');
+    expect(r2[1].name).toEqual('Kusama');
     expect(r2[2].name).toEqual('Statemine');
   });
 });
