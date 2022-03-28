@@ -1,6 +1,11 @@
 # CHANGELOG
 
-## 4.0.3-2 Mar 21, 2022
+
+## 4.0.4-3 Mar 28, 2022
+Changes:
+  - Update history sdk, support swap/homa/earn actions
+
+## 4.0.4-2 Mar 21, 2022
 Changes:
   - support display kusd on karura
 
