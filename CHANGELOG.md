@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 4.0.4-3 Mar 28, 2022
+Changes:
+  - Update history sdk, support swap/homa/earn actions
+
 ## 4.0.3 Mar 21, 2022
 Changes:
   - add new history sdk, support query transfer histories
