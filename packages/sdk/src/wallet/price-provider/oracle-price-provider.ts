@@ -119,6 +119,12 @@ export class OraclePriceProvider implements PriceProvider {
           return liquidCrowdloanPrices[name] || FixedPointNumber.ZERO;
         }
 
+        // TODO: should check the token symbol
+        if (name === 'sa://0') {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          return oracle!.KSM || FixedPointNumber.ZERO;
+        }
+
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         return oracle![forceToCurrencyName(currency)] || FixedPointNumber.ZERO;
       })
