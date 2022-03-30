@@ -166,7 +166,7 @@ export class Token {
   }
 
   /* create DexShareToken by Token array */
-  static fromTokens(token1: Token, token2: Token): Token {
+  static fromTokens(token1: Token, token2: Token, configs?: Configs): Token {
     const [_token1, _token2] = this.sort(token1, token2);
 
     // set token1 decimals as decimals;
@@ -176,7 +176,8 @@ export class Token {
     return new Token(createDexShareName(_token1.name, _token2.name), {
       decimals,
       type: TokenType.DEX_SHARE,
-      ed
+      ed,
+      ...configs
     });
   }
 

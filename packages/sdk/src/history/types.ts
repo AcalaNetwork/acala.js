@@ -16,6 +16,10 @@ export interface HistoryConfigs {
   wallet: Wallet;
   fetchEndpoints: {
     transfer: string;
+    swap: string;
+    earn: string;
+    loan: string;
+    homa: string;
   };
   poolInterval: number;
 }
