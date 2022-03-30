@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 4.0.4-4 Mar 28, 2022
+Changes:
+  - Support taiKSM loan
 
 ## 4.0.4-3 Mar 28, 2022
 Changes:
