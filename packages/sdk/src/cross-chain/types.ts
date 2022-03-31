@@ -1,7 +1,5 @@
 import { FixedPointNumber, Token } from '@acala-network/sdk-core';
-import { ApiTypes, SubmittableExtrinsic } from '@polkadot/api/types';
-import { Observable } from 'rxjs';
-import { BalanceData } from '../wallet/type';
+import { BaseCrossChainAdapter } from './base-chain-adapter';
 import { RegisteredChain } from './configs/chains';
 
 export type CROSS_CHAIN_ENV = 'kusama' | 'polkadot';
@@ -19,25 +17,21 @@ export interface Chain {
 export interface CrossChainRouter {
   from: Chain;
   to: Chain;
-  token: Token | string;
+  token: string;
 }
 
 export interface CrossChainTransferParams {
-  to: Chain;
-  token: Token;
+  amount: number;
+  to: RegisteredChain;
+  token: string;
   address: string;
 }
 
 export interface CrossChainTransferEnv {
-  token: Token;
   minInput: FixedPointNumber;
   maxInput: FixedPointNumber;
 }
 
-export interface CrossChainAdapter<T extends ApiTypes> {
-  readonly chain: Chain;
-  readonly routers: Omit<CrossChainRouter, 'from'>[];
-  // subscribeEnv: (params: CrossChainTransferParams) => Observable<CrossChainTransferEnv>;
-  // createTx: (token: Token, dest: Chain, amount: FixedPointNumber) => SubmittableExtrinsic<T>;
-  // subscribeBalance: (token: Token) => Observable<BalanceData>;
+export interface CrossChainSDKConfigs {
+  adapters: BaseCrossChainAdapter[];
 }

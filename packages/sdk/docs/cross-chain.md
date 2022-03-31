@@ -49,21 +49,21 @@ output:
 ```javascript
 ...init cross-chain SDK
 
-const dests = crossChain.getDestiantionChains({ from: 'karura' });
+const dests = crossChain..router.getDestiantionChains({ from: 'karura' });
 ```
 
 ### 3. Query Available From Chains
 ```javascript
 ...init cross-chain SDK
 
-const froms = crossChain.getFromChains({ to: 'karura' });
+const froms = crossChain.router.getFromChains({ to: 'karura' });
 ```
 
 ### 4. Query Available Tokens
 ```javascript
 ...init cross-chain SDK
 
-const tokens = crossChain.getAvailableTokens({ from: 'karura', to: 'kusama' });
+const tokens = crossChain.router.getAvailableTokens({ from: 'karura', to: 'kusama' });
 ```
 
 ### 5. Query Transfer Configs   

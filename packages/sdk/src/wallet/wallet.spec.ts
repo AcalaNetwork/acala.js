@@ -33,11 +33,11 @@ describe('wallet', () => {
   test('get token sould work', async () => {
     const sdk = await initSDK();
 
-    const rmrk1 = await sdk.getToken('RMRK');
-    const rmrk2 = await sdk.getToken('fa://0');
-    const taiKSM1 = await sdk.getToken('taiKSM');
-    const taiKSM2 = await sdk.getToken('sa://0');
-    const taiKSM3 = await sdk.getToken('Taiga KSM');
+    const rmrk1 = sdk.getToken('RMRK');
+    const rmrk2 = sdk.getToken('fa://0');
+    const taiKSM1 = sdk.getToken('taiKSM');
+    const taiKSM2 = sdk.getToken('sa://0');
+    const taiKSM3 = sdk.getToken('Taiga KSM');
 
     expect(rmrk1.symbol).toEqual('RMRK');
     expect(rmrk2.symbol).toEqual('RMRK');
@@ -54,9 +54,9 @@ describe('wallet', () => {
   test('get tokens should work', async () => {
     const sdk = await initSDK();
 
-    const tokens1 = await sdk.getTokens(TokenType.BASIC);
-    const tokens2 = await sdk.getTokens(TokenType.DEX_SHARE);
-    const tokens3 = await sdk.getTokens([TokenType.BASIC, TokenType.DEX_SHARE]);
+    const tokens1 = sdk.getTokens(TokenType.BASIC);
+    const tokens2 = sdk.getTokens(TokenType.DEX_SHARE);
+    const tokens3 = sdk.getTokens([TokenType.BASIC, TokenType.DEX_SHARE]);
 
     expect(Object.values(tokens1).length).not.toBe('KAR');
     expect(Object.values(tokens2).length).not.toBe(0);
@@ -66,8 +66,8 @@ describe('wallet', () => {
   test('get location should work', async () => {
     const sdk = await initSDK();
 
-    const rmrk = await sdk.getToken('RMRK');
-    const qtz = await sdk.getToken('QTZ');
+    const rmrk = sdk.getToken('RMRK');
+    const qtz = sdk.getToken('QTZ');
 
     expect(rmrk.locations?.generalIndex).toBe(8);
     expect(rmrk.locations?.paraChainId).toBe(1000);
@@ -78,9 +78,9 @@ describe('wallet', () => {
   test('get market price should work', async () => {
     const sdk = await initSDK();
 
-    const price1 = await sdk.getPrice('KSM');
-    const price2 = await sdk.getPrice('RMRK');
-    const price3 = await sdk.getPrice('LKSM');
+    const price1 = sdk.getPrice('KSM');
+    const price2 = sdk.getPrice('RMRK');
+    const price3 = sdk.getPrice('LKSM');
 
     expect(price1.toString()).not.toBe('0');
     expect(price1.toString()).not.toBe(undefined);
@@ -93,9 +93,9 @@ describe('wallet', () => {
   test('get dex price should work', async () => {
     const sdk = await initSDK();
 
-    const price1 = await sdk.getPrice('KSM', PriceProviderType.DEX);
-    const price2 = await sdk.getPrice('RMRK', PriceProviderType.DEX);
-    const price3 = await sdk.getPrice('LKSM', PriceProviderType.DEX);
+    const price1 = sdk.getPrice('KSM', PriceProviderType.DEX);
+    const price2 = sdk.getPrice('RMRK', PriceProviderType.DEX);
+    const price3 = sdk.getPrice('LKSM', PriceProviderType.DEX);
 
     expect(price1.toString()).not.toBe('0');
     expect(price1.toString()).not.toBe(undefined);
@@ -110,10 +110,10 @@ describe('wallet', () => {
     const sdk1 = await initSDK();
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const token0 = await sdk0.getToken('AUSD').catch((i) => i.toString());
-    const token1 = await sdk0.getToken('KUSD');
-    const token2 = await sdk1.getToken('AUSD');
-    const token3 = await sdk1.getToken('KUSD');
+    const token0 = await sdk0.queryToken('AUSD').catch((i) => i.toString());
+    const token1 = sdk0.getToken('KUSD');
+    const token2 = sdk1.getToken('AUSD');
+    const token3 = sdk1.getToken('KUSD');
 
     expect(token0).toBe("CurrencyNotFound: can't find AUSD currency in current network");
     expect(token1.display).toBe('kUSD');

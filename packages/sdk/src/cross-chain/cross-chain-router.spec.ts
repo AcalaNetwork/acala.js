@@ -27,7 +27,7 @@ describe('cross-chain-router-manager', () => {
 
     await wallet.isReady;
 
-    manager = new CrossChainRouterManager(wallet);
+    manager = new CrossChainRouterManager();
 
     await manager.addRouters([
       { from: chains.karura, to: chains.kusama, token: 'KSM' },
@@ -73,7 +73,6 @@ describe('cross-chain-router-manager', () => {
     expect(r6.length).toEqual(1);
     expect(r7.length).toEqual(2);
     expect(r8.length).toEqual(1);
-    expect(r8[0].token.name).toEqual('fa://0');
     expect(r9.length).toEqual(9);
   });
 

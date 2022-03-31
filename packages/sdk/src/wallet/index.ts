@@ -241,11 +241,15 @@ export class Wallet implements BaseSDK, TokenProvider {
     return firstValueFrom(this.subscribeToken(target));
   }
 
-  // get token, must be called when wallet sdk is ready
-  public __getToken(target: MaybeCurrency): Token | undefined {
+  // direct get token no need await, must be called after wallet sdk is ready
+  public directGetToken(target: MaybeCurrency): Token {
     const name = forceToCurrencyName(target);
 
-    return Object.values(this.tokens$.value || {}).find((item) => this.tokenEeual(name, item));
+    const token = Object.values(this.tokens$.value || {}).find((item) => this.tokenEeual(name, item));
+
+    if (!token) throw new CurrencyNotFound(forceToCurrencyName(target));
+
+    return token;
   }
 
   /**

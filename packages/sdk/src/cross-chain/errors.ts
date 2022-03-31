@@ -1,13 +1,8 @@
-import { forceToCurrencyName } from '@acala-network/sdk-core';
-import { CrossChainSelectorParams } from './types';
-
-export class InvalidCrossChainSelectorParams extends Error {
-  constructor(params: CrossChainSelectorParams) {
+export class NoCrossChainAdapterFound extends Error {
+  constructor(name: string) {
     super();
 
-    this.message = `Invalid CrossChain Selector Params, ${params?.from?.name ?? ''}, ${params?.to?.name ?? ''}, ${
-      params.token ? forceToCurrencyName(params.token) : ''
-    }`;
-    this.name = 'InvalidCrossChainSelectorParams';
+    this.message = `Can't find ${name} adapter, please registed it first before use.`;
+    this.name = 'NoCrossChainAdapterFound';
   }
 }
