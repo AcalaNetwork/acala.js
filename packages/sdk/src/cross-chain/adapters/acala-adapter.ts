@@ -2,7 +2,7 @@ import { AnyApi, FixedPointNumber } from '@acala-network/sdk-core';
 import { Wallet } from '@acala-network/sdk/wallet';
 import { combineLatest, map, Observable } from 'rxjs';
 import { chains } from '../configs/chains';
-import { CrossChainTransferEnv, CrossChainTransferParams } from '../types';
+import { Chain, CrossChainRouter, CrossChainTransferEnv, CrossChainTransferParams } from '../types';
 import { BaseCrossChainAdapter } from '../base-chain-adapter';
 import { isChainEqual } from '../utils/is-chain-equal';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
@@ -12,32 +12,11 @@ interface AcalaAdaptorConfigs {
   wallet: Wallet;
 }
 
-export class AcalaAdaptor extends BaseCrossChainAdapter {
+export class BaseAcalaAdaptor extends BaseCrossChainAdapter {
   private wallet: Wallet;
 
-  constructor(configs: AcalaAdaptorConfigs) {
-    super(configs.api, chains.acala, [
-      // kusama
-      { to: chains.kusama, token: 'KSM' },
-      // bifrost
-      { to: chains.bifrost, token: 'KSM' },
-      { to: chains.bifrost, token: 'KAR' },
-      { to: chains.bifrost, token: 'KUSD' },
-      { to: chains.bifrost, token: 'BNC' },
-      { to: chains.bifrost, token: 'VSKSM' },
-      // statemine
-      { to: chains.statemine, token: 'RMRK' },
-      { to: chains.statemine, token: 'ARIS' },
-      // quartz
-      { to: chains.quartz, token: 'QTZ' },
-      // kintsugi
-      { to: chains.kintsugi, token: 'KINT' },
-      // khala
-      { to: chains.khala, token: 'KAR' },
-      { to: chains.khala, token: 'KUSD' },
-      { to: chains.khala, token: 'PHA' }
-    ]);
-
+  constructor(configs: AcalaAdaptorConfigs, chain: Chain, routers: Omit<CrossChainRouter, 'from'>[]) {
+    super(configs.api, chain, routers);
     const { wallet } = configs;
 
     this.wallet = wallet;
@@ -114,7 +93,7 @@ export class AcalaAdaptor extends BaseCrossChainAdapter {
       );
     }
 
-    // if destination is not statemine
+    // if destination is not statemine/kusama
     const call = this.api.tx.xTokens.transfer;
 
     const dst = {
@@ -130,5 +109,40 @@ export class AcalaAdaptor extends BaseCrossChainAdapter {
       { V1: dst },
       this.getDestinationWeight(token)
     );
+  }
+}
+
+export class AcalaAdaptor extends BaseAcalaAdaptor {
+  constructor(configs: AcalaAdaptorConfigs) {
+    super(configs, chains.acala, [
+      // polkadot
+      { to: chains.polkadot, token: 'DOT' }
+    ]);
+  }
+}
+
+export class KaruraAdaptor extends BaseAcalaAdaptor {
+  constructor(configs: AcalaAdaptorConfigs) {
+    super(configs, chains.karura, [
+      // kusama
+      { to: chains.kusama, token: 'KSM' },
+      // bifrost
+      { to: chains.bifrost, token: 'KSM' },
+      { to: chains.bifrost, token: 'KAR' },
+      { to: chains.bifrost, token: 'KUSD' },
+      { to: chains.bifrost, token: 'BNC' },
+      { to: chains.bifrost, token: 'VSKSM' },
+      // statemine
+      { to: chains.statemine, token: 'RMRK' },
+      { to: chains.statemine, token: 'ARIS' },
+      // quartz
+      { to: chains.quartz, token: 'QTZ' },
+      // kintsugi
+      { to: chains.kintsugi, token: 'KINT' },
+      // khala
+      { to: chains.khala, token: 'KAR' },
+      { to: chains.khala, token: 'KUSD' },
+      { to: chains.khala, token: 'PHA' }
+    ]);
   }
 }
