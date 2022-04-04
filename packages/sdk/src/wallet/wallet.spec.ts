@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import { Wallet } from './index';
 import dotenv from 'dotenv';
 import { WsProvider } from '@polkadot/rpc-provider';
@@ -75,12 +77,15 @@ describe('wallet', () => {
     expect(qtz.locations?.paraChainId).toBe(2095);
   });
 
-  test('get market price should work', async () => {
+  test('get aggregate price should work', async () => {
     const sdk = await initSDK();
 
     const price1 = await sdk.getPrice('KSM');
     const price2 = await sdk.getPrice('RMRK');
     const price3 = await sdk.getPrice('LKSM');
+    const price4 = await sdk.getPrice('KINT');
+    const price5 = await sdk.getPrice('QTZ');
+    const price6 = await sdk.getPrice('MOVR');
 
     expect(price1.toString()).not.toBe('0');
     expect(price1.toString()).not.toBe(undefined);
@@ -88,6 +93,44 @@ describe('wallet', () => {
     expect(price2.toString()).not.toBe(undefined);
     expect(price3.toString()).not.toBe('0');
     expect(price3.toString()).not.toBe(undefined);
+    expect(price4.toString()).not.toBe('0');
+    expect(price4.toString()).not.toBe(undefined);
+    expect(price5.toString()).not.toBe('0');
+    expect(price5.toString()).not.toBe(undefined);
+    expect(price6.toString()).not.toBe('0');
+    expect(price6.toString()).not.toBe(undefined);
+  });
+
+  test('get market price should work', async () => {
+    const sdk = await initSDK();
+
+    const price1 = await sdk.getPrice('KSM', PriceProviderType.MARKET);
+    const price2 = await sdk.getPrice('RMRK', PriceProviderType.MARKET);
+    const price3 = await sdk.getPrice('LKSM', PriceProviderType.MARKET);
+    const price4 = await sdk.getPrice('KINT', PriceProviderType.MARKET);
+    const price5 = await sdk.getPrice('QTZ', PriceProviderType.MARKET);
+    const price6 = await sdk.getPrice('MOVR', PriceProviderType.MARKET);
+    const price7 = await sdk.getPrice('taiKSM', PriceProviderType.MARKET);
+    const price8 = await sdk.getPrice('PHA', PriceProviderType.MARKET);
+
+    console.log(price8.toString());
+
+    expect(price1.toString()).not.toBe('0');
+    expect(price1.toString()).not.toBe(undefined);
+    expect(price2.toString()).not.toBe('0');
+    expect(price2.toString()).not.toBe(undefined);
+    expect(price3.toString()).not.toBe('0');
+    expect(price3.toString()).not.toBe(undefined);
+    expect(price4.toString()).not.toBe('0');
+    expect(price4.toString()).not.toBe(undefined);
+    expect(price5.toString()).not.toBe('0');
+    expect(price5.toString()).not.toBe(undefined);
+    expect(price6.toString()).not.toBe('0');
+    expect(price6.toString()).not.toBe(undefined);
+    expect(price7.toString()).not.toBe('0');
+    expect(price7.toString()).not.toBe(undefined);
+    expect(price8.toString()).not.toBe('0');
+    expect(price8.toString()).not.toBe(undefined);
   });
 
   test('get dex price should work', async () => {
@@ -96,6 +139,16 @@ describe('wallet', () => {
     const price1 = await sdk.getPrice('KSM', PriceProviderType.DEX);
     const price2 = await sdk.getPrice('RMRK', PriceProviderType.DEX);
     const price3 = await sdk.getPrice('LKSM', PriceProviderType.DEX);
+    const price4 = await sdk.getPrice('BNC', PriceProviderType.DEX);
+    const price5 = await sdk.getPrice('TAI', PriceProviderType.DEX);
+    const price6 = await sdk.getPrice('PHA', PriceProviderType.DEX);
+
+    console.log(price1.toString());
+    console.log(price2.toString());
+    console.log(price3.toString());
+    console.log(price4.toString());
+    console.log(price5.toString());
+    console.log(price6.toString());
 
     expect(price1.toString()).not.toBe('0');
     expect(price1.toString()).not.toBe(undefined);
@@ -103,14 +156,18 @@ describe('wallet', () => {
     expect(price2.toString()).not.toBe(undefined);
     expect(price3.toString()).not.toBe('0');
     expect(price3.toString()).not.toBe(undefined);
+    // expect(price4.toString()).not.toBe('0');
+    // expect(price4.toString()).not.toBe(undefined);
+    // expect(price5.toString()).not.toBe('0');
+    // expect(price5.toString()).not.toBe(undefined);
   });
 
   test('support ausd should work', async () => {
     const sdk0 = await initSDK({ supportAUSD: false });
     const sdk1 = await initSDK();
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const token0 = await sdk0.getToken('AUSD').catch((i) => i.toString());
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const token0 = await sdk0.getToken('AUSD').catch((i) => (i as any).toString());
     const token1 = await sdk0.getToken('KUSD');
     const token2 = await sdk1.getToken('AUSD');
     const token3 = await sdk1.getToken('KUSD');
