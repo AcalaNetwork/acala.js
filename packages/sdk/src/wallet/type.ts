@@ -15,7 +15,7 @@ export interface WalletConsts {
 
 export interface WalletConfigs {
   supportAUSD?: boolean;
-  tokenPriceFetchSource?: TokenPriceFetchSource;
+  // overview price providers if need
   priceProviders?: PriceProviders;
 }
 

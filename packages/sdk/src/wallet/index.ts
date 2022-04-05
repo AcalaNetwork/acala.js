@@ -10,37 +10,28 @@ import {
   MaybeCurrency,
   forceToCurrencyName,
   TokenType,
-  unzipDexShareName,
   isDexShareName,
-  createLiquidCrowdloanName
+  createLiquidCrowdloanName,
+  FixedPointNumber
 } from '@acala-network/sdk-core';
 import { AccountInfo, Balance, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { BehaviorSubject, combineLatest, Observable, of, firstValueFrom } from 'rxjs';
 import { map, switchMap, shareReplay, filter } from 'rxjs/operators';
-import {
-  TokenRecord,
-  WalletConsts,
-  BalanceData,
-  PresetTokens,
-  TokenPriceFetchSource,
-  WalletConfigs,
-  PriceProviders
-} from './type';
+import { TokenRecord, WalletConsts, BalanceData, PresetTokens, WalletConfigs, PriceProviders } from './type';
 import { ChainType, CurrencyNotFound, Homa, Liquidity, SDKNotReady } from '..';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 import { MarketPriceProvider } from './price-provider/market-price-provider';
 import { OraclePriceProvider } from './price-provider/oracle-price-provider';
-import { PriceProvider, PriceProviderType } from './price-provider/types';
+import { PriceProviderType } from './price-provider/types';
 import { createTokenList } from './utils/create-token-list';
 import { BaseSDK } from '../types';
 import { createStorages } from './storages';
 import tokenList from '../configs/token-list';
 import { TokenProvider } from '../base-provider';
-import { defaultTokenPriceFetchSource } from './price-provider/default-token-price-fetch-source-config';
-import { subscribeDexShareTokenPrice } from './utils/get-dex-share-token-price';
 import { getChainType } from '../utils/get-chain-type';
 import { DexPriceProvider } from './price-provider/dex-price-provider';
+import { AggregateProvider } from './price-provider/aggregate-price-provider';
 
 export class Wallet implements BaseSDK, TokenProvider {
   private api: AnyApi;
@@ -48,7 +39,6 @@ export class Wallet implements BaseSDK, TokenProvider {
   // readed from chain information
   private tokens$: BehaviorSubject<TokenRecord | undefined>;
   private storages: ReturnType<typeof createStorages>;
-  private tokenPriceFetchSource: TokenPriceFetchSource;
   private configs: WalletConfigs;
 
   // inject liquidity, homa sdk by default for easy using
@@ -71,7 +61,6 @@ export class Wallet implements BaseSDK, TokenProvider {
 
     this.configs = {
       supportAUSD: true,
-      tokenPriceFetchSource: defaultTokenPriceFetchSource,
       ...configs
     };
 
@@ -79,9 +68,16 @@ export class Wallet implements BaseSDK, TokenProvider {
     this.liquidity = new Liquidity(this.api, this);
     this.homa = new Homa(this.api, this);
 
-    this.tokenPriceFetchSource = configs?.tokenPriceFetchSource || defaultTokenPriceFetchSource;
+    const market = new MarketPriceProvider();
+    const dex = new DexPriceProvider(this.liquidity);
+    const aggregate = new AggregateProvider({ market, dex });
+    const oracle = new OraclePriceProvider(this.api);
+
     this.priceProviders = {
-      ...this.defaultPriceProviders,
+      [PriceProviderType.AGGREGATE]: aggregate,
+      [PriceProviderType.MARKET]: market,
+      [PriceProviderType.ORACLE]: oracle,
+      [PriceProviderType.DEX]: dex,
       ...this.configs?.priceProviders
     };
     this.storages = createStorages(this.api);
@@ -104,14 +100,6 @@ export class Wallet implements BaseSDK, TokenProvider {
     this.consts = {
       runtimeChain: this.api.runtimeChain.toString(),
       nativeCurrency: this.api.registry.chainTokens[0].toString()
-    };
-  }
-
-  private get defaultPriceProviders(): Record<PriceProviderType, PriceProvider> {
-    return {
-      [PriceProviderType.MARKET]: new MarketPriceProvider(),
-      [PriceProviderType.ORACLE]: new OraclePriceProvider(this.api),
-      [PriceProviderType.DEX]: new DexPriceProvider(this.api, this.liquidity)
     };
   }
 
@@ -158,6 +146,7 @@ export class Wallet implements BaseSDK, TokenProvider {
       const name = createLiquidCrowdloanName(13);
 
       basicTokens[name] = new Token(name, {
+        display: 'LCDOT',
         decimals: basicTokens.DOT.decimals,
         ed: basicTokens.DOT.ed,
         type: TokenType.LIQUID_CROWDLOAN
@@ -457,50 +446,64 @@ export class Wallet implements BaseSDK, TokenProvider {
    * @name subscribePrice
    * @description subscirbe the price of `token`
    */
-  public subscribePrice = memoize((token: MaybeCurrency, type?: PriceProviderType): Observable<FN> => {
+  public subscribePrice = memoize((token: MaybeCurrency, type = PriceProviderType.AGGREGATE): Observable<FN> => {
     const name = forceToCurrencyName(token);
     const isDexShare = isDexShareName(name);
     const presetTokens = this.getPresetTokens();
     const isLiquidToken = presetTokens?.liquidToken?.name === name;
     const stakingToken = presetTokens.stakingToken;
 
-    // use market price provider as default
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const _type =
-      type || this.tokenPriceFetchSource?.[getChainType(this.consts.runtimeChain)]?.[name] || PriceProviderType.MARKET;
-
-    const priceProvider = this.priceProviders?.[_type];
-
-    // should calculate dexShare price
+    // if token is dex share, get dex share price form liquidity sdk
     if (isDexShare) {
-      const [token0, token1] = unzipDexShareName(name);
-
-      return subscribeDexShareTokenPrice(
-        this.subscribePrice(token0),
-        this.subscribePrice(token1),
-        this.liquidity.subscribePoolDetail(name)
-      );
+      return this.liquidity.subscribePoolDetails(name).pipe(map((data) => data.sharePrice));
     }
 
-    // should calculate liquidToken price, when price provider type is market
-    if (isLiquidToken && stakingToken && _type === PriceProviderType.MARKET) {
+    // get liquid token price when price type is market or aggergate
+    if (isLiquidToken && stakingToken && (type === PriceProviderType.MARKET || type === PriceProviderType.AGGREGATE)) {
       // create homa sd for get exchange rate
       return this.homa.subscribeEnv().pipe(
         filter((env) => !env.exchangeRate.isZero()),
-        switchMap((env) => {
-          return this.subscribePrice(stakingToken).pipe(
+        switchMap((env) =>
+          this.subscribePrice(stakingToken, type).pipe(
             map((price) => {
               return price.times(env.exchangeRate);
             })
-          );
-        })
+          )
+        )
       );
     }
 
-    if (!priceProvider) return of(FN.ZERO);
+    if (type === PriceProviderType.MARKET && this.priceProviders[PriceProviderType.MARKET]) {
+      return this.subscribeToken(token).pipe(
+        switchMap(
+          (token) => this.priceProviders[PriceProviderType.MARKET]?.subscribe(token) || of(FixedPointNumber.ZERO)
+        )
+      );
+    }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.subscribeToken(token).pipe(switchMap((token) => priceProvider!.subscribe(token)));
+    if (type === PriceProviderType.AGGREGATE && this.priceProviders[PriceProviderType.AGGREGATE]) {
+      return this.subscribeToken(token).pipe(
+        switchMap(
+          (token) => this.priceProviders[PriceProviderType.AGGREGATE]?.subscribe(token) || of(FixedPointNumber.ZERO)
+        )
+      );
+    }
+
+    if (type === PriceProviderType.DEX && this.priceProviders[PriceProviderType.DEX]) {
+      return this.subscribeToken(token).pipe(
+        switchMap((token) => this.priceProviders[PriceProviderType.DEX]?.subscribe(token) || of(FixedPointNumber.ZERO))
+      );
+    }
+
+    if (type === PriceProviderType.ORACLE && this.priceProviders[PriceProviderType.ORACLE]) {
+      return this.subscribeToken(token).pipe(
+        switchMap(
+          (token) => this.priceProviders[PriceProviderType.ORACLE]?.subscribe(token) || of(FixedPointNumber.ZERO)
+        )
+      );
+    }
+
+    return of(FixedPointNumber.ZERO);
   });
 
   public getPrice(token: MaybeCurrency, type?: PriceProviderType): Promise<FN> {
