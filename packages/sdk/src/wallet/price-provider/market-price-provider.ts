@@ -31,7 +31,7 @@ export class MarketPriceProvider implements PriceProvider {
         switchMap(() =>
           from(
             (async () => {
-              const data = await Promise.all(this.trackedCurrencies.map(this.queryBalance));
+              const data = await Promise.all(this.trackedCurrencies.map(this.queryPrice));
 
               return Object.fromEntries(this.trackedCurrencies.map((name, i) => [name, data[i]]));
             })()
@@ -43,7 +43,7 @@ export class MarketPriceProvider implements PriceProvider {
       });
   };
 
-  private queryBalance = async (currency: string) => {
+  private queryPrice = async (currency: string) => {
     const result = await fetch.get(`${PRICE_API}?token=${currency}&from=market`);
 
     if (result.status === 200) {
@@ -60,6 +60,11 @@ export class MarketPriceProvider implements PriceProvider {
     // set KUSD, AUSD market price to 1 for calculate in system
     if (name === 'KSUD' || name === 'AUSD') {
       return of(new FixedPointNumber(1, 12));
+    }
+
+    // use KSM price as taiKSM price
+    if (name === 'taiKSM') {
+      return this.subscribe(new Token('KSM'));
     }
 
     // if doesn't track this token, fetch it immediately

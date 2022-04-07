@@ -181,7 +181,7 @@ export class Incentive implements BaseSDK {
     );
 
     const stableCurrencyPosition$ = !savingRate.isZero()
-      ? this.wallet.liquidity.subscribePoolDetail(pool.collateral).pipe(
+      ? this.wallet.liquidity.subscribePoolDetails(pool.collateral).pipe(
           map((data) => {
             const stableCurrencyPosition = data.info.pair.findIndex(
               (item) => forceToCurrencyName(item) === forceToCurrencyName(this.consts.stableCurrencyId)
