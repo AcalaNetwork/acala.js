@@ -2,6 +2,7 @@ import { FixedPointNumber as FN, getERC20TokenAddressFromName, Token } from '@ac
 import { WsProvider } from '@polkadot/api';
 import { AccountInfo } from '@polkadot/types/interfaces/system';
 import { Provider as BodhiProvider } from '@acala-network/bodhi';
+import { ERC20_ABI} from '@acala-network/eth-providers/src/consts';
 
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { Contract, utils } from 'ethers';
@@ -9,9 +10,9 @@ import { map } from 'rxjs/operators';
 import { createStorages } from '../storages';
 import { BalanceData } from '../type';
 import { BalanceAdapter } from './types';
-import ERC20_JSON from '@acala-network/contracts/build/contracts/Token.json';
 import { from, Observable } from 'rxjs';
 import { NotSupportETHAddress, NotSupportEVMBalance } from '../errors';
+
 
 interface AcalaAdapterConfigs {
   nativeCurrency: string;
@@ -75,7 +76,7 @@ export class AcalaBalanceAdapter implements BalanceAdapter {
     }
 
     const tokenAddress = getERC20TokenAddressFromName(token.name);
-    const tokenContract = new Contract(tokenAddress, ERC20_JSON.abi, this.ethProvider);
+    const tokenContract = new Contract(tokenAddress, ERC20_ABI, this.ethProvider);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const balance = await tokenContract.balanceOf(ethAddress);
 
