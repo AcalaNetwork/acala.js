@@ -20,7 +20,7 @@ import './interfaces/augment-api-rpc';
 import './interfaces/augment-api-tx';
 import './interfaces/augment-types';
 
-export * from './interfaces/augment-api-mobx';
+// export * from './interfaces/augment-api-mobx';
 
 export const types: RegistryTypes = acalaTypes;
 

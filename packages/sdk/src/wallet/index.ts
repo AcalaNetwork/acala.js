@@ -19,7 +19,7 @@ import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { BehaviorSubject, combineLatest, Observable, of, firstValueFrom } from 'rxjs';
 import { map, switchMap, shareReplay, filter } from 'rxjs/operators';
 import { TokenRecord, WalletConsts, BalanceData, PresetTokens, WalletConfigs, PriceProviders } from './type';
-import { ChainType, CurrencyNotFound, Homa, Liquidity, SDKNotReady } from '..';
+import { ChainType, Homa, Liquidity, SDKNotReady } from '..';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 import { MarketPriceProvider } from './price-provider/market-price-provider';
 import { OraclePriceProvider } from './price-provider/oracle-price-provider';
@@ -32,6 +32,9 @@ import { TokenProvider } from '../base-provider';
 import { getChainType } from '../utils/get-chain-type';
 import { DexPriceProvider } from './price-provider/dex-price-provider';
 import { AggregateProvider } from './price-provider/aggregate-price-provider';
+import { BalanceAdapter } from './balance-adapter/types';
+import { AcalaBalanceAdapter } from './balance-adapter/acala';
+import { CurrencyNotFound } from './errors';
 
 export class Wallet implements BaseSDK, TokenProvider {
   private api: AnyApi;
@@ -40,6 +43,7 @@ export class Wallet implements BaseSDK, TokenProvider {
   private tokens$: BehaviorSubject<TokenRecord | undefined>;
   private storages: ReturnType<typeof createStorages>;
   private configs: WalletConfigs;
+  private balanceAdapter: BalanceAdapter;
 
   // inject liquidity, homa sdk by default for easy using
   public readonly liquidity: Liquidity;
@@ -55,10 +59,8 @@ export class Wallet implements BaseSDK, TokenProvider {
     // priceProviders?: Record<PriceProviderType, PriceProvider>
   ) {
     this.api = api;
-
     this.isReady$ = new BehaviorSubject<boolean>(false);
     this.tokens$ = new BehaviorSubject<TokenRecord | undefined>(undefined);
-
     this.configs = {
       supportAUSD: true,
       ...configs
@@ -83,6 +85,12 @@ export class Wallet implements BaseSDK, TokenProvider {
     this.storages = createStorages(this.api);
 
     this.init();
+
+    this.balanceAdapter = new AcalaBalanceAdapter({
+      storages: this.storages,
+      nativeCurrency: this.consts.nativeCurrency,
+      wsProvider: configs?.wsProvider
+    });
   }
 
   public get isReady(): Promise<boolean> {
@@ -244,43 +252,7 @@ export class Wallet implements BaseSDK, TokenProvider {
    * @param address
    */
   public subscribeBalance = memoize((token: MaybeCurrency, address: string): Observable<BalanceData> => {
-    return this.subscribeToken(token).pipe(
-      switchMap((token) => {
-        const { nativeCurrency } = this.consts;
-        const isNativeToken = nativeCurrency === token.name;
-
-        const handleNative = (data: AccountInfo, token: Token) => {
-          const free = FN.fromInner(data.data.free.toString(), token.decimals);
-          const locked = FN.fromInner(data.data.miscFrozen.toString(), token.decimals).max(
-            FN.fromInner(data.data.feeFrozen.toString(), token.decimals)
-          );
-          const reserved = FN.fromInner(data.data.reserved.toString(), token.decimals);
-          const available = free.sub(locked).max(FN.ZERO);
-
-          return { available, token, free, locked, reserved };
-        };
-
-        const handleNonNative = (data: OrmlAccountData, token: Token) => {
-          const free = FN.fromInner(data.free.toString(), token.decimals);
-          const locked = FN.fromInner(data.frozen.toString(), token.decimals);
-          const reserved = FN.fromInner(data.reserved.toString(), token.decimals);
-          const available = free.sub(locked).max(FN.ZERO);
-
-          return { available, token, free, locked, reserved };
-        };
-
-        if (isNativeToken) {
-          const storage = this.storages.nativeBalance(address);
-
-          return storage.observable.pipe(map((data) => handleNative(data, token)));
-        }
-
-        // nonNative token
-        const storage = this.storages.nonNativeBalance(token, address);
-
-        return storage.observable.pipe(map((data) => handleNonNative(data, token)));
-      })
-    );
+    return this.subscribeToken(token).pipe(switchMap((token) => this.balanceAdapter.subscribeBalance(token, address)));
   });
 
   public async getBalance(token: MaybeCurrency, address: string): Promise<BalanceData> {
@@ -322,8 +294,8 @@ export class Wallet implements BaseSDK, TokenProvider {
       feeFactor = 1.2
     ): Observable<FN> => {
       const handleNativeResult = (accountInfo: AccountInfo, token: Token, nativeToken: Token) => {
-        const providers = accountInfo.providers.toNumber();
-        const consumers = accountInfo.consumers.toNumber();
+        const providers = accountInfo.providers.toBigInt();
+        const consumers = accountInfo.consumers.toBigInt();
         const nativeFreeBalance = FN.fromInner(accountInfo.data.free.toString(), nativeToken.decimals);
         // native locked balance = max(accountInfo.data.miscFrozen, accountInfo.data.feeFrozen)
         const nativeLockedBalance = FN.fromInner(accountInfo.data.miscFrozen.toString(), nativeToken.decimals).max(
@@ -352,8 +324,8 @@ export class Wallet implements BaseSDK, TokenProvider {
         token: Token,
         nativeToken: Token
       ) => {
-        const providers = accountInfo.providers.toNumber();
-        const consumers = accountInfo.consumers.toNumber();
+        const providers = accountInfo.providers.toBigInt();
+        const consumers = accountInfo.consumers.toBigInt();
         const nativeFreeBalance = FN.fromInner(accountInfo.data.free.toString(), nativeToken.decimals);
         // native locked balance = max(accountInfo.data.miscFrozen, accountInfo.data.feeFrozen)
         const nativeLockedBalance = FN.fromInner(accountInfo.data.miscFrozen.toString(), nativeToken.decimals).max(

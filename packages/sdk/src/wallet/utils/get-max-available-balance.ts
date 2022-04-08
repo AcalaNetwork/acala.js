@@ -33,8 +33,8 @@ interface Config {
   isNativeToken: boolean;
   isAllowDeath: boolean;
 
-  providers: number;
-  consumers: number;
+  providers: bigint;
+  consumers: bigint;
 
   nativeFreeBalance: FN;
   nativeLockedBalance: FN;
@@ -71,7 +71,7 @@ export const getMaxAvailableBalance = (config: Config): FN => {
 
     // if native locked balance <= 0
     if (nativeLockedBalance.lte(ZERO)) {
-      if (isAllowDeath && (providers > 0 || consumers === 0)) {
+      if (isAllowDeath && (providers > 0 || consumers === BigInt(0))) {
         return nativeFreeBalance.sub(fee).max(ZERO);
       } else {
         return nativeFreeBalance.sub(ed).sub(fee).max(ZERO);
@@ -92,7 +92,7 @@ export const getMaxAvailableBalance = (config: Config): FN => {
   if (nativeFreeBalance.add(nativeLockedBalance).gt(fee)) {
     // if target locked balance <= 0
     if (targetLockedBalance.lte(ZERO)) {
-      if (isAllowDeath && (providers > 0 || consumers === 0)) {
+      if (isAllowDeath && (providers > 0 || consumers === BigInt(0))) {
         return targetFreeBalance;
       } else {
         return targetFreeBalance.sub(ed).max(ZERO);

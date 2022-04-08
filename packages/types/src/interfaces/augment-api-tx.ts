@@ -3,9 +3,9 @@
 
 import type { AccountId32, Call, H160, H256, MultiAddress, Perbill } from '@acala-network/types/interfaces/runtime';
 import type { ApiTypes } from '@polkadot/api-base/types';
-import type { BTreeMap, Bytes, Compact, Option, U8aFixed, Vec, bool, i128, u128, u16, u32, u64, u8 } from '@polkadot/types-codec';
+import type { BTreeMap, Bytes, Compact, Option, U8aFixed, Vec, WrapperKeepOpaque, bool, i128, u128, u16, u32, u64, u8 } from '@polkadot/types-codec';
 import type { AnyNumber, ITuple } from '@polkadot/types-codec/types';
-import type { AcalaPrimitivesAuthoritysOriginId, AcalaPrimitivesCurrencyCurrencyId, CumulusPrimitivesParachainInherentParachainInherentData, EthereumTransactionTransactionAction, FrameSupportScheduleDispatchTime, KaruraRuntimeOriginCaller, KaruraRuntimeScheduledTasks, KaruraRuntimeSessionKeys, ModuleAssetRegistryModuleAssetMetadata, ModuleHomaModuleUnlockChunk, ModuleHomaXcmModuleHomaXcmOperation, ModuleIncentivesPoolId, OrmlTraitsChangeOption, OrmlTraitsChangeU128, OrmlVestingVestingSchedule, PalletDemocracyConviction, PalletDemocracyVoteAccountVote, PalletMultisigTimepoint, RuntimeCommonProxyType, SpCoreEcdsaSignature, XcmV1MultiLocation, XcmV2WeightLimit, XcmVersionedMultiAsset, XcmVersionedMultiAssets, XcmVersionedMultiLocation, XcmVersionedXcm } from '@polkadot/types/lookup';
+import type { AcalaPrimitivesAuthoritysOriginId, AcalaPrimitivesCurrencyCurrencyId, CumulusPrimitivesParachainInherentParachainInherentData, EthereumTransactionAccessListItem, EthereumTransactionTransactionAction, FrameSupportScheduleDispatchTime, FrameSupportScheduleMaybeHashed, KaruraRuntimeOriginCaller, KaruraRuntimeScheduledTasks, KaruraRuntimeSessionKeys, ModuleAssetRegistryModuleAssetMetadata, ModuleHomaModuleUnlockChunk, ModuleIncentivesPoolId, ModuleSupportDexSwapLimit, ModuleXcmInterfaceModuleXcmInterfaceOperation, OrmlTraitsChangeOption, OrmlTraitsChangeU128, OrmlVestingVestingSchedule, PalletDemocracyConviction, PalletDemocracyVoteAccountVote, PalletMultisigTimepoint, RuntimeCommonProxyType, XcmV1MultiLocation, XcmV2WeightLimit, XcmVersionedMultiAsset, XcmVersionedMultiAssets, XcmVersionedMultiLocation, XcmVersionedXcm } from './types-lookup';
 
 declare module '@polkadot/api-base/types/submittable' {
   export interface AugmentedSubmittables<ApiType extends ApiTypes> {
@@ -15,7 +15,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * 
        * Require authorized operator.
        **/
-      feedValues: AugmentedSubmittable<(values: Vec<ITuple<[AcalaPrimitivesCurrencyCurrencyId, u128]>> | ([AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, u128 | AnyNumber | Uint8Array])[]) => SubmittableExtrinsic<ApiType>, [Vec<ITuple<[AcalaPrimitivesCurrencyCurrencyId, u128]>>]>;
+      feedValues: AugmentedSubmittable<(values: Vec<ITuple<[AcalaPrimitivesCurrencyCurrencyId, u128]>> | ([AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, u128 | AnyNumber | Uint8Array])[]) => SubmittableExtrinsic<ApiType>, [Vec<ITuple<[AcalaPrimitivesCurrencyCurrencyId, u128]>>]>;
       /**
        * Generic tx
        **/
@@ -24,9 +24,11 @@ declare module '@polkadot/api-base/types/submittable' {
     assetRegistry: {
       registerErc20Asset: AugmentedSubmittable<(contract: H160 | string | Uint8Array, minimalBalance: u128 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [H160, u128]>;
       registerForeignAsset: AugmentedSubmittable<(location: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, metadata: ModuleAssetRegistryModuleAssetMetadata | { name?: any; symbol?: any; decimals?: any; minimalBalance?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [XcmVersionedMultiLocation, ModuleAssetRegistryModuleAssetMetadata]>;
+      registerNativeAsset: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, metadata: ModuleAssetRegistryModuleAssetMetadata | { name?: any; symbol?: any; decimals?: any; minimalBalance?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, ModuleAssetRegistryModuleAssetMetadata]>;
       registerStableAsset: AugmentedSubmittable<(metadata: ModuleAssetRegistryModuleAssetMetadata | { name?: any; symbol?: any; decimals?: any; minimalBalance?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [ModuleAssetRegistryModuleAssetMetadata]>;
       updateErc20Asset: AugmentedSubmittable<(contract: H160 | string | Uint8Array, metadata: ModuleAssetRegistryModuleAssetMetadata | { name?: any; symbol?: any; decimals?: any; minimalBalance?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [H160, ModuleAssetRegistryModuleAssetMetadata]>;
       updateForeignAsset: AugmentedSubmittable<(foreignAssetId: u16 | AnyNumber | Uint8Array, location: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, metadata: ModuleAssetRegistryModuleAssetMetadata | { name?: any; symbol?: any; decimals?: any; minimalBalance?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u16, XcmVersionedMultiLocation, ModuleAssetRegistryModuleAssetMetadata]>;
+      updateNativeAsset: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, metadata: ModuleAssetRegistryModuleAssetMetadata | { name?: any; symbol?: any; decimals?: any; minimalBalance?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, ModuleAssetRegistryModuleAssetMetadata]>;
       updateStableAsset: AugmentedSubmittable<(stableAssetId: u32 | AnyNumber | Uint8Array, metadata: ModuleAssetRegistryModuleAssetMetadata | { name?: any; symbol?: any; decimals?: any; minimalBalance?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, ModuleAssetRegistryModuleAssetMetadata]>;
       /**
        * Generic tx
@@ -108,7 +110,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * Set the balances of a given account.
        * 
        * This will alter `FreeBalance` and `ReservedBalance` in storage. it will
-       * also decrease the total issuance of the system (`TotalIssuance`).
+       * also alter the total issuance of the system (`TotalIssuance`) appropriately.
        * If the new free or reserved balance is below the existential deposit,
        * it will reset the account nonce (`frame_system::AccountNonce`).
        * 
@@ -119,7 +121,6 @@ declare module '@polkadot/api-base/types/submittable' {
        * Transfer some liquid free balance to another account.
        * 
        * `transfer` will set the `FreeBalance` of the sender and receiver.
-       * It will decrease the total issuance of the system by the `TransferFee`.
        * If the sender's account is below the existential deposit as a result
        * of the transfer, the account will be reaped.
        * 
@@ -313,7 +314,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `currency_id`: CDP's collateral type.
        * - `who`: CDP's owner.
        **/
-      liquidate: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, who: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, MultiAddress]>;
+      liquidate: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, who: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, MultiAddress]>;
       /**
        * Update parameters related to risk management of CDP under specific
        * collateral type
@@ -331,7 +332,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * `Some(None)` means update it to `None`.
        * - `maximum_total_debit_value`: maximum total debit value.
        **/
-      setCollateralParams: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, interestRatePerSec: OrmlTraitsChangeOption | { NoChange: any } | { NewValue: any } | string | Uint8Array, liquidationRatio: OrmlTraitsChangeOption | { NoChange: any } | { NewValue: any } | string | Uint8Array, liquidationPenalty: OrmlTraitsChangeOption | { NoChange: any } | { NewValue: any } | string | Uint8Array, requiredCollateralRatio: OrmlTraitsChangeOption | { NoChange: any } | { NewValue: any } | string | Uint8Array, maximumTotalDebitValue: OrmlTraitsChangeU128 | { NoChange: any } | { NewValue: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, OrmlTraitsChangeOption, OrmlTraitsChangeOption, OrmlTraitsChangeOption, OrmlTraitsChangeOption, OrmlTraitsChangeU128]>;
+      setCollateralParams: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, interestRatePerSec: OrmlTraitsChangeOption | { NoChange: any } | { NewValue: any } | string | Uint8Array, liquidationRatio: OrmlTraitsChangeOption | { NoChange: any } | { NewValue: any } | string | Uint8Array, liquidationPenalty: OrmlTraitsChangeOption | { NoChange: any } | { NewValue: any } | string | Uint8Array, requiredCollateralRatio: OrmlTraitsChangeOption | { NoChange: any } | { NewValue: any } | string | Uint8Array, maximumTotalDebitValue: OrmlTraitsChangeU128 | { NoChange: any } | { NewValue: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, OrmlTraitsChangeOption, OrmlTraitsChangeOption, OrmlTraitsChangeOption, OrmlTraitsChangeOption, OrmlTraitsChangeU128]>;
       /**
        * Update global parameters related to risk management of CDP
        * 
@@ -348,14 +349,33 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `currency_id`: CDP's collateral type.
        * - `who`: CDP's owner.
        **/
-      settle: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, who: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, MultiAddress]>;
+      settle: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, who: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, MultiAddress]>;
       /**
        * Generic tx
        **/
       [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
     cdpTreasury: {
-      auctionCollateral: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, amount: Compact<u128> | AnyNumber | Uint8Array, target: Compact<u128> | AnyNumber | Uint8Array, splited: bool | boolean | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, Compact<u128>, Compact<u128>, bool]>;
+      /**
+       * Auction the collateral not occupied by the auction.
+       * 
+       * The dispatch origin of this call must be `UpdateOrigin`.
+       * 
+       * - `currency_id`: collateral type
+       * - `amount`: collateral amount
+       * - `target`: target amount
+       * - `splited`: splite collateral to multiple auction according to the config size
+       **/
+      auctionCollateral: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, amount: Compact<u128> | AnyNumber | Uint8Array, target: Compact<u128> | AnyNumber | Uint8Array, splited: bool | boolean | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, Compact<u128>, Compact<u128>, bool]>;
+      /**
+       * Swap the collateral not occupied by the auction to stable.
+       * 
+       * The dispatch origin of this call must be `UpdateOrigin`.
+       * 
+       * - `currency_id`: collateral type
+       * - `swap_limit`: target amount
+       **/
+      exchangeCollateralToStable: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, swapLimit: ModuleSupportDexSwapLimit | { ExactSupply: any } | { ExactTarget: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, ModuleSupportDexSwapLimit]>;
       extractSurplusToTreasury: AugmentedSubmittable<(amount: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Compact<u128>]>;
       /**
        * Update parameters related to collateral auction under specific
@@ -366,7 +386,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `currency_id`: collateral type
        * - `amount`: expected size of per lot collateral auction
        **/
-      setExpectedCollateralAuctionSize: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, size: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, Compact<u128>]>;
+      setExpectedCollateralAuctionSize: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, size: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, Compact<u128>]>;
       /**
        * Generic tx
        **/
@@ -386,14 +406,14 @@ declare module '@polkadot/api-base/types/submittable' {
       [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
     currencies: {
-      sweepDust: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, accounts: Vec<AccountId32> | (AccountId32 | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, Vec<AccountId32>]>;
+      sweepDust: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, accounts: Vec<AccountId32> | (AccountId32 | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, Vec<AccountId32>]>;
       /**
        * Transfer some balance to another account under `currency_id`.
        * 
        * The dispatch origin for this call must be `Signed` by the
        * transactor.
        **/
-      transfer: AugmentedSubmittable<(dest: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, amount: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, AcalaPrimitivesCurrencyCurrencyId, Compact<u128>]>;
+      transfer: AugmentedSubmittable<(dest: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, amount: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, AcalaPrimitivesCurrencyCurrencyId, Compact<u128>]>;
       /**
        * Transfer some native currency to another account.
        * 
@@ -406,7 +426,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * 
        * The dispatch origin of this call must be _Root_.
        **/
-      updateBalance: AugmentedSubmittable<(who: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, amount: i128 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, AcalaPrimitivesCurrencyCurrencyId, i128]>;
+      updateBalance: AugmentedSubmittable<(who: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array, currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, amount: i128 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [MultiAddress, AcalaPrimitivesCurrencyCurrencyId, i128]>;
       /**
        * Generic tx
        **/
@@ -750,6 +770,10 @@ declare module '@polkadot/api-base/types/submittable' {
     };
     dex: {
       /**
+       * Abort provision when it's don't meet the target and expired.
+       **/
+      abortProvisioning: AugmentedSubmittable<(currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId]>;
+      /**
        * Add liquidity to Enabled trading pair.
        * - Add provision success will record the provision, issue shares to caller in the initial
        * exchange rate when trading pair convert to Enabled.
@@ -764,7 +788,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `stake_increment_share`: indicates whether to stake increased dex share to earn
        * incentives
        **/
-      addLiquidity: AugmentedSubmittable<(currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, maxAmountA: Compact<u128> | AnyNumber | Uint8Array, maxAmountB: Compact<u128> | AnyNumber | Uint8Array, minShareIncrement: Compact<u128> | AnyNumber | Uint8Array, stakeIncrementShare: bool | boolean | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId, Compact<u128>, Compact<u128>, Compact<u128>, bool]>;
+      addLiquidity: AugmentedSubmittable<(currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, maxAmountA: Compact<u128> | AnyNumber | Uint8Array, maxAmountB: Compact<u128> | AnyNumber | Uint8Array, minShareIncrement: Compact<u128> | AnyNumber | Uint8Array, stakeIncrementShare: bool | boolean | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId, Compact<u128>, Compact<u128>, Compact<u128>, bool]>;
       /**
        * Add provision to Provisioning trading pair.
        * If succecced, will record the provision, but shares issuing will happen after the
@@ -775,7 +799,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `amount_a`: provision amount for currency_id_a.
        * - `amount_b`: provision amount for currency_id_b.
        **/
-      addProvision: AugmentedSubmittable<(currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, amountA: Compact<u128> | AnyNumber | Uint8Array, amountB: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId, Compact<u128>, Compact<u128>]>;
+      addProvision: AugmentedSubmittable<(currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, amountA: Compact<u128> | AnyNumber | Uint8Array, amountB: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId, Compact<u128>, Compact<u128>]>;
       /**
        * Claim dex share for founders who have participated in trading pair provision.
        * 
@@ -783,25 +807,33 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `currency_id_a`: currency id A.
        * - `currency_id_b`: currency id B.
        **/
-      claimDexShare: AugmentedSubmittable<(owner: AccountId32 | string | Uint8Array, currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId]>;
+      claimDexShare: AugmentedSubmittable<(owner: AccountId32 | string | Uint8Array, currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId]>;
       /**
        * Disable a `Enabled` trading pair.
        **/
-      disableTradingPair: AugmentedSubmittable<(currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId]>;
+      disableTradingPair: AugmentedSubmittable<(currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId]>;
       /**
        * Enable a trading pair
        * if the status of trading pair is `Disabled`, or `Provisioning` without any accumulated
        * provision, enable it directly.
        **/
-      enableTradingPair: AugmentedSubmittable<(currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId]>;
+      enableTradingPair: AugmentedSubmittable<(currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId]>;
       /**
        * Enable a Provisioning trading pair if meet the condition.
        **/
-      endProvisioning: AugmentedSubmittable<(currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId]>;
+      endProvisioning: AugmentedSubmittable<(currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId]>;
       /**
        * List a new provisioning trading pair.
        **/
-      listProvisioning: AugmentedSubmittable<(currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, minContributionA: Compact<u128> | AnyNumber | Uint8Array, minContributionB: Compact<u128> | AnyNumber | Uint8Array, targetProvisionA: Compact<u128> | AnyNumber | Uint8Array, targetProvisionB: Compact<u128> | AnyNumber | Uint8Array, notBefore: Compact<u32> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId, Compact<u128>, Compact<u128>, Compact<u128>, Compact<u128>, Compact<u32>]>;
+      listProvisioning: AugmentedSubmittable<(currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, minContributionA: Compact<u128> | AnyNumber | Uint8Array, minContributionB: Compact<u128> | AnyNumber | Uint8Array, targetProvisionA: Compact<u128> | AnyNumber | Uint8Array, targetProvisionB: Compact<u128> | AnyNumber | Uint8Array, notBefore: Compact<u32> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId, Compact<u128>, Compact<u128>, Compact<u128>, Compact<u128>, Compact<u32>]>;
+      /**
+       * Refund provision if the provision has already aborted.
+       * 
+       * - `owner`: founder account.
+       * - `currency_id_a`: currency id A.
+       * - `currency_id_b`: currency id B.
+       **/
+      refundProvision: AugmentedSubmittable<(owner: AccountId32 | string | Uint8Array, currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId]>;
       /**
        * Remove liquidity from specific liquidity pool in the form of burning
        * shares, and withdrawing currencies in trading pairs from liquidity
@@ -814,7 +846,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `min_withdrawn_b`: minimum acceptable withrawn for currency_id_b.
        * - `by_unstake`: this flag indicates whether to withdraw share which is on incentives.
        **/
-      removeLiquidity: AugmentedSubmittable<(currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, removeShare: Compact<u128> | AnyNumber | Uint8Array, minWithdrawnA: Compact<u128> | AnyNumber | Uint8Array, minWithdrawnB: Compact<u128> | AnyNumber | Uint8Array, byUnstake: bool | boolean | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId, Compact<u128>, Compact<u128>, Compact<u128>, bool]>;
+      removeLiquidity: AugmentedSubmittable<(currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, removeShare: Compact<u128> | AnyNumber | Uint8Array, minWithdrawnA: Compact<u128> | AnyNumber | Uint8Array, minWithdrawnB: Compact<u128> | AnyNumber | Uint8Array, byUnstake: bool | boolean | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId, Compact<u128>, Compact<u128>, Compact<u128>, bool]>;
       /**
        * Trading with DEX, swap with exact supply amount
        * 
@@ -822,7 +854,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `supply_amount`: exact supply amount.
        * - `min_target_amount`: acceptable minimum target amount.
        **/
-      swapWithExactSupply: AugmentedSubmittable<(path: Vec<AcalaPrimitivesCurrencyCurrencyId> | (AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array)[], supplyAmount: Compact<u128> | AnyNumber | Uint8Array, minTargetAmount: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Vec<AcalaPrimitivesCurrencyCurrencyId>, Compact<u128>, Compact<u128>]>;
+      swapWithExactSupply: AugmentedSubmittable<(path: Vec<AcalaPrimitivesCurrencyCurrencyId> | (AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array)[], supplyAmount: Compact<u128> | AnyNumber | Uint8Array, minTargetAmount: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Vec<AcalaPrimitivesCurrencyCurrencyId>, Compact<u128>, Compact<u128>]>;
       /**
        * Trading with DEX, swap with exact target amount
        * 
@@ -830,12 +862,47 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `target_amount`: exact target amount.
        * - `max_supply_amount`: acceptable maximum supply amount.
        **/
-      swapWithExactTarget: AugmentedSubmittable<(path: Vec<AcalaPrimitivesCurrencyCurrencyId> | (AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array)[], targetAmount: Compact<u128> | AnyNumber | Uint8Array, maxSupplyAmount: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Vec<AcalaPrimitivesCurrencyCurrencyId>, Compact<u128>, Compact<u128>]>;
+      swapWithExactTarget: AugmentedSubmittable<(path: Vec<AcalaPrimitivesCurrencyCurrencyId> | (AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array)[], targetAmount: Compact<u128> | AnyNumber | Uint8Array, maxSupplyAmount: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Vec<AcalaPrimitivesCurrencyCurrencyId>, Compact<u128>, Compact<u128>]>;
       /**
        * List a new trading pair, trading pair will become Enabled status
        * after provision process.
        **/
-      updateProvisioningParameters: AugmentedSubmittable<(currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, minContributionA: Compact<u128> | AnyNumber | Uint8Array, minContributionB: Compact<u128> | AnyNumber | Uint8Array, targetProvisionA: Compact<u128> | AnyNumber | Uint8Array, targetProvisionB: Compact<u128> | AnyNumber | Uint8Array, notBefore: Compact<u32> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId, Compact<u128>, Compact<u128>, Compact<u128>, Compact<u128>, Compact<u32>]>;
+      updateProvisioningParameters: AugmentedSubmittable<(currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, minContributionA: Compact<u128> | AnyNumber | Uint8Array, minContributionB: Compact<u128> | AnyNumber | Uint8Array, targetProvisionA: Compact<u128> | AnyNumber | Uint8Array, targetProvisionB: Compact<u128> | AnyNumber | Uint8Array, notBefore: Compact<u32> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId, Compact<u128>, Compact<u128>, Compact<u128>, Compact<u128>, Compact<u32>]>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
+    };
+    dexOracle: {
+      /**
+       * Disable average price for trading pair.
+       * 
+       * Requires `UpdateOrigin`
+       * 
+       * - `currency_id_a`: one currency_id that forms a trading pair
+       * - `currency_id_b`: another currency_id that forms a trading pair
+       **/
+      disableAveragePrice: AugmentedSubmittable<(currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId]>;
+      /**
+       * Enabled average price for trading pair.
+       * 
+       * Requires `UpdateOrigin`
+       * 
+       * - `currency_id_a`: one currency_id that forms a trading pair
+       * - `currency_id_b`: another currency_id that forms a trading pair
+       * - `interval`: the timestamp interval to update average price.
+       **/
+      enableAveragePrice: AugmentedSubmittable<(currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, interval: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId, u64]>;
+      /**
+       * Update the interval of the trading pair that enabled average price.
+       * 
+       * Requires `UpdateOrigin`
+       * 
+       * - `currency_id_a`: one currency_id that forms a trading pair
+       * - `currency_id_b`: another currency_id that forms a trading pair
+       * - `new_interval`: the new interval.
+       **/
+      updateAveragePriceInterval: AugmentedSubmittable<(currencyIdA: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, currencyIdB: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, newInterval: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId, u64]>;
       /**
        * Generic tx
        **/
@@ -897,74 +964,74 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `gas_limit`: the maximum gas the call can use
        * - `storage_limit`: the total bytes the contract's storage can increase by
        **/
-      call: AugmentedSubmittable<(target: H160 | string | Uint8Array, input: Bytes | string | Uint8Array, value: Compact<u128> | AnyNumber | Uint8Array, gasLimit: Compact<u64> | AnyNumber | Uint8Array, storageLimit: Compact<u32> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [H160, Bytes, Compact<u128>, Compact<u64>, Compact<u32>]>;
+      call: AugmentedSubmittable<(target: H160 | string | Uint8Array, input: Bytes | string | Uint8Array, value: Compact<u128> | AnyNumber | Uint8Array, gasLimit: Compact<u64> | AnyNumber | Uint8Array, storageLimit: Compact<u32> | AnyNumber | Uint8Array, accessList: Vec<EthereumTransactionAccessListItem> | (EthereumTransactionAccessListItem | { address?: any; storageKeys?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [H160, Bytes, Compact<u128>, Compact<u64>, Compact<u32>, Vec<EthereumTransactionAccessListItem>]>;
       /**
        * Issue an EVM create operation. This is similar to a contract
        * creation transaction in Ethereum.
        * 
-       * - `init`: the data supplied for the contract's constructor
+       * - `input`: the data supplied for the contract's constructor
        * - `value`: the amount sent to the contract upon creation
        * - `gas_limit`: the maximum gas the call can use
        * - `storage_limit`: the total bytes the contract's storage can increase by
        **/
-      create: AugmentedSubmittable<(init: Bytes | string | Uint8Array, value: Compact<u128> | AnyNumber | Uint8Array, gasLimit: Compact<u64> | AnyNumber | Uint8Array, storageLimit: Compact<u32> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes, Compact<u128>, Compact<u64>, Compact<u32>]>;
+      create: AugmentedSubmittable<(input: Bytes | string | Uint8Array, value: Compact<u128> | AnyNumber | Uint8Array, gasLimit: Compact<u64> | AnyNumber | Uint8Array, storageLimit: Compact<u32> | AnyNumber | Uint8Array, accessList: Vec<EthereumTransactionAccessListItem> | (EthereumTransactionAccessListItem | { address?: any; storageKeys?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Bytes, Compact<u128>, Compact<u64>, Compact<u32>, Vec<EthereumTransactionAccessListItem>]>;
       /**
        * Issue an EVM create2 operation.
        * 
        * - `target`: the contract address to call
-       * - `init`: the data supplied for the contract's constructor
+       * - `input`: the data supplied for the contract's constructor
        * - `salt`: used for generating the new contract's address
        * - `value`: the amount sent for payable calls
        * - `gas_limit`: the maximum gas the call can use
        * - `storage_limit`: the total bytes the contract's storage can increase by
        **/
-      create2: AugmentedSubmittable<(init: Bytes | string | Uint8Array, salt: H256 | string | Uint8Array, value: Compact<u128> | AnyNumber | Uint8Array, gasLimit: Compact<u64> | AnyNumber | Uint8Array, storageLimit: Compact<u32> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes, H256, Compact<u128>, Compact<u64>, Compact<u32>]>;
+      create2: AugmentedSubmittable<(input: Bytes | string | Uint8Array, salt: H256 | string | Uint8Array, value: Compact<u128> | AnyNumber | Uint8Array, gasLimit: Compact<u64> | AnyNumber | Uint8Array, storageLimit: Compact<u32> | AnyNumber | Uint8Array, accessList: Vec<EthereumTransactionAccessListItem> | (EthereumTransactionAccessListItem | { address?: any; storageKeys?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Bytes, H256, Compact<u128>, Compact<u64>, Compact<u32>, Vec<EthereumTransactionAccessListItem>]>;
       /**
        * Create mirrored NFT contract. The next available system contract
        * address will be used as created contract address.
        * 
-       * - `init`: the data supplied for the contract's constructor
+       * - `input`: the data supplied for the contract's constructor
        * - `value`: the amount sent for payable calls
        * - `gas_limit`: the maximum gas the call can use
        * - `storage_limit`: the total bytes the contract's storage can increase by
        **/
-      createNftContract: AugmentedSubmittable<(init: Bytes | string | Uint8Array, value: Compact<u128> | AnyNumber | Uint8Array, gasLimit: Compact<u64> | AnyNumber | Uint8Array, storageLimit: Compact<u32> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes, Compact<u128>, Compact<u64>, Compact<u32>]>;
+      createNftContract: AugmentedSubmittable<(input: Bytes | string | Uint8Array, value: Compact<u128> | AnyNumber | Uint8Array, gasLimit: Compact<u64> | AnyNumber | Uint8Array, storageLimit: Compact<u32> | AnyNumber | Uint8Array, accessList: Vec<EthereumTransactionAccessListItem> | (EthereumTransactionAccessListItem | { address?: any; storageKeys?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Bytes, Compact<u128>, Compact<u64>, Compact<u32>, Vec<EthereumTransactionAccessListItem>]>;
       /**
        * Issue an EVM create operation. The address specified
        * will be used as created contract address.
        * 
        * - `target`: the address specified by the contract
-       * - `init`: the data supplied for the contract's constructor
+       * - `input`: the data supplied for the contract's constructor
        * - `value`: the amount sent for payable calls
        * - `gas_limit`: the maximum gas the call can use
        * - `storage_limit`: the total bytes the contract's storage can increase by
        **/
-      createPredeployContract: AugmentedSubmittable<(target: H160 | string | Uint8Array, init: Bytes | string | Uint8Array, value: Compact<u128> | AnyNumber | Uint8Array, gasLimit: Compact<u64> | AnyNumber | Uint8Array, storageLimit: Compact<u32> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [H160, Bytes, Compact<u128>, Compact<u64>, Compact<u32>]>;
-      /**
-       * Mark a given contract as deployed.
-       * 
-       * - `contract`: The contract to mark as deployed, the caller must the contract's
-       * maintainer
-       **/
-      deploy: AugmentedSubmittable<(contract: H160 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [H160]>;
-      /**
-       * Mark a given contract as deployed without paying the deployment fee
-       * 
-       * - `contract`: The contract to mark as deployed, the caller must be the contract's
-       * maintainer.
-       **/
-      deployFree: AugmentedSubmittable<(contract: H160 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [H160]>;
+      createPredeployContract: AugmentedSubmittable<(target: H160 | string | Uint8Array, input: Bytes | string | Uint8Array, value: Compact<u128> | AnyNumber | Uint8Array, gasLimit: Compact<u64> | AnyNumber | Uint8Array, storageLimit: Compact<u32> | AnyNumber | Uint8Array, accessList: Vec<EthereumTransactionAccessListItem> | (EthereumTransactionAccessListItem | { address?: any; storageKeys?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [H160, Bytes, Compact<u128>, Compact<u64>, Compact<u32>, Vec<EthereumTransactionAccessListItem>]>;
       /**
        * Mark the caller's address to disable contract development.
-       * This disallows the address to interact with non-deployed contracts.
+       * This disallows the address to interact with non-published contracts.
        **/
       disableContractDevelopment: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
       /**
        * Mark the caller's address to allow contract development.
-       * This allows the address to interact with non-deployed contracts.
+       * This allows the address to interact with non-published contracts.
        **/
       enableContractDevelopment: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
-      ethCall: AugmentedSubmittable<(action: EthereumTransactionTransactionAction | { Call: any } | { Create: any } | string | Uint8Array, input: Bytes | string | Uint8Array, value: Compact<u128> | AnyNumber | Uint8Array, gasLimit: Compact<u64> | AnyNumber | Uint8Array, storageLimit: Compact<u32> | AnyNumber | Uint8Array, validUntil: Compact<u32> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [EthereumTransactionTransactionAction, Bytes, Compact<u128>, Compact<u64>, Compact<u32>, Compact<u32>]>;
+      ethCall: AugmentedSubmittable<(action: EthereumTransactionTransactionAction | { Call: any } | { Create: any } | string | Uint8Array, input: Bytes | string | Uint8Array, value: Compact<u128> | AnyNumber | Uint8Array, gasLimit: Compact<u64> | AnyNumber | Uint8Array, storageLimit: Compact<u32> | AnyNumber | Uint8Array, accessList: Vec<EthereumTransactionAccessListItem> | (EthereumTransactionAccessListItem | { address?: any; storageKeys?: any } | string | Uint8Array)[], validUntil: Compact<u32> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [EthereumTransactionTransactionAction, Bytes, Compact<u128>, Compact<u64>, Compact<u32>, Vec<EthereumTransactionAccessListItem>, Compact<u32>]>;
+      /**
+       * Mark a given contract as published.
+       * 
+       * - `contract`: The contract to mark as published, the caller must the contract's
+       * maintainer
+       **/
+      publishContract: AugmentedSubmittable<(contract: H160 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [H160]>;
+      /**
+       * Mark a given contract as published without paying the publication fee
+       * 
+       * - `contract`: The contract to mark as published, the caller must be the contract's
+       * maintainer.
+       **/
+      publishFree: AugmentedSubmittable<(contract: H160 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [H160]>;
       /**
        * Issue an EVM call operation on a scheduled contract call, and
        * refund the unused gas reserved when the call was scheduled.
@@ -976,17 +1043,17 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `gas_limit`: the maximum gas the call can use
        * - `storage_limit`: the total bytes the contract's storage can increase by
        **/
-      scheduledCall: AugmentedSubmittable<(from: H160 | string | Uint8Array, target: H160 | string | Uint8Array, input: Bytes | string | Uint8Array, value: Compact<u128> | AnyNumber | Uint8Array, gasLimit: Compact<u64> | AnyNumber | Uint8Array, storageLimit: Compact<u32> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [H160, H160, Bytes, Compact<u128>, Compact<u64>, Compact<u32>]>;
+      scheduledCall: AugmentedSubmittable<(from: H160 | string | Uint8Array, target: H160 | string | Uint8Array, input: Bytes | string | Uint8Array, value: Compact<u128> | AnyNumber | Uint8Array, gasLimit: Compact<u64> | AnyNumber | Uint8Array, storageLimit: Compact<u32> | AnyNumber | Uint8Array, accessList: Vec<EthereumTransactionAccessListItem> | (EthereumTransactionAccessListItem | { address?: any; storageKeys?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [H160, H160, Bytes, Compact<u128>, Compact<u64>, Compact<u32>, Vec<EthereumTransactionAccessListItem>]>;
       /**
        * Remove a contract at a given address.
        * 
-       * - `contract`: The contract to remove, must not be marked as deployed
+       * - `contract`: The contract to remove, must not be marked as published
        **/
       selfdestruct: AugmentedSubmittable<(contract: H160 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [H160]>;
       /**
        * Set the code of a contract at a given address.
        * 
-       * - `contract`: The contract whose code is being set, must not be marked as deployed
+       * - `contract`: The contract whose code is being set, must not be marked as published
        * - `code`: The new ABI bundle for the contract
        **/
       setCode: AugmentedSubmittable<(contract: H160 | string | Uint8Array, code: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [H160, Bytes]>;
@@ -1011,7 +1078,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `eth_address`: The address to bind to the caller's account
        * - `eth_signature`: A signature generated by the address to prove ownership
        **/
-      claimAccount: AugmentedSubmittable<(ethAddress: H160 | string | Uint8Array, ethSignature: SpCoreEcdsaSignature | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [H160, SpCoreEcdsaSignature]>;
+      claimAccount: AugmentedSubmittable<(ethAddress: H160 | string | Uint8Array, ethSignature: U8aFixed | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [H160, U8aFixed]>;
       /**
        * Claim account mapping between Substrate accounts and a generated EVM
        * address based off of those accounts.
@@ -1455,6 +1522,14 @@ declare module '@polkadot/api-base/types/submittable' {
        **/
       fastMatchRedeems: AugmentedSubmittable<(redeemerList: Vec<AccountId32> | (AccountId32 | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<AccountId32>]>;
       /**
+       * Execute fast match for specific redeem requests, require completely matched.
+       * 
+       * Parameters:
+       * - `redeemer_list`: The list of redeem requests to execute fast redeem.
+       **/
+      fastMatchRedeemsCompletely: AugmentedSubmittable<(redeemerList: Vec<AccountId32> | (AccountId32 | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<AccountId32>]>;
+      forceBumpCurrentEra: AugmentedSubmittable<(bumpAmount: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32]>;
+      /**
        * Mint liquid currency by put locking up amount of staking currency.
        * 
        * Parameters:
@@ -1733,19 +1808,6 @@ declare module '@polkadot/api-base/types/submittable' {
        **/
       [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
-    homaXcm: {
-      /**
-       * Sets the xcm_dest_weight and fee for XCM operation of HomaXcm.
-       * 
-       * Parameters:
-       * - `updates`: tumple of (HomaXcmOperation, WeightChange, FeeChange).
-       **/
-      updateXcmDestWeightAndFee: AugmentedSubmittable<(updates: Vec<ITuple<[ModuleHomaXcmModuleHomaXcmOperation, Option<u64>, Option<u128>]>> | ([ModuleHomaXcmModuleHomaXcmOperation | 'XtokensTransfer' | 'XcmWithdrawUnbonded' | 'XcmBondExtra' | 'XcmUnbond' | number | Uint8Array, Option<u64> | null | object | string | Uint8Array, Option<u128> | null | object | string | Uint8Array])[]) => SubmittableExtrinsic<ApiType>, [Vec<ITuple<[ModuleHomaXcmModuleHomaXcmOperation, Option<u64>, Option<u128>]>>]>;
-      /**
-       * Generic tx
-       **/
-      [key: string]: SubmittableExtrinsicFunction<ApiType>;
-    };
     honzon: {
       /**
        * Adjust the loans of `currency_id` by specific
@@ -1758,14 +1820,14 @@ declare module '@polkadot/api-base/types/submittable' {
        * to caller according to the debit adjustment, negative means caller will payback some
        * amount of stablecoin to CDP according to to the debit adjustment.
        **/
-      adjustLoan: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, collateralAdjustment: i128 | AnyNumber | Uint8Array, debitAdjustment: i128 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, i128, i128]>;
+      adjustLoan: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, collateralAdjustment: i128 | AnyNumber | Uint8Array, debitAdjustment: i128 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, i128, i128]>;
       /**
        * Authorize `to` to manipulate the loan under `currency_id`
        * 
        * - `currency_id`: collateral currency id.
        * - `to`: authorizee account
        **/
-      authorize: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, to: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, MultiAddress]>;
+      authorize: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, to: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, MultiAddress]>;
       /**
        * Close caller's CDP which has debit but still in safe by use collateral to swap
        * stable token on DEX for clearing debit.
@@ -1774,7 +1836,23 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `max_collateral_amount`: the max collateral amount which is used to swap enough
        * stable token to clear debit.
        **/
-      closeLoanHasDebitByDex: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, maxCollateralAmount: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, Compact<u128>]>;
+      closeLoanHasDebitByDex: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, maxCollateralAmount: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, Compact<u128>]>;
+      /**
+       * Generate new debit in advance, buy collateral and deposit it into CDP.
+       * 
+       * - `currency_id`: collateral currency id.
+       * - `increase_debit_value`: the specific increased debit value for CDP
+       * - `min_increase_collateral`: the minimal increased collateral amount for CDP
+       **/
+      expandPositionCollateral: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, increaseDebitValue: u128 | AnyNumber | Uint8Array, minIncreaseCollateral: u128 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, u128, u128]>;
+      /**
+       * Sell ​​the collateral locked in CDP to get stable coin to repay the debit.
+       * 
+       * - `currency_id`: collateral currency id.
+       * - `decrease_collateral`: the specific decreased collateral amount for CDP
+       * - `min_decrease_debit_value`: the minimal decreased debit value for CDP
+       **/
+      shrinkPositionDebit: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, decreaseCollateral: u128 | AnyNumber | Uint8Array, minDecreaseDebitValue: u128 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, u128, u128]>;
       /**
        * Transfer the whole CDP of `from` under `currency_id` to caller's CDP
        * under the same `currency_id`, caller must have the authorization of
@@ -1783,18 +1861,38 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `currency_id`: collateral currency id.
        * - `from`: authorizer account
        **/
-      transferLoanFrom: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, from: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, MultiAddress]>;
+      transferLoanFrom: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, from: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, MultiAddress]>;
       /**
        * Cancel the authorization for `to` under `currency_id`
        * 
        * - `currency_id`: collateral currency id.
        * - `to`: authorizee account
        **/
-      unauthorize: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, to: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, MultiAddress]>;
+      unauthorize: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, to: MultiAddress | { Id: any } | { Index: any } | { Raw: any } | { Address32: any } | { Address20: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, MultiAddress]>;
       /**
        * Cancel all authorization of caller
        **/
       unauthorizeAll: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
+    };
+    honzonBridge: {
+      /**
+       * Exchange some amount of Bridge's stable coin into Native stable coin
+       * 
+       * Parameters:
+       * - `amount`: The amount of stable coin to exchange.
+       **/
+      fromBridged: AugmentedSubmittable<(amount: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Compact<u128>]>;
+      /**
+       * Exchange some amount of Native stable coin into Bridge's stable coin
+       * 
+       * Parameters:
+       * - `amount`: The amount of stable coin to exchange.
+       **/
+      toBridged: AugmentedSubmittable<(amount: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Compact<u128>]>;
       /**
        * Generic tx
        **/
@@ -1824,7 +1922,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `lp_currency_id`: LP token type
        * - `amount`: amount to stake
        **/
-      depositDexShare: AugmentedSubmittable<(lpCurrencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, amount: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, Compact<u128>]>;
+      depositDexShare: AugmentedSubmittable<(lpCurrencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, amount: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, Compact<u128>]>;
       /**
        * Update claim rewards deduction rates for all rewards currencies of specific PoolId
        * 
@@ -1848,7 +1946,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * 
        * - `updates`: Vec<(PoolId, Vec<(RewardCurrencyId, FixedAmountPerPeriod)>)>
        **/
-      updateIncentiveRewards: AugmentedSubmittable<(updates: Vec<ITuple<[ModuleIncentivesPoolId, Vec<ITuple<[AcalaPrimitivesCurrencyCurrencyId, u128]>>]>> | ([ModuleIncentivesPoolId | { Loans: any } | { Dex: any } | string | Uint8Array, Vec<ITuple<[AcalaPrimitivesCurrencyCurrencyId, u128]>> | ([AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, u128 | AnyNumber | Uint8Array])[]])[]) => SubmittableExtrinsic<ApiType>, [Vec<ITuple<[ModuleIncentivesPoolId, Vec<ITuple<[AcalaPrimitivesCurrencyCurrencyId, u128]>>]>>]>;
+      updateIncentiveRewards: AugmentedSubmittable<(updates: Vec<ITuple<[ModuleIncentivesPoolId, Vec<ITuple<[AcalaPrimitivesCurrencyCurrencyId, u128]>>]>> | ([ModuleIncentivesPoolId | { Loans: any } | { Dex: any } | string | Uint8Array, Vec<ITuple<[AcalaPrimitivesCurrencyCurrencyId, u128]>> | ([AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, u128 | AnyNumber | Uint8Array])[]])[]) => SubmittableExtrinsic<ApiType>, [Vec<ITuple<[ModuleIncentivesPoolId, Vec<ITuple<[AcalaPrimitivesCurrencyCurrencyId, u128]>>]>>]>;
       /**
        * Unstake LP token to remove shares of Pool::Dex
        * 
@@ -1857,7 +1955,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `lp_currency_id`: LP token type
        * - `amount`: amount to unstake
        **/
-      withdrawDexShare: AugmentedSubmittable<(lpCurrencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, amount: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, Compact<u128>]>;
+      withdrawDexShare: AugmentedSubmittable<(lpCurrencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, amount: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, Compact<u128>]>;
       /**
        * Generic tx
        **/
@@ -1955,7 +2053,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * - Plus Call Weight
        * # </weight>
        **/
-      asMulti: AugmentedSubmittable<(threshold: u16 | AnyNumber | Uint8Array, otherSignatories: Vec<AccountId32> | (AccountId32 | string | Uint8Array)[], maybeTimepoint: Option<PalletMultisigTimepoint> | null | object | string | Uint8Array, call: Bytes | string | Uint8Array, storeCall: bool | boolean | Uint8Array, maxWeight: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u16, Vec<AccountId32>, Option<PalletMultisigTimepoint>, Bytes, bool, u64]>;
+      asMulti: AugmentedSubmittable<(threshold: u16 | AnyNumber | Uint8Array, otherSignatories: Vec<AccountId32> | (AccountId32 | string | Uint8Array)[], maybeTimepoint: Option<PalletMultisigTimepoint> | null | object | string | Uint8Array, call: WrapperKeepOpaque<Call> | object | string | Uint8Array, storeCall: bool | boolean | Uint8Array, maxWeight: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u16, Vec<AccountId32>, Option<PalletMultisigTimepoint>, WrapperKeepOpaque<Call>, bool, u64]>;
       /**
        * Immediately dispatch a multi-signature call using a single approval from the caller.
        * 
@@ -2229,8 +2327,8 @@ declare module '@polkadot/api-base/types/submittable' {
        * an `AccountId32` value.
        * - `assets`: The assets to be withdrawn. The first item should be the currency used to to pay the fee on the
        * `dest` side. May not be empty.
-       * - `dest_weight`: Equal to the total weight on `dest` of the XCM message
-       * `Teleport { assets, effects: [ BuyExecution{..}, DepositAsset{..} ] }`.
+       * - `fee_asset_item`: The index into `assets` of the item which should be used to pay
+       * fees.
        * - `weight_limit`: The remote-side weight limit, if any, for the XCM fee purchase.
        **/
       limitedTeleportAssets: AugmentedSubmittable<(dest: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, beneficiary: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, assets: XcmVersionedMultiAssets | { V0: any } | { V1: any } | string | Uint8Array, feeAssetItem: u32 | AnyNumber | Uint8Array, weightLimit: XcmV2WeightLimit | { Unlimited: any } | { Limited: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [XcmVersionedMultiLocation, XcmVersionedMultiLocation, XcmVersionedMultiAssets, u32, XcmV2WeightLimit]>;
@@ -2268,10 +2366,40 @@ declare module '@polkadot/api-base/types/submittable' {
        * an `AccountId32` value.
        * - `assets`: The assets to be withdrawn. The first item should be the currency used to to pay the fee on the
        * `dest` side. May not be empty.
-       * - `dest_weight`: Equal to the total weight on `dest` of the XCM message
-       * `Teleport { assets, effects: [ BuyExecution{..}, DepositAsset{..} ] }`.
+       * - `fee_asset_item`: The index into `assets` of the item which should be used to pay
+       * fees.
        **/
       teleportAssets: AugmentedSubmittable<(dest: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, beneficiary: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, assets: XcmVersionedMultiAssets | { V0: any } | { V1: any } | string | Uint8Array, feeAssetItem: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [XcmVersionedMultiLocation, XcmVersionedMultiLocation, XcmVersionedMultiAssets, u32]>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
+    };
+    preimage: {
+      /**
+       * Register a preimage on-chain.
+       * 
+       * If the preimage was previously requested, no fees or deposits are taken for providing
+       * the preimage. Otherwise, a deposit is taken proportional to the size of the preimage.
+       **/
+      notePreimage: AugmentedSubmittable<(bytes: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes]>;
+      /**
+       * Request a preimage be uploaded to the chain without paying any fees or deposits.
+       * 
+       * If the preimage requests has already been provided on-chain, we unreserve any deposit
+       * a user may have paid, and take the control of the preimage out of their hands.
+       **/
+      requestPreimage: AugmentedSubmittable<(hash: H256 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [H256]>;
+      /**
+       * Clear an unrequested preimage from the runtime storage.
+       **/
+      unnotePreimage: AugmentedSubmittable<(hash: H256 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [H256]>;
+      /**
+       * Clear a previously made request for a preimage.
+       * 
+       * NOTE: THIS MUST NOT BE CALLED ON `hash` MORE TIMES THAN `request_preimage`.
+       **/
+      unrequestPreimage: AugmentedSubmittable<(hash: H256 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [H256]>;
       /**
        * Generic tx
        **/
@@ -2285,7 +2413,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * 
        * - `currency_id`: currency type.
        **/
-      lockPrice: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId]>;
+      lockPrice: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId]>;
       /**
        * Unlock the price and get the price from `PriceProvider` again
        * 
@@ -2293,7 +2421,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * 
        * - `currency_id`: currency type.
        **/
-      unlockPrice: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId]>;
+      unlockPrice: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId]>;
       /**
        * Generic tx
        **/
@@ -2315,7 +2443,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * Weight is a function of the number of proxies the user has (P).
        * # </weight>
        **/
-      addProxy: AugmentedSubmittable<(delegate: AccountId32 | string | Uint8Array, proxyType: RuntimeCommonProxyType | 'Any' | 'CancelProxy' | 'Governance' | 'Auction' | 'Swap' | 'Loan' | number | Uint8Array, delay: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, RuntimeCommonProxyType, u32]>;
+      addProxy: AugmentedSubmittable<(delegate: AccountId32 | string | Uint8Array, proxyType: RuntimeCommonProxyType | 'Any' | 'CancelProxy' | 'Governance' | 'Auction' | 'Swap' | 'Loan' | 'DexLiquidity' | number | Uint8Array, delay: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, RuntimeCommonProxyType, u32]>;
       /**
        * Publish the hash of a proxy-call that will be made in the future.
        * 
@@ -2365,7 +2493,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * # </weight>
        * TODO: Might be over counting 1 read
        **/
-      anonymous: AugmentedSubmittable<(proxyType: RuntimeCommonProxyType | 'Any' | 'CancelProxy' | 'Governance' | 'Auction' | 'Swap' | 'Loan' | number | Uint8Array, delay: u32 | AnyNumber | Uint8Array, index: u16 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [RuntimeCommonProxyType, u32, u16]>;
+      anonymous: AugmentedSubmittable<(proxyType: RuntimeCommonProxyType | 'Any' | 'CancelProxy' | 'Governance' | 'Auction' | 'Swap' | 'Loan' | 'DexLiquidity' | number | Uint8Array, delay: u32 | AnyNumber | Uint8Array, index: u16 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [RuntimeCommonProxyType, u32, u16]>;
       /**
        * Removes a previously spawned anonymous proxy.
        * 
@@ -2388,7 +2516,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * Weight is a function of the number of proxies the user has (P).
        * # </weight>
        **/
-      killAnonymous: AugmentedSubmittable<(spawner: AccountId32 | string | Uint8Array, proxyType: RuntimeCommonProxyType | 'Any' | 'CancelProxy' | 'Governance' | 'Auction' | 'Swap' | 'Loan' | number | Uint8Array, index: u16 | AnyNumber | Uint8Array, height: Compact<u32> | AnyNumber | Uint8Array, extIndex: Compact<u32> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, RuntimeCommonProxyType, u16, Compact<u32>, Compact<u32>]>;
+      killAnonymous: AugmentedSubmittable<(spawner: AccountId32 | string | Uint8Array, proxyType: RuntimeCommonProxyType | 'Any' | 'CancelProxy' | 'Governance' | 'Auction' | 'Swap' | 'Loan' | 'DexLiquidity' | number | Uint8Array, index: u16 | AnyNumber | Uint8Array, height: Compact<u32> | AnyNumber | Uint8Array, extIndex: Compact<u32> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, RuntimeCommonProxyType, u16, Compact<u32>, Compact<u32>]>;
       /**
        * Dispatch the given `call` from an account that the sender is authorised for through
        * `add_proxy`.
@@ -2491,7 +2619,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * Weight is a function of the number of proxies the user has (P).
        * # </weight>
        **/
-      removeProxy: AugmentedSubmittable<(delegate: AccountId32 | string | Uint8Array, proxyType: RuntimeCommonProxyType | 'Any' | 'CancelProxy' | 'Governance' | 'Auction' | 'Swap' | 'Loan' | number | Uint8Array, delay: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, RuntimeCommonProxyType, u32]>;
+      removeProxy: AugmentedSubmittable<(delegate: AccountId32 | string | Uint8Array, proxyType: RuntimeCommonProxyType | 'Any' | 'CancelProxy' | 'Governance' | 'Auction' | 'Swap' | 'Loan' | 'DexLiquidity' | number | Uint8Array, delay: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AccountId32, RuntimeCommonProxyType, u32]>;
       /**
        * Generic tx
        **/
@@ -2515,7 +2643,7 @@ declare module '@polkadot/api-base/types/submittable' {
       /**
        * Anonymously schedule a task.
        **/
-      schedule: AugmentedSubmittable<(when: u32 | AnyNumber | Uint8Array, maybePeriodic: Option<ITuple<[u32, u32]>> | null | object | string | Uint8Array, priority: u8 | AnyNumber | Uint8Array, call: Call | { callIndex?: any; args?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, Option<ITuple<[u32, u32]>>, u8, Call]>;
+      schedule: AugmentedSubmittable<(when: u32 | AnyNumber | Uint8Array, maybePeriodic: Option<ITuple<[u32, u32]>> | null | object | string | Uint8Array, priority: u8 | AnyNumber | Uint8Array, call: FrameSupportScheduleMaybeHashed | { Value: any } | { Hash: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, Option<ITuple<[u32, u32]>>, u8, FrameSupportScheduleMaybeHashed]>;
       /**
        * Anonymously schedule a task after a delay.
        * 
@@ -2523,11 +2651,11 @@ declare module '@polkadot/api-base/types/submittable' {
        * Same as [`schedule`].
        * # </weight>
        **/
-      scheduleAfter: AugmentedSubmittable<(after: u32 | AnyNumber | Uint8Array, maybePeriodic: Option<ITuple<[u32, u32]>> | null | object | string | Uint8Array, priority: u8 | AnyNumber | Uint8Array, call: Call | { callIndex?: any; args?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, Option<ITuple<[u32, u32]>>, u8, Call]>;
+      scheduleAfter: AugmentedSubmittable<(after: u32 | AnyNumber | Uint8Array, maybePeriodic: Option<ITuple<[u32, u32]>> | null | object | string | Uint8Array, priority: u8 | AnyNumber | Uint8Array, call: FrameSupportScheduleMaybeHashed | { Value: any } | { Hash: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, Option<ITuple<[u32, u32]>>, u8, FrameSupportScheduleMaybeHashed]>;
       /**
        * Schedule a named task.
        **/
-      scheduleNamed: AugmentedSubmittable<(id: Bytes | string | Uint8Array, when: u32 | AnyNumber | Uint8Array, maybePeriodic: Option<ITuple<[u32, u32]>> | null | object | string | Uint8Array, priority: u8 | AnyNumber | Uint8Array, call: Call | { callIndex?: any; args?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes, u32, Option<ITuple<[u32, u32]>>, u8, Call]>;
+      scheduleNamed: AugmentedSubmittable<(id: Bytes | string | Uint8Array, when: u32 | AnyNumber | Uint8Array, maybePeriodic: Option<ITuple<[u32, u32]>> | null | object | string | Uint8Array, priority: u8 | AnyNumber | Uint8Array, call: FrameSupportScheduleMaybeHashed | { Value: any } | { Hash: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes, u32, Option<ITuple<[u32, u32]>>, u8, FrameSupportScheduleMaybeHashed]>;
       /**
        * Schedule a named task after a delay.
        * 
@@ -2535,7 +2663,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * Same as [`schedule_named`](Self::schedule_named).
        * # </weight>
        **/
-      scheduleNamedAfter: AugmentedSubmittable<(id: Bytes | string | Uint8Array, after: u32 | AnyNumber | Uint8Array, maybePeriodic: Option<ITuple<[u32, u32]>> | null | object | string | Uint8Array, priority: u8 | AnyNumber | Uint8Array, call: Call | { callIndex?: any; args?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes, u32, Option<ITuple<[u32, u32]>>, u8, Call]>;
+      scheduleNamedAfter: AugmentedSubmittable<(id: Bytes | string | Uint8Array, after: u32 | AnyNumber | Uint8Array, maybePeriodic: Option<ITuple<[u32, u32]>> | null | object | string | Uint8Array, priority: u8 | AnyNumber | Uint8Array, call: FrameSupportScheduleMaybeHashed | { Value: any } | { Hash: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes, u32, Option<ITuple<[u32, u32]>>, u8, FrameSupportScheduleMaybeHashed]>;
       /**
        * Generic tx
        **/
@@ -2591,6 +2719,19 @@ declare module '@polkadot/api-base/types/submittable' {
        * - `duration`:  new session duration.
        **/
       scheduleSessionDuration: AugmentedSubmittable<(startSession: Compact<u32> | AnyNumber | Uint8Array, duration: Compact<u32> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Compact<u32>, Compact<u32>]>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
+    };
+    stableAsset: {
+      createPool: AugmentedSubmittable<(poolAsset: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, assets: Vec<AcalaPrimitivesCurrencyCurrencyId> | (AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array)[], precisions: Vec<u128> | (u128 | AnyNumber | Uint8Array)[], mintFee: u128 | AnyNumber | Uint8Array, swapFee: u128 | AnyNumber | Uint8Array, redeemFee: u128 | AnyNumber | Uint8Array, initialA: u128 | AnyNumber | Uint8Array, feeRecipient: AccountId32 | string | Uint8Array, yieldRecipient: AccountId32 | string | Uint8Array, precision: u128 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, Vec<AcalaPrimitivesCurrencyCurrencyId>, Vec<u128>, u128, u128, u128, u128, AccountId32, AccountId32, u128]>;
+      mint: AugmentedSubmittable<(poolId: u32 | AnyNumber | Uint8Array, amounts: Vec<u128> | (u128 | AnyNumber | Uint8Array)[], minMintAmount: u128 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, Vec<u128>, u128]>;
+      modifyA: AugmentedSubmittable<(poolId: u32 | AnyNumber | Uint8Array, a: u128 | AnyNumber | Uint8Array, futureABlock: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, u128, u32]>;
+      redeemMulti: AugmentedSubmittable<(poolId: u32 | AnyNumber | Uint8Array, amounts: Vec<u128> | (u128 | AnyNumber | Uint8Array)[], maxRedeemAmount: u128 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, Vec<u128>, u128]>;
+      redeemProportion: AugmentedSubmittable<(poolId: u32 | AnyNumber | Uint8Array, amount: u128 | AnyNumber | Uint8Array, minRedeemAmounts: Vec<u128> | (u128 | AnyNumber | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [u32, u128, Vec<u128>]>;
+      redeemSingle: AugmentedSubmittable<(poolId: u32 | AnyNumber | Uint8Array, amount: u128 | AnyNumber | Uint8Array, i: u32 | AnyNumber | Uint8Array, minRedeemAmount: u128 | AnyNumber | Uint8Array, assetLength: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, u128, u32, u128, u32]>;
+      swap: AugmentedSubmittable<(poolId: u32 | AnyNumber | Uint8Array, i: u32 | AnyNumber | Uint8Array, j: u32 | AnyNumber | Uint8Array, dx: u128 | AnyNumber | Uint8Array, minDy: u128 | AnyNumber | Uint8Array, assetLength: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32, u32, u32, u128, u128, u32]>;
       /**
        * Generic tx
        **/
@@ -2681,11 +2822,6 @@ declare module '@polkadot/api-base/types/submittable' {
       remark: AugmentedSubmittable<(remark: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes]>;
       /**
        * Make some on-chain remark and emit event.
-       * 
-       * # <weight>
-       * - `O(b)` where b is the length of the remark.
-       * - 1 event.
-       * # </weight>
        **/
       remarkWithEvent: AugmentedSubmittable<(remark: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Bytes]>;
       /**
@@ -3107,17 +3243,27 @@ declare module '@polkadot/api-base/types/submittable' {
     };
     transactionPayment: {
       /**
+       * Disable charge fee pool.
+       **/
+      disableChargeFeePool: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId]>;
+      /**
        * Enable and initialize charge fee pool.
        **/
-      enableChargeFeePool: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, poolSize: u128 | AnyNumber | Uint8Array, swapThreshold: u128 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, u128, u128]>;
+      enableChargeFeePool: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, swapPath: Vec<AcalaPrimitivesCurrencyCurrencyId> | (AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array)[], poolSize: u128 | AnyNumber | Uint8Array, swapThreshold: u128 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, Vec<AcalaPrimitivesCurrencyCurrencyId>, u128, u128]>;
       /**
        * Set fee swap path
        **/
       setAlternativeFeeSwapPath: AugmentedSubmittable<(feeSwapPath: Option<Vec<AcalaPrimitivesCurrencyCurrencyId>> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Option<Vec<AcalaPrimitivesCurrencyCurrencyId>>]>;
       /**
-       * Set swap balance threshold of native asset
+       * Dapp wrap call, and user pay tx fee as provided currency, this dispatch call should make
+       * sure the currency is exist in tx fee pool.
        **/
-      setSwapBalanceThreshold: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, swapThreshold: u128 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, u128]>;
+      withFeeCurrency: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, call: Call | { callIndex?: any; args?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, Call]>;
+      /**
+       * Dapp wrap call, and user pay tx fee as provided trading path. this dispatch call should
+       * make sure the trading path is valid.
+       **/
+      withFeePath: AugmentedSubmittable<(feeSwapPath: Vec<AcalaPrimitivesCurrencyCurrencyId> | (AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array)[], call: Call | { callIndex?: any; args?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Vec<AcalaPrimitivesCurrencyCurrencyId>, Call]>;
       /**
        * Generic tx
        **/
@@ -3250,6 +3396,102 @@ declare module '@polkadot/api-base/types/submittable' {
        **/
       [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
+    xcmInterface: {
+      /**
+       * Sets the xcm_dest_weight and fee for XCM operation of XcmInterface.
+       * 
+       * Parameters:
+       * - `updates`: vec of tuple: (XcmInterfaceOperation, WeightChange, FeeChange).
+       **/
+      updateXcmDestWeightAndFee: AugmentedSubmittable<(updates: Vec<ITuple<[ModuleXcmInterfaceModuleXcmInterfaceOperation, Option<u64>, Option<u128>]>> | ([ModuleXcmInterfaceModuleXcmInterfaceOperation | { XtokensTransfer: any } | { HomaWithdrawUnbonded: any } | { HomaBondExtra: any } | { HomaUnbond: any } | { ParachainFee: any } | string | Uint8Array, Option<u64> | null | object | string | Uint8Array, Option<u128> | null | object | string | Uint8Array])[]) => SubmittableExtrinsic<ApiType>, [Vec<ITuple<[ModuleXcmInterfaceModuleXcmInterfaceOperation, Option<u64>, Option<u128>]>>]>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
+    };
+    xcmpQueue: {
+      /**
+       * Resumes all XCM executions for the XCMP queue.
+       * 
+       * Note that this function doesn't change the status of the in/out bound channels.
+       * 
+       * - `origin`: Must pass `ControllerOrigin`.
+       **/
+      resumeXcmExecution: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
+      /**
+       * Services a single overweight XCM.
+       * 
+       * - `origin`: Must pass `ExecuteOverweightOrigin`.
+       * - `index`: The index of the overweight XCM to service
+       * - `weight_limit`: The amount of weight that XCM execution may take.
+       * 
+       * Errors:
+       * - `BadOverweightIndex`: XCM under `index` is not found in the `Overweight` storage map.
+       * - `BadXcm`: XCM under `index` cannot be properly decoded into a valid XCM format.
+       * - `WeightOverLimit`: XCM execution may use greater `weight_limit`.
+       * 
+       * Events:
+       * - `OverweightServiced`: On success.
+       **/
+      serviceOverweight: AugmentedSubmittable<(index: u64 | AnyNumber | Uint8Array, weightLimit: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64, u64]>;
+      /**
+       * Suspends all XCM executions for the XCMP queue, regardless of the sender's origin.
+       * 
+       * - `origin`: Must pass `ControllerOrigin`.
+       **/
+      suspendXcmExecution: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
+      /**
+       * Overwrites the number of pages of messages which must be in the queue after which we drop any further
+       * messages from the channel.
+       * 
+       * - `origin`: Must pass `Root`.
+       * - `new`: Desired value for `QueueConfigData.drop_threshold`
+       **/
+      updateDropThreshold: AugmentedSubmittable<(updated: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32]>;
+      /**
+       * Overwrites the number of pages of messages which the queue must be reduced to before it signals that
+       * message sending may recommence after it has been suspended.
+       * 
+       * - `origin`: Must pass `Root`.
+       * - `new`: Desired value for `QueueConfigData.resume_threshold`
+       **/
+      updateResumeThreshold: AugmentedSubmittable<(updated: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32]>;
+      /**
+       * Overwrites the number of pages of messages which must be in the queue for the other side to be told to
+       * suspend their sending.
+       * 
+       * - `origin`: Must pass `Root`.
+       * - `new`: Desired value for `QueueConfigData.suspend_value`
+       **/
+      updateSuspendThreshold: AugmentedSubmittable<(updated: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u32]>;
+      /**
+       * Overwrites the amount of remaining weight under which we stop processing messages.
+       * 
+       * - `origin`: Must pass `Root`.
+       * - `new`: Desired value for `QueueConfigData.threshold_weight`
+       **/
+      updateThresholdWeight: AugmentedSubmittable<(updated: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
+      /**
+       * Overwrites the speed to which the available weight approaches the maximum weight.
+       * A lower number results in a faster progression. A value of 1 makes the entire weight available initially.
+       * 
+       * - `origin`: Must pass `Root`.
+       * - `new`: Desired value for `QueueConfigData.weight_restrict_decay`.
+       **/
+      updateWeightRestrictDecay: AugmentedSubmittable<(updated: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
+      /**
+       * Overwrite the maximum amount of weight any individual message may consume.
+       * Messages above this weight go into the overweight queue and may only be serviced explicitly.
+       * 
+       * - `origin`: Must pass `Root`.
+       * - `new`: Desired value for `QueueConfigData.xcmp_max_individual_weight`.
+       **/
+      updateXcmpMaxIndividualWeight: AugmentedSubmittable<(updated: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [u64]>;
+      /**
+       * Generic tx
+       **/
+      [key: string]: SubmittableExtrinsicFunction<ApiType>;
+    };
     xTokens: {
       /**
        * Transfer native currencies.
@@ -3265,7 +3507,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * by the network, and if the receiving chain would handle
        * messages correctly.
        **/
-      transfer: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, amount: u128 | AnyNumber | Uint8Array, dest: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, destWeight: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, u128, XcmVersionedMultiLocation, u64]>;
+      transfer: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, amount: u128 | AnyNumber | Uint8Array, dest: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, destWeight: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, u128, XcmVersionedMultiLocation, u64]>;
       /**
        * Transfer `MultiAsset`.
        * 
@@ -3281,6 +3523,24 @@ declare module '@polkadot/api-base/types/submittable' {
        * messages correctly.
        **/
       transferMultiasset: AugmentedSubmittable<(asset: XcmVersionedMultiAsset | { V0: any } | { V1: any } | string | Uint8Array, dest: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, destWeight: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [XcmVersionedMultiAsset, XcmVersionedMultiLocation, u64]>;
+      /**
+       * Transfer several `MultiAsset` specifying the item to be used as fee
+       * 
+       * `dest_weight` is the weight for XCM execution on the dest chain, and
+       * it would be charged from the transferred assets. If set below
+       * requirements, the execution may fail and assets wouldn't be
+       * received.
+       * 
+       * `fee_item` is index of the MultiAssets that we want to use for
+       * payment
+       * 
+       * It's a no-op if any error on local XCM execution or message sending.
+       * Note sending assets out per se doesn't guarantee they would be
+       * received. Receiving depends on if the XCM message could be delivered
+       * by the network, and if the receiving chain would handle
+       * messages correctly.
+       **/
+      transferMultiassets: AugmentedSubmittable<(assets: XcmVersionedMultiAssets | { V0: any } | { V1: any } | string | Uint8Array, feeItem: u32 | AnyNumber | Uint8Array, dest: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, destWeight: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [XcmVersionedMultiAssets, u32, XcmVersionedMultiLocation, u64]>;
       /**
        * Transfer `MultiAsset` specifying the fee and amount as separate.
        * 
@@ -3306,6 +3566,24 @@ declare module '@polkadot/api-base/types/submittable' {
        **/
       transferMultiassetWithFee: AugmentedSubmittable<(asset: XcmVersionedMultiAsset | { V0: any } | { V1: any } | string | Uint8Array, fee: XcmVersionedMultiAsset | { V0: any } | { V1: any } | string | Uint8Array, dest: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, destWeight: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [XcmVersionedMultiAsset, XcmVersionedMultiAsset, XcmVersionedMultiLocation, u64]>;
       /**
+       * Transfer several currencies specifying the item to be used as fee
+       * 
+       * `dest_weight` is the weight for XCM execution on the dest chain, and
+       * it would be charged from the transferred assets. If set below
+       * requirements, the execution may fail and assets wouldn't be
+       * received.
+       * 
+       * `fee_item` is index of the currencies tuple that we want to use for
+       * payment
+       * 
+       * It's a no-op if any error on local XCM execution or message sending.
+       * Note sending assets out per se doesn't guarantee they would be
+       * received. Receiving depends on if the XCM message could be delivered
+       * by the network, and if the receiving chain would handle
+       * messages correctly.
+       **/
+      transferMulticurrencies: AugmentedSubmittable<(currencies: Vec<ITuple<[AcalaPrimitivesCurrencyCurrencyId, u128]>> | ([AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, u128 | AnyNumber | Uint8Array])[], feeItem: u32 | AnyNumber | Uint8Array, dest: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, destWeight: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Vec<ITuple<[AcalaPrimitivesCurrencyCurrencyId, u128]>>, u32, XcmVersionedMultiLocation, u64]>;
+      /**
        * Transfer native currencies specifying the fee and amount as
        * separate.
        * 
@@ -3328,7 +3606,7 @@ declare module '@polkadot/api-base/types/submittable' {
        * by the network, and if the receiving chain would handle
        * messages correctly.
        **/
-      transferWithFee: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, amount: u128 | AnyNumber | Uint8Array, fee: u128 | AnyNumber | Uint8Array, dest: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, destWeight: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, u128, u128, XcmVersionedMultiLocation, u64]>;
+      transferWithFee: AugmentedSubmittable<(currencyId: AcalaPrimitivesCurrencyCurrencyId | { Token: any } | { DexShare: any } | { Erc20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, amount: u128 | AnyNumber | Uint8Array, fee: u128 | AnyNumber | Uint8Array, dest: XcmVersionedMultiLocation | { V0: any } | { V1: any } | string | Uint8Array, destWeight: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesCurrencyCurrencyId, u128, u128, XcmVersionedMultiLocation, u64]>;
       /**
        * Generic tx
        **/

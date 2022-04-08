@@ -3,17 +3,17 @@
 
 import type { AccountId32, H160, Percent, Permill } from '@acala-network/types/interfaces/runtime';
 import type { ApiTypes } from '@polkadot/api-base/types';
-import type { Vec, bool, u128, u16, u32, u64 } from '@polkadot/types-codec';
+import type { Option, Vec, bool, u128, u16, u32, u64 } from '@polkadot/types-codec';
 import type { Codec, ITuple } from '@polkadot/types-codec/types';
-import type { AcalaPrimitivesCurrencyCurrencyId, FrameSupportPalletId, FrameSupportWeightsRuntimeDbWeight, FrameSupportWeightsWeightToFeeCoefficient, FrameSystemLimitsBlockLength, FrameSystemLimitsBlockWeights, SpVersionRuntimeVersion, XcmV1MultiLocation } from '@polkadot/types/lookup';
+import type { AcalaPrimitivesCurrencyCurrencyId, FrameSupportPalletId, FrameSupportWeightsRuntimeDbWeight, FrameSupportWeightsWeightToFeeCoefficient, FrameSystemLimitsBlockLength, FrameSystemLimitsBlockWeights, SpVersionRuntimeVersion, XcmV1MultiLocation } from './types-lookup';
 
 declare module '@polkadot/api-base/types/consts' {
   export interface AugmentedConsts<ApiType extends ApiTypes> {
     assetRegistry: {
       /**
-       * The Currency ID for the Liquid Croadloan asset
+       * The Currency ID for the staking currency
        **/
-      liquidCroadloanCurrencyId: AcalaPrimitivesCurrencyCurrencyId & AugmentedConst<ApiType>;
+      stakingCurrencyId: AcalaPrimitivesCurrencyCurrencyId & AugmentedConst<ApiType>;
       /**
        * Generic const
        **/
@@ -108,6 +108,8 @@ declare module '@polkadot/api-base/types/consts' {
       dataDepositPerByte: u128 & AugmentedConst<ApiType>;
       /**
        * Maximum acceptable reason length.
+       * 
+       * Benchmarks depend on this value, be sure to update weights file when changing this value
        **/
       maximumReasonLength: u32 & AugmentedConst<ApiType>;
       /**
@@ -116,6 +118,11 @@ declare module '@polkadot/api-base/types/consts' {
       [key: string]: Codec;
     };
     cdpEngine: {
+      /**
+       * The alternative swap path joint list, which can be concated to
+       * alternative swap path when cdp treasury swap collateral to stable.
+       **/
+      alternativeSwapPathJointList: Vec<Vec<AcalaPrimitivesCurrencyCurrencyId>> & AugmentedConst<ApiType>;
       /**
        * The list of valid collateral currency types
        **/
@@ -295,6 +302,10 @@ declare module '@polkadot/api-base/types/consts' {
     };
     dex: {
       /**
+       * The extended provisioning blocks since the `not_before` of provisioning.
+       **/
+      extendedProvisioningBlocks: u32 & AugmentedConst<ApiType>;
+      /**
        * Trading fee rate
        * The first item of the tuple is the numerator of the fee rate, second
        * item is the denominator, fee_rate = numerator / denominator,
@@ -331,10 +342,6 @@ declare module '@polkadot/api-base/types/consts' {
        **/
       chainId: u64 & AugmentedConst<ApiType>;
       /**
-       * The fee for deploying the contract.
-       **/
-      deploymentFee: u128 & AugmentedConst<ApiType>;
-      /**
        * Deposit for the developer.
        **/
       developerDeposit: u128 & AugmentedConst<ApiType>;
@@ -348,6 +355,10 @@ declare module '@polkadot/api-base/types/consts' {
        **/
       newContractExtraBytes: u32 & AugmentedConst<ApiType>;
       /**
+       * The fee for publishing the contract.
+       **/
+      publicationFee: u128 & AugmentedConst<ApiType>;
+      /**
        * Storage required for per byte.
        **/
       storageDepositPerByte: u128 & AugmentedConst<ApiType>;
@@ -357,6 +368,16 @@ declare module '@polkadot/api-base/types/consts' {
        * Provide to the client
        **/
       txFeePerGas: u128 & AugmentedConst<ApiType>;
+      /**
+       * Generic const
+       **/
+      [key: string]: Codec;
+    };
+    evmAccounts: {
+      /**
+       * Chain ID of EVM.
+       **/
+      chainId: u64 & AugmentedConst<ApiType>;
       /**
        * Generic const
        **/
@@ -405,29 +426,26 @@ declare module '@polkadot/api-base/types/consts' {
        **/
       [key: string]: Codec;
     };
-    homaXcm: {
-      /**
-       * The account of parachain on the relaychain.
-       **/
-      parachainAccount: AccountId32 & AugmentedConst<ApiType>;
-      /**
-       * Unbonding slashing spans for unbonding on the relaychain.
-       **/
-      relayChainUnbondingSlashingSpans: u32 & AugmentedConst<ApiType>;
-      /**
-       * The currency id of the Staking asset
-       **/
-      stakingCurrencyId: AcalaPrimitivesCurrencyCurrencyId & AugmentedConst<ApiType>;
-      /**
-       * Generic const
-       **/
-      [key: string]: Codec;
-    };
     honzon: {
       /**
        * Reserved amount per authorization.
        **/
       depositPerAuthorization: u128 & AugmentedConst<ApiType>;
+      /**
+       * Generic const
+       **/
+      [key: string]: Codec;
+    };
+    honzonBridge: {
+      /**
+       * Currency ID of the Bridge's Stable currency
+       **/
+      bridgedStableCoinCurrencyId: AcalaPrimitivesCurrencyCurrencyId & AugmentedConst<ApiType>;
+      palletId: FrameSupportPalletId & AugmentedConst<ApiType>;
+      /**
+       * Currency ID of current chain's stable currency
+       **/
+      stablecoinCurrencyId: AcalaPrimitivesCurrencyCurrencyId & AugmentedConst<ApiType>;
       /**
        * Generic const
        **/
@@ -448,6 +466,14 @@ declare module '@polkadot/api-base/types/consts' {
        * The period to accumulate rewards
        **/
       accumulatePeriod: u32 & AugmentedConst<ApiType>;
+      /**
+       * Additional share amount from earning
+       **/
+      earnShareBooster: Permill & AugmentedConst<ApiType>;
+      /**
+       * The native currency for earning staking
+       **/
+      nativeCurrencyId: AcalaPrimitivesCurrencyCurrencyId & AugmentedConst<ApiType>;
       /**
        * The module id, keep DexShare LP.
        **/
@@ -540,6 +566,11 @@ declare module '@polkadot/api-base/types/consts' {
        **/
       getStakingCurrencyId: AcalaPrimitivesCurrencyCurrencyId & AugmentedConst<ApiType>;
       /**
+       * The staking reward rate per relaychain block for StakingCurrency.
+       * In fact, the staking reward is not settled according to the block on relaychain.
+       **/
+      rewardRatePerRelaychainBlock: u128 & AugmentedConst<ApiType>;
+      /**
        * The fixed prices of stable currency, it should be 1 USD in Acala.
        **/
       stableCurrencyFixedPrice: u128 & AugmentedConst<ApiType>;
@@ -607,6 +638,16 @@ declare module '@polkadot/api-base/types/consts' {
        **/
       [key: string]: Codec;
     };
+    stableAsset: {
+      aPrecision: u128 & AugmentedConst<ApiType>;
+      feePrecision: u128 & AugmentedConst<ApiType>;
+      palletId: FrameSupportPalletId & AugmentedConst<ApiType>;
+      poolAssetLimit: u32 & AugmentedConst<ApiType>;
+      /**
+       * Generic const
+       **/
+      [key: string]: Codec;
+    };
     system: {
       /**
        * Maximum number of block number to block hash mappings to keep (oldest pruned first).
@@ -661,6 +702,8 @@ declare module '@polkadot/api-base/types/consts' {
       dataDepositPerByte: u128 & AugmentedConst<ApiType>;
       /**
        * Maximum acceptable reason length.
+       * 
+       * Benchmarks depend on this value, be sure to update weights file when changing this value
        **/
       maximumReasonLength: u32 & AugmentedConst<ApiType>;
       /**
@@ -689,13 +732,21 @@ declare module '@polkadot/api-base/types/consts' {
     };
     transactionPayment: {
       /**
+       * Alternative fee surplus if not payed with native asset.
+       **/
+      alternativeFeeSurplus: Percent & AugmentedConst<ApiType>;
+      /**
        * Deposit for setting an Alternative fee swap
        **/
       alternativeFeeSwapDeposit: u128 & AugmentedConst<ApiType>;
       /**
-       * Default fee swap path list
+       * Custom fee surplus if not payed with native asset.
        **/
-      defaultFeeSwapPathList: Vec<Vec<AcalaPrimitivesCurrencyCurrencyId>> & AugmentedConst<ApiType>;
+      customFeeSurplus: Percent & AugmentedConst<ApiType>;
+      /**
+       * Default fee tokens used in tx fee pool.
+       **/
+      defaultFeeTokens: Vec<AcalaPrimitivesCurrencyCurrencyId> & AugmentedConst<ApiType>;
       /**
        * When swap with DEX, the acceptable max slippage for the price from oracle.
        **/
@@ -770,6 +821,8 @@ declare module '@polkadot/api-base/types/consts' {
       burn: Permill & AugmentedConst<ApiType>;
       /**
        * The maximum number of approvals that can wait in the spending queue.
+       * 
+       * NOTE: This parameter is also used within the Bounties Pallet extension if enabled.
        **/
       maxApprovals: u32 & AugmentedConst<ApiType>;
       /**
@@ -781,6 +834,10 @@ declare module '@polkadot/api-base/types/consts' {
        * An accepted proposal gets these back. A rejected proposal does not.
        **/
       proposalBond: Permill & AugmentedConst<ApiType>;
+      /**
+       * Maximum amount of funds that should be placed in a deposit for making a proposal.
+       **/
+      proposalBondMaximum: Option<u128> & AugmentedConst<ApiType>;
       /**
        * Minimum amount of funds that should be placed in a deposit for making a proposal.
        **/
@@ -809,6 +866,24 @@ declare module '@polkadot/api-base/types/consts' {
        * The minimum amount transferred to call `vested_transfer`.
        **/
       minVestedTransfer: u128 & AugmentedConst<ApiType>;
+      /**
+       * Generic const
+       **/
+      [key: string]: Codec;
+    };
+    xcmInterface: {
+      /**
+       * The account of parachain on the relaychain.
+       **/
+      parachainAccount: AccountId32 & AugmentedConst<ApiType>;
+      /**
+       * Unbonding slashing spans for unbonding on the relaychain.
+       **/
+      relayChainUnbondingSlashingSpans: u32 & AugmentedConst<ApiType>;
+      /**
+       * The currency id of the Staking asset
+       **/
+      stakingCurrencyId: AcalaPrimitivesCurrencyCurrencyId & AugmentedConst<ApiType>;
       /**
        * Generic const
        **/

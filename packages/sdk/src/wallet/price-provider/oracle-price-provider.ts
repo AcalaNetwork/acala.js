@@ -12,7 +12,7 @@ import {
 } from '@acala-network/sdk-core';
 import { OracleKey } from '@acala-network/types/interfaces';
 import { Storage } from '../../utils/storage';
-import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/interfaces/types-lookup';
 import { SignedBlock } from '@polkadot/types/interfaces';
 import { getAllLiquidCrowdloanTokenPrice } from '../utils/get-liquid-crowdloan-token-price';
 

@@ -1,7 +1,7 @@
 import { AnyApi, createLiquidCrowdloanName, FixedPointNumber } from '@acala-network/sdk-core';
 import { u128 } from '@polkadot/types-codec';
 import { Extrinsic, SignedBlock } from '@polkadot/types/interfaces';
-import { CumulusPrimitivesParachainInherentParachainInherentData } from '@polkadot/types/lookup';
+import { CumulusPrimitivesParachainInherentParachainInherentData } from '@acala-network/types/interfaces/types-lookup';
 
 // current crowdloan token lease
 const CROWDLOAN_TOKEN_LEASE: number[] = [13];

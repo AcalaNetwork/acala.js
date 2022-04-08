@@ -1,9 +1,10 @@
 import { AnyApi, FixedPointNumber, forceToCurrencyName, MaybeCurrency, Token } from '@acala-network/sdk-core';
-import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/interfaces/types-lookup';
 import { memoize } from '@polkadot/util';
 import { BehaviorSubject, firstValueFrom, Observable, combineLatest, of } from 'rxjs';
 import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
-import { BaseSDK, IncentivePoolNotFound, Wallet } from '..';
+import { BaseSDK, Wallet } from '..';
+import { IncentivePoolNotFound } from '../liquidity/errors';
 import { createStorages } from './storages';
 import {
   BaseIncentivePool,

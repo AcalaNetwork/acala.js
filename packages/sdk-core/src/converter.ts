@@ -1,5 +1,5 @@
 import { CurrencyId, TokenSymbol } from '@acala-network/types/interfaces';
-import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/interfaces/types-lookup';
 import { isArray } from 'lodash';
 import {
   ConvertToCurrencyIdFailed,

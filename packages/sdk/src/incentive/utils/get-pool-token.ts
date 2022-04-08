@@ -1,4 +1,4 @@
-import { AcalaPrimitivesCurrencyCurrencyId, ModuleIncentivesPoolId } from '@polkadot/types/lookup';
+import { AcalaPrimitivesCurrencyCurrencyId, ModuleIncentivesPoolId } from '@acala-network/types/interfaces/types-lookup';
 
 export function getPoolToken(poolId: ModuleIncentivesPoolId): AcalaPrimitivesCurrencyCurrencyId {
   if (poolId.isDex) return poolId.asDex;

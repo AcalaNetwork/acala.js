@@ -1,4 +1,4 @@
-import { TokenSymbol, DexShare, TradingPair } from '@acala-network/types/interfaces';
+import { TokenSymbol, DexShare } from '@acala-network/types/interfaces';
 import { assert } from '@polkadot/util';
 
 import { AnyApi, CombinedCurrencyId, CurrencyObject, TokenType } from './types';
@@ -12,6 +12,7 @@ import {
 } from './converter';
 import { sortTokenByName } from './sort-token';
 import { FixedPointNumber } from './fixed-point-number';
+import { AcalaPrimitivesTradingPair } from '@acala-network/types/interfaces/types-lookup';
 
 export interface StableAsset {
   poolId: number;
@@ -250,7 +251,7 @@ export class Token {
     }
   }
 
-  public toTradingPair(api: AnyApi): TradingPair {
+  public toTradingPair(api: AnyApi): AcalaPrimitivesTradingPair {
     assert(this.isDexShare, 'the currency is not a dex share');
 
     try {
