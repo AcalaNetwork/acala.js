@@ -13,10 +13,9 @@ describe('wallet', () => {
 
   jest.setTimeout(30000);
 
-  const initSDK = async (configs?: Partial<WalletConfigs>) => {
+  const initSDK = async (configs?: Partial<WalletConfigs>, endpoint = 'wss://karura.api.onfinality.io/public-ws') => {
     if (sdk) return sdk;
 
-    const endpoint = 'wss://karura.api.onfinality.io/public-ws';
     const provider = new WsProvider(endpoint);
     const api = await ApiPromise.create(options({ provider }));
 
@@ -180,15 +179,15 @@ describe('wallet', () => {
     expect(token3.symbol).toBe('KUSD');
   });
 
-  // test('query balance should work', async () => {
-  //   const sdk = await initSDK();
+  test('query balance should work', async () => {
+    const sdk = await initSDK({}, 'wss://karura-dev.aca-dev.network/rpc/ws');
 
-  //   const usdtBalance0 = await sdk.getBalance('USDT', '0x2804F43DDD8c08B66B61A1Cf8DcC744f1B109971');
-  //   const usdtBalance1 = await sdk.getBalance('USDT', '5GREeQcGHt7na341Py6Y6Grr38KUYRvVoiFSiDB52Gt7VZiN');
-  //   const usdtBalance2 = await sdk.getBalance('USDT', 'p62hgj46CwnVtZjP2MUAxLzoxG7SJdpFq5RYbBdy4SMzS9i');
+    const usdtBalance0 = await sdk.getBalance('USDT', '0x2804F43DDD8c08B66B61A1Cf8DcC744f1B109971');
+    const usdtBalance1 = await sdk.getBalance('USDT', '5GREeQcGHt7na341Py6Y6Grr38KUYRvVoiFSiDB52Gt7VZiN');
+    const usdtBalance2 = await sdk.getBalance('USDT', 'p62hgj46CwnVtZjP2MUAxLzoxG7SJdpFq5RYbBdy4SMzS9i');
 
-  //   console.log('USDT', '0x2804F43DDD8c08B66B61A1Cf8DcC744f1B109971', usdtBalance0.available.toString());
-  //   console.log('USDT', '0x2804F43DDD8c08B66B61A1Cf8DcC744f1B109971', usdtBalance1.available.toString());
-  //   console.log('USDT', '0x2804F43DDD8c08B66B61A1Cf8DcC744f1B109971', usdtBalance2.available.toString());
-  // });
+    expect(usdtBalance0.free.toString()).not.toBe('0');
+    expect(usdtBalance1.free.toString()).not.toBe('0');
+    expect(usdtBalance2.free.toString()).not.toBe('0');
+  });
 });

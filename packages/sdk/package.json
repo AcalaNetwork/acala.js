@@ -18,6 +18,7 @@
     "@acala-network/api": "4.0.4-5",
     "@acala-network/bodhi": "^2.4.0",
     "@acala-network/contracts": "^3.2.0",
+    "@acala-network/eth-providers": "^2.4.0",
     "@acala-network/type-definitions": "4.0.4-5",
     "@polkadot/api": "^7.1.1",
     "@polkadot/types": "^7.1.1",

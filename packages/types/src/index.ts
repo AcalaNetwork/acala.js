@@ -13,7 +13,6 @@ import {
   DefinitionRpcSub
 } from '@polkadot/types/types';
 
-import './interfaces/augment-api';
 import './interfaces/augment-api-consts';
 import './interfaces/augment-api-query';
 import './interfaces/augment-api-rpc';
