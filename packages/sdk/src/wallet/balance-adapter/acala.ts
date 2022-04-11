@@ -2,7 +2,7 @@ import { FixedPointNumber as FN, getERC20TokenAddressFromName, Token } from '@ac
 import { WsProvider } from '@polkadot/api';
 import { AccountInfo } from '@polkadot/types/interfaces/system';
 import { Provider as BodhiProvider } from '@acala-network/bodhi';
-
+import { ERC20_ABI } from '@acala-network/eth-providers/lib/consts';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { Contract, utils } from 'ethers';
 import { map } from 'rxjs/operators';
@@ -11,19 +11,6 @@ import { BalanceData } from '../type';
 import { BalanceAdapter } from './types';
 import { from, Observable } from 'rxjs';
 import { NotSupportETHAddress, NotSupportEVMBalance } from '../errors';
-
-const ERC20_ABI = [
-  // Read-Only Functions
-  'function balanceOf(address owner) view returns (uint256)',
-  'function decimals() view returns (uint8)',
-  'function symbol() view returns (string)',
-
-  // Authenticated Functions
-  'function transfer(address to, uint amount) returns (bool)',
-
-  // Events
-  'event Transfer(address indexed from, address indexed to, uint amount)'
-];
 
 interface AcalaAdapterConfigs {
   nativeCurrency: string;
