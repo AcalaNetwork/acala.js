@@ -11,7 +11,8 @@ import {
   FixedPointNumber as FN,
   isDexShareName,
   isStableAssetName,
-  createLiquidCrowdloanName
+  createLiquidCrowdloanName,
+  isERC20Name
 } from '@acala-network/sdk-core';
 import { getChainType } from '@acala-network/sdk/utils/get-chain-type';
 import { CurrencyId } from '@acala-network/types/interfaces';
@@ -112,6 +113,8 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
       const poolId = getStableAssetPoolIdFromName(currencyName);
 
       return Token.fromStableAssetPool(this.api.runtimeChain.toString(), poolId);
+    } else if (isERC20Name(currencyName)) {
+      return Token.fromCurrencyName(currencyName);
     }
 
     return this.tokenMap.get(currencyName)?.clone() || new Token('EMPTY');
