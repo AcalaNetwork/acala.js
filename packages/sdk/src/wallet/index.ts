@@ -10,37 +10,31 @@ import {
   MaybeCurrency,
   forceToCurrencyName,
   TokenType,
-  unzipDexShareName,
   isDexShareName,
-  createLiquidCrowdloanName
+  createLiquidCrowdloanName,
+  FixedPointNumber
 } from '@acala-network/sdk-core';
 import { AccountInfo, Balance, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { BehaviorSubject, combineLatest, Observable, of, firstValueFrom } from 'rxjs';
 import { map, switchMap, shareReplay, filter } from 'rxjs/operators';
-import {
-  TokenRecord,
-  WalletConsts,
-  BalanceData,
-  PresetTokens,
-  TokenPriceFetchSource,
-  WalletConfigs,
-  PriceProviders
-} from './type';
-import { ChainType, CurrencyNotFound, Homa, Liquidity, SDKNotReady } from '..';
+import { TokenRecord, WalletConsts, BalanceData, PresetTokens, WalletConfigs, PriceProviders } from './type';
+import { ChainType, Homa, Liquidity, SDKNotReady } from '..';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 import { MarketPriceProvider } from './price-provider/market-price-provider';
 import { OraclePriceProvider } from './price-provider/oracle-price-provider';
-import { PriceProvider, PriceProviderType } from './price-provider/types';
+import { PriceProviderType } from './price-provider/types';
 import { createTokenList } from './utils/create-token-list';
 import { BaseSDK } from '../types';
 import { createStorages } from './storages';
 import tokenList from '../configs/token-list';
 import { TokenProvider } from '../base-provider';
-import { defaultTokenPriceFetchSource } from './price-provider/default-token-price-fetch-source-config';
-import { subscribeDexShareTokenPrice } from './utils/get-dex-share-token-price';
 import { getChainType } from '../utils/get-chain-type';
 import { DexPriceProvider } from './price-provider/dex-price-provider';
+import { AggregateProvider } from './price-provider/aggregate-price-provider';
+import { BalanceAdapter } from './balance-adapter/types';
+import { AcalaBalanceAdapter } from './balance-adapter/acala';
+import { CurrencyNotFound } from './errors';
 
 export class Wallet implements BaseSDK, TokenProvider {
   private api: AnyApi;
@@ -48,8 +42,8 @@ export class Wallet implements BaseSDK, TokenProvider {
   // readed from chain information
   private tokens$: BehaviorSubject<TokenRecord | undefined>;
   private storages: ReturnType<typeof createStorages>;
-  private tokenPriceFetchSource: TokenPriceFetchSource;
   private configs: WalletConfigs;
+  private balanceAdapter: BalanceAdapter;
 
   // inject liquidity, homa sdk by default for easy using
   public readonly liquidity: Liquidity;
@@ -65,13 +59,10 @@ export class Wallet implements BaseSDK, TokenProvider {
     // priceProviders?: Record<PriceProviderType, PriceProvider>
   ) {
     this.api = api;
-
     this.isReady$ = new BehaviorSubject<boolean>(false);
     this.tokens$ = new BehaviorSubject<TokenRecord | undefined>(undefined);
-
     this.configs = {
       supportAUSD: true,
-      tokenPriceFetchSource: defaultTokenPriceFetchSource,
       ...configs
     };
 
@@ -79,14 +70,27 @@ export class Wallet implements BaseSDK, TokenProvider {
     this.liquidity = new Liquidity(this.api, this);
     this.homa = new Homa(this.api, this);
 
-    this.tokenPriceFetchSource = configs?.tokenPriceFetchSource || defaultTokenPriceFetchSource;
+    const market = new MarketPriceProvider();
+    const dex = new DexPriceProvider(this.liquidity);
+    const aggregate = new AggregateProvider({ market, dex });
+    const oracle = new OraclePriceProvider(this.api);
+
     this.priceProviders = {
-      ...this.defaultPriceProviders,
+      [PriceProviderType.AGGREGATE]: aggregate,
+      [PriceProviderType.MARKET]: market,
+      [PriceProviderType.ORACLE]: oracle,
+      [PriceProviderType.DEX]: dex,
       ...this.configs?.priceProviders
     };
     this.storages = createStorages(this.api);
 
     this.init();
+
+    this.balanceAdapter = new AcalaBalanceAdapter({
+      storages: this.storages,
+      nativeCurrency: this.consts.nativeCurrency,
+      wsProvider: configs?.wsProvider
+    });
   }
 
   public get isReady(): Promise<boolean> {
@@ -104,14 +108,6 @@ export class Wallet implements BaseSDK, TokenProvider {
     this.consts = {
       runtimeChain: this.api.runtimeChain.toString(),
       nativeCurrency: this.api.registry.chainTokens[0].toString()
-    };
-  }
-
-  private get defaultPriceProviders(): Record<PriceProviderType, PriceProvider> {
-    return {
-      [PriceProviderType.MARKET]: new MarketPriceProvider(),
-      [PriceProviderType.ORACLE]: new OraclePriceProvider(this.api),
-      [PriceProviderType.DEX]: new DexPriceProvider(this.api, this.liquidity)
     };
   }
 
@@ -158,6 +154,7 @@ export class Wallet implements BaseSDK, TokenProvider {
       const name = createLiquidCrowdloanName(13);
 
       basicTokens[name] = new Token(name, {
+        display: 'LCDOT',
         decimals: basicTokens.DOT.decimals,
         ed: basicTokens.DOT.ed,
         type: TokenType.LIQUID_CROWDLOAN
@@ -259,43 +256,7 @@ export class Wallet implements BaseSDK, TokenProvider {
    * @param address
    */
   public subscribeBalance = memoize((token: MaybeCurrency, address: string): Observable<BalanceData> => {
-    return this.subscribeToken(token).pipe(
-      switchMap((token) => {
-        const { nativeCurrency } = this.consts;
-        const isNativeToken = nativeCurrency === token.name;
-
-        const handleNative = (data: AccountInfo, token: Token) => {
-          const free = FN.fromInner(data.data.free.toString(), token.decimals);
-          const locked = FN.fromInner(data.data.miscFrozen.toString(), token.decimals).max(
-            FN.fromInner(data.data.feeFrozen.toString(), token.decimals)
-          );
-          const reserved = FN.fromInner(data.data.reserved.toString(), token.decimals);
-          const available = free.sub(locked).max(FN.ZERO);
-
-          return { available, token, free, locked, reserved };
-        };
-
-        const handleNonNative = (data: OrmlAccountData, token: Token) => {
-          const free = FN.fromInner(data.free.toString(), token.decimals);
-          const locked = FN.fromInner(data.frozen.toString(), token.decimals);
-          const reserved = FN.fromInner(data.reserved.toString(), token.decimals);
-          const available = free.sub(locked).max(FN.ZERO);
-
-          return { available, token, free, locked, reserved };
-        };
-
-        if (isNativeToken) {
-          const storage = this.storages.nativeBalance(address);
-
-          return storage.observable.pipe(map((data) => handleNative(data, token)));
-        }
-
-        // nonNative token
-        const storage = this.storages.nonNativeBalance(token, address);
-
-        return storage.observable.pipe(map((data) => handleNonNative(data, token)));
-      })
-    );
+    return this.subscribeToken(token).pipe(switchMap((token) => this.balanceAdapter.subscribeBalance(token, address)));
   });
 
   public async getBalance(token: MaybeCurrency, address: string): Promise<BalanceData> {
@@ -337,8 +298,8 @@ export class Wallet implements BaseSDK, TokenProvider {
       feeFactor = 1.2
     ): Observable<FN> => {
       const handleNativeResult = (accountInfo: AccountInfo, token: Token, nativeToken: Token) => {
-        const providers = accountInfo.providers.toNumber();
-        const consumers = accountInfo.consumers.toNumber();
+        const providers = accountInfo.providers.toBigInt();
+        const consumers = accountInfo.consumers.toBigInt();
         const nativeFreeBalance = FN.fromInner(accountInfo.data.free.toString(), nativeToken.decimals);
         // native locked balance = max(accountInfo.data.miscFrozen, accountInfo.data.feeFrozen)
         const nativeLockedBalance = FN.fromInner(accountInfo.data.miscFrozen.toString(), nativeToken.decimals).max(
@@ -367,8 +328,8 @@ export class Wallet implements BaseSDK, TokenProvider {
         token: Token,
         nativeToken: Token
       ) => {
-        const providers = accountInfo.providers.toNumber();
-        const consumers = accountInfo.consumers.toNumber();
+        const providers = accountInfo.providers.toBigInt();
+        const consumers = accountInfo.consumers.toBigInt();
         const nativeFreeBalance = FN.fromInner(accountInfo.data.free.toString(), nativeToken.decimals);
         // native locked balance = max(accountInfo.data.miscFrozen, accountInfo.data.feeFrozen)
         const nativeLockedBalance = FN.fromInner(accountInfo.data.miscFrozen.toString(), nativeToken.decimals).max(
@@ -461,50 +422,64 @@ export class Wallet implements BaseSDK, TokenProvider {
    * @name subscribePrice
    * @description subscirbe the price of `token`
    */
-  public subscribePrice = memoize((token: MaybeCurrency, type?: PriceProviderType): Observable<FN> => {
+  public subscribePrice = memoize((token: MaybeCurrency, type = PriceProviderType.AGGREGATE): Observable<FN> => {
     const name = forceToCurrencyName(token);
     const isDexShare = isDexShareName(name);
     const presetTokens = this.getPresetTokens();
     const isLiquidToken = presetTokens?.liquidToken?.name === name;
     const stakingToken = presetTokens.stakingToken;
 
-    // use market price provider as default
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const _type =
-      type || this.tokenPriceFetchSource?.[getChainType(this.consts.runtimeChain)]?.[name] || PriceProviderType.MARKET;
-
-    const priceProvider = this.priceProviders?.[_type];
-
-    // should calculate dexShare price
+    // if token is dex share, get dex share price form liquidity sdk
     if (isDexShare) {
-      const [token0, token1] = unzipDexShareName(name);
-
-      return subscribeDexShareTokenPrice(
-        this.subscribePrice(token0),
-        this.subscribePrice(token1),
-        this.liquidity.subscribePoolDetail(name)
-      );
+      return this.liquidity.subscribePoolDetails(name).pipe(map((data) => data.sharePrice));
     }
 
-    // should calculate liquidToken price, when price provider type is market
-    if (isLiquidToken && stakingToken && _type === PriceProviderType.MARKET) {
+    // get liquid token price when price type is market or aggergate
+    if (isLiquidToken && stakingToken && (type === PriceProviderType.MARKET || type === PriceProviderType.AGGREGATE)) {
       // create homa sd for get exchange rate
       return this.homa.subscribeEnv().pipe(
         filter((env) => !env.exchangeRate.isZero()),
-        switchMap((env) => {
-          return this.subscribePrice(stakingToken).pipe(
+        switchMap((env) =>
+          this.subscribePrice(stakingToken, type).pipe(
             map((price) => {
               return price.times(env.exchangeRate);
             })
-          );
-        })
+          )
+        )
       );
     }
 
-    if (!priceProvider) return of(FN.ZERO);
+    if (type === PriceProviderType.MARKET && this.priceProviders[PriceProviderType.MARKET]) {
+      return this.subscribeToken(token).pipe(
+        switchMap(
+          (token) => this.priceProviders[PriceProviderType.MARKET]?.subscribe(token) || of(FixedPointNumber.ZERO)
+        )
+      );
+    }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.subscribeToken(token).pipe(switchMap((token) => priceProvider!.subscribe(token)));
+    if (type === PriceProviderType.AGGREGATE && this.priceProviders[PriceProviderType.AGGREGATE]) {
+      return this.subscribeToken(token).pipe(
+        switchMap(
+          (token) => this.priceProviders[PriceProviderType.AGGREGATE]?.subscribe(token) || of(FixedPointNumber.ZERO)
+        )
+      );
+    }
+
+    if (type === PriceProviderType.DEX && this.priceProviders[PriceProviderType.DEX]) {
+      return this.subscribeToken(token).pipe(
+        switchMap((token) => this.priceProviders[PriceProviderType.DEX]?.subscribe(token) || of(FixedPointNumber.ZERO))
+      );
+    }
+
+    if (type === PriceProviderType.ORACLE && this.priceProviders[PriceProviderType.ORACLE]) {
+      return this.subscribeToken(token).pipe(
+        switchMap(
+          (token) => this.priceProviders[PriceProviderType.ORACLE]?.subscribe(token) || of(FixedPointNumber.ZERO)
+        )
+      );
+    }
+
+    return of(FixedPointNumber.ZERO);
   });
 
   public getPrice(token: MaybeCurrency, type?: PriceProviderType): Promise<FN> {

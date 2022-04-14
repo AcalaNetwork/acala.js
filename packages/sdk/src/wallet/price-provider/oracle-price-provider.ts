@@ -12,7 +12,7 @@ import {
 } from '@acala-network/sdk-core';
 import { OracleKey } from '@acala-network/types/interfaces';
 import { Storage } from '../../utils/storage';
-import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/interfaces/types-lookup';
 import { SignedBlock } from '@polkadot/types/interfaces';
 import { getAllLiquidCrowdloanTokenPrice } from '../utils/get-liquid-crowdloan-token-price';
 
@@ -117,6 +117,12 @@ export class OraclePriceProvider implements PriceProvider {
 
         if (isLiquidCrowdloanName(name)) {
           return liquidCrowdloanPrices[name] || FixedPointNumber.ZERO;
+        }
+
+        // TODO: should check the token symbol
+        if (name === 'sa://0') {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          return oracle!.KSM || FixedPointNumber.ZERO;
         }
 
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

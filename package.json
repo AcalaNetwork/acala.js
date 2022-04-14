@@ -1,5 +1,5 @@
 {
-  "version": "4.0.4-3",
+  "version": "4.0.4-6",
   "private": true,
   "engines": {
     "yarn": "^1.10.1"
@@ -8,9 +8,28 @@
     "packages/*"
   ],
   "resolutions": {
-    "@polkadot/api": "^7.2.1",
-    "@polkadot/types": "^7.2.1",
-    "typescript": "4.5.4"
+    "@polkadot/api": "^7.15.2-2",
+    "@polkadot/api-augment": "^7.15.2-2",
+    "@polkadot/api-base": "^7.15.2-2",
+    "@polkadot/api-contract": "^7.15.2-2",
+    "@polkadot/api-derive": "^7.15.2-2",
+    "@polkadot/hw-ledger": "^8.7.2-3",
+    "@polkadot/keyring": "^8.7.2-3",
+    "@polkadot/networks": "^8.7.2-3",
+    "@polkadot/phishing": "^0.10.64",
+    "@polkadot/rpc-augment": "^7.15.2-2",
+    "@polkadot/rpc-core": "^7.15.2-2",
+    "@polkadot/rpc-provider": "^7.15.2-2",
+    "@polkadot/types": "^7.15.2-2",
+    "@polkadot/types-augment": "^7.15.2-2",
+    "@polkadot/types-codec": "^7.15.2-2",
+    "@polkadot/types-create": "^7.15.2-2",
+    "@polkadot/types-known": "^7.15.2-2",
+    "@polkadot/types-support": "^7.15.2-2",
+    "@polkadot/util": "^8.7.2-3",
+    "@polkadot/util-crypto": "^8.7.2-3",
+    "@polkadot/wasm-crypto": "^5.1.2-4",
+    "typescript": "4.3.5"
   },
   "scripts": {
     "build": "yarn build:interfaces && polkadot-dev-build-ts",

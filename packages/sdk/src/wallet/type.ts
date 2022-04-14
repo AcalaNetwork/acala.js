@@ -1,6 +1,7 @@
 import { FixedPointNumber as FN, Token } from '@acala-network/sdk-core';
 import { PriceProvider, PriceProviderType } from './price-provider/types';
 import { ChainType } from '../types';
+import { WsProvider } from '@polkadot/api';
 
 export type TokenRecord = Record<string, Token>;
 
@@ -15,12 +16,13 @@ export interface WalletConsts {
 
 export interface WalletConfigs {
   supportAUSD?: boolean;
-  tokenPriceFetchSource?: TokenPriceFetchSource;
+  // overview price providers if need
   priceProviders?: PriceProviders;
+  // ws provider for evm adapter
+  wsProvider?: WsProvider;
 }
 
 export interface BalanceData {
-  token: Token;
   free: FN;
   locked: FN;
   reserved: FN;

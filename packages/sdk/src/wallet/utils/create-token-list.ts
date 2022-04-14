@@ -13,7 +13,7 @@ import {
   ModuleAssetRegistryModuleAssetIds,
   ModuleAssetRegistryModuleAssetMetadata,
   XcmV1MultiLocation
-} from '@polkadot/types/lookup';
+} from '@acala-network/types/interfaces/types-lookup';
 import { hexToString } from '@polkadot/util';
 import { TokenRecord } from '../type';
 
@@ -117,7 +117,7 @@ export function createTokenList(
           name,
           Token.create(name, {
             type: TokenType.FOREIGN_ASSET,
-            display: hexToString(value.name.toHex()),
+            fullname: hexToString(value.name.toHex()),
             symbol: hexToString(value.symbol.toHex()),
             decimals,
             ed: FN.fromInner(value.minimalBalance.toString(), decimals),
