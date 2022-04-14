@@ -7,7 +7,7 @@ import { DerivedLoanType } from '@acala-network/api-derive';
 import { ApiRx } from '@polkadot/api';
 import { WalletRx } from '@acala-network/sdk-wallet';
 import { memoize } from 'lodash';
-import { ModuleLoansPosition } from '@polkadot/types/lookup';
+import { ModuleLoansPosition } from '@acala-network/types/interfaces/types-lookup';
 
 export interface LoanParams {
   debitExchangeRate: FixedPointNumber;

@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/app-util",
-  "version": "4.0.4-5",
+  "version": "4.0.4-6",
   "description": "Utilities to work with Acala Network",
   "author": "Acala Developers <hello@acala.one>",
   "main": "index.js",

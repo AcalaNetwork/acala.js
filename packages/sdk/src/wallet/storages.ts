@@ -1,15 +1,14 @@
 import { AnyApi, Token, forceToCurrencyName } from '@acala-network/sdk-core';
 import { TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
-import { StorageKey, U128, Option, u16 } from '@polkadot/types';
-import { AccountInfo, Balance } from '@polkadot/types/interfaces';
-import { ITuple } from '@polkadot/types/types';
+import { StorageKey, Option, u16 } from '@polkadot/types';
+import { AccountInfo, Balance, H160 } from '@polkadot/types/interfaces';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { Storage } from '../utils/storage';
 import {
   ModuleAssetRegistryModuleAssetIds,
   ModuleAssetRegistryModuleAssetMetadata,
   XcmV1MultiLocation
-} from '@polkadot/types/lookup';
+} from '@acala-network/types/interfaces/types-lookup';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const createStorages = (api: AnyApi) => {
@@ -57,12 +56,11 @@ export const createStorages = (api: AnyApi) => {
         params: isNativeToken ? [] : [token.toChainData()]
       });
     },
-    liquidityPool: (dexShareToken: Token) => {
-      return Storage.create<ITuple<[U128, U128]>>({
+    evmAddress: (address: string) =>
+      Storage.create<Option<H160>>({
         api: api,
-        path: 'query.dex.liquidityPool',
-        params: [dexShareToken.toTradingPair(api)]
-      });
-    }
+        path: 'query.evmAccounts.evmAddresses',
+        params: [address]
+      })
   };
 };

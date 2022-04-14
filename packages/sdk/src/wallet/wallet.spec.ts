@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import { Wallet } from './index';
-import dotenv from 'dotenv';
 import { WsProvider } from '@polkadot/rpc-provider';
 import { ApiPromise } from '@polkadot/api';
 import { options } from '@acala-network/api';
@@ -9,23 +8,23 @@ import { TokenType } from '@acala-network/sdk-core';
 import { PriceProviderType } from './price-provider/types';
 import { WalletConfigs } from './type';
 
-dotenv.config();
-
 describe('wallet', () => {
   let sdk: Wallet | undefined;
 
   jest.setTimeout(30000);
 
-  const initSDK = async (configs?: WalletConfigs) => {
+  const initSDK = async (configs?: Partial<WalletConfigs>, endpoint = 'wss://karura.api.onfinality.io/public-ws') => {
     if (sdk) return sdk;
 
-    const endpoint = process.env.ENDPOINT || 'wss://karura.api.onfinality.io/public-ws';
     const provider = new WsProvider(endpoint);
     const api = await ApiPromise.create(options({ provider }));
 
     await api.isReady;
 
-    const wallet = new Wallet(api, configs);
+    const wallet = new Wallet(api, {
+      wsProvider: provider,
+      ...configs
+    });
 
     await wallet.isReady;
 
@@ -156,10 +155,10 @@ describe('wallet', () => {
     expect(price2.toString()).not.toBe(undefined);
     expect(price3.toString()).not.toBe('0');
     expect(price3.toString()).not.toBe(undefined);
-    // expect(price4.toString()).not.toBe('0');
-    // expect(price4.toString()).not.toBe(undefined);
-    // expect(price5.toString()).not.toBe('0');
-    // expect(price5.toString()).not.toBe(undefined);
+    expect(price4.toString()).not.toBe('0');
+    expect(price4.toString()).not.toBe(undefined);
+    expect(price5.toString()).not.toBe('0');
+    expect(price5.toString()).not.toBe(undefined);
   });
 
   test('support ausd should work', async () => {
@@ -178,5 +177,17 @@ describe('wallet', () => {
     expect(token3.display).toBe('aUSD');
     expect(token2.symbol).toBe('KUSD');
     expect(token3.symbol).toBe('KUSD');
+  });
+
+  test('query balance should work', async () => {
+    const sdk = await initSDK({}, 'wss://karura-dev.aca-dev.network/rpc/ws');
+
+    const usdtBalance0 = await sdk.getBalance('USDT', '0x2804F43DDD8c08B66B61A1Cf8DcC744f1B109971');
+    const usdtBalance1 = await sdk.getBalance('USDT', '5GREeQcGHt7na341Py6Y6Grr38KUYRvVoiFSiDB52Gt7VZiN');
+    const usdtBalance2 = await sdk.getBalance('USDT', 'p62hgj46CwnVtZjP2MUAxLzoxG7SJdpFq5RYbBdy4SMzS9i');
+
+    expect(usdtBalance0.free.toString()).not.toBe('0');
+    expect(usdtBalance1.free.toString()).not.toBe('0');
+    expect(usdtBalance2.free.toString()).not.toBe('0');
   });
 });

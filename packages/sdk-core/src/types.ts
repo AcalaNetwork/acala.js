@@ -1,7 +1,7 @@
 import { CurrencyId } from '@acala-network/types/interfaces';
 import { ApiPromise, ApiRx } from '@polkadot/api';
 import { AccountId } from '@polkadot/types/interfaces';
-import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/interfaces/types-lookup';
 import { Codec, Observable } from '@polkadot/types/types';
 import { Token } from './token';
 

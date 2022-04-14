@@ -11,10 +11,10 @@ import { StorageKey } from '@polkadot/types';
 import { memoize } from '@polkadot/util';
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of } from 'rxjs';
 import { map, switchMap, filter } from 'rxjs/operators';
-import { TradingPairNotFound } from '..';
 import { TokenProvider } from '../base-provider';
 import { BaseSDK, ChainType } from '../types';
 import { getChainType } from '../utils/get-chain-type';
+import { TradingPairNotFound } from './errors';
 import { createStorages } from './storage';
 import {
   PoolDetail,
