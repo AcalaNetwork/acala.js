@@ -1,16 +1,22 @@
 import { AnyApi, FixedPointNumber } from '@acala-network/sdk-core';
 import { Wallet } from '@acala-network/sdk/wallet';
-import { combineLatest, map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { chains } from '../configs/chains';
-import { Chain, CrossChainRouter, CrossChainTransferEnv, CrossChainTransferParams } from '../types';
+import { Chain, CrossChainRouter, CrossChainTransferParams } from '../types';
 import { BaseCrossChainAdapter } from '../base-chain-adapter';
 import { isChainEqual } from '../utils/is-chain-equal';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { TokenBalance } from '@acala-network/sdk/types';
 
 interface AcalaAdaptorConfigs {
   api: AnyApi;
   wallet: Wallet;
 }
+
+const crossChainFeeConfigs: Record<string, string> = {
+  KSM: '64000000',
+  DOT: '64000000'
+};
 
 export class BaseAcalaAdaptor extends BaseCrossChainAdapter {
   private wallet: Wallet;
@@ -23,40 +29,41 @@ export class BaseAcalaAdaptor extends BaseCrossChainAdapter {
   }
 
   public subscribeMinInput(token: string): Observable<FixedPointNumber> {
-    return this.wallet.subscribeToken(token).pipe(map((r) => r.ed));
+    return this.wallet.subscribeToken(token).pipe(
+      map((r) => {
+        return r.ed.add(this.getCrossChainFee(token)?.balance || FixedPointNumber.ZERO);
+      })
+    );
+  }
+
+  public subscribeAvailableBalance(token: string, address: string): Observable<FixedPointNumber> {
+    return this.wallet.subscribeBalance(token, address).pipe(map((r) => r.available));
   }
 
   public subscribeMaxInput(token: string, address: string): Observable<FixedPointNumber> {
     return this.wallet.subscribeBalance(token, address).pipe(map((r) => r.available));
   }
 
-  // all token's destination weight in karura/acala is same
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public getDestinationWeight(_token: string): number {
-    return 5 * 1_000_000_000;
+  public getCrossChainFee(token: string): TokenBalance {
+    return {
+      token,
+      balance: FixedPointNumber.fromInner(crossChainFeeConfigs[token] ?? '0', this.wallet.__getToken(token).decimals)
+    };
   }
 
-  public subscribeEnv(params: CrossChainTransferParams): Observable<CrossChainTransferEnv> {
-    const { to, token, address } = params;
-    const toAdapter = this.getAdapterByName(to);
+  public getCrossChainTokenDecimals(token: string): number {
+    return this.wallet.__getToken(token).decimals;
+  }
 
-    // subscribe destination min receive
-    const minInput$ = toAdapter.subscribeMinInput(token);
-    const maxInput$ = this.subscribeMaxInput(token, address);
-
-    return combineLatest({
-      minInput: minInput$,
-      maxInput: maxInput$
-    }).pipe(
-      map(({ minInput, maxInput }) => {
-        return { minInput, maxInput };
-      })
-    );
+  // all token's destination weight in karura/acala is same
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private getDestinationWeight(_token: string): number {
+    return 5 * 1_000_000_000;
   }
 
   public createTx(params: CrossChainTransferParams): SubmittableExtrinsic<'rxjs'> | SubmittableExtrinsic<'promise'> {
     const { to, token, address, amount } = params;
-    const tokenFormSDK = this.wallet.directGetToken(token);
+    const tokenFormSDK = this.wallet.__getToken(token);
     const accountId = this.api.createType('AccountId32', address).toHex();
     const toChain = chains[to];
 
@@ -73,7 +80,7 @@ export class BaseAcalaAdaptor extends BaseCrossChainAdapter {
                 { GeneralIndex: tokenFormSDK.locations?.generalIndex }
               ]
             },
-            amount: new FixedPointNumber(amount, tokenFormSDK.decimal).toChainData()
+            amount: amount.toChainData()
           }
         }
       ];
@@ -87,7 +94,7 @@ export class BaseAcalaAdaptor extends BaseCrossChainAdapter {
 
       return call(
         tokenFormSDK.toChainData() as any,
-        new FixedPointNumber(amount, tokenFormSDK.decimals).toChainData(),
+        amount.toChainData(),
         { V1: dst },
         this.getDestinationWeight(token)
       );
@@ -103,12 +110,7 @@ export class BaseAcalaAdaptor extends BaseCrossChainAdapter {
       }
     };
 
-    return call(
-      tokenFormSDK.toChainData() as any,
-      new FixedPointNumber(amount, tokenFormSDK.decimals).toChainData(),
-      { V1: dst },
-      this.getDestinationWeight(token)
-    );
+    return call(tokenFormSDK.toChainData() as any, amount.toChainData(), { V1: dst }, this.getDestinationWeight(token));
   }
 }
 

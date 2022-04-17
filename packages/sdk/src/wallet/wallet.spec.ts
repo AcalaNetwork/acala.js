@@ -34,11 +34,11 @@ describe('wallet', () => {
   test('get token sould work', async () => {
     const sdk = await initSDK();
 
-    const rmrk1 = sdk.getToken('RMRK');
-    const rmrk2 = sdk.getToken('fa://0');
-    const taiKSM1 = sdk.getToken('taiKSM');
-    const taiKSM2 = sdk.getToken('sa://0');
-    const taiKSM3 = sdk.getToken('Taiga KSM');
+    const rmrk1 = await sdk.getToken('RMRK');
+    const rmrk2 = await sdk.getToken('fa://0');
+    const taiKSM1 = await sdk.getToken('taiKSM');
+    const taiKSM2 = await sdk.getToken('sa://0');
+    const taiKSM3 = await sdk.getToken('Taiga KSM');
 
     expect(rmrk1.symbol).toEqual('RMRK');
     expect(rmrk2.symbol).toEqual('RMRK');
@@ -67,8 +67,8 @@ describe('wallet', () => {
   test('get location should work', async () => {
     const sdk = await initSDK();
 
-    const rmrk = sdk.getToken('RMRK');
-    const qtz = sdk.getToken('QTZ');
+    const rmrk = await sdk.getToken('RMRK');
+    const qtz = await sdk.getToken('QTZ');
 
     expect(rmrk.locations?.generalIndex).toBe(8);
     expect(rmrk.locations?.paraChainId).toBe(1000);

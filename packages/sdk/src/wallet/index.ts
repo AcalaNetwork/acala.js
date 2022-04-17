@@ -239,7 +239,7 @@ export class Wallet implements BaseSDK, TokenProvider {
   }
 
   // direct get token no need await, must be called after wallet sdk is ready
-  public directGetToken(target: MaybeCurrency): Token {
+  public __getToken(target: MaybeCurrency): Token {
     const name = forceToCurrencyName(target);
 
     const token = Object.values(this.tokens$.value || {}).find((item) => this.tokenEeual(name, item));

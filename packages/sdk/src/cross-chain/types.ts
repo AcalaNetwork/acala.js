@@ -1,11 +1,13 @@
-import { FixedPointNumber, Token } from '@acala-network/sdk-core';
+import { FixedPointNumber } from '@acala-network/sdk-core';
+import { TokenBalance } from '../types';
 import { BaseCrossChainAdapter } from './base-chain-adapter';
 import { RegisteredChain } from './configs/chains';
 
 export type CROSS_CHAIN_ENV = 'kusama' | 'polkadot';
 
 export interface Chain {
-  readonly name: RegisteredChain;
+  readonly id: RegisteredChain;
+  readonly display: string;
   // chain icon resource path
   readonly icon: string;
   // set id to -1 if the chain is para chain
@@ -21,15 +23,18 @@ export interface CrossChainRouter {
 }
 
 export interface CrossChainTransferParams {
-  amount: number;
+  amount: FixedPointNumber;
   to: RegisteredChain;
   token: string;
   address: string;
 }
 
-export interface CrossChainTransferEnv {
+export interface CrossChainInputConfigs {
   minInput: FixedPointNumber;
   maxInput: FixedPointNumber;
+  destCrossChainFee: TokenBalance;
+  ss58Prefix: number;
+  tokenDecimals: number;
 }
 
 export interface CrossChainSDKConfigs {

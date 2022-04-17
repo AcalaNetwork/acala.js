@@ -29,17 +29,20 @@ describe('cross-chain-router-manager', () => {
 
     manager = new CrossChainRouterManager();
 
-    await manager.addRouters([
-      { from: chains.karura, to: chains.kusama, token: 'KSM' },
-      { from: chains.karura, to: chains.phala, token: 'KSM' },
-      { from: chains.karura, to: chains.phala, token: 'AUSD' },
-      { from: chains.karura, to: chains.phala, token: 'LKSM' },
-      { from: chains.phala, to: chains.karura, token: 'KSM' },
-      { from: chains.phala, to: chains.karura, token: 'AUSD' },
-      { from: chains.phala, to: chains.karura, token: 'LKSM' },
-      { from: chains.kusama, to: chains.karura, token: 'KSM' },
-      { from: chains.statemine, to: chains.karura, token: 'RMRK' }
-    ]);
+    await manager.addRouters(
+      [
+        { from: chains.karura, to: chains.kusama, token: 'KSM' },
+        { from: chains.karura, to: chains.phala, token: 'KSM' },
+        { from: chains.karura, to: chains.phala, token: 'AUSD' },
+        { from: chains.karura, to: chains.phala, token: 'LKSM' },
+        { from: chains.phala, to: chains.karura, token: 'KSM' },
+        { from: chains.phala, to: chains.karura, token: 'AUSD' },
+        { from: chains.phala, to: chains.karura, token: 'LKSM' },
+        { from: chains.kusama, to: chains.karura, token: 'KSM' },
+        { from: chains.statemine, to: chains.karura, token: 'RMRK' }
+      ],
+      false
+    );
 
     return manager;
   };
@@ -83,11 +86,11 @@ describe('cross-chain-router-manager', () => {
     const r2 = manager.getFromChains({ to: 'karura' });
 
     expect(r1.length).toEqual(2);
-    expect(r1[0].name).toEqual('Kusama');
-    expect(r1[1].name).toEqual('Phala');
+    expect(r1[0].display).toEqual('Kusama');
+    expect(r1[1].display).toEqual('Phala');
     expect(r2.length).toEqual(3);
-    expect(r2[0].name).toEqual('Phala');
-    expect(r2[1].name).toEqual('Kusama');
-    expect(r2[2].name).toEqual('Statemine');
+    expect(r2[0].display).toEqual('Phala');
+    expect(r2[1].display).toEqual('Kusama');
+    expect(r2[2].display).toEqual('Statemine');
   });
 });
