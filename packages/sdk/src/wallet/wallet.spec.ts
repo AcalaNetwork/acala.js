@@ -8,10 +8,10 @@ import { TokenType } from '@acala-network/sdk-core';
 import { PriceProviderType } from './price-provider/types';
 import { WalletConfigs } from './type';
 
-describe('wallet', () => {
+describe.skip('wallet', () => {
   let sdk: Wallet | undefined;
 
-  jest.setTimeout(30000);
+  jest.setTimeout(50000);
 
   const initSDK = async (configs?: Partial<WalletConfigs>, endpoint = 'wss://karura.api.onfinality.io/public-ws') => {
     if (sdk) return sdk;

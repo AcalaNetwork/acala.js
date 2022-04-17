@@ -7,7 +7,7 @@ import { Token } from './token';
 
 export type AnyApi = ApiPromise | ApiRx;
 
-export type ObOrPromiseResult<T extends AnyApi, R extends unknown> = T extends ApiRx ? Observable<R> : Promise<R>;
+export type ObOrPromiseResult<T extends AnyApi, R> = T extends ApiRx ? Observable<R> : Promise<R>;
 
 export type MaybeCurrency =
   | number

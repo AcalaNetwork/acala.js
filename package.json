@@ -1,5 +1,5 @@
 {
-  "version": "4.0.4-6",
+  "version": "4.1.1",
   "private": true,
   "engines": {
     "yarn": "^1.10.1"
@@ -38,7 +38,7 @@
     "lint": "polkadot-dev-run-lint",
     "clean": "polkadot-dev-clean-build",
     "postinstall": "polkadot-dev-yarn-only",
-    "test": "polkadot-dev-run-test --coverage",
+    "test": "polkadot-dev-run-test --coverage --forceExit",
     "check-deps": "./node_modules/@open-web3/util/scripts/check-deps.js yarn.lock @polkadot/ @open-web3/",
     "update-metadata": "ts-node --project ./tsconfig.json packages/types/scripts/updateMetadata.ts"
   },
@@ -46,7 +46,7 @@
     "@babel/core": "^7.14.3",
     "@babel/register": "^7.13.6",
     "@babel/runtime": "^7.14.0",
-    "@open-web3/dev-config": "^0.1.13",
+    "@open-web3/dev-config": "^0.2.2",
     "@open-web3/util": "^1.0.2-4",
     "@types/jest": "^25.2.3",
     "ts-node": "^8.6.1",
