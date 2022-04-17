@@ -11,7 +11,7 @@ dotenv.config();
 describe('wallet', () => {
   let sdk: Liquidity | undefined;
 
-  jest.setTimeout(30000);
+  jest.setTimeout(50000);
 
   const initSDK = async () => {
     if (sdk) return sdk;

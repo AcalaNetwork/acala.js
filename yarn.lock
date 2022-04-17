@@ -233,6 +233,7 @@ __metadata:
     "@acala-network/type-definitions": 4.0.4-6
     "@polkadot/api": ^7.1.1
     "@polkadot/types": ^7.1.1
+    "@types/dotenv": ^8.2.0
     "@types/events": ^3.0.0
     "@types/lodash": ^4.14.161
     axios: ^0.24.0
@@ -3797,6 +3798,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/dotenv@npm:^8.2.0":
+  version: 8.2.0
+  resolution: "@types/dotenv@npm:8.2.0"
+  dependencies:
+    dotenv: "*"
+  checksum: 8b4d00f8849c550a6888b8f426f85f14171bf1bab53f6b2683bd71a25869a93cb4b960f4fa8de592f2b4c43366240fc9c50d89e6cc1cffffafbb843879c6fdd6
+  languageName: node
+  linkType: hard
+
 "@types/events@npm:^3.0.0":
   version: 3.0.0
   resolution: "@types/events@npm:3.0.0"
@@ -5769,7 +5779,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:^16.0.0":
+"dotenv@npm:*, dotenv@npm:^16.0.0":
   version: 16.0.0
   resolution: "dotenv@npm:16.0.0"
   checksum: 70186d98404e20a911623723800f7721253a3091190b8b1b65cad942e709b81e17f3c83042772de3ba598c1c05f9087c12358758a32441b83060789ab63f9a6c

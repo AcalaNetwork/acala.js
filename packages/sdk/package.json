@@ -32,6 +32,7 @@
     "rxjs": "^7.4.0"
   },
   "devDependencies": {
+    "@types/dotenv": "^8.2.0",
     "@types/lodash": "^4.14.161"
   }
 }
