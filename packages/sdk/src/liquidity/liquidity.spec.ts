@@ -8,7 +8,7 @@ import { createDexShareName } from '@acala-network/sdk-core';
 
 dotenv.config();
 
-describe('wallet', () => {
+describe.skip('liquidity', () => {
   let sdk: Liquidity | undefined;
 
   jest.setTimeout(50000);
@@ -29,7 +29,7 @@ describe('wallet', () => {
     return wallet.liquidity;
   };
 
-  test.skip('get all enabled pool should be ok', async () => {
+  test('get all enabled pool should be ok', async () => {
     const liqudity = await initSDK();
 
     const enabledPools = await liqudity.getPoolListByStatus();
