@@ -8,7 +8,7 @@ import { TokenType } from '@acala-network/sdk-core';
 import { PriceProviderType } from './price-provider/types';
 import { WalletConfigs } from './type';
 
-describe('wallet', () => {
+describe.skip('wallet', () => {
   let sdk: Wallet | undefined;
 
   jest.setTimeout(50000);
