@@ -179,7 +179,7 @@ describe('wallet', () => {
     expect(token3.symbol).toBe('KUSD');
   });
 
-  test.skip('query balance should work', async () => {
+  test('query balance should work', async () => {
     const sdk = await initSDK({}, 'wss://karura-dev.aca-dev.network/rpc/ws');
 
     const usdtBalance0 = await sdk.getBalance('USDT', '0x2804F43DDD8c08B66B61A1Cf8DcC744f1B109971');
