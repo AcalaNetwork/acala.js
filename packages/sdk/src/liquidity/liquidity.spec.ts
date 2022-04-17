@@ -11,7 +11,7 @@ dotenv.config();
 describe('wallet', () => {
   let sdk: Liquidity | undefined;
 
-  jest.setTimeout(30000);
+  jest.setTimeout(50000);
 
   const initSDK = async () => {
     if (sdk) return sdk;
@@ -29,7 +29,7 @@ describe('wallet', () => {
     return wallet.liquidity;
   };
 
-  test('get all enabled pool should be ok', async () => {
+  test.skip('get all enabled pool should be ok', async () => {
     const liqudity = await initSDK();
 
     const enabledPools = await liqudity.getPoolListByStatus();
