@@ -3,9 +3,9 @@ import { map } from 'rxjs/operators';
 import { BalanceData } from '../../wallet/type';
 import { BalanceAdapter } from '../../wallet/balance-adapter/types';
 import { Observable } from 'rxjs';
-import { Storage } from '@acala-network/sdk/utils/storage';
+import { Storage } from '../../utils/storage';
 import { DeriveBalancesAll } from '@polkadot/api-derive/balances/types';
-import { CurrencyNotFound } from '@acala-network/sdk/wallet/errors';
+import { CurrencyNotFound } from '../../wallet/errors';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const createBalanceStorages = (api: AnyApi) => {

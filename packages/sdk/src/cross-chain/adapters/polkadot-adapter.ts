@@ -1,6 +1,6 @@
 import { AnyApi, FixedPointNumber } from '@acala-network/sdk-core';
 import { TokenBalance } from '@acala-network/sdk/types';
-import { CurrencyNotFound } from '@acala-network/sdk/wallet/errors';
+import { CurrencyNotFound } from '../../wallet/errors';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { map, Observable, of } from 'rxjs';
