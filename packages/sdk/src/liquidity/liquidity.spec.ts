@@ -29,7 +29,7 @@ describe('wallet', () => {
     return wallet.liquidity;
   };
 
-  test('get all enabled pool should be ok', async () => {
+  test.skip('get all enabled pool should be ok', async () => {
     const liqudity = await initSDK();
 
     const enabledPools = await liqudity.getPoolListByStatus();
