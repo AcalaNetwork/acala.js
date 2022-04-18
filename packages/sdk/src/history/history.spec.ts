@@ -36,7 +36,7 @@ describe('history', () => {
         transfer: 'https://api.subquery.network/sq/AcalaNetwork/karura-transfer-history',
         swap: 'https://api.subquery.network/sq/AcalaNetwork/karura-dex',
         earn: 'https://api.subquery.network/sq/AcalaNetwork/karura-incentives',
-        loan: 'https://api.subquery.network/sq/AcalaNetwork/acala-loans',
+        loan: 'https://api.subquery.network/sq/AcalaNetwork/karura-loan',
         homa: 'https://api.subquery.network/sq/AcalaNetwork/karura-homa'
       },
       wallet,
@@ -56,7 +56,7 @@ describe('history', () => {
     });
 
     const loans = await history.loan.getHistories({
-      address: '22UAyzgYDYt1yAF1FKDjBktVvRT4uUTXy5U7vk12mEMgv3pb'
+      address: 'seorgCZDzP5G3JEbsBjFdpQ4dTUgCWoPjQynyJqHCfXvZVW'
     });
 
     const homas = await history.homa.getHistories({

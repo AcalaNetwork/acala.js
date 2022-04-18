@@ -3,3 +3,4 @@ export * from './wallet';
 export * from './liquidity';
 export * from './homa';
 export * from './types';
+export * from './cross-chain';

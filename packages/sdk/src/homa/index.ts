@@ -84,7 +84,7 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
   }
 
   public get isReady(): Promise<boolean> {
-    return firstValueFrom(this.isReady$.pipe(filter((i) => i)));
+    return firstValueFrom(this.isReady$.asObservable().pipe(filter((i) => i)));
   }
 
   private toBondPool$ = memoize((): Observable<FixedPointNumber> => {

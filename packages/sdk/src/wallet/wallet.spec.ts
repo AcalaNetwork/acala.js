@@ -55,9 +55,9 @@ describe.skip('wallet', () => {
   test('get tokens should work', async () => {
     const sdk = await initSDK();
 
-    const tokens1 = await sdk.getTokens(TokenType.BASIC);
-    const tokens2 = await sdk.getTokens(TokenType.DEX_SHARE);
-    const tokens3 = await sdk.getTokens([TokenType.BASIC, TokenType.DEX_SHARE]);
+    const tokens1 = sdk.getTokens(TokenType.BASIC);
+    const tokens2 = sdk.getTokens(TokenType.DEX_SHARE);
+    const tokens3 = sdk.getTokens([TokenType.BASIC, TokenType.DEX_SHARE]);
 
     expect(Object.values(tokens1).length).not.toBe('KAR');
     expect(Object.values(tokens2).length).not.toBe(0);
