@@ -1,7 +1,7 @@
 import { AnyApi, Token, forceToCurrencyName } from '@acala-network/sdk-core';
 import { TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
 import { StorageKey, Option, u16 } from '@polkadot/types';
-import { AccountInfo, Balance, H160 } from '@polkadot/types/interfaces';
+import { AccountInfo, Balance } from '@polkadot/types/interfaces';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { Storage } from '../utils/storage';
 import {
@@ -55,12 +55,6 @@ export const createStorages = (api: AnyApi) => {
         path: isNativeToken ? 'query.balances.totalIssuance' : 'query.tokens.totalIssuance',
         params: isNativeToken ? [] : [token.toChainData()]
       });
-    },
-    evmAddress: (address: string) =>
-      Storage.create<Option<H160>>({
-        api: api,
-        path: 'query.evmAccounts.evmAddresses',
-        params: [address]
-      })
+    }
   };
 };
