@@ -16,4 +16,4 @@ homa sdk [document](https://github.com/AcalaNetwork/acala.js/blob/master/package
 // TODO
 
 ## CrossChain
-// TODO
+cross-chain sdk [document](https://github.com/AcalaNetwork/acala.js/blob/master/packages/sdk/docs/cross-chain.md)

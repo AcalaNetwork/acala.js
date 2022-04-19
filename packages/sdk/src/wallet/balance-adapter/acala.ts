@@ -1,4 +1,4 @@
-import { FixedPointNumber as FN, getERC20TokenAddressFromName, Token } from '@acala-network/sdk-core';
+import { FixedPointNumber, FixedPointNumber as FN, getERC20TokenAddressFromName, Token } from '@acala-network/sdk-core';
 import { WsProvider } from '@polkadot/api';
 import { AccountInfo } from '@polkadot/types/interfaces/system';
 import { Provider as BodhiProvider } from '@acala-network/bodhi';
@@ -114,5 +114,9 @@ export class AcalaBalanceAdapter implements BalanceAdapter {
     const storage = this.storages.nonNativeBalance(token, address);
 
     return storage.observable.pipe(map((data) => this.handleNonNative(data, token)));
+  }
+
+  public getED(token: Token): FixedPointNumber {
+    return token.ed;
   }
 }
