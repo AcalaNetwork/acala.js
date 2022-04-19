@@ -4,7 +4,6 @@ import {
   eventsFilterRx,
   FixedPointNumber,
   FixedPointNumber as FN,
-  forceToCurrencyName,
   getERC20TokenAddressFromName,
   Token
 } from '@acala-network/sdk-core';
