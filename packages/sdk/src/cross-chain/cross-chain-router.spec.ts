@@ -9,7 +9,7 @@ import { isChainEqual } from './utils/is-chain-equal';
 
 dotenv.config();
 
-describe('cross-chain-router-manager', () => {
+describe.skip('cross-chain-router-manager', () => {
   let manager: CrossChainRouterManager;
 
   jest.setTimeout(30000);

@@ -87,8 +87,7 @@ export class Wallet implements BaseSDK, TokenProvider {
     this.init();
 
     this.balanceAdapter = new AcalaBalanceAdapter({
-      storages: this.storages,
-      nativeCurrency: this.consts.nativeCurrency,
+      api: this.api,
       wsProvider: configs?.wsProvider
     });
   }
