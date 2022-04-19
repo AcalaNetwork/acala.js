@@ -1,13 +1,10 @@
 import { Wallet } from '../wallet';
-import dotenv from 'dotenv';
 import { WsProvider } from '@polkadot/rpc-provider';
 import { ApiPromise } from '@polkadot/api';
 import { options } from '@acala-network/api';
 import { History } from '.';
 
-dotenv.config();
-
-describe('history', () => {
+describe.skip('history', () => {
   let sdk: Wallet | undefined;
 
   jest.setTimeout(300000);
