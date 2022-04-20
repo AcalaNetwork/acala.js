@@ -1,16 +1,21 @@
 import { ApiInterfaceRx } from '@polkadot/api/types';
 import { map } from 'rxjs/operators';
+import { u128 } from '@polkadot/types-codec';
+import { ITuple } from '@polkadot/types-codec/types';
 import primitivesConfig from '@acala-network/type-definitions/primitives';
 import { Observable } from 'rxjs';
 
-import { CurrencyId, Balance } from '@acala-network/types/interfaces';
 import { memo } from '@polkadot/api-derive/util';
 
 import { DerivedDexPool } from '../types/dex';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/interfaces/types-lookup';
 
 const TOKEN_SORT: Record<string, number> = primitivesConfig.types.TokenSymbol._enum;
 
-function sortTokens(token1: CurrencyId, token2: CurrencyId): CurrencyId[] {
+function sortTokens(
+  token1: AcalaPrimitivesCurrencyCurrencyId,
+  token2: AcalaPrimitivesCurrencyCurrencyId
+): AcalaPrimitivesCurrencyCurrencyId[] {
   const result = [token1, token2];
 
   return result.sort((a, b) => TOKEN_SORT[a.asToken.toString()] - TOKEN_SORT[b.asToken.toString()]);
@@ -24,11 +29,14 @@ function sortTokens(token1: CurrencyId, token2: CurrencyId): CurrencyId[] {
 export function pool(
   instanceId: string,
   api: ApiInterfaceRx
-): (token1: CurrencyId, token2: CurrencyId) => Observable<DerivedDexPool> {
-  return memo(instanceId, (token1: CurrencyId, token2: CurrencyId) => {
+): (
+  token1: AcalaPrimitivesCurrencyCurrencyId,
+  token2: AcalaPrimitivesCurrencyCurrencyId
+) => Observable<DerivedDexPool> {
+  return memo(instanceId, (token1: AcalaPrimitivesCurrencyCurrencyId, token2: AcalaPrimitivesCurrencyCurrencyId) => {
     const params = sortTokens(token1, token2);
 
-    return api.query.dex.liquidityPool<[Balance, Balance]>(params).pipe(
+    return api.query.dex.liquidityPool<ITuple<[u128, u128]>>(params).pipe(
       map((result) => {
         const [token1Amount, token2Amount] = result;
 

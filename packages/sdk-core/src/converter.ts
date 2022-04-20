@@ -1,5 +1,7 @@
-import { CurrencyId, TokenSymbol } from '@acala-network/types/interfaces';
-import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/interfaces/types-lookup';
+import {
+  AcalaPrimitivesCurrencyCurrencyId,
+  AcalaPrimitivesCurrencyTokenSymbol
+} from '@acala-network/types/interfaces/types-lookup';
 import { isArray } from 'lodash';
 import {
   ConvertToCurrencyIdFailed,
@@ -213,22 +215,24 @@ export function forceToCurrencyName(target: MaybeCurrency): string {
 
     if (target instanceof Token) return target.toString();
 
-    if ((target as CurrencyId).isToken) return (target as CurrencyId).asToken.toString();
+    if ((target as AcalaPrimitivesCurrencyCurrencyId).isToken)
+      return (target as AcalaPrimitivesCurrencyCurrencyId).asToken.toString();
 
-    if ((target as CurrencyId).isDexShare) {
+    if ((target as AcalaPrimitivesCurrencyCurrencyId).isDexShare) {
       return createDexShareName(
-        forceToCurrencyName((target as CurrencyId).asDexShare[0] as CurrencyId),
-        forceToCurrencyName((target as CurrencyId).asDexShare[1] as CurrencyId)
+        forceToCurrencyName((target as AcalaPrimitivesCurrencyCurrencyId).asDexShare[0]),
+        forceToCurrencyName((target as AcalaPrimitivesCurrencyCurrencyId).asDexShare[1])
       );
     }
 
-    if ((target as CurrencyId).isErc20) return createERC20Name((target as CurrencyId).asErc20.toString());
+    if ((target as AcalaPrimitivesCurrencyCurrencyId).isErc20)
+      return createERC20Name((target as AcalaPrimitivesCurrencyCurrencyId).asErc20.toString());
 
-    if ((target as CurrencyId).isStableAssetPoolToken)
-      return createStableAssetName((target as CurrencyId).asStableAssetPoolToken.toNumber());
+    if ((target as AcalaPrimitivesCurrencyCurrencyId).isStableAssetPoolToken)
+      return createStableAssetName((target as AcalaPrimitivesCurrencyCurrencyId).asStableAssetPoolToken.toNumber());
 
-    if ((target as CurrencyId).isForeignAsset)
-      return createForeignAssetName((target as CurrencyId).asForeignAsset.toNumber());
+    if ((target as AcalaPrimitivesCurrencyCurrencyId).isForeignAsset)
+      return createForeignAssetName((target as AcalaPrimitivesCurrencyCurrencyId).asForeignAsset.toNumber());
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if ((target as any).isLiquidCrowdloan) {
@@ -251,21 +255,18 @@ export function forceToCurrencyName(target: MaybeCurrency): string {
   }
 }
 
-export function forceToCurrencyId(api: AnyApi, target: MaybeCurrency): CurrencyId {
+export function forceToCurrencyId(api: AnyApi, target: MaybeCurrency): AcalaPrimitivesCurrencyCurrencyId {
   try {
     const name = forceToCurrencyName(target);
 
-    const type = api.registry.createType('AcalaPrimitivesCurrencyCurrencyId') as AcalaPrimitivesCurrencyCurrencyId;
+    const type = api.registry.createType('AcalaPrimitivesCurrencyCurrencyId');
 
     // FIXME: need remove if all chain released
     if (Reflect.has(type, 'asLiquidCroadloan')) {
       IS_LIQUID_CROADLOAN = true;
     }
 
-    return api.registry.createType(
-      'AcalaPrimitivesCurrencyCurrencyId',
-      getCurrencyObject(name)
-    ) as unknown as CurrencyId;
+    return api.registry.createType('AcalaPrimitivesCurrencyCurrencyId', getCurrencyObject(name));
   } catch (e) {
     throw new ConvertToCurrencyIdFailed(target);
   }
@@ -273,14 +274,17 @@ export function forceToCurrencyId(api: AnyApi, target: MaybeCurrency): CurrencyI
 
 export const forceToTokenSymbolCurrencyId = (
   api: AnyApi,
-  target: string | Token | CurrencyId | TokenSymbol
-): CurrencyId => {
+  target: string | Token | AcalaPrimitivesCurrencyCurrencyId | AcalaPrimitivesCurrencyTokenSymbol
+): AcalaPrimitivesCurrencyCurrencyId => {
   const name = target.toString();
 
   return forceToCurrencyId(api, name);
 };
 
-export const forceToDexShareCurrencyId = (api: AnyApi, target: [string, string] | CurrencyId): CurrencyId => {
+export const forceToDexShareCurrencyId = (
+  api: AnyApi,
+  target: [string, string] | AcalaPrimitivesCurrencyCurrencyId
+): AcalaPrimitivesCurrencyCurrencyId => {
   let name = '';
 
   if (isArray(target)) {
@@ -292,7 +296,10 @@ export const forceToDexShareCurrencyId = (api: AnyApi, target: [string, string] 
   return forceToCurrencyId(api, name);
 };
 
-export const forceToStableAssetCurrencyId = (api: AnyApi, target: number | CurrencyId): CurrencyId => {
+export const forceToStableAssetCurrencyId = (
+  api: AnyApi,
+  target: number | AcalaPrimitivesCurrencyCurrencyId
+): AcalaPrimitivesCurrencyCurrencyId => {
   let name = '';
 
   if (typeof target === 'number') {
@@ -304,7 +311,10 @@ export const forceToStableAssetCurrencyId = (api: AnyApi, target: number | Curre
   return forceToCurrencyId(api, name);
 };
 
-export const forceToForeignAssetCurrencyId = (api: AnyApi, target: number | CurrencyId): CurrencyId => {
+export const forceToForeignAssetCurrencyId = (
+  api: AnyApi,
+  target: number | AcalaPrimitivesCurrencyCurrencyId
+): AcalaPrimitivesCurrencyCurrencyId => {
   let name = '';
 
   if (typeof target === 'number') {
@@ -316,7 +326,10 @@ export const forceToForeignAssetCurrencyId = (api: AnyApi, target: number | Curr
   return forceToCurrencyId(api, name);
 };
 
-export const forceToERC20CurrencyId = (api: AnyApi, target: string | CurrencyId): CurrencyId => {
+export const forceToERC20CurrencyId = (
+  api: AnyApi,
+  target: string | AcalaPrimitivesCurrencyCurrencyId
+): AcalaPrimitivesCurrencyCurrencyId => {
   let name = '';
 
   if (typeof target === 'string') {

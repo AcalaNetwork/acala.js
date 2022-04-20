@@ -1,10 +1,11 @@
 import { EraIndex } from '@polkadot/types/interfaces';
-import { ExchangeRate, CurrencyId, BlockNumber, Params, Ledger, Balance } from '@acala-network/types/interfaces';
+import { ExchangeRate, BlockNumber, Params, Ledger, Balance } from '@acala-network/types/interfaces';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/interfaces/types-lookup';
 
 export interface DerivedStakingPoolConstants {
   defaultExchangeRate: ExchangeRate;
-  stakingCurrency: CurrencyId;
-  liquidCurrency: CurrencyId;
+  stakingCurrency: AcalaPrimitivesCurrencyCurrencyId;
+  liquidCurrency: AcalaPrimitivesCurrencyCurrencyId;
   eraLength: BlockNumber;
   bondingDuration: EraIndex;
 }

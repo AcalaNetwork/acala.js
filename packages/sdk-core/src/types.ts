@@ -42,5 +42,3 @@ export type CurrencyObject =
   // FIXME: need remove if all chain released
   | { LiquidCroadloan: number }
   | { LiquidCrowdloan: number };
-
-export type CombinedCurrencyId = CurrencyId | AcalaPrimitivesCurrencyCurrencyId;

@@ -14,7 +14,7 @@ import {
   createLiquidCrowdloanName
 } from '@acala-network/sdk-core';
 import { getChainType } from '@acala-network/sdk/utils/get-chain-type';
-import { CurrencyId } from '@acala-network/types/interfaces';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/interfaces/types-lookup';
 
 import { ApiRx, ApiPromise } from '@polkadot/api';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
@@ -25,7 +25,7 @@ import { getExistentialDepositConfig } from './utils/get-existential-deposit-con
 export abstract class WalletBase<T extends ApiRx | ApiPromise> {
   protected api: T;
   protected decimalsMap: Map<string, number>;
-  protected currencyIdMap: Map<string, CurrencyId>;
+  protected currencyIdMap: Map<string, AcalaPrimitivesCurrencyCurrencyId>;
   protected tokenMap: Map<string, Token>;
   protected nativeToken!: string;
   protected runtimeChain!: string;
@@ -33,7 +33,7 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
   protected constructor(api: T) {
     this.api = api;
     this.decimalsMap = new Map<string, number>([]);
-    this.currencyIdMap = new Map<string, CurrencyId>([]);
+    this.currencyIdMap = new Map<string, AcalaPrimitivesCurrencyCurrencyId>([]);
     this.tokenMap = new Map<string, Token>([]);
 
     this.init();
