@@ -81,7 +81,7 @@ export class AcalaBalanceAdapter implements BalanceAdapter {
         method: '*'
       }
     ];
-    if (this.api.type === 'promise') {
+    if (this.api.type === 'rxjs') {
       eventsFilterRx(this.api as ApiRx, eventFilterConfigs, true).subscribe(() =>
         this.evmUpdate$.next(this.evmUpdate$.value + 1)
       );

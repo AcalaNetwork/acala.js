@@ -1,7 +1,6 @@
 import { eventsFilterCallback, eventsFilterRx } from '@acala-network/sdk-core';
 import { ApiPromise, ApiRx } from '@polkadot/api';
-import { BlockHash } from '@polkadot/types/interfaces';
-import { BehaviorSubject, Observable, Subject, Subscription, of, from, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription, firstValueFrom } from 'rxjs';
 import { switchMap, filter } from 'rxjs/operators';
 import { NoQueryPath } from './error';
 import { StorageConfigs } from './types';
@@ -49,23 +48,6 @@ export class Storage<T = unknown> {
     }, start);
   }
 
-  private getBlockHash = (at?: number | string): Observable<BlockHash> => {
-    const api = this.configs.api;
-    if (!at) return of('' as unknown as BlockHash);
-
-    if (at && typeof at === 'string') return of(at as unknown as BlockHash);
-
-    if (api.type === 'promise') {
-      return from(
-        (async () => {
-          return (api as ApiPromise).rpc.chain.getBlockHash(at);
-        })()
-      );
-    } else {
-      return (api as ApiRx).rpc.chain.getBlockHash(at);
-    }
-  };
-
   private processWithApiRx(): Observable<T> {
     const { path, params, at, triggleEvents } = this.configs;
     const api = this.configs.api as ApiRx;
@@ -80,23 +62,15 @@ export class Storage<T = unknown> {
       throw new NoQueryPath(path);
     };
 
-    if (triggleEvents) {
-      return eventsFilterRx(api, triggleEvents, true).pipe(
-        switchMap(() => {
-          return this.getBlockHash(at).pipe(
-            switchMap((hash) => {
-              return api.rpc.chain.subscribeFinalizedHeads().pipe(
-                switchMap(() => {
-                  return inner(hash.toString());
-                })
-              );
-            })
-          );
-        })
-      );
+    if (at) {
+      return api.rpc.chain.getBlockHash(at).pipe(switchMap((hash) => inner(hash.toString())));
     }
 
-    return this.getBlockHash(at).pipe(switchMap((hash) => inner(hash.toString())));
+    if (triggleEvents) {
+      return eventsFilterRx(api, triggleEvents, true).pipe(switchMap(() => inner()));
+    }
+
+    return inner();
   }
 
   private processWithApiPromise(): Observable<T> {
@@ -109,15 +83,11 @@ export class Storage<T = unknown> {
 
         const func = this.getQueryFN(api, path, atHash.toString()) as (...params: any[]) => void;
 
-        params.push((result: T) => {
-          subscriber.next(result);
-        });
+        params.push((result: T) => subscriber.next(result));
 
         if (triggleEvents) {
           eventsFilterCallback(api, triggleEvents, true, () => {
-            api.rpc.chain.subscribeFinalizedHeads(() => {
-              func(...params);
-            });
+            func(...params);
           });
         } else {
           func(...params);

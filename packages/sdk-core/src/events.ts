@@ -1,6 +1,7 @@
 import { ApiPromise, ApiRx } from '@polkadot/api';
 import { Vec } from '@polkadot/types';
 import { EventRecord } from '@polkadot/types/interfaces';
+import { FrameSystemEventRecord } from '@polkadot/types/lookup';
 import { from, Observable } from 'rxjs';
 import { startWith, filter, switchMap, shareReplay } from 'rxjs/operators';
 
@@ -21,7 +22,7 @@ export const eventSectionsFilter = (sections: string[]) => {
 };
 
 export const eventsFilter = (data: { section: string; method: string }[]) => {
-  return (event: EventRecord): boolean => {
+  return (event: FrameSystemEventRecord): boolean => {
     return data.reduce((acc, cur) => {
       // eslint-disable-next-line prettier/prettier
       const isSectionMatch = cur.section === '*' ? true : cur.section.toUpperCase() === event?.event?.section.toUpperCase();
@@ -42,10 +43,12 @@ export const eventsFilterRx = (
   api: ApiRx,
   configs: { section: string; method: string }[],
   immediately: boolean
-): Observable<EventRecord> => {
-  return api.query.system.events<Vec<EventRecord>>().pipe(
-    startWith(immediately ? mockEventRecord(configs?.[0].section, configs?.[0].method) : []),
-    switchMap((events) => from(events as unknown as Vec<EventRecord>)),
+): Observable<FrameSystemEventRecord> => {
+  const events$ = api.rpc.chain.subscribeNewHeads().pipe(switchMap(() => api.query.system.events()));
+
+  return events$.pipe(
+    startWith(immediately ? mockEventRecord(configs[0].section, configs[0].method) : []),
+    switchMap((events) => from(events)),
     filter(eventsFilter(configs)),
     shareReplay(1)
   );
@@ -59,8 +62,13 @@ export const eventsFilterCallback = (
 ): void => {
   if (immediately) callback();
 
-  api.query.system.events<Vec<EventRecord>>((events: Vec<EventRecord>) => {
-    // eslint-disable-next-line no-unused-expressions
-    eventsFilter(configs)(events as unknown as EventRecord) ? callback() : undefined;
+  api.rpc.chain.subscribeNewHeads(async () => {
+    const events = await api.query.system.events();
+
+    const filterdEvents = events.filter(eventsFilter(configs));
+
+    if (filterdEvents.length !== 0) {
+      callback();
+    }
   });
 };
