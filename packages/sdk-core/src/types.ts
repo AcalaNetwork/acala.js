@@ -39,6 +39,4 @@ export type CurrencyObject =
   | { Erc20: string }
   | { StableAssetPoolToken: number }
   | { ForeignAsset: number }
-  // FIXME: need remove if all chain released
-  | { LiquidCroadloan: number }
   | { LiquidCrowdloan: number };

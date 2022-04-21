@@ -15,8 +15,6 @@ import {
 import { STABLE_ASSET_POOLS, Token } from './token';
 import { AnyApi, CurrencyObject, MaybeCurrency, TokenType } from './types';
 
-let IS_LIQUID_CROADLOAN = false;
-
 /**
  *  we set a name with a prefix to all types of tokens for easy passing and use.
  *  e.g.
@@ -152,12 +150,6 @@ export function getForeignAssetCurrencyObject(name: string): CurrencyObject {
 }
 
 export function getLiquidCrowdloanObject(name: string): CurrencyObject {
-  // FIXME: need remove if all chain released
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  if (IS_LIQUID_CROADLOAN) {
-    return { LiquidCroadloan: getLiquidCrowdloanIdFromName(name) };
-  }
-
   return { LiquidCrowdloan: getLiquidCrowdloanIdFromName(name) };
 }
 
@@ -236,17 +228,8 @@ export function forceToCurrencyName(target: MaybeCurrency): string {
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if ((target as any).isLiquidCrowdloan) {
-      IS_LIQUID_CROADLOAN = false;
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       return createLiquidCrowdloanName((target as any).asLiquidCrowdloan.toNumber());
-    }
-
-    // FIXME: need remove if all chain released
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if ((target as any).isLiquidCroadloan) {
-      IS_LIQUID_CROADLOAN = true;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      return createLiquidCrowdloanName((target as any).asLiquidCroadloan.toNumber());
     }
 
     return target.toString();
@@ -258,13 +241,6 @@ export function forceToCurrencyName(target: MaybeCurrency): string {
 export function forceToCurrencyId(api: AnyApi, target: MaybeCurrency): AcalaPrimitivesCurrencyCurrencyId {
   try {
     const name = forceToCurrencyName(target);
-
-    const type = api.registry.createType('AcalaPrimitivesCurrencyCurrencyId');
-
-    // FIXME: need remove if all chain released
-    if (Reflect.has(type, 'asLiquidCroadloan')) {
-      IS_LIQUID_CROADLOAN = true;
-    }
 
     return api.registry.createType('AcalaPrimitivesCurrencyCurrencyId', getCurrencyObject(name));
   } catch (e) {

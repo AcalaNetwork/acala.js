@@ -12,6 +12,7 @@ import {
   TokenType,
   isDexShareName,
   createLiquidCrowdloanName,
+  isLiquidCrowdloanName,
   FixedPointNumber
 } from '@acala-network/sdk-core';
 import { AccountInfo, Balance, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
@@ -444,6 +445,20 @@ export class Wallet implements BaseSDK, TokenProvider {
               return price.times(env.exchangeRate);
             })
           )
+        )
+      );
+    }
+
+    // handle sa://0 as KSM, when chain is karuar
+    if (ChainType.KARURA === getChainType(this.consts.runtimeChain) && name === 'sa://0' && stakingToken) {
+      return this.subscribePrice(stakingToken, type);
+    }
+
+    // handle crowdloan token price
+    if (isLiquidCrowdloanName(name)) {
+      return this.subscribeToken(token).pipe(
+        switchMap(
+          (token) => this.priceProviders[PriceProviderType.ORACLE]?.subscribe(token) || of(FixedPointNumber.ZERO)
         )
       );
     }
