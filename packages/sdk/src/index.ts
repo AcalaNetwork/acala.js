@@ -4,3 +4,4 @@ export * from './liquidity';
 export * from './homa';
 export * from './types';
 export * from './cross-chain';
+export * from './history';
