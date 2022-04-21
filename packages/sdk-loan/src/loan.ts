@@ -2,12 +2,12 @@ import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { assert } from '@polkadot/util';
 import { FixedPointNumber, forceToCurrencyId, MaybeCurrency, Token } from '@acala-network/sdk-core';
-import { CurrencyId, Position } from '@acala-network/types/interfaces';
+import { Position } from '@acala-network/types/interfaces';
 import { DerivedLoanType } from '@acala-network/api-derive';
 import { ApiRx } from '@polkadot/api';
 import { WalletRx } from '@acala-network/sdk-wallet';
 import { memoize } from 'lodash';
-import { ModuleLoansPosition } from '@acala-network/types/interfaces/types-lookup';
+import { AcalaPrimitivesCurrencyCurrencyId, ModuleLoansPosition } from '@acala-network/types/interfaces/types-lookup';
 
 export interface LoanParams {
   debitExchangeRate: FixedPointNumber;
@@ -37,7 +37,7 @@ const YEAR_SECONDS = 365 * 24 * 60 * 60; // second of one year
 
 export class LoanRx {
   private api: ApiRx;
-  private readonly currency: CurrencyId;
+  private readonly currency: AcalaPrimitivesCurrencyCurrencyId;
   private collateralToken: Token;
   private stableCoinToken: Token;
   private readonly address: string;

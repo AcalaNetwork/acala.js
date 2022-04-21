@@ -6,16 +6,17 @@ import { ApiInterfaceRx } from '@polkadot/api/types';
 import { memo } from '@polkadot/api-derive/util';
 
 import { DerivedStakingPool, DerivedStakingPoolConstants } from '../types/staking-pool';
-import { CurrencyId, ExchangeRate } from '@acala-network/types/interfaces';
+import { ExchangeRate } from '@acala-network/types/interfaces';
 import { BlockNumber } from '@open-web3/orml-types/interfaces';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/interfaces/types-lookup';
 
 function getConstants(api: ApiInterfaceRx): DerivedStakingPoolConstants {
   return {
     defaultExchangeRate: api.consts.stakingPool.defaultExchangeRate as ExchangeRate,
     bondingDuration: api.consts.polkadotBridge.bondingDuration as EraIndex,
     eraLength: api.consts.polkadotBridge.eraLength as BlockNumber,
-    stakingCurrency: api.consts.stakingPool.stakingCurrencyId as CurrencyId,
-    liquidCurrency: api.consts.stakingPool.liquidCurrencyId as CurrencyId
+    stakingCurrency: api.consts.stakingPool.stakingCurrencyId as AcalaPrimitivesCurrencyCurrencyId,
+    liquidCurrency: api.consts.stakingPool.liquidCurrencyId as AcalaPrimitivesCurrencyCurrencyId
   };
 }
 

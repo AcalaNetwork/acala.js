@@ -1,7 +1,6 @@
-import { TokenSymbol, DexShare } from '@acala-network/types/interfaces';
 import { assert } from '@polkadot/util';
 
-import { AnyApi, CombinedCurrencyId, CurrencyObject, TokenType } from './types';
+import { AnyApi, CurrencyObject, TokenType } from './types';
 import {
   createDexShareName,
   createStableAssetName,
@@ -12,7 +11,12 @@ import {
 } from './converter';
 import { sortTokenByName } from './sort-token';
 import { FixedPointNumber } from './fixed-point-number';
-import { AcalaPrimitivesTradingPair } from '@acala-network/types/interfaces/types-lookup';
+import {
+  AcalaPrimitivesCurrencyCurrencyId,
+  AcalaPrimitivesCurrencyDexShare,
+  AcalaPrimitivesCurrencyTokenSymbol,
+  AcalaPrimitivesTradingPair
+} from '@acala-network/types/interfaces/types-lookup';
 
 export interface StableAsset {
   poolId: number;
@@ -158,11 +162,11 @@ export class Token {
    * @name fromCurrencyId
    * @description create token from currency id
    */
-  static fromCurrencyId(currency: CombinedCurrencyId, configs?: Configs): Token {
+  static fromCurrencyId(currency: AcalaPrimitivesCurrencyCurrencyId, configs?: Configs): Token {
     return this.fromCurrencyName(forceToCurrencyName(currency), configs);
   }
 
-  static fromTokenSymbol(token: TokenSymbol, configs?: Configs): Token {
+  static fromTokenSymbol(token: AcalaPrimitivesCurrencyTokenSymbol, configs?: Configs): Token {
     return this.fromCurrencyName(token.toString(), configs);
   }
 
@@ -184,8 +188,8 @@ export class Token {
 
   /* create DexShareToken form CombinedCurrencyId array */
   static fromCurrencies(
-    currency1: CombinedCurrencyId,
-    currency2: CombinedCurrencyId,
+    currency1: AcalaPrimitivesCurrencyCurrencyId,
+    currency2: AcalaPrimitivesCurrencyCurrencyId,
     decimals?: number | [number, number]
   ): Token {
     const decimals1 = Array.isArray(decimals) ? decimals[0] : decimals;
@@ -198,7 +202,11 @@ export class Token {
   }
 
   /* create DexShareToken from TokenSymbol array */
-  static fromTokenSymbols(currency1: TokenSymbol, currency2: TokenSymbol, decimals?: number | [number, number]): Token {
+  static fromTokenSymbols(
+    currency1: AcalaPrimitivesCurrencyTokenSymbol,
+    currency2: AcalaPrimitivesCurrencyTokenSymbol,
+    decimals?: number | [number, number]
+  ): Token {
     const decimals1 = Array.isArray(decimals) ? decimals[0] : decimals;
     const decimals2 = Array.isArray(decimals) ? decimals[1] : decimals;
 
@@ -225,7 +233,7 @@ export class Token {
     });
   }
 
-  static sortCurrencies(...currencies: CombinedCurrencyId[]): CombinedCurrencyId[] {
+  static sortCurrencies(...currencies: AcalaPrimitivesCurrencyCurrencyId[]): AcalaPrimitivesCurrencyCurrencyId[] {
     const result = [...currencies];
     const nameMap = Object.fromEntries(result.map((item) => [forceToCurrencyName(item), item]));
 
@@ -243,7 +251,7 @@ export class Token {
       .map((name) => nameMap[name]);
   }
 
-  public toCurrencyId(api: AnyApi): CombinedCurrencyId {
+  public toCurrencyId(api: AnyApi): AcalaPrimitivesCurrencyCurrencyId {
     try {
       return api.registry.createType('AcalaPrimitivesCurrencyCurrencyId', this.toChainData());
     } catch (e) {
@@ -263,21 +271,21 @@ export class Token {
     }
   }
 
-  public toDexShare(api: AnyApi): DexShare {
+  public toDexShare(api: AnyApi): AcalaPrimitivesCurrencyDexShare {
     try {
       assert(this.isDexShare, 'the token is not a dexShare');
 
-      return api.registry.createType('DexShare', this.toChainData());
+      return api.registry.createType('AcalaPrimitivesCurrencyDexShare', this.toChainData());
     } catch (e) {
       throw new Error(`can't convert ${this.toChainData()} to DexShare`);
     }
   }
 
-  public toTokenSymbol(api: AnyApi): TokenSymbol {
+  public toTokenSymbol(api: AnyApi): AcalaPrimitivesCurrencyTokenSymbol {
     try {
       assert(this.isTokenSymbol, 'the currency is not a token symbol');
 
-      return api.registry.createType('TokenSymbol', this.name);
+      return api.registry.createType('AcalaPrimitivesCurrencyTokenSymbol', this.name);
     } catch (e) {
       throw new Error(`can't convert ${this.toChainData()} to Token Symbol`);
     }

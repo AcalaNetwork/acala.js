@@ -2,7 +2,7 @@ import { ApiPromise } from '@polkadot/api';
 
 import { TimestampedValue, OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { FixedPointNumber as FN, getPromiseOrAtQuery, isDexShareName, Token } from '@acala-network/sdk-core';
-import { Balance, CurrencyId, OracleKey, Ledger } from '@acala-network/types/interfaces';
+import { Balance, OracleKey, Ledger } from '@acala-network/types/interfaces';
 import { forceToCurrencyId, forceToCurrencyName, unzipDexShareName } from '@acala-network/sdk-core/converter';
 import { MaybeAccount, MaybeCurrency } from '@acala-network/sdk-core/types';
 import { BalanceData, PriceData, PriceDataWithTimestamp } from './types';
@@ -14,6 +14,7 @@ import { Option } from '@polkadot/types';
 import { ORACLE_FEEDS_TOKEN } from './config';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/interfaces/types-lookup';
 
 const queryFN = getPromiseOrAtQuery;
 
@@ -217,7 +218,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
   };
 
   public queryIssuance = async (currency: MaybeCurrency, at?: number): Promise<FN> => {
-    let currencyId: CurrencyId;
+    let currencyId: AcalaPrimitivesCurrencyCurrencyId;
     let currencyName: string;
     let token: Token;
 

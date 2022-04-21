@@ -4,10 +4,11 @@ import { map } from 'rxjs/operators';
 import { ApiInterfaceRx } from '@polkadot/api/types';
 import { memo } from '@polkadot/api-derive/util';
 
-import { CurrencyId, Rate, ExchangeRate, Balance, Position, Ratio } from '@acala-network/types/interfaces';
+import { Rate, ExchangeRate, Balance, Position, Ratio } from '@acala-network/types/interfaces';
 
 import { DerivedLoanConstants, DerivedLoanType, DerivedLoanOverView, CollateralParams } from '../types/loan';
 import { getAllCollateralCurrencyIds } from '../utils';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/interfaces/types-lookup';
 
 /**
  * @name loanConstants
@@ -25,13 +26,13 @@ function loanConstants(api: ApiInterfaceRx): DerivedLoanConstants {
 /**
  * @name loanType
  * @description get loan type
- * @param {(CurrencyId | string)} currency
+ * @param {(AcalaPrimitivesCurrencyCurrencyId | string)} currency
  */
 export function loanType(
   instanceId: string,
   api: ApiInterfaceRx
-): (currncy: CurrencyId | string) => Observable<DerivedLoanType> {
-  return memo(instanceId, (currency: CurrencyId | string) => {
+): (currncy: AcalaPrimitivesCurrencyCurrencyId) => Observable<DerivedLoanType> {
+  return memo(instanceId, (currency: AcalaPrimitivesCurrencyCurrencyId) => {
     return combineLatest([
       api.query.cdpEngine.globalInterestRatePerSec<Rate>(),
       api.query.cdpEngine.debitExchangeRate<Rate>(currency),
@@ -82,8 +83,8 @@ export function allLoanTypes(instanceId: string, api: ApiInterfaceRx): () => Obs
 export function loanOverview(
   instanceId: string,
   api: ApiInterfaceRx
-): (currency: CurrencyId) => Observable<DerivedLoanOverView> {
-  return memo(instanceId, (currency: CurrencyId) =>
+): (currency: AcalaPrimitivesCurrencyCurrencyId) => Observable<DerivedLoanOverView> {
+  return memo(instanceId, (currency: AcalaPrimitivesCurrencyCurrencyId) =>
     api.query.loans.totalPositions<Position>(currency).pipe(
       map((result) => {
         const { collateral, debit } = result;
