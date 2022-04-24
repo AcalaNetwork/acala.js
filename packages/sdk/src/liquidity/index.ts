@@ -380,7 +380,7 @@ export class Liquidity implements BaseSDK {
   private subscribeBaseTokenPrice = memoize((token: MaybeCurrency): Observable<FixedPointNumber> => {
     const name = forceToCurrencyName(token);
 
-    if (name === 'KSM' || name === 'KAR') {
+    if (name === 'KSM') {
       return this.subscribePoolPositions(createDexShareName('KUSD', 'KSM')).pipe(
         map((positions) => {
           return positions.amounts[0].div(positions.amounts[1]);
@@ -388,8 +388,24 @@ export class Liquidity implements BaseSDK {
       );
     }
 
-    if (name === 'ACA' || name === 'DOT') {
-      return this.subscribePoolPositions(createDexShareName('KUSD', 'KSM')).pipe(
+    if (name === 'DOT') {
+      return this.subscribePoolPositions(createDexShareName('AUSD', 'DOT')).pipe(
+        map((positions) => {
+          return positions.amounts[0].div(positions.amounts[1]);
+        })
+      );
+    }
+
+    if (name === 'KAR') {
+      return this.subscribePoolPositions(createDexShareName('KAR', 'KUSD')).pipe(
+        map((positions) => {
+          return positions.amounts[0].div(positions.amounts[1]);
+        })
+      );
+    }
+
+    if (name === 'ACA') {
+      return this.subscribePoolPositions(createDexShareName('ACA', 'AUSD')).pipe(
         map((positions) => {
           return positions.amounts[0].div(positions.amounts[1]);
         })
@@ -406,7 +422,7 @@ export class Liquidity implements BaseSDK {
   public subscribeDexPrice = memoize((token: Token) => {
     const karuraBaseTokens = ['KSM', 'KAR', 'KUSD', 'sa://0'];
     // TODO: show add DOT as base token when lp://AUSD/DOT is open
-    const acalaBaseTokens = ['ACA', 'lc://13', 'AUSD'];
+    const acalaBaseTokens = ['ACA', 'AUSD'];
     const chainType = getChainType(this.consts.runtimeChain);
     const name = forceToCurrencyName(token);
 
@@ -422,7 +438,6 @@ export class Liquidity implements BaseSDK {
     }
 
     // create base pools should be sorted
-
     const basePools = baseTokens.map((i) => {
       const [token0, token1] = Token.sortTokenNames(name, i);
 
