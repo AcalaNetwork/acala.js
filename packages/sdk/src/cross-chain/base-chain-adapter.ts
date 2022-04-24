@@ -1,10 +1,19 @@
-import { Chain, CrossChainRouter, CrossChainInputConfigs, CrossChainTransferParams } from './types';
+import {
+  Chain,
+  CrossChainRouter,
+  CrossChainInputConfigs,
+  CrossChainTransferParams,
+  CrossChianBalanceChangedConfigs,
+  CrossChainTxStatus
+} from './types';
 import { RegisteredChain } from './configs/chains';
 import { AnyApi, FixedPointNumber } from '@acala-network/sdk-core';
-import { combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, timeout } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { TokenBalance } from '../types';
+
+const DEFAULT_TX_CHECKING_TIMEOUT = 2 * 60 * 1000;
 
 export abstract class BaseCrossChainAdapter {
   protected routers: Omit<CrossChainRouter, 'from'>[];
@@ -53,6 +62,44 @@ export abstract class BaseCrossChainAdapter {
         };
       })
     );
+  }
+
+  public subscribeBalanceChanged(configs: CrossChianBalanceChangedConfigs): Observable<CrossChainTxStatus> {
+    const status$ = new BehaviorSubject<CrossChainTxStatus>(CrossChainTxStatus.CHECKING);
+    const { token, address, amount, tolerance } = configs;
+    // allow 1% tolerance as default
+    const target = amount.mul(new FixedPointNumber(tolerance || 0.01));
+
+    let savedBalance: FixedPointNumber | undefined;
+
+    const balance$ = this.subscribeAvailableBalance(token, address)
+      .pipe(timeout(configs.timeout || DEFAULT_TX_CHECKING_TIMEOUT))
+      .subscribe({
+        next: (balance) => {
+          if (!savedBalance) {
+            savedBalance = balance;
+          }
+
+          const diff = balance.minus(savedBalance);
+
+          if (diff.gte(target)) {
+            status$.next(CrossChainTxStatus.SUCCESS);
+            balance$.unsubscribe();
+          }
+        },
+        error: (e: Error) => {
+          if (e.name === 'TimeoutError') {
+            status$.next(CrossChainTxStatus.TIMEOUT);
+
+            throw e;
+          }
+
+          status$.next(CrossChainTxStatus.TIMEOUT);
+          throw e;
+        }
+      });
+
+    return status$;
   }
 
   public abstract subscribeAvailableBalance(token: string, address: string): Observable<FixedPointNumber>;
