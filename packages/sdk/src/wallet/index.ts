@@ -11,8 +11,6 @@ import {
   forceToCurrencyName,
   TokenType,
   isDexShareName,
-  createLiquidCrowdloanName,
-  isLiquidCrowdloanName,
   FixedPointNumber
 } from '@acala-network/sdk-core';
 import { AccountInfo, Balance, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
@@ -28,7 +26,6 @@ import { PriceProviderType } from './price-provider/types';
 import { createTokenList } from './utils/create-token-list';
 import { BaseSDK } from '../types';
 import { createStorages } from './storages';
-import tokenList from '../configs/token-list';
 import { TokenProvider } from '../base-provider';
 import { getChainType } from '../utils/get-chain-type';
 import { DexPriceProvider } from './price-provider/dex-price-provider';
@@ -112,54 +109,9 @@ export class Wallet implements BaseSDK, TokenProvider {
   }
 
   private initTokens() {
-    const chainDecimals = this.api.registry.chainDecimals;
-    const chainTokens = this.api.registry.chainTokens;
     const tradingPairs$ = this.storages.tradingPairs().observable;
     const assetMetadatas$ = this.storages.assetMetadatas().observable;
     const foreignAssetLocations$ = this.storages.foreignAssetLocations().observable;
-
-    const basicTokens = Object.fromEntries(
-      chainTokens.map((token, i) => {
-        const config = tokenList.getToken(token, this.consts.runtimeChain);
-
-        if (config?.symbol === 'KUSD' && this.configs.supportAUSD) {
-          return [
-            token,
-            new Token(token, {
-              ...config,
-              display: 'aUSD',
-              type: TokenType.BASIC,
-              decimals: chainDecimals[i] ?? 12
-            })
-          ];
-        }
-
-        return [
-          token,
-          new Token(token, {
-            ...config,
-            type: TokenType.BASIC,
-            decimals: chainDecimals[i] ?? 12
-          })
-        ];
-      })
-    );
-
-    // insert LCDOT if chain is acala or mandala
-    if (
-      (getChainType(this.consts.runtimeChain) === ChainType.ACALA ||
-        getChainType(this.consts.runtimeChain) === ChainType.MANDALA) &&
-      basicTokens.DOT
-    ) {
-      const name = createLiquidCrowdloanName(13);
-
-      basicTokens[name] = new Token(name, {
-        display: 'LCDOT',
-        decimals: basicTokens.DOT.decimals,
-        ed: basicTokens.DOT.ed,
-        type: TokenType.LIQUID_CROWDLOAN
-      });
-    }
 
     return combineLatest({
       tradingPairs: tradingPairs$,
@@ -167,7 +119,12 @@ export class Wallet implements BaseSDK, TokenProvider {
       foreignAssetLocations: foreignAssetLocations$
     }).subscribe({
       next: ({ tradingPairs, assetMetadatas, foreignAssetLocations }) => {
-        const list = createTokenList(basicTokens, tradingPairs, assetMetadatas, foreignAssetLocations);
+        const list = createTokenList(tradingPairs, assetMetadatas, foreignAssetLocations, {
+          keepDisplayKUSD: !this.configs.supportAUSD,
+          insertLCDOT:
+            getChainType(this.consts.runtimeChain) === ChainType.ACALA ||
+            getChainType(this.consts.runtimeChain) === ChainType.MANDALA
+        });
 
         this.tokens$.next(list);
         this.isReady$.next(true);
@@ -209,7 +166,14 @@ export class Wallet implements BaseSDK, TokenProvider {
 
   private tokenEeual(a: string, b: Token): boolean {
     if (this.configs.supportAUSD && (a === 'KUSD' || a === 'AUSD')) {
-      return b.display === 'AUSD' || b.display === 'KUSD' || b.symbol === 'AUSD' || b.symbol === 'KUSD';
+      return (
+        b.display === 'AUSD' ||
+        b.display === 'KUSD' ||
+        b.symbol === 'AUSD' ||
+        b.symbol === 'KUSD' ||
+        b.name === 'AUSD' ||
+        b.name === 'KUSD'
+      );
     }
 
     return b.display === a || b.symbol === a || b.name === a;
@@ -242,7 +206,7 @@ export class Wallet implements BaseSDK, TokenProvider {
   public __getToken(target: MaybeCurrency): Token {
     const name = forceToCurrencyName(target);
 
-    const token = Object.values(this.tokens$.value || {}).find((item) => this.tokenEeual(name, item));
+    const token = Object.values(this.tokens$.getValue() || {}).find((item) => this.tokenEeual(name, item));
 
     if (!token) throw new CurrencyNotFound(forceToCurrencyName(target));
 
@@ -452,15 +416,6 @@ export class Wallet implements BaseSDK, TokenProvider {
     // handle sa://0 as KSM, when chain is karuar
     if (ChainType.KARURA === getChainType(this.consts.runtimeChain) && name === 'sa://0' && stakingToken) {
       return this.subscribePrice(stakingToken, type);
-    }
-
-    // handle crowdloan token price
-    if (isLiquidCrowdloanName(name)) {
-      return this.subscribeToken(token).pipe(
-        switchMap(
-          (token) => this.priceProviders[PriceProviderType.ORACLE]?.subscribe(token) || of(FixedPointNumber.ZERO)
-        )
-      );
     }
 
     if (type === PriceProviderType.MARKET && this.priceProviders[PriceProviderType.MARKET]) {

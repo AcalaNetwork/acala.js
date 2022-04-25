@@ -5,7 +5,8 @@ import {
   FixedPointNumber as FN,
   forceToCurrencyName,
   createStableAssetName,
-  createERC20Name
+  createERC20Name,
+  createLiquidCrowdloanName
 } from '@acala-network/sdk-core';
 import { TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
 import { Option, StorageKey, u16 } from '@polkadot/types';
@@ -45,15 +46,17 @@ function extractLocation(key: number, data: [StorageKey<[u16]>, Option<XcmV1Mult
   };
 }
 
+interface Configs {
+  keepDisplayKUSD: boolean;
+  insertLCDOT: boolean;
+}
+
 export function createTokenList(
-  basicTokens: TokenRecord,
   tradingPairs: [StorageKey<[TradingPair]>, TradingPairStatus][],
   assetMetadata: [StorageKey<[ModuleAssetRegistryModuleAssetIds]>, Option<ModuleAssetRegistryModuleAssetMetadata>][],
-  foreignAssetLocations: [StorageKey<[u16]>, Option<XcmV1MultiLocation>][]
+  foreignAssetLocations: [StorageKey<[u16]>, Option<XcmV1MultiLocation>][],
+  configs: Configs
 ): TokenRecord {
-  // tokens list temp
-  let temp: TokenRecord = { ...basicTokens };
-
   const erc20Tokens = Object.fromEntries(
     assetMetadata
       .filter((item) => {
@@ -69,7 +72,8 @@ export function createTokenList(
           name,
           Token.create(name, {
             type: TokenType.ERC20,
-            display: hexToString(value.name.toHex()),
+            fullname: hexToString(value.name.toHex()),
+            display: hexToString(value.symbol.toHex()),
             symbol: hexToString(value.symbol.toHex()),
             decimals,
             ed: FN.fromInner(value.minimalBalance.toString(), decimals)
@@ -93,7 +97,8 @@ export function createTokenList(
           name,
           Token.create(name, {
             type: TokenType.STABLE_ASSET_POOL_TOKEN,
-            display: hexToString(value.name.toHex()),
+            fullname: hexToString(value.name.toHex()),
+            display: hexToString(value.symbol.toHex()),
             symbol: hexToString(value.symbol.toHex()),
             decimals,
             ed: FN.fromInner(value.minimalBalance.toString(), decimals)
@@ -119,6 +124,7 @@ export function createTokenList(
             type: TokenType.FOREIGN_ASSET,
             fullname: hexToString(value.name.toHex()),
             symbol: hexToString(value.symbol.toHex()),
+            display: hexToString(value.symbol.toHex()),
             decimals,
             ed: FN.fromInner(value.minimalBalance.toString(), decimals),
             // TODO: should support other locations
@@ -128,8 +134,45 @@ export function createTokenList(
       })
   );
 
+  const nativeTokens = Object.fromEntries(
+    assetMetadata
+      .filter((item) => item[0].args[0].isNativeAssetId)
+      .map((item) => {
+        const value = item[1].unwrapOrDefault();
+        const name = forceToCurrencyName(item[0].args[0].asNativeAssetId);
+        const decimals = value.decimals.toNumber();
+        const display = name === 'KUSD' && configs.keepDisplayKUSD ? 'kUSD' : hexToString(value.symbol.toHex());
+
+        return [
+          name,
+          Token.create(name, {
+            type: TokenType.BASIC,
+            fullname: hexToString(value.name.toHex()),
+            display: display,
+            symbol: hexToString(value.symbol.toHex()),
+            decimals,
+            ed: FN.fromInner(value.minimalBalance.toString(), decimals)
+          })
+        ];
+      })
+  );
+
   // insert foreign tokens to temp
-  temp = { ...temp, ...foreignTokens, ...stableCoinTokens, ...erc20Tokens };
+  let temp = { ...nativeTokens, ...foreignTokens, ...stableCoinTokens, ...erc20Tokens };
+
+  // inert lcdot to temp
+  if (configs.insertLCDOT && temp.DOT) {
+    const name = createLiquidCrowdloanName(13);
+
+    temp[name] = Token.create(name, {
+      type: TokenType.LIQUID_CROWDLOAN,
+      display: 'lcDOT',
+      symbol: 'lcDOT',
+      fullname: 'Liquid Crowdloan DOT(13)',
+      decimals: temp.DOT.decimals,
+      ed: temp.DOT.ed
+    });
+  }
 
   // handle dex share at latest
   const dexShareTokens = Object.fromEntries(

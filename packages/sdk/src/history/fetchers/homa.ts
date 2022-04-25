@@ -277,9 +277,11 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
       };
     });
     const mints = data.mints.nodes.map((item) => {
+      const staked = item.amountStaked === '0' ? item.stakingCurrencyAmount : item.amountStaked;
+      const minted = item.amountMinted === '0' ? item.liquidAmountReceived : item.amountMinted;
       return {
         data: item,
-        message: this.createMintsMessage(item.amountStaked, item.amountMinted, liquidToken, stakingToken),
+        message: this.createMintsMessage(staked, minted, liquidToken, stakingToken),
         resolveLinks: resolveLinks(
           getChainType(this.configs.wallet.consts.runtimeChain),
           item.extrinsicId,
