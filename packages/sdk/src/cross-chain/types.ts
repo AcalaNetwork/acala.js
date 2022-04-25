@@ -40,3 +40,18 @@ export interface CrossChainInputConfigs {
 export interface CrossChainSDKConfigs {
   adapters: BaseCrossChainAdapter[];
 }
+
+export interface CrossChianBalanceChangedConfigs {
+  token: string;
+  address: string;
+  amount: FixedPointNumber;
+  tolerance?: number;
+  timeout?: number;
+}
+
+export enum BalanceChangedStatus {
+  'CHECKING',
+  'SUCCESS',
+  'TIMEOUT',
+  'UNKNOWN_ERROR'
+}
