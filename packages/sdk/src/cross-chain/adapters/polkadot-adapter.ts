@@ -3,10 +3,10 @@ import { TokenBalance } from '@acala-network/sdk/types';
 import { CurrencyNotFound } from '../../wallet/errors';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
-import { map, Observable, of } from 'rxjs';
+import { combineLatest, map, Observable, of } from 'rxjs';
 import { KusamaBalanceAdapter } from '../balance-adapter/kusama';
 import { BaseCrossChainAdapter } from '../base-chain-adapter';
-import { chains } from '../configs/chains';
+import { chains, RegisteredChain } from '../configs/chains';
 import { Chain, CrossChainRouter, CrossChainTransferParams } from '../types';
 
 interface PolkadotAdapterConfigs {
@@ -29,8 +29,25 @@ class BasePolkadotAdapter extends BaseCrossChainAdapter {
     return this.balanceAdapter.subscribeBalance(token, address).pipe(map((i) => i.available));
   }
 
-  public subscribeMaxInput(token: string, address: string): Observable<FixedPointNumber> {
-    return this.balanceAdapter.subscribeBalance(token, address).pipe(map((i) => i.available));
+  public subscribeMaxInput(token: string, address: string, to: RegisteredChain): Observable<FixedPointNumber> {
+    return combineLatest({
+      txFee: this.measureTransferFee({
+        amount: FixedPointNumber.ZERO,
+        to,
+        token,
+        address
+      }),
+      balance: this.balanceAdapter.subscribeBalance(token, address).pipe(map((i) => i.available))
+    }).pipe(
+      map(({ txFee, balance }) => {
+        const feeFactor = 0.02;
+        const fee = FixedPointNumber.fromInner(txFee, this.balanceAdapter.decimals).mul(
+          new FixedPointNumber(feeFactor)
+        );
+
+        return balance.minus(fee);
+      })
+    );
   }
 
   public subscribeMinInput(token: string): Observable<FixedPointNumber> {

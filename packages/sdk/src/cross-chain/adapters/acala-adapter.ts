@@ -1,7 +1,7 @@
 import { AnyApi, FixedPointNumber } from '@acala-network/sdk-core';
 import { Wallet } from '@acala-network/sdk/wallet';
-import { map, Observable } from 'rxjs';
-import { chains } from '../configs/chains';
+import { combineLatest, map, Observable } from 'rxjs';
+import { chains, RegisteredChain } from '../configs/chains';
 import { Chain, CrossChainRouter, CrossChainTransferParams } from '../types';
 import { BaseCrossChainAdapter } from '../base-chain-adapter';
 import { isChainEqual } from '../utils/is-chain-equal';
@@ -40,8 +40,24 @@ export class BaseAcalaAdaptor extends BaseCrossChainAdapter {
     return this.wallet.subscribeBalance(token, address).pipe(map((r) => r.available));
   }
 
-  public subscribeMaxInput(token: string, address: string): Observable<FixedPointNumber> {
-    return this.wallet.subscribeBalance(token, address).pipe(map((r) => r.available));
+  public subscribeMaxInput(token: string, address: string, to: RegisteredChain): Observable<FixedPointNumber> {
+    const { nativeToken } = this.wallet.getPresetTokens();
+    return combineLatest({
+      txFee: this.measureTransferFee({
+        amount: FixedPointNumber.ZERO,
+        to,
+        token,
+        address
+      }),
+      balance: this.wallet.subscribeBalance(token, address).pipe(map((i) => i.available))
+    }).pipe(
+      map(({ txFee, balance }) => {
+        const feeFactor = 0.02;
+        const fee = FixedPointNumber.fromInner(txFee, nativeToken.decimals || 12).mul(new FixedPointNumber(feeFactor));
+
+        return balance.minus(fee);
+      })
+    );
   }
 
   public getCrossChainFee(token: string): TokenBalance {

@@ -49,7 +49,7 @@ export interface CrossChianBalanceChangedConfigs {
   timeout?: number;
 }
 
-export enum CrossChainTxStatus {
+export enum BalanceChangedStatus {
   'CHECKING',
   'SUCCESS',
   'TIMEOUT',
