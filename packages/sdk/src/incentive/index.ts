@@ -32,6 +32,7 @@ export class Incentive implements BaseSDK {
 
   constructor(api: AnyApi, wallet: Wallet) {
     this.api = api;
+
     this.storages = createStorages(this.api);
     this.isReady$ = new BehaviorSubject<boolean>(false);
     this.wallet = wallet;
@@ -303,7 +304,7 @@ export class Incentive implements BaseSDK {
     }).pipe(
       map(({ endTimes, deductionRates, poolInfos, rewardTokensConfigs, savingRewardRates }) => {
         return poolInfos.map((item) => {
-          const deductionRate = deductionRates[item.id];
+          const deductionRate = deductionRates[item.id] || FixedPointNumber.ZERO;
           const rewardTokensConfig = rewardTokensConfigs[item.id] || [];
           const savingRewardRate = savingRewardRates[item.id] || FixedPointNumber.ZERO;
           const endBlockNumber = endTimes[item.id] || -1;
