@@ -43,7 +43,7 @@ export const createStorages = (api: AnyApi) => {
     claimRewardDeductionRates: () => {
       return Storage.create<[StorageKey<[ModuleIncentivesPoolId]>, u128][]>({
         api: api,
-        path: 'query.incentive.claimRewardDeductionRates',
+        path: 'query.incentives.claimRewardDeductionRates.entries',
         params: []
       });
     },

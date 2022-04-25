@@ -13,11 +13,13 @@ export function getDeductionEndtimeConfigs(
     const blockNumber = key.args[0].toNumber();
 
     const inner = (data: PalletSchedulerScheduledV3['call']) => {
-      const _data = data.asValue;
+      const value = data.asValue;
 
-      if (_data.method === 'updateClaimRewardDeductionRates' && _data.section === 'incentives') {
+      if (!value) return;
+
+      if (value.method === 'updateClaimRewardDeductionRates' && value.section === 'incentives') {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-        const args = _data.args as any as Vec<Vec<ITuple<[ModuleIncentivesPoolId, Rate]>>>;
+        const args = value.args as any as Vec<Vec<ITuple<[ModuleIncentivesPoolId, Rate]>>>;
 
         args.forEach((i) => {
           i.forEach((item) => {
@@ -30,9 +32,9 @@ export function getDeductionEndtimeConfigs(
         });
       }
 
-      if (_data.method === 'batchAll' && _data.section === 'utility') {
+      if (value.method === 'batchAll' && value.section === 'utility') {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-        (_data.args[0] as any as PalletSchedulerScheduledV3['call'][]).forEach((item) => inner(item));
+        (value.args[0] as any as PalletSchedulerScheduledV3['call'][]).forEach((item) => inner(item));
       }
     };
 
