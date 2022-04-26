@@ -279,9 +279,7 @@ __metadata:
     "@types/websocket": ^1.0.0
     websocket: ^1.0.31
   peerDependencies:
-    "@polkadot/api": ^7.1.1
-    "@polkadot/typegen": ^7.1.1
-    "@polkadot/types": ^7.1.1
+    "@polkadot/api": ">7.1.1"
   languageName: unknown
   linkType: soft
 
