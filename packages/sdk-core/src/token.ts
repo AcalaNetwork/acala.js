@@ -38,11 +38,7 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
       poolId: 1,
       name: '3USD',
       decimals: 12,
-      assets: [
-        'AUSD',
-        'erc20://0x5f8e26facc23fa4cbd87b8d9dbbd33d5047abde1',
-        'fa://0'
-      ]
+      assets: ['AUSD', 'erc20://0x5f8e26facc23fa4cbd87b8d9dbbd33d5047abde1', 'fa://0']
     }
   ],
   // Karura
