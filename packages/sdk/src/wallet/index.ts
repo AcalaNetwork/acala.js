@@ -14,7 +14,6 @@ import {
   FixedPointNumber
 } from '@acala-network/sdk-core';
 import { AccountInfo, Balance, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
-import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { BehaviorSubject, combineLatest, Observable, of, firstValueFrom } from 'rxjs';
 import { map, switchMap, shareReplay, filter } from 'rxjs/operators';
 import { TokenRecord, WalletConsts, BalanceData, PresetTokens, WalletConfigs, PriceProviders } from './type';
@@ -288,7 +287,7 @@ export class Wallet implements BaseSDK, TokenProvider {
 
       const handleNonNativeResult = (
         accountInfo: AccountInfo,
-        tokenInfo: OrmlAccountData,
+        tokenInfo: BalanceData,
         token: Token,
         nativeToken: Token
       ) => {
@@ -299,8 +298,8 @@ export class Wallet implements BaseSDK, TokenProvider {
         const nativeLockedBalance = FN.fromInner(accountInfo.data.miscFrozen.toString(), nativeToken.decimals).max(
           FN.fromInner(accountInfo.data.feeFrozen.toString(), nativeToken.decimals)
         );
-        const targetFreeBalance = FN.fromInner(tokenInfo.free.toString(), token.decimals);
-        const targetLockedBalance = FN.fromInner(tokenInfo.frozen.toString(), token.decimals);
+        const targetFreeBalance = tokenInfo.free;
+        const targetLockedBalance = tokenInfo.locked;
         const ed = token.ed;
         const fee = FN.fromInner(paymentInfo.partialFee.toString(), nativeToken.decimals).mul(new FN(feeFactor));
 
@@ -333,7 +332,7 @@ export class Wallet implements BaseSDK, TokenProvider {
 
           return combineLatest({
             accountInfo: this.storages.nativeBalance(address).observable,
-            tokenInfo: this.storages.nonNativeBalance(token, address).observable
+            tokenInfo: this.balanceAdapter.subscribeBalance(token, address)
           }).pipe(
             map(({ accountInfo, tokenInfo }) => handleNonNativeResult(accountInfo, tokenInfo, token, nativeToken))
           );
