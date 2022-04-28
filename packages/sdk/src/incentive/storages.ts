@@ -51,14 +51,14 @@ export const createStorages = (api: AnyApi) => {
       return Storage.create<[u128, BTreeMap<AcalaPrimitivesCurrencyCurrencyId, Balance>]>({
         api: api,
         path: 'query.rewards.sharesAndWithdrawnRewards',
-        params: [address, id]
+        params: [id, address]
       });
     },
     pendingRewards: (id: ModuleIncentivesPoolId, address: string) => {
       return Storage.create<BTreeMap<AcalaPrimitivesCurrencyCurrencyId, Balance>>({
         api: api,
         path: 'query.incentives.pendingMultiRewards',
-        params: [address, id]
+        params: [id, address]
       });
     }
   };
