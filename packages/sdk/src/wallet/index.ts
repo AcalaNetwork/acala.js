@@ -397,8 +397,8 @@ export class Wallet implements BaseSDK, TokenProvider {
       return this.liquidity.subscribePoolDetails(name).pipe(map((data) => data.sharePrice));
     }
 
-    // get liquid token price when price type is market or aggergate
-    if (isLiquidToken && stakingToken && (type === PriceProviderType.MARKET || type === PriceProviderType.AGGREGATE)) {
+    // get liquid token price when price type is market/aggergate/oracle
+    if (isLiquidToken && stakingToken && type !== PriceProviderType.DEX) {
       // create homa sd for get exchange rate
       return this.homa.subscribeEnv().pipe(
         filter((env) => !env.exchangeRate.isZero()),
