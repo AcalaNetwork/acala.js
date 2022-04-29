@@ -196,8 +196,8 @@ export class Swaps extends BaseHistoryFetcher<SwapFetchParams> {
   ) {
     const token0 = this.configs.wallet.__getToken(token0Id);
     const token1 = this.configs.wallet.__getToken(token1Id);
-    const amount0 = FixedPointNumber.fromInner(token0Amount, token0?.decimals).toString(6);
-    const amount1 = FixedPointNumber.fromInner(token1Amount, token1?.decimals).toString(6);
+    const amount0 = FixedPointNumber.fromInner(token0Amount, token0?.decimals).toNumber(6);
+    const amount1 = FixedPointNumber.fromInner(token1Amount, token1?.decimals).toNumber(6);
 
     if (type === 'swap') {
       return `Supply ${amount0} ${token0?.display} for ${amount1} ${token1?.display}`;
@@ -207,7 +207,7 @@ export class Swaps extends BaseHistoryFetcher<SwapFetchParams> {
       const [_t0, _t1] = Token.sortTokenNames(token0Id, token1Id);
       const shareTokenName = createDexShareName(_t0, _t1);
       const shareToken = this.configs.wallet.__getToken(shareTokenName);
-      const amount = FixedPointNumber.fromInner(shareAmount || '0', shareToken?.decimals).toString(6);
+      const amount = FixedPointNumber.fromInner(shareAmount || '0', shareToken?.decimals).toNumber(6);
       return `Remove ${amount} shares from ${shareToken?.display} pool`;
     } else if (type === 'addProvision') {
       return `Add ${amount0} ${token0?.display} + ${amount1} ${token1?.display} in bootstrap`;
