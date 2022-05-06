@@ -194,6 +194,9 @@ export abstract class WalletBase<T extends ApiRx | ApiPromise> {
     currency: MaybeCurrency,
     account: MaybeAccount,
     isAllowDeath: boolean,
-    feeFactor?: number
+    fee: {
+      currency: MaybeCurrency;
+      amount: FN;
+    }
   ): ObOrPromiseResult<T, FN>;
 }

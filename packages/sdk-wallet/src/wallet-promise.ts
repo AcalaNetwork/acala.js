@@ -370,17 +370,24 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     currency: MaybeCurrency,
     account: MaybeAccount,
     isAllowDeath: boolean,
-    feeFactor = 1
+    fee: {
+      currency: MaybeCurrency;
+      amount: FN;
+    }
   ): Promise<FN> {
-    const paymentInfo = await call.paymentInfo(account.toString());
     const accountInfo = await this.api.query.system.account<AccountInfo>(account.toString());
     const currencyInfo = await this.api.query.tokens.accounts<OrmlAccountData>(
       account.toString(),
       forceToCurrencyId(this.api, currency)
     );
+    const feeCurrencyInfo = await this.api.query.tokens.accounts<OrmlAccountData>(
+      account.toString(),
+      forceToCurrencyId(this.api, fee.currency)
+    );
 
     const nativeToken = this.getToken(this.nativeToken);
     const targetToken = this.getToken(currency);
+    const feeToken = this.getToken(fee.currency);
     const isNativeToken = this.isNativeToken(currency);
 
     const providers = accountInfo.providers.toNumber();
@@ -390,22 +397,35 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     const nativeLockedBalance = FN.fromInner(accountInfo.data.miscFrozen.toString(), nativeToken.decimals).max(
       FN.fromInner(accountInfo.data.feeFrozen.toString(), nativeToken.decimals)
     );
-    const targetFreeBalance = FN.fromInner(currencyInfo.free.toString(), targetToken.decimals);
-    const targetLockedBalance = FN.fromInner(currencyInfo.frozen.toString(), targetToken.decimals);
+    const isFeeToken = forceToCurrencyName(feeToken) === forceToCurrencyName(currency);
+    const feeFreeBalance =
+      forceToCurrencyName(feeToken) === nativeToken.name
+        ? nativeFreeBalance
+        : FN.fromInner(feeCurrencyInfo.free.toString(), feeToken.decimals);
+    const feeLockedBalance =
+      forceToCurrencyName(feeToken) === nativeToken.name
+        ? nativeLockedBalance
+        : FN.fromInner(feeCurrencyInfo.frozen.toString(), feeToken.decimals);
+    const targetFreeBalance = isNativeToken
+      ? nativeFreeBalance
+      : FN.fromInner(currencyInfo.free.toString(), targetToken.decimals);
+    const targetLockedBalance = isNativeToken
+      ? nativeLockedBalance
+      : FN.fromInner(currencyInfo.frozen.toString(), targetToken.decimals);
     const ed = this.getTransferConfig(currency).existentialDeposit;
-    const fee = FN.fromInner(paymentInfo.partialFee.toString(), nativeToken.decimals).mul(new FN(feeFactor));
 
     return getMaxAvailableBalance({
       isNativeToken,
+      isFeeToken,
       isAllowDeath,
       providers,
       consumers,
-      nativeFreeBalance,
-      nativeLockedBalance,
+      feeFreeBalance,
+      feeLockedBalance,
       targetFreeBalance,
       targetLockedBalance,
       ed,
-      fee
+      fee: fee.amount
     });
   }
 }

@@ -470,22 +470,26 @@ export class WalletRx extends WalletBase<ApiRx> {
     currency: MaybeCurrency,
     account: MaybeAccount,
     isAllowDeath: boolean,
-    feeFactor = 1
+    fee: {
+      currency: MaybeCurrency;
+      amount: FN;
+    }
   ): Observable<FN> {
-    return call.paymentInfo(account.toString()).pipe(
-      switchMap((paymentInfo) => {
-        return combineLatest([
-          of(paymentInfo),
-          this.api.query.system.account(account.toString()) as Observable<AccountInfo>,
-          this.api.query.tokens.accounts(
-            account.toString(),
-            forceToCurrencyId(this.api, currency)
-          ) as unknown as Observable<OrmlAccountData>
-        ]);
-      }),
-      map(([paymentInfo, accountInfo, currencyInfo]) => {
+    return combineLatest([
+      this.api.query.system.account(account.toString()) as Observable<AccountInfo>,
+      this.api.query.tokens.accounts(
+        account.toString(),
+        forceToCurrencyId(this.api, currency)
+      ) as unknown as Observable<OrmlAccountData>,
+      this.api.query.tokens.accounts(
+        account.toString(),
+        forceToCurrencyId(this.api, fee.currency)
+      ) as unknown as Observable<OrmlAccountData>
+    ]).pipe(
+      map(([accountInfo, currencyInfo, feeCurrencyInfo]) => {
         const nativeToken = this.getToken(this.nativeToken);
         const targetToken = this.getToken(currency);
+        const feeToken = this.getToken(fee.currency);
         const isNativeToken = this.isNativeToken(currency);
         const providers = accountInfo.providers.toNumber();
         const consumers = accountInfo.consumers.toNumber();
@@ -494,22 +498,35 @@ export class WalletRx extends WalletBase<ApiRx> {
         const nativeLockedBalance = FN.fromInner(accountInfo.data.miscFrozen.toString(), nativeToken.decimals).max(
           FN.fromInner(accountInfo.data.feeFrozen.toString(), nativeToken.decimals)
         );
-        const targetFreeBalance = FN.fromInner(currencyInfo.free.toString(), targetToken.decimals);
-        const targetLockedBalance = FN.fromInner(currencyInfo.frozen.toString(), targetToken.decimals);
+        const isFeeToken = forceToCurrencyName(feeToken) === forceToCurrencyName(currency);
+        const feeFreeBalance =
+          forceToCurrencyName(feeToken) === nativeToken.name
+            ? nativeFreeBalance
+            : FN.fromInner(feeCurrencyInfo.free.toString(), feeToken.decimals);
+        const feeLockedBalance =
+          forceToCurrencyName(feeToken) === nativeToken.name
+            ? nativeLockedBalance
+            : FN.fromInner(feeCurrencyInfo.frozen.toString(), feeToken.decimals);
+        const targetFreeBalance = isNativeToken
+          ? nativeFreeBalance
+          : FN.fromInner(currencyInfo.free.toString(), targetToken.decimals);
+        const targetLockedBalance = isNativeToken
+          ? nativeLockedBalance
+          : FN.fromInner(currencyInfo.frozen.toString(), targetToken.decimals);
         const ed = this.getTransferConfig(currency).existentialDeposit;
-        const fee = FN.fromInner(paymentInfo.partialFee.toString(), nativeToken.decimals).mul(new FN(feeFactor));
 
         return getMaxAvailableBalance({
           isNativeToken,
+          isFeeToken,
           isAllowDeath,
           providers,
           consumers,
-          nativeFreeBalance,
-          nativeLockedBalance,
+          feeFreeBalance,
+          feeLockedBalance,
           targetFreeBalance,
           targetLockedBalance,
           ed,
-          fee
+          fee: fee.amount
         });
       })
     );
