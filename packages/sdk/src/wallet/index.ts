@@ -13,7 +13,7 @@ import {
   isDexShareName,
   FixedPointNumber
 } from '@acala-network/sdk-core';
-import { AccountInfo, Balance, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
+import { Balance } from '@polkadot/types/interfaces';
 import { BehaviorSubject, combineLatest, Observable, of, firstValueFrom } from 'rxjs';
 import { map, switchMap, shareReplay, filter } from 'rxjs/operators';
 import { TokenRecord, WalletConsts, BalanceData, PresetTokens, WalletConfigs, PriceProviders } from './type';
@@ -257,84 +257,54 @@ export class Wallet implements BaseSDK, TokenProvider {
       token: MaybeCurrency,
       address: string,
       isAllowDeath: boolean,
-      paymentInfo: RuntimeDispatchInfo,
-      feeFactor = 1.2
+      fee: {
+        currency: MaybeCurrency;
+        amount: FN;
+      }
     ): Observable<FN> => {
-      const handleNativeResult = (accountInfo: AccountInfo, token: Token, nativeToken: Token) => {
-        const providers = accountInfo.providers.toBigInt();
-        const consumers = accountInfo.consumers.toBigInt();
-        const nativeFreeBalance = FN.fromInner(accountInfo.data.free.toString(), nativeToken.decimals);
-        // native locked balance = max(accountInfo.data.miscFrozen, accountInfo.data.feeFrozen)
-        const nativeLockedBalance = FN.fromInner(accountInfo.data.miscFrozen.toString(), nativeToken.decimals).max(
-          FN.fromInner(accountInfo.data.feeFrozen.toString(), nativeToken.decimals)
-        );
-        const ed = token.ed;
-        const fee = FN.fromInner(paymentInfo.partialFee.toString(), nativeToken.decimals).mul(new FN(feeFactor));
-
-        return getMaxAvailableBalance({
-          isNativeToken: true,
-          isAllowDeath,
-          providers,
-          consumers,
-          nativeFreeBalance,
-          nativeLockedBalance,
-          targetFreeBalance: FN.ZERO,
-          targetLockedBalance: FN.ZERO,
-          ed,
-          fee
-        });
-      };
-
-      const handleNonNativeResult = (
-        accountInfo: AccountInfo,
-        tokenInfo: BalanceData,
-        token: Token,
-        nativeToken: Token
-      ) => {
-        const providers = accountInfo.providers.toBigInt();
-        const consumers = accountInfo.consumers.toBigInt();
-        const nativeFreeBalance = FN.fromInner(accountInfo.data.free.toString(), nativeToken.decimals);
-        // native locked balance = max(accountInfo.data.miscFrozen, accountInfo.data.feeFrozen)
-        const nativeLockedBalance = FN.fromInner(accountInfo.data.miscFrozen.toString(), nativeToken.decimals).max(
-          FN.fromInner(accountInfo.data.feeFrozen.toString(), nativeToken.decimals)
-        );
-        const targetFreeBalance = tokenInfo.free;
-        const targetLockedBalance = tokenInfo.locked;
-        const ed = token.ed;
-        const fee = FN.fromInner(paymentInfo.partialFee.toString(), nativeToken.decimals).mul(new FN(feeFactor));
-
-        return getMaxAvailableBalance({
-          isNativeToken: false,
-          isAllowDeath,
-          providers,
-          consumers,
-          nativeFreeBalance,
-          nativeLockedBalance,
-          targetFreeBalance,
-          targetLockedBalance,
-          ed,
-          fee
-        });
-      };
-
       return combineLatest({
         token: this.subscribeToken(token),
-        nativeToken: this.subscribeToken(this.consts.nativeCurrency)
+        nativeToken: this.subscribeToken(this.consts.nativeCurrency),
+        feeToken: this.subscribeToken(fee.currency)
       }).pipe(
-        switchMap(({ token, nativeToken }) => {
+        switchMap(({ token, nativeToken, feeToken }) => {
           const isNativeToken = forceToCurrencyName(token) === nativeToken.name;
-
-          if (isNativeToken) {
-            return this.storages
-              .nativeBalance(address)
-              .observable.pipe(map((data) => handleNativeResult(data, token, nativeToken)));
-          }
+          const isFeeToken = forceToCurrencyName(feeToken) === forceToCurrencyName(token);
 
           return combineLatest({
             accountInfo: this.storages.nativeBalance(address).observable,
-            tokenInfo: this.balanceAdapter.subscribeBalance(token, address)
+            tokenInfo: this.balanceAdapter.subscribeBalance(token, address),
+            feeInfo: this.balanceAdapter.subscribeBalance(feeToken, address)
           }).pipe(
-            map(({ accountInfo, tokenInfo }) => handleNonNativeResult(accountInfo, tokenInfo, token, nativeToken))
+            map(({ accountInfo, tokenInfo, feeInfo }) => {
+              const providers = accountInfo.providers.toBigInt();
+              const consumers = accountInfo.consumers.toBigInt();
+              const nativeFreeBalance = FN.fromInner(accountInfo.data.free.toString(), nativeToken.decimals);
+              // native locked balance = max(accountInfo.data.miscFrozen, accountInfo.data.feeFrozen)
+              const nativeLockedBalance = FN.fromInner(
+                accountInfo.data.miscFrozen.toString(),
+                nativeToken.decimals
+              ).max(FN.fromInner(accountInfo.data.feeFrozen.toString(), nativeToken.decimals));
+              const feeFreeBalance = forceToCurrencyName(feeToken) === nativeToken.name ? nativeFreeBalance : feeInfo.free;
+              const feeLockedBalance = forceToCurrencyName(feeToken) === nativeToken.name ? nativeLockedBalance : feeInfo.locked;
+
+              const targetFreeBalance = isNativeToken ? nativeFreeBalance : tokenInfo.free;
+              const targetLockedBalance = isNativeToken ? nativeLockedBalance : tokenInfo.locked;
+              const ed = token.ed;
+
+              return getMaxAvailableBalance({
+                isFeeToken,
+                isAllowDeath,
+                providers,
+                consumers,
+                feeFreeBalance,
+                feeLockedBalance,
+                targetFreeBalance,
+                targetLockedBalance,
+                ed,
+                fee: fee.amount
+              });
+            })
           );
         })
       );
@@ -345,10 +315,12 @@ export class Wallet implements BaseSDK, TokenProvider {
     token: MaybeCurrency,
     address: string,
     isAllowDeath: boolean,
-    paymentInfo: RuntimeDispatchInfo,
-    feeFactor = 1.2
+    fee: {
+      currency: MaybeCurrency;
+      amount: FN;
+    }
   ): Promise<FN> {
-    return firstValueFrom(this.subscribeSuggestInput(token, address, isAllowDeath, paymentInfo, feeFactor));
+    return firstValueFrom(this.subscribeSuggestInput(token, address, isAllowDeath, fee));
   }
 
   public getPresetTokens(): PresetTokens {
