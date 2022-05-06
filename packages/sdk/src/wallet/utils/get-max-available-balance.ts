@@ -72,8 +72,7 @@ export const getMaxAvailableBalance = (config: Config): FN => {
     const targetAvailableBalance = freeBalance.sub(targetLockedBalance);
 
     // if 0 < target locked balance < ed
-    if (targetLockedBalance.lt(ed) && targetLockedBalance.gt(ZERO))
-      return targetAvailableBalance.sub(ed).max(ZERO);
+    if (targetLockedBalance.lt(ed) && targetLockedBalance.gt(ZERO)) return targetAvailableBalance.sub(ed).max(ZERO);
 
     // if target locked balance >= ed
     if (targetLockedBalance.gte(ed)) return targetAvailableBalance.max(ZERO);

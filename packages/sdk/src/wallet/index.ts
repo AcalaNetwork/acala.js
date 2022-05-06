@@ -285,8 +285,10 @@ export class Wallet implements BaseSDK, TokenProvider {
                 accountInfo.data.miscFrozen.toString(),
                 nativeToken.decimals
               ).max(FN.fromInner(accountInfo.data.feeFrozen.toString(), nativeToken.decimals));
-              const feeFreeBalance = forceToCurrencyName(feeToken) === nativeToken.name ? nativeFreeBalance : feeInfo.free;
-              const feeLockedBalance = forceToCurrencyName(feeToken) === nativeToken.name ? nativeLockedBalance : feeInfo.locked;
+              const feeFreeBalance =
+                forceToCurrencyName(feeToken) === nativeToken.name ? nativeFreeBalance : feeInfo.free;
+              const feeLockedBalance =
+                forceToCurrencyName(feeToken) === nativeToken.name ? nativeLockedBalance : feeInfo.locked;
 
               const targetFreeBalance = isNativeToken ? nativeFreeBalance : tokenInfo.free;
               const targetLockedBalance = isNativeToken ? nativeLockedBalance : tokenInfo.locked;
