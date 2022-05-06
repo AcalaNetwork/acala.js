@@ -49,6 +49,24 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
       decimals: 12,
       assets: ['KSM', 'LKSM']
     }
+  ],
+  // Mandala testnet
+  'Mandala Dev': [
+    {
+      poolId: 0,
+      name: 'taiKSM',
+      decimals: 12,
+      assets: ['KSM', 'LKSM']
+    }
+  ],
+  // Karura testnet
+  'Acala Karura Dev': [
+    {
+      poolId: 0,
+      name: 'taiKSM',
+      decimals: 12,
+      assets: ['KSM', 'LKSM']
+    }
   ]
 };
 
