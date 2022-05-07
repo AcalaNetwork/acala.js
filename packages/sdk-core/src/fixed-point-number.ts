@@ -121,7 +121,7 @@ export class FixedPointNumber {
     return this.inner;
   }
 
-  private setMode(dp = 0, rm = 3): void {
+  private setMode(dp = 0, rm: ROUND_MODE = 3): void {
     BN.config({
       DECIMAL_PLACES: dp,
       ROUNDING_MODE: rm as ROUND_MODE,
@@ -132,21 +132,16 @@ export class FixedPointNumber {
   /**
    * @name toNumber
    */
-  public toNumber(dp = 8, rm = 3): number {
+  public toNumber(dp = 8, rm: ROUND_MODE = 3): number {
     this.setMode();
-    return this.inner
-      .shiftedBy(-this.precision)
-      .dp(dp, rm as any)
-      .toNumber();
+    return this.inner.shiftedBy(-this.precision).dp(dp, rm).toNumber();
   }
 
   /**
    * @name toStirng
    */
-  public toString(dp = 0, rm = 3): string {
-    this.setMode(dp, rm);
-
-    return this.inner.shiftedBy(-this.precision).toString();
+  public toString(dp = 8, rm: ROUND_MODE = 3): string {
+    return this.inner.shiftedBy(-this.precision).dp(dp, rm).toString(10);
   }
 
   /**
