@@ -204,18 +204,18 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
     const token = this.configs.wallet.__getToken(forceToCurrencyName(data.tokenId));
 
     if (type === 'claimRewards') {
-      const amount = FixedPointNumber.fromInner(data.actualAmount || '0', token?.decimals || 12).toString(6);
+      const amount = FixedPointNumber.fromInner(data.actualAmount || '0', token?.decimals || 12).toNumber(6);
       const poolId = this.getPoolId(data.pool);
       return `Claim ${amount} ${token?.display} from ${poolId || ''} earn pool`;
     } else if (type === 'payoutRewards') {
       const poolId = this.getPoolId(data.pool);
-      const amount = FixedPointNumber.fromInner(data.actualPayout || '0', token?.decimals || 12).toString(6);
+      const amount = FixedPointNumber.fromInner(data.actualPayout || '0', token?.decimals || 12).toNumber(6);
       return `Claim ${amount} ${token?.display} from ${poolId || ''} earn pool`;
     } else if (type === 'depositDexShares') {
-      const amount = FixedPointNumber.fromInner(data.amount || '0', token?.decimals || 12).toString(6);
+      const amount = FixedPointNumber.fromInner(data.amount || '0', token?.decimals || 12).toNumber(6);
       return `Add ${amount} shares to ${token?.display} earn pool`;
     } else if (type === 'withdrawDexShares') {
-      const amount = FixedPointNumber.fromInner(data.amount || '0', token?.decimals || 12).toString(6);
+      const amount = FixedPointNumber.fromInner(data.amount || '0', token?.decimals || 12).toNumber(6);
       return `Remove ${amount} shares from ${token?.display} earn pool`;
     } else {
       return 'parse history data failed';

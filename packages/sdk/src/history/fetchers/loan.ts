@@ -153,24 +153,24 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
     const { stableToken } = this.configs.wallet.getPresetTokens();
     const collateral = FixedPointNumber.fromInner(data.collateralAdjustment, collateralToken?.decimals);
     const debit = FixedPointNumber.fromInner(data.debitAdjustment).times(
-      FixedPointNumber.fromInner(data.debitExchangeRate.toString())
+      FixedPointNumber.fromInner(data.debitExchangeRate)
     );
     debit.forceSetPrecision(stableToken?.decimals || 12);
 
     if (collateral.lt(FixedPointNumber.ZERO)) {
-      return `Withdraw ${FixedPointNumber.ZERO.minus(collateral).toString(6)} ${collateralToken?.display}`;
+      return `Withdraw ${FixedPointNumber.ZERO.minus(collateral).toNumber(6)} ${collateralToken?.display}`;
     }
 
     if (collateral.isGreaterThan(FixedPointNumber.ZERO)) {
-      return `Deposit ${collateral.toString(6)} ${collateralToken?.display}`;
+      return `Deposit ${collateral.toNumber(6)} ${collateralToken?.display}`;
     }
 
     if (debit.isGreaterThan(FixedPointNumber.ZERO)) {
-      return `Mint ${debit.toString(6)} ${stableToken?.display}`;
+      return `Mint ${debit.toNumber(6)} ${stableToken?.display}`;
     }
 
     if (debit.lt(FixedPointNumber.ZERO)) {
-      return `Payback ${FixedPointNumber.ZERO.minus(debit).toString(6)} ${stableToken?.display}`;
+      return `Payback ${FixedPointNumber.ZERO.minus(debit).toNumber(6)} ${stableToken?.display}`;
     }
 
     return 'parse history data failed';
@@ -182,8 +182,8 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
     const collateral = FixedPointNumber.fromInner(data.collateralAmount, collateralToken?.decimals);
     const debit = FixedPointNumber.fromInner(data.badDebitVolumeUSD, stableToken?.decimals);
     debit.forceSetPrecision(stableToken?.decimals || 12);
-    return `${collateralToken?.display} position(${collateral.toString(6)} ${
+    return `${collateralToken?.display} position(${collateral.toNumber(6)} ${
       collateralToken?.display
-    }, ${debit.toString(6)} ${stableToken?.display}) had been liquidated through ${data.liquidationStrategy}`;
+    }, ${debit.toNumber(6)} ${stableToken?.display}) had been liquidated through ${data.liquidationStrategy}`;
   }
 }
