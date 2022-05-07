@@ -3,11 +3,14 @@ import { FixedPointNumber } from './fixed-point-number';
 describe('fixed point number constructor should worker', () => {
   test('toString & toNumber', () => {
     const a = FixedPointNumber.fromInner('123456789123456789123456789');
-    const b = FixedPointNumber.fromInner('123456789123456781123456789');
 
-    expect(a.toString()).toEqual('123456789.123456789123456789');
+    expect(a.toString(8)).toEqual('123456789.12345678');
+    expect(a.toString(4)).toEqual('123456789.1234');
+    expect(a.toString(4, 2)).toEqual('123456789.1235');
+    expect(a.toString(0)).toEqual('123456789');
     expect(a.toNumber()).toEqual(123456789.12345678);
-    expect(b.toNumber()).toEqual(123456789.12345678);
+    expect(a.toNumber(4)).toEqual(123456789.1234);
+    expect(a.toNumber(4, 2)).toEqual(123456789.1235);
   });
   test('construct from number', () => {
     const a = new FixedPointNumber(1);
