@@ -93,8 +93,8 @@ export class SwapRx extends SwapBase<ApiRx> {
       );
   }
 
-  private _swapper = memoize((inputToken: Token, outputToken: Token) => {
-    return this.getTradingPathes(inputToken, outputToken).pipe(
+  public _swapper = memoize((inputToken: Token, outputToken: Token) => {
+    return this.getTradingPaths(inputToken, outputToken).pipe(
       switchMap((paths) => this.getLiquidityPoolsByPath(paths).pipe(withLatestFrom(of(paths))))
     );
   });

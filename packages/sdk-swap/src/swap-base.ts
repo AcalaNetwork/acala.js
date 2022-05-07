@@ -93,7 +93,7 @@ export abstract class SwapBase<T extends ApiPromise | ApiRx> {
     return invalidated.length === 0;
   }
 
-  protected getTradingPathes(input: Token, output: Token): Observable<Token[][]> {
+  public getTradingPaths(input: Token, output: Token): Observable<Token[][]> {
     return this.enableTradingPairs$.pipe(
       map((pairs) => {
         const tradeGraph = new TradeGraph(pairs);
