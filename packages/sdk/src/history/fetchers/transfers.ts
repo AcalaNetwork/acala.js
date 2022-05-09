@@ -108,7 +108,7 @@ export class Transfers extends BaseHistoryFetcher<TransfersFetchParams> {
   private createMessage(from: string, to: string, tokenName: string, balance: string) {
     const current = this.fetchParams?.address;
     const token = this.configs.wallet.__getToken(tokenName);
-    const amount = FixedPointNumber.fromInner(balance, token?.decimals).toString(6);
+    const amount = FixedPointNumber.fromInner(balance, token?.decimals).toNumber(6);
 
     let action = '';
 

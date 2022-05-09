@@ -371,36 +371,40 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
   }
 
   private createRequestedRedeemsMessage(amount: string, liquidToken?: Token) {
-    return `Request redeem ${FixedPointNumber.fromInner(amount, liquidToken?.decimals).toString(6)} ${
+    return `Request redeem ${FixedPointNumber.fromInner(amount, liquidToken?.decimals).toNumber(6)} ${
       liquidToken?.display
     }`;
   }
 
   private createMintsMessage(deposit: string, receive: string, liquidToken?: Token, stakingToken?: Token) {
-    return `Stake ${FixedPointNumber.fromInner(deposit, stakingToken?.decimals)} ${
+    return `Stake ${FixedPointNumber.fromInner(deposit, stakingToken?.decimals).toNumber(6)} ${
       stakingToken?.display
-    } for ${FixedPointNumber.fromInner(receive, liquidToken?.decimals)} ${liquidToken?.display}`;
+    } for ${FixedPointNumber.fromInner(receive, liquidToken?.decimals).toNumber(6)} ${liquidToken?.display}`;
   }
 
   private createCamcelledsMessage(amount: string, liquidToken?: Token) {
-    return `Cancel redeem with ${FixedPointNumber.fromInner(amount, liquidToken?.decimals)} ${liquidToken?.display}`;
+    return `Cancel redeem with ${FixedPointNumber.fromInner(amount, liquidToken?.decimals).toNumber(6)} ${
+      liquidToken?.display
+    }`;
   }
 
   private createredeemedsMessage(receive: string, deducted: string, liquidToken?: Token, stakingToken?: Token) {
-    return `Redeem ${FixedPointNumber.fromInner(receive, stakingToken?.decimals)} ${
+    return `Redeem ${FixedPointNumber.fromInner(receive, stakingToken?.decimals).toNumber(6)} ${
       stakingToken?.display
-    } from ${FixedPointNumber.fromInner(deducted, liquidToken?.decimals)} ${liquidToken?.display}`;
+    } from ${FixedPointNumber.fromInner(deducted, liquidToken?.decimals).toNumber(6)} ${liquidToken?.display}`;
   }
 
   private createRedeemedByUnbondsMessage(burned: string, receive: string, liquidToken?: Token, stakingToken?: Token) {
-    return `UnStake ${FixedPointNumber.fromInner(burned, stakingToken?.decimals)} ${
+    return `UnStake ${FixedPointNumber.fromInner(burned, stakingToken?.decimals).toNumber(6)} ${
       liquidToken?.display
-    } for ${FixedPointNumber.fromInner(receive, liquidToken?.decimals)} ${stakingToken?.display}`;
+    } for ${FixedPointNumber.fromInner(receive, liquidToken?.decimals).toNumber(6)} ${stakingToken?.display}`;
   }
 
   private createFastMatchesMessage(burned: string, receive: string, liquidToken?: Token, stakingToken?: Token) {
-    return `UnStake ${FixedPointNumber.fromInner(burned, liquidToken?.decimals)} ${
+    return `UnStake ${FixedPointNumber.fromInner(burned, liquidToken?.decimals).toNumber(6)} ${
       liquidToken?.display
-    } for ${FixedPointNumber.fromInner(receive, stakingToken?.decimals)} ${stakingToken?.display} By Fastmatch`;
+    } for ${FixedPointNumber.fromInner(receive, stakingToken?.decimals).toNumber(6)} ${
+      stakingToken?.display
+    } By Fastmatch`;
   }
 }
