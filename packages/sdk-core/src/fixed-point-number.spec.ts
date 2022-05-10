@@ -8,7 +8,7 @@ describe('fixed point number constructor should worker', () => {
     expect(a.toString(4)).toEqual('123456789.1234');
     expect(a.toString(4, 2)).toEqual('123456789.1235');
     expect(a.toString(0)).toEqual('123456789');
-    expect(a.toNumber()).toEqual(123456789.12345678);
+    expect(a.toNumber(8)).toEqual(123456789.12345678);
     expect(a.toNumber(4)).toEqual(123456789.1234);
     expect(a.toNumber(4, 2)).toEqual(123456789.1235);
   });
@@ -16,6 +16,7 @@ describe('fixed point number constructor should worker', () => {
     const a = new FixedPointNumber(1);
     const b = new FixedPointNumber(1, 2);
     const c = FixedPointNumber.fromInner(1e18, 18);
+    const d = new FixedPointNumber(1.23456, 18);
 
     expect(a._getInner().toString()).toEqual('1000000000000000000');
     expect(a.toString()).toEqual('1');
@@ -24,6 +25,7 @@ describe('fixed point number constructor should worker', () => {
     expect(c.toNumber()).toEqual(1);
     expect(c._getInner().toNumber() + 1).toEqual(1e18 + 1);
     expect(FixedPointNumber.fromInner(c._getInner().toNumber() + 1).toNumber(18)).toEqual(1 + 1e-18);
+    expect(d.toString(18, 2)).toEqual('1.23456');
   });
 
   test('construct from inner', () => {

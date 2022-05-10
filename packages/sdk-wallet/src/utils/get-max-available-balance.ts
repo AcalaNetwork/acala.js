@@ -3,13 +3,13 @@ import { FixedPointNumber as FN } from '@acala-network/sdk-core';
 /*
 the max amount rule:
 
-  1. if fee_free - feeLockedBalance >= fee:
+  1. if fee_free >= fee:
     A. if locked_balance === 0:
       a. if allow_death && (providers > 0 || consumers === 0), then max = free_balance 
       b. if !allow_death || !(provider > 0 || consumers === 0), then max = free_balance - ed
     B. if locked_balance < ed && locked_balance > 0, then max = available_balance - (ed - locked_balance)
     C. if locked_balance >= ed, then max = available_balance 
-  2. if fee_free - feeLockedBalance < fee, throw MayFailedCausedByFee
+  2. if fee_free < fee, throw MayFailedCausedByFee
 */
 
 export class MayFailedCausedByFee extends Error {
@@ -30,7 +30,6 @@ interface Config {
   consumers: number;
 
   feeFreeBalance: FN;
-  feeLockedBalance: FN;
 
   targetFreeBalance: FN;
   targetLockedBalance: FN;
@@ -50,7 +49,6 @@ export const getMaxAvailableBalance = (config: Config): FN => {
     consumers,
 
     feeFreeBalance,
-    feeLockedBalance,
 
     targetFreeBalance,
     targetLockedBalance,
@@ -58,7 +56,7 @@ export const getMaxAvailableBalance = (config: Config): FN => {
     ed,
     fee
   } = config;
-  if (feeFreeBalance.sub(feeLockedBalance).gte(fee)) {
+  if (feeFreeBalance.gte(fee)) {
     const freeBalance = isFeeToken ? targetFreeBalance.sub(fee) : targetFreeBalance;
 
     // if target locked balance <= 0
