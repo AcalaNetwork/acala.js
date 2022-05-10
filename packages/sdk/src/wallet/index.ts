@@ -28,7 +28,6 @@ import { DexPriceProvider } from './price-provider/dex-price-provider';
 import { AggregateProvider } from './price-provider/aggregate-price-provider';
 import { AcalaExpandBalanceAdapter } from './balance-adapter/types';
 import { AcalaBalanceAdapter } from './balance-adapter/acala';
-import { CurrencyNotFound } from './errors';
 import { TokenProvider } from './token-provider/type';
 import { AcalaTokenProvider } from './token-provider/acala';
 
@@ -49,12 +48,7 @@ export class Wallet implements BaseSDK {
   public isReady$: BehaviorSubject<boolean>;
   public consts!: WalletConsts;
 
-  public constructor(
-    api: AnyApi,
-    configs?: WalletConfigs
-    // tokenPriceFetchSource = defaultTokenPriceFetchSource,
-    // priceProviders?: Record<PriceProviderType, PriceProvider>
-  ) {
+  public constructor(api: AnyApi, configs?: WalletConfigs) {
     this.api = api;
     this.isReady$ = new BehaviorSubject<boolean>(false);
     this.configs = {
@@ -98,6 +92,10 @@ export class Wallet implements BaseSDK {
   private init() {
     // 1. init constants
     this.initConsts();
+
+    this.tokenProvider.isReady$.subscribe({
+      next: (status) => this.isReady$.next(status)
+    });
   }
 
   private initConsts() {
@@ -247,7 +245,7 @@ export class Wallet implements BaseSDK {
       throw new SDKNotReady('wallet');
     }
 
-    const tokens = this.tokenProvider.token$.getValue();
+    const tokens = this.tokenProvider.__getAllTokens();
 
     const data: PresetTokens = {
       nativeToken: tokens[forceToCurrencyName(this.consts.nativeCurrency)]

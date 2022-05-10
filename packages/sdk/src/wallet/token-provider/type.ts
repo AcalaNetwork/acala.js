@@ -3,6 +3,8 @@ import { Observable } from 'rxjs';
 import { TokenRecord } from '../type';
 
 export interface TokenProvider {
+  get isReady$(): Observable<boolean>;
+  get isReady(): Promise<boolean>;
   // subscribe token information
   subscribeToken(token: MaybeCurrency): Observable<Token>;
   // get token information

@@ -91,7 +91,7 @@ export class AcalaTokenProvider implements TokenProvider {
     return this.ready$.pipe(filter((i) => !!i));
   }
 
-  public isReady() {
+  public get isReady(): Promise<boolean> {
     return firstValueFrom(this.isReady$);
   }
 
@@ -165,5 +165,13 @@ export class AcalaTokenProvider implements TokenProvider {
       }),
       shareReplay(1)
     );
+  }
+
+  public __getAllTokens() {
+    if (this.ready$.getValue() === false) {
+      console.warn(`__getAllToken need sdk ready`);
+    }
+
+    return this.tokens$.getValue();
   }
 }
