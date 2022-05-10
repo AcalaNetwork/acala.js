@@ -6,3 +6,7 @@ export interface BalanceAdapter {
   subscribeBalance(token: Token | string, address: string): Observable<BalanceData>;
   getED(token: Token | string): FixedPointNumber;
 }
+
+export interface AcalaExpandBalanceAdapter extends BalanceAdapter {
+  subscribeIssuance(token: Token): Observable<FixedPointNumber>;
+}

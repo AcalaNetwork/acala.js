@@ -13,34 +13,34 @@ import {
   isDexShareName,
   FixedPointNumber
 } from '@acala-network/sdk-core';
-import { Balance } from '@polkadot/types/interfaces';
 import { BehaviorSubject, combineLatest, Observable, of, firstValueFrom } from 'rxjs';
-import { map, switchMap, shareReplay, filter } from 'rxjs/operators';
+import { map, switchMap, filter } from 'rxjs/operators';
 import { TokenRecord, WalletConsts, BalanceData, PresetTokens, WalletConfigs, PriceProviders } from './type';
 import { ChainType, Homa, Liquidity, SDKNotReady } from '..';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 import { MarketPriceProvider } from './price-provider/market-price-provider';
 import { OraclePriceProvider } from './price-provider/oracle-price-provider';
 import { PriceProviderType } from './price-provider/types';
-import { createTokenList } from './utils/create-token-list';
 import { BaseSDK } from '../types';
 import { createStorages } from './storages';
-import { TokenProvider } from '../base-provider';
 import { getChainType } from '../utils/get-chain-type';
 import { DexPriceProvider } from './price-provider/dex-price-provider';
 import { AggregateProvider } from './price-provider/aggregate-price-provider';
-import { BalanceAdapter } from './balance-adapter/types';
+import { AcalaExpandBalanceAdapter } from './balance-adapter/types';
 import { AcalaBalanceAdapter } from './balance-adapter/acala';
 import { CurrencyNotFound } from './errors';
+import { TokenProvider } from './token-provider/type';
+import { AcalaTokenProvider } from './token-provider/acala';
 
-export class Wallet implements BaseSDK, TokenProvider {
+export class Wallet implements BaseSDK {
   private api: AnyApi;
-  private priceProviders: PriceProviders;
   // readed from chain information
-  private tokens$: BehaviorSubject<TokenRecord | undefined>;
   private storages: ReturnType<typeof createStorages>;
   private configs: WalletConfigs;
-  private balanceAdapter: BalanceAdapter;
+
+  private balanceAdapter: AcalaExpandBalanceAdapter;
+  private tokenProvider: TokenProvider;
+  private priceProviders: PriceProviders;
 
   // inject liquidity, homa sdk by default for easy using
   public readonly liquidity: Liquidity;
@@ -57,22 +57,29 @@ export class Wallet implements BaseSDK, TokenProvider {
   ) {
     this.api = api;
     this.isReady$ = new BehaviorSubject<boolean>(false);
-    this.tokens$ = new BehaviorSubject<TokenRecord | undefined>(undefined);
     this.configs = {
       supportAUSD: true,
       ...configs
     };
 
+    this.tokenProvider = new AcalaTokenProvider(this.api, {
+      kusd2ausd: this.configs.supportAUSD || true
+    });
+    this.balanceAdapter = new AcalaBalanceAdapter({
+      api: this.api,
+      wsProvider: configs?.wsProvider
+    });
+
     // we should init sdk before init price provider
     this.liquidity = new Liquidity(this.api, this);
     this.homa = new Homa(this.api, this);
-
     const market = new MarketPriceProvider();
     const dex = new DexPriceProvider(this.liquidity);
     const aggregate = new AggregateProvider({ market, dex });
     const oracle = new OraclePriceProvider(this.api);
 
     this.priceProviders = {
+      // default price provider
       [PriceProviderType.AGGREGATE]: aggregate,
       [PriceProviderType.MARKET]: market,
       [PriceProviderType.ORACLE]: oracle,
@@ -82,11 +89,6 @@ export class Wallet implements BaseSDK, TokenProvider {
     this.storages = createStorages(this.api);
 
     this.init();
-
-    this.balanceAdapter = new AcalaBalanceAdapter({
-      api: this.api,
-      wsProvider: configs?.wsProvider
-    });
   }
 
   public get isReady(): Promise<boolean> {
@@ -96,8 +98,6 @@ export class Wallet implements BaseSDK, TokenProvider {
   private init() {
     // 1. init constants
     this.initConsts();
-    // 2. init tokens information
-    this.initTokens();
   }
 
   private initConsts() {
@@ -107,75 +107,17 @@ export class Wallet implements BaseSDK, TokenProvider {
     };
   }
 
-  private initTokens() {
-    const tradingPairs$ = this.storages.tradingPairs().observable;
-    const assetMetadatas$ = this.storages.assetMetadatas().observable;
-    const foreignAssetLocations$ = this.storages.foreignAssetLocations().observable;
-
-    return combineLatest({
-      tradingPairs: tradingPairs$,
-      assetMetadatas: assetMetadatas$,
-      foreignAssetLocations: foreignAssetLocations$
-    }).subscribe({
-      next: ({ tradingPairs, assetMetadatas, foreignAssetLocations }) => {
-        const list = createTokenList(tradingPairs, assetMetadatas, foreignAssetLocations, {
-          keepDisplayKUSD: !this.configs.supportAUSD,
-          insertLCDOT:
-            getChainType(this.consts.runtimeChain) === ChainType.ACALA ||
-            getChainType(this.consts.runtimeChain) === ChainType.MANDALA
-        });
-
-        this.tokens$.next(list);
-        this.isReady$.next(true);
-      }
-    });
-  }
-
   /**
    *  @name subscribeTokens
    *  @param type
    *  @description subscirbe the token list, can filter by type
    */
   public subscribeTokens = memoize((type?: TokenType | TokenType[]): Observable<TokenRecord> => {
-    return this.isReady$.pipe(
-      // wait sdk isReady
-      filter((i) => i),
-      switchMap(() => {
-        return this.tokens$.pipe(
-          filter((data) => !!data),
-          map((data) => {
-            if (type === undefined) return data || {};
-
-            return Object.fromEntries(
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              Object.entries(data!).filter(([, value]) => {
-                return Array.isArray(type) ? type.includes(value.type) : value.type === type;
-              })
-            );
-          })
-        );
-      }),
-      shareReplay(1)
-    );
+    return this.tokenProvider.subscribeTokens(type);
   });
 
   public async getTokens(type?: TokenType | TokenType[]): Promise<TokenRecord> {
     return firstValueFrom(this.subscribeTokens(type));
-  }
-
-  private tokenEeual(a: string, b: Token): boolean {
-    if (this.configs.supportAUSD && (a === 'KUSD' || a === 'AUSD')) {
-      return (
-        b.display === 'AUSD' ||
-        b.display === 'KUSD' ||
-        b.symbol === 'AUSD' ||
-        b.symbol === 'KUSD' ||
-        b.name === 'AUSD' ||
-        b.name === 'KUSD'
-      );
-    }
-
-    return b.display === a || b.symbol === a || b.name === a;
   }
 
   /**
@@ -183,18 +125,7 @@ export class Wallet implements BaseSDK, TokenProvider {
    *  @description subscirbe the token info
    */
   public subscribeToken = memoize((target: MaybeCurrency): Observable<Token> => {
-    const name = forceToCurrencyName(target);
-
-    return this.subscribeTokens().pipe(
-      map((all) => {
-        // filter token by name or symbol
-        const result = Object.values(all).find((item) => this.tokenEeual(name, item));
-
-        if (!result) throw new CurrencyNotFound(name);
-
-        return result;
-      })
-    );
+    return this.tokenProvider.subscribeToken(target);
   });
 
   public async getToken(target: MaybeCurrency): Promise<Token> {
@@ -203,18 +134,12 @@ export class Wallet implements BaseSDK, TokenProvider {
 
   // direct get token no need await, must be called after wallet sdk is ready
   public __getToken(target: MaybeCurrency): Token {
-    const name = forceToCurrencyName(target);
-
-    const token = Object.values(this.tokens$.getValue() || {}).find((item) => this.tokenEeual(name, item));
-
-    if (!token) throw new CurrencyNotFound(forceToCurrencyName(target));
-
-    return token;
+    return this.tokenProvider.__getToken(target);
   }
 
   /**
    * @name subscribeBalance
-   * @description subscribe `address` `token` balance info
+   * @description subscribe `address` `token` balance information
    * @param token
    * @param address
    */
@@ -232,14 +157,7 @@ export class Wallet implements BaseSDK, TokenProvider {
    * @param token
    */
   public subscribeIssuance = memoize((token: MaybeCurrency): Observable<FN> => {
-    return this.subscribeToken(token).pipe(
-      switchMap((token) => {
-        const storage = this.storages.issuance(token);
-        const handleIssuance = (data: Balance, token: Token) => FN.fromInner(data.toString(), token.decimals);
-
-        return storage.observable.pipe(map((data) => handleIssuance(data, token)));
-      })
-    );
+    return this.subscribeToken(token).pipe(switchMap((token) => this.balanceAdapter.subscribeIssuance(token)));
   });
 
   public async getIssuance(token: MaybeCurrency): Promise<FN> {
@@ -330,7 +248,7 @@ export class Wallet implements BaseSDK, TokenProvider {
       throw new SDKNotReady('wallet');
     }
 
-    const tokens = this.tokens$.value || {};
+    const tokens = this.tokenProvider.token$.getValue();
 
     const data: PresetTokens = {
       nativeToken: tokens[forceToCurrencyName(this.consts.nativeCurrency)]
