@@ -402,10 +402,10 @@ export class WalletPromise extends WalletBase<ApiPromise> {
       forceToCurrencyName(feeToken) === nativeToken.name
         ? nativeFreeBalance
         : FN.fromInner(feeCurrencyInfo.free.toString(), feeToken.decimals);
-    const feeLockedBalance =
-      forceToCurrencyName(feeToken) === nativeToken.name
-        ? nativeLockedBalance
-        : FN.fromInner(feeCurrencyInfo.frozen.toString(), feeToken.decimals);
+    // const feeLockedBalance =
+    //   forceToCurrencyName(feeToken) === nativeToken.name
+    //     ? nativeLockedBalance
+    //     : FN.fromInner(feeCurrencyInfo.frozen.toString(), feeToken.decimals);
     const targetFreeBalance = isNativeToken
       ? nativeFreeBalance
       : FN.fromInner(currencyInfo.free.toString(), targetToken.decimals);
@@ -421,7 +421,6 @@ export class WalletPromise extends WalletBase<ApiPromise> {
       providers,
       consumers,
       feeFreeBalance,
-      feeLockedBalance,
       targetFreeBalance,
       targetLockedBalance,
       ed,
