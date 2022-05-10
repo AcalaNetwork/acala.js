@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { isNumber } from 'lodash';
 
 /**
  * @constant
@@ -132,16 +133,23 @@ export class FixedPointNumber {
   /**
    * @name toNumber
    */
-  public toNumber(dp = 8, rm: ROUND_MODE = 3): number {
+  public toNumber(dp?: number, rm: ROUND_MODE = 3): number {
     this.setMode();
-    return this.inner.shiftedBy(-this.precision).dp(dp, rm).toNumber();
+    return this.inner
+      .shiftedBy(-this.precision)
+      .dp(isNumber(dp) ? dp : this.precision || 8, rm)
+      .toNumber();
   }
 
   /**
    * @name toStirng
    */
-  public toString(dp = 8, rm: ROUND_MODE = 3): string {
-    return this.inner.shiftedBy(-this.precision).dp(dp, rm).toString(10);
+  public toString(dp?: number, rm: ROUND_MODE = 3): string {
+    this.setMode();
+    return this.inner
+      .shiftedBy(-this.precision)
+      .dp(isNumber(dp) ? dp : this.precision || 8, rm)
+      .toString();
   }
 
   /**
