@@ -86,20 +86,17 @@ export class AcalaBalanceAdapter implements AcalaExpandBalanceAdapter {
 
   private subscribeEVMEvents() {
     const evmUpdate$ = new BehaviorSubject<number>(0);
+    let count = 0;
 
     // TODO: should subscribe ERC20 transfer event
     const eventFilterConfigs = [{ section: 'evm', method: '*' }];
 
     if (this.api.type === 'rxjs') {
-      eventsFilterRx(this.api as ApiRx, eventFilterConfigs, true).subscribe(() =>
-        this.evmUpdate$.next(this.evmUpdate$.value + 1)
-      );
+      eventsFilterRx(this.api as ApiRx, eventFilterConfigs, true).subscribe(() => evmUpdate$.next(++count));
     }
 
     if (this.api.type === 'promise') {
-      eventsFilterCallback(this.api as ApiPromise, eventFilterConfigs, true, () =>
-        this.evmUpdate$.next(this.evmUpdate$.value + 1)
-      );
+      eventsFilterCallback(this.api as ApiPromise, eventFilterConfigs, true, () => evmUpdate$.next(++count));
     }
 
     return evmUpdate$;
