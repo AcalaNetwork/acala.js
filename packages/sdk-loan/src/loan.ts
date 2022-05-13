@@ -11,7 +11,6 @@ import { AcalaPrimitivesCurrencyCurrencyId, ModuleLoansPosition } from '@acala-n
 
 export interface LoanParams {
   debitExchangeRate: FixedPointNumber;
-  globalInterestRatePerSec: FixedPointNumber;
   liquidationRatio: FixedPointNumber;
   requiredCollateralRatio: FixedPointNumber;
   interestRatePerSec: FixedPointNumber;
@@ -85,13 +84,7 @@ export class LoanRx {
       return combineLatest([this.loanParams$, this.loanPosition$, this.wallet.queryPrice(this.currency)]).pipe(
         map(([params, position, price]) => {
           const { debit, collateral } = position;
-          const {
-            debitExchangeRate,
-            requiredCollateralRatio,
-            interestRatePerSec,
-            liquidationRatio,
-            globalInterestRatePerSec
-          } = params;
+          const { debitExchangeRate, requiredCollateralRatio, interestRatePerSec, liquidationRatio } = params;
           // trade debit decimal with stable coin decimal
           const _debit = FixedPointNumber.fromInner(debit.toString(), this.stableCoinToken.decimals);
 
@@ -121,7 +114,7 @@ export class LoanRx {
             collateralAmount: collateralAmount,
             collateralRatio: collateralAmount.div(debitAmount),
             requiredCollateral,
-            stableFeeAPR: this.getStableFeeAPR(interestRatePerSec.plus(globalInterestRatePerSec)),
+            stableFeeAPR: this.getStableFeeAPR(interestRatePerSec),
             liquidationPrice: this.getLiquidationPrice(_collateral, debitAmount, liquidationRatio),
             canGenerate,
             canPayBack: debitAmount,
@@ -198,7 +191,6 @@ export class LoanRx {
       map((params: DerivedLoanType): LoanParams => {
         return {
           debitExchangeRate: FixedPointNumber.fromInner(params.debitExchangeRate.toString()),
-          globalInterestRatePerSec: FixedPointNumber.fromInner(params.globalInterestRatePerSec.toString()),
           liquidationRatio: FixedPointNumber.fromInner(params.liquidationRatio.toString()),
           requiredCollateralRatio: FixedPointNumber.fromInner(params.requiredCollateralRatio.toString()),
           interestRatePerSec: FixedPointNumber.fromInner(params.interestRatePerSec.toString())
