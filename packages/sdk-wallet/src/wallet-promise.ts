@@ -398,8 +398,9 @@ export class WalletPromise extends WalletBase<ApiPromise> {
       FN.fromInner(accountInfo.data.feeFrozen.toString(), nativeToken.decimals)
     );
     const isFeeToken = forceToCurrencyName(feeToken) === forceToCurrencyName(currency);
+    const isDefaultFee = forceToCurrencyName(feeToken) === nativeToken.name
     const feeFreeBalance =
-      forceToCurrencyName(feeToken) === nativeToken.name
+      isDefaultFee
         ? nativeFreeBalance
         : FN.fromInner(feeCurrencyInfo.free.toString(), feeToken.decimals);
     // const feeLockedBalance =
@@ -415,6 +416,7 @@ export class WalletPromise extends WalletBase<ApiPromise> {
     const ed = this.getTransferConfig(currency).existentialDeposit;
 
     return getMaxAvailableBalance({
+      isDefaultFee,
       isNativeToken,
       isFeeToken,
       isAllowDeath,
