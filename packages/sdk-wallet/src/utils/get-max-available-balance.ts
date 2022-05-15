@@ -58,7 +58,7 @@ export const getMaxAvailableBalance = (config: Config): FN => {
     ed,
     fee
   } = config;
-  
+
   if ((isDefaultFee || !feeFreeBalance.isZero()) && feeFreeBalance.gte(fee)) {
     const freeBalance = isFeeToken ? targetFreeBalance.sub(fee) : targetFreeBalance;
 

@@ -398,11 +398,10 @@ export class WalletPromise extends WalletBase<ApiPromise> {
       FN.fromInner(accountInfo.data.feeFrozen.toString(), nativeToken.decimals)
     );
     const isFeeToken = forceToCurrencyName(feeToken) === forceToCurrencyName(currency);
-    const isDefaultFee = forceToCurrencyName(feeToken) === nativeToken.name
-    const feeFreeBalance =
-      isDefaultFee
-        ? nativeFreeBalance
-        : FN.fromInner(feeCurrencyInfo.free.toString(), feeToken.decimals);
+    const isDefaultFee = forceToCurrencyName(feeToken) === nativeToken.name;
+    const feeFreeBalance = isDefaultFee
+      ? nativeFreeBalance
+      : FN.fromInner(feeCurrencyInfo.free.toString(), feeToken.decimals);
     // const feeLockedBalance =
     //   forceToCurrencyName(feeToken) === nativeToken.name
     //     ? nativeLockedBalance
