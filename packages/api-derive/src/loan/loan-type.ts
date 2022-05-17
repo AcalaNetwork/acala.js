@@ -34,13 +34,12 @@ export function loanType(
 ): (currncy: AcalaPrimitivesCurrencyCurrencyId) => Observable<DerivedLoanType> {
   return memo(instanceId, (currency: AcalaPrimitivesCurrencyCurrencyId) => {
     return combineLatest([
-      api.query.cdpEngine.globalInterestRatePerSec<Rate>(),
       api.query.cdpEngine.debitExchangeRate<Rate>(currency),
       api.query.cdpEngine.collateralParams<CollateralParams>(currency)
     ]).pipe(
       map((result) => {
         const constants = loanConstants(api);
-        const [globalInterestRatePerSec, debitExchangeRate, collateralParams] = result;
+        const [debitExchangeRate, collateralParams] = result;
 
         return {
           currency,
@@ -53,7 +52,6 @@ export function loanType(
             : collateralParams.liquidationRatio,
           requiredCollateralRatio: collateralParams.requiredCollateralRatio,
           interestRatePerSec: collateralParams.interestRatePerSec,
-          globalInterestRatePerSec: globalInterestRatePerSec,
           maximumTotalDebitValue: collateralParams.maximumTotalDebitValue,
           minimumDebitValue: constants.minimumDebitValue
         };

@@ -5,13 +5,13 @@ import { FixedPointNumber, forceToCurrencyId, MaybeCurrency, Token } from '@acal
 import { Position } from '@acala-network/types/interfaces';
 import { DerivedLoanType } from '@acala-network/api-derive';
 import { ApiRx } from '@polkadot/api';
-import { WalletRx } from '@acala-network/sdk-wallet';
 import { memoize } from 'lodash';
 import { AcalaPrimitivesCurrencyCurrencyId, ModuleLoansPosition } from '@acala-network/types/interfaces/types-lookup';
+import { Wallet } from '@acala-network/sdk';
+import { PriceProviderType } from '@acala-network/sdk/wallet/price-provider/types';
 
 export interface LoanParams {
   debitExchangeRate: FixedPointNumber;
-  globalInterestRatePerSec: FixedPointNumber;
   liquidationRatio: FixedPointNumber;
   requiredCollateralRatio: FixedPointNumber;
   interestRatePerSec: FixedPointNumber;
@@ -31,6 +31,7 @@ export interface LoanPosition extends LoanParams {
   canPayBack: FixedPointNumber;
   canWithdraw: FixedPointNumber;
   maxGenerate: FixedPointNumber;
+  minCollateral: FixedPointNumber;
 }
 
 const YEAR_SECONDS = 365 * 24 * 60 * 60; // second of one year
@@ -41,13 +42,13 @@ export class LoanRx {
   private collateralToken: Token;
   private stableCoinToken: Token;
   private readonly address: string;
-  private wallet: WalletRx;
+  private wallet: Wallet;
   private loanPosition$: Observable<Position>;
   private readonly loanParams$: Observable<LoanParams>;
 
-  constructor(api: ApiRx, currency: MaybeCurrency, address: string, wallet: WalletRx) {
-    const collateralToken = wallet.getToken(currency);
-    const stableCoinToken = wallet.getToken(api.consts.cdpEngine.getStableCurrencyId);
+  constructor(api: ApiRx, currency: MaybeCurrency, address: string, wallet: Wallet) {
+    const collateralToken = wallet.__getToken(currency);
+    const stableCoinToken = wallet.__getToken(api.consts.cdpEngine.getStableCurrencyId);
 
     assert(collateralToken && stableCoinToken, `init the loan sdk failed, can't find useable token in currency chain`);
 
@@ -82,16 +83,15 @@ export class LoanRx {
    */
   private getPositionWithChanged = memoize(
     (debitAmountChange: FixedPointNumber, collateralChange: FixedPointNumber): Observable<LoanPosition> => {
-      return combineLatest([this.loanParams$, this.loanPosition$, this.wallet.queryPrice(this.currency)]).pipe(
-        map(([params, position, price]) => {
+      return combineLatest({
+        params: this.loanParams$,
+        position: this.loanPosition$,
+        price: this.wallet.subscribePrice(this.currency, PriceProviderType.ORACLE),
+        token: this.wallet.subscribeToken(this.currency)
+      }).pipe(
+        map(({ params, position, price, token }) => {
           const { debit, collateral } = position;
-          const {
-            debitExchangeRate,
-            requiredCollateralRatio,
-            interestRatePerSec,
-            liquidationRatio,
-            globalInterestRatePerSec
-          } = params;
+          const { debitExchangeRate, requiredCollateralRatio, interestRatePerSec, liquidationRatio } = params;
           // trade debit decimal with stable coin decimal
           const _debit = FixedPointNumber.fromInner(debit.toString(), this.stableCoinToken.decimals);
 
@@ -100,9 +100,9 @@ export class LoanRx {
             collateralChange
           );
           const debitAmount = _debit.times(debitExchangeRate).plus(debitAmountChange);
-          const collateralAmount = _collateral.times(price.price);
+          const collateralAmount = _collateral.times(price);
 
-          const requiredCollateral = this.getRequiredCollateral(debitAmount, requiredCollateralRatio, price.price);
+          const requiredCollateral = this.getRequiredCollateral(debitAmount, requiredCollateralRatio, price);
 
           const canGenerate = this.getCanGenerate(
             collateralAmount,
@@ -113,6 +113,7 @@ export class LoanRx {
           );
 
           const maxGenerate = this.getMaxGenerate(collateralAmount, requiredCollateralRatio);
+          const minCollateral = debitAmount.isZero() ? token.ed.mul(new FixedPointNumber(100)) : FixedPointNumber.ZERO;
 
           return {
             collateral: _collateral,
@@ -121,12 +122,13 @@ export class LoanRx {
             collateralAmount: collateralAmount,
             collateralRatio: collateralAmount.div(debitAmount),
             requiredCollateral,
-            stableFeeAPR: this.getStableFeeAPR(interestRatePerSec.plus(globalInterestRatePerSec)),
+            stableFeeAPR: this.getStableFeeAPR(interestRatePerSec),
             liquidationPrice: this.getLiquidationPrice(_collateral, debitAmount, liquidationRatio),
             canGenerate,
             canPayBack: debitAmount,
             canWithdraw: _collateral.minus(requiredCollateral).min(FixedPointNumber.ZERO),
             maxGenerate,
+            minCollateral,
             ...params
           };
         })
@@ -198,7 +200,6 @@ export class LoanRx {
       map((params: DerivedLoanType): LoanParams => {
         return {
           debitExchangeRate: FixedPointNumber.fromInner(params.debitExchangeRate.toString()),
-          globalInterestRatePerSec: FixedPointNumber.fromInner(params.globalInterestRatePerSec.toString()),
           liquidationRatio: FixedPointNumber.fromInner(params.liquidationRatio.toString()),
           requiredCollateralRatio: FixedPointNumber.fromInner(params.requiredCollateralRatio.toString()),
           interestRatePerSec: FixedPointNumber.fromInner(params.interestRatePerSec.toString())

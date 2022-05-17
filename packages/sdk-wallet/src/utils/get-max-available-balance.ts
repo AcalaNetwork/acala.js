@@ -22,6 +22,7 @@ export class MayFailedCausedByFee extends Error {
 }
 
 interface Config {
+  isDefaultFee: boolean;
   isNativeToken: boolean;
   isFeeToken: boolean;
   isAllowDeath: boolean;
@@ -42,6 +43,7 @@ const ZERO = FN.ZERO;
 
 export const getMaxAvailableBalance = (config: Config): FN => {
   const {
+    isDefaultFee,
     isFeeToken,
     isAllowDeath,
 
@@ -56,7 +58,8 @@ export const getMaxAvailableBalance = (config: Config): FN => {
     ed,
     fee
   } = config;
-  if (feeFreeBalance.gte(fee)) {
+
+  if ((isDefaultFee || !feeFreeBalance.isZero()) && feeFreeBalance.gte(fee)) {
     const freeBalance = isFeeToken ? targetFreeBalance.sub(fee) : targetFreeBalance;
 
     // if target locked balance <= 0

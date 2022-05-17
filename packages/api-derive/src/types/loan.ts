@@ -21,7 +21,6 @@ export interface DerivedLoanType extends Omit<CollateralParams, 'liquidationRati
   debitExchangeRate: Rate;
   liquidationRatio: OptionRatio | ExchangeRate;
   liquidationPenalty: OptionRatio | Rate;
-  globalInterestRatePerSec: Rate;
 }
 
 export interface DerivedUserLoan {
