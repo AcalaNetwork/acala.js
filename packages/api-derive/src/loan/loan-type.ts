@@ -3,12 +3,16 @@ import { map } from 'rxjs/operators';
 
 import { ApiInterfaceRx } from '@polkadot/api/types';
 import { memo } from '@polkadot/api-derive/util';
+import { Option } from '@polkadot/types';
 
 import { Rate, ExchangeRate, Balance, Position, Ratio } from '@acala-network/types/interfaces';
 
-import { DerivedLoanConstants, DerivedLoanType, DerivedLoanOverView, CollateralParams } from '../types/loan';
+import { DerivedLoanConstants, DerivedLoanType, DerivedLoanOverView } from '../types/loan';
 import { getAllCollateralCurrencyIds } from '../utils';
-import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/interfaces/types-lookup';
+import {
+  AcalaPrimitivesCurrencyCurrencyId,
+  ModuleCdpEngineRiskManagementParams
+} from '@acala-network/types/interfaces/types-lookup';
 
 /**
  * @name loanConstants
@@ -35,11 +39,12 @@ export function loanType(
   return memo(instanceId, (currency: AcalaPrimitivesCurrencyCurrencyId) => {
     return combineLatest([
       api.query.cdpEngine.debitExchangeRate<Rate>(currency),
-      api.query.cdpEngine.collateralParams<CollateralParams>(currency)
+      api.query.cdpEngine.collateralParams<Option<ModuleCdpEngineRiskManagementParams>>(currency)
     ]).pipe(
       map((result) => {
         const constants = loanConstants(api);
-        const [debitExchangeRate, collateralParams] = result;
+        const [debitExchangeRate] = result;
+        const collateralParams = result[1].unwrapOrDefault();
 
         return {
           currency,
