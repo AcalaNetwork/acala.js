@@ -44,7 +44,9 @@ export function loanType(
       map((result) => {
         const constants = loanConstants(api);
         const [debitExchangeRate] = result;
-        const collateralParams = result[1].unwrapOrDefault();
+        const collateralParams = Reflect.has(result[1], 'unwrapOrDefault')
+          ? result[1].unwrapOrDefault()
+          : (result[1] as any as ModuleCdpEngineRiskManagementParams);
 
         return {
           currency,
