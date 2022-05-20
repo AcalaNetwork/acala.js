@@ -58,7 +58,7 @@ export class MarketPriceProvider implements PriceProvider {
     const name = currency.symbol;
 
     // set KUSD, AUSD market price to 1 for calculate in system
-    if (name === 'KSUD' || name === 'AUSD') {
+    if (name === 'KSUD' || name === 'AUSD' || name === '3USD') {
       return of(new FixedPointNumber(1, 12));
     }
 
