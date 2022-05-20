@@ -59,7 +59,7 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
       poolId: 1,
       name: '3USD',
       decimals: 12,
-      assets: ['AUSD', 'erc20://0x1f3a10587a20114ea25ba1b388ee2dd4a337ce27', 'fa://7']
+      assets: ['KUSD', 'erc20://0x1f3a10587a20114ea25ba1b388ee2dd4a337ce27', 'fa://7']
     }
   ],
   // Mandala testnet
