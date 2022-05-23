@@ -21,13 +21,13 @@
     "@open-web3/orml-types": "^1.1.4"
   },
   "devDependencies": {
-    "@polkadot/api": "^7.1.1",
-    "@polkadot/typegen": "^7.1.1",
-    "@polkadot/types": "^7.1.1",
+    "@polkadot/api": "^8.5.1",
+    "@polkadot/typegen": "^8.5.1",
+    "@polkadot/types": "^8.5.1",
     "@types/websocket": "^1.0.0",
     "websocket": "^1.0.31"
   },
   "peerDependencies": {
-    "@polkadot/api": ">7.1.1"
+    "@polkadot/api": ">8.5.1"
   }
 }
