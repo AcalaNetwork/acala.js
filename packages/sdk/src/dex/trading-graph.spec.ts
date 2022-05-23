@@ -45,6 +45,15 @@ describe('trading graph', () => {
 
     tradingGraph.genGraph();
 
-    console.log(TradingGraph.printPaths(tradingGraph.searchPaths(token0, token1)));
+    console.log(TradingGraph.printPaths(tradingGraph.searchPaths(token0, token3)));
+    tradingGraph
+      .getTradingPaths({
+        start: token0,
+        end: token3,
+        aggreagetLimit: 4
+      })
+      .forEach((i) => {
+        console.log(i[0], i[1]);
+      });
   });
 });

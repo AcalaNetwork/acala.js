@@ -1,5 +1,5 @@
 import { Token } from '@acala-network/sdk-core';
-import { DexSource, TradingPair } from './types';
+import { DexSource, TradingPair, TradingPath } from './types';
 
 interface TradeNode {
   source: DexSource;
@@ -91,7 +91,7 @@ export class TradingGraph {
 
     tracking.push(current);
 
-    if (current.token.name === target.name && !this.isInPath(tracking, current)) {
+    if (current.token.name === target.name) {
       paths.push([...tracking]);
 
       return;
@@ -118,10 +118,32 @@ export class TradingGraph {
     return paths;
   }
 
-  public getTradingPaths(configs: { start: Token; end: Token; acalaLimit: number; aggreagetLimit: number }) {
-    const { start, end } = configs;
+  private mapTradeNodesToTradePath(nodePath: TradeNode[]): TradingPath {
+    const path: TradingPath = [];
 
-    return this.searchPaths(start, end);
+    for (let i = 0; i < nodePath.length; i++) {
+      const { source, token } = nodePath[i];
+
+      const latest = path.pop();
+
+      if (latest?.[0] === source) {
+        path.push([latest[0], [...latest[1], token]]);
+      } else {
+        if (latest) path.push(latest);
+
+        path.push([source, [token]]);
+      }
+    }
+
+    return path;
+  }
+
+  public getTradingPaths(configs: { start: Token; end: Token; aggreagetLimit: number }) {
+    const { start, end, aggreagetLimit } = configs;
+
+    return this.searchPaths(start, end)
+      .map(this.mapTradeNodesToTradePath)
+      .filter((i) => i.length <= aggreagetLimit);
   }
 
   public static printPaths(data: TradeNode[][]) {

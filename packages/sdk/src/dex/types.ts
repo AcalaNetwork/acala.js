@@ -8,9 +8,9 @@ export type DexSource = 'acala' | 'nuts';
  * define the trading path for dex swap
  * eg: the struct below define (AUSD -> DOT)(acala) -> (DOT -> LDOT)(nuts) -> (LDOT -> lcDOT)(acala)
  * [
- *    ["acala", "AUSD", "DOT"],
- *    ["nuts", "DOT", "LDOT"],
- *    ["acala", "LDOT", "lcDOT://13"]
+ *    ["acala", ["AUSD", "DOT"]],
+ *    ["nuts", ["DOT", "LDOT"]],
+ *    ["acala", ["LDOT", "lcDOT://13"]]
  * ]
  */
 export type TradingPath = [DexSource, Token[]][];
@@ -63,6 +63,10 @@ export interface SwapParams {
 
 export interface SwapParamsWithExactPath extends SwapParams {
   path: Token[];
+}
+
+export interface AggregateDexSwapParams extends SwapParams {
+  path: [Token, Token];
 }
 
 export interface BaseSwap {

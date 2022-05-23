@@ -29,3 +29,13 @@ export class NoTradingPathError extends Error {
     this.message = 'No Trading Path';
   }
 }
+
+/* no swap provider found */
+export class NoSwapProvider extends Error {
+  constructor(name: string) {
+    super();
+
+    this.name = 'NoSwapProvider';
+    this.message = `no ${name} swap provider`;
+  }
+}
