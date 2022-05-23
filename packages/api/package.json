@@ -19,11 +19,11 @@
     "@acala-network/types": "4.1.2-28",
     "@babel/runtime": "^7.10.2",
     "@open-web3/orml-api-derive": "^1.1.4",
-    "@polkadot/api": "^7.1.1",
-    "@polkadot/rpc-core": "^7.1.1"
+    "@polkadot/api": "^8.5.1",
+    "@polkadot/rpc-core": "^8.5.1"
   },
   "peerDependencies": {
-    "@polkadot/api": "^7.1.1",
-    "@polkadot/types": "^7.1.1"
+    "@polkadot/api": "^8.5.1",
+    "@polkadot/types": "^8.5.1"
   }
 }
