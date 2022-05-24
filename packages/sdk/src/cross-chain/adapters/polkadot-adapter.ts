@@ -40,7 +40,7 @@ class BasePolkadotAdapter extends BaseCrossChainAdapter {
       balance: this.balanceAdapter.subscribeBalance(token, address).pipe(map((i) => i.available))
     }).pipe(
       map(({ txFee, balance }) => {
-        const feeFactor = 0.02;
+        const feeFactor = 1.2;
         const fee = FixedPointNumber.fromInner(txFee, this.balanceAdapter.decimals).mul(
           new FixedPointNumber(feeFactor)
         );
