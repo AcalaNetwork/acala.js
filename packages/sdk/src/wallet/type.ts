@@ -35,9 +35,9 @@ export interface TransferConfig {
 
 export interface PresetTokens {
   nativeToken: Token;
-  stableToken?: Token;
-  liquidToken?: Token;
-  stakingToken?: Token;
+  stableToken: Token;
+  liquidToken: Token;
+  stakingToken: Token;
 }
 
 export type TokenPriceFetchSource = {

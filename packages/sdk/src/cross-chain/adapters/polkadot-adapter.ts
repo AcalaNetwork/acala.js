@@ -4,7 +4,7 @@ import { CurrencyNotFound } from '../../wallet/errors';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { combineLatest, map, Observable, of } from 'rxjs';
-import { KusamaBalanceAdapter } from '../balance-adapter/kusama';
+import { PolkadotBalanceAdapter } from '../balance-adapter/polkadot';
 import { BaseCrossChainAdapter } from '../base-chain-adapter';
 import { chains, RegisteredChain } from '../configs/chains';
 import { Chain, CrossChainRouter, CrossChainTransferParams } from '../types';
@@ -19,10 +19,10 @@ const crossChainFeeConfigs: Record<string, string> = {
 };
 
 class BasePolkadotAdapter extends BaseCrossChainAdapter {
-  private balanceAdapter: KusamaBalanceAdapter;
+  private balanceAdapter: PolkadotBalanceAdapter;
   constructor(configs: PolkadotAdapterConfigs, chain: Chain, routers: Omit<CrossChainRouter, 'from'>[]) {
     super(configs.api, chain, routers);
-    this.balanceAdapter = new KusamaBalanceAdapter({ api: configs.api });
+    this.balanceAdapter = new PolkadotBalanceAdapter({ api: configs.api });
   }
 
   public subscribeAvailableBalance(token: string, address: string): Observable<FixedPointNumber> {
@@ -40,12 +40,14 @@ class BasePolkadotAdapter extends BaseCrossChainAdapter {
       balance: this.balanceAdapter.subscribeBalance(token, address).pipe(map((i) => i.available))
     }).pipe(
       map(({ txFee, balance }) => {
-        const feeFactor = 0.02;
+        const feeFactor = 1.2;
         const fee = FixedPointNumber.fromInner(txFee, this.balanceAdapter.decimals).mul(
           new FixedPointNumber(feeFactor)
         );
+        const ed = this.balanceAdapter.getED();
 
-        return balance.minus(fee);
+        // always minus ed
+        return balance.minus(fee).minus(ed);
       })
     );
   }
