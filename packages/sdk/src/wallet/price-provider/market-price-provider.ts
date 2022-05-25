@@ -67,6 +67,11 @@ export class MarketPriceProvider implements PriceProvider {
       return this.subscribe(new Token('KSM'));
     }
 
+    // use DOT price as tDOT price
+    if (name === 'tDOT') {
+      return this.subscribe(new Token('DOT'));
+    }
+
     // if doesn't track this token, fetch it immediately
     if (this.trackedCurrencies.findIndex((i) => i === name) === -1) {
       this.trackedCurrencies.push(name);
