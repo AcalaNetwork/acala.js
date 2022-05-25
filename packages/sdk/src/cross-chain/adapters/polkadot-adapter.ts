@@ -45,7 +45,10 @@ class BasePolkadotAdapter extends BaseCrossChainAdapter {
           new FixedPointNumber(feeFactor)
         );
 
-        return balance.minus(fee);
+        // always minus ed
+        const ed = this.balanceAdapter.getED();
+
+        return balance.minus(fee).minus(ed);
       })
     );
   }

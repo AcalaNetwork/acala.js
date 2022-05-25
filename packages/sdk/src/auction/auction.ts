@@ -22,7 +22,7 @@ export class Auction {
     this.wallet = wallet;
     this.storages = createAuctionStorages(this.api);
     this.configs = {
-      auctionDurationSoftCap: this.api.consts.auctionManager.auctionDurationSoftCap.toBn(),
+      auctionDurationSoftCap: this.api.consts.auctionManager.auctionDurationSoftCap.toBigInt(),
       minimumIncrementSize: FixedPointNumber.fromInner(
         this.api.consts.auctionManager.minimumIncrementSize.toString(),
         18
@@ -48,7 +48,7 @@ export class Auction {
     startBlock: bigint,
     currentBlock: bigint,
     target: FixedPointNumber,
-    last: FixedPointNumber
+    last?: FixedPointNumber
   ) {
     const { minimumIncrementSize, auctionDurationSoftCap } = this.configs;
 
@@ -59,7 +59,7 @@ export class Auction {
       incrementSize = minimumIncrementSize.mul(FixedPointNumber.TWO);
     }
 
-    return target.max(last).mul(FixedPointNumber.ONE.add(incrementSize));
+    return target.max(last || FixedPointNumber.ZERO).mul(FixedPointNumber.ONE.add(incrementSize));
   }
 
   private subscribeData(): Observable<AuctionData> {
@@ -73,8 +73,8 @@ export class Auction {
         const bid = auctionBidDetails.unwrap();
         const collateral = this.wallet.__getToken(details.currencyId);
         const stableToken = this.wallet.getPresetTokens().stableToken;
-        const startBlock = details.startTime.toBn();
-        const currentBlock = newHeader.number.toBn();
+        const startBlock = details.startTime.toBigInt();
+        const currentBlock = newHeader.number.toBigInt();
         const bidDetails = bid.bid.unwrapOrDefault();
         const target = FixedPointNumber.fromInner(details.target.toString(), stableToken.decimals);
         const currentBidAccount = bidDetails[0] ? bidDetails[0].toString() : undefined;
@@ -88,8 +88,8 @@ export class Auction {
           initialAmount: FixedPointNumber.fromInner(details.initialAmount.toString(), collateral.decimals),
           amount: FixedPointNumber.fromInner(details.amount.toString(), collateral.decimals),
           target: target,
-          startBlock: bid.start.toBn(),
-          endBlock: bid.end.unwrapOrDefault()?.toBn(),
+          startBlock: bid.start.toBigInt(),
+          endBlock: bid.end.unwrapOrDefault()?.toBigInt(),
           currentBidAmount: currentBidAmount,
           currentBidAccount: currentBidAccount,
           minimumBidAmount: this.getMinimumBidAmount(startBlock, currentBlock, target, currentBidAmount)

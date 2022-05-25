@@ -333,24 +333,21 @@ export class Wallet implements BaseSDK, TokenProvider {
     const tokens = this.tokens$.value || {};
 
     const data: PresetTokens = {
-      nativeToken: tokens[forceToCurrencyName(this.consts.nativeCurrency)]
+      nativeToken: tokens[forceToCurrencyName(this.consts.nativeCurrency)],
+      stableToken: tokens[forceToCurrencyName(this.api.consts.cdpEngine.getStableCurrencyId)],
+      liquidToken:
+        tokens[
+          forceToCurrencyName(
+            this.api.consts.homa?.liquidCurrencyId || this.api.consts.homaLite?.liquidCurrencyId || ''
+          )
+        ],
+      stakingToken:
+        tokens[
+          forceToCurrencyName(
+            this.api.consts.homa?.stakingCurrencyId || this.api.consts.homaLite?.stakingCurrencyId || ''
+          )
+        ]
     };
-
-    if (this.api.consts?.cdpEngine.getStableCurrencyId) {
-      data.stableToken = tokens[forceToCurrencyName(this.api.consts.cdpEngine.getStableCurrencyId)];
-    }
-
-    data.liquidToken =
-      tokens[
-        forceToCurrencyName(this.api.consts.homa?.liquidCurrencyId || this.api.consts.homaLite?.liquidCurrencyId || '')
-      ];
-
-    data.stakingToken =
-      tokens[
-        forceToCurrencyName(
-          this.api.consts.homa?.stakingCurrencyId || this.api.consts.homaLite?.stakingCurrencyId || ''
-        )
-      ];
 
     return data;
   }

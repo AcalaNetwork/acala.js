@@ -1,5 +1,5 @@
 import { AnyApi } from '@acala-network/sdk-core';
-import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, firstValueFrom, Observable } from 'rxjs';
 import { BaseSDK } from '../types';
 import { Wallet } from '../wallet';
 import { AuctionManagerConfigs } from './types';
@@ -37,8 +37,9 @@ export class AuctionManager implements BaseSDK {
   }
 
   private subscribeAuction(id: string) {
-    if (this.auctions.get(id)) {
-      return this.auctions.get(id).data$;
+    if (this.auctions.has(id)) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return this.auctions.get(id)!.data$;
     }
 
     const auction = new Auction({ id, api: this.api, wallet: this.wallet });
