@@ -162,7 +162,8 @@ export class Swaps extends BaseHistoryFetcher<SwapFetchParams> {
             token1Id: item.token1Id,
             token0Amount: item.token0Amount,
             token1Amount: item.token1Amount,
-            shareAmount: item.shareAmount || ''
+            shareAmount: item.shareAmount || '',
+            timestamp: item.timestamp
           },
           message: this.createMessage(
             item.type,
