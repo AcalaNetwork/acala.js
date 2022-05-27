@@ -3087,9 +3087,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@open-web3/dev-config@npm:^0.2.2":
-  version: 0.2.2
-  resolution: "@open-web3/dev-config@npm:0.2.2"
+"@open-web3/dev-config@npm:^0.2.3":
+  version: 0.2.3
+  resolution: "@open-web3/dev-config@npm:0.2.3"
   dependencies:
     "@babel/cli": ^7.17.6
     "@babel/core": ^7.17.8
@@ -3176,7 +3176,7 @@ __metadata:
     polkadot-exec-typedoc: scripts/polkadot-exec-typedoc.cjs
     polkadot-exec-vuepress: scripts/polkadot-exec-vuepress.cjs
     polkadot-exec-webpack: scripts/polkadot-exec-webpack.cjs
-  checksum: a23acb10470a87ef9fd62936d6995c1e42fe0406ec9b05ace0210d411af02820f5c389c91e71a626c943929fdd90c4dee12707185f755db350127e0d9adc2d2a
+  checksum: a7610cccc452848b7d676c62420467fe8dd3efb38aaa252aa7c64e2f1d2b51a0be73f2abe96fc40604a7158d3e2b1b9b525f8b2f085131b2c845fa9ea9628b56
   languageName: node
   linkType: hard
 
@@ -10763,7 +10763,7 @@ __metadata:
     "@babel/core": ^7.14.3
     "@babel/register": ^7.13.6
     "@babel/runtime": ^7.14.0
-    "@open-web3/dev-config": ^0.2.2
+    "@open-web3/dev-config": ^0.2.3
     "@open-web3/util": ^1.1.4
     "@types/jest": ^25.2.3
     dotenv: ^16.0.0
