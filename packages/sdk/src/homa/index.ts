@@ -303,9 +303,9 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
       if (isFastMatch) {
         if (!address) throw new RequiredAddressInFastReddem();
 
-        return this.api.tx.utility.batch([
+        return this.api.tx.utility.batchAll([
           this.api.tx.homa.requestRedeem(amount.toChainData(), true),
-          this.api.tx.homa.fastMatchRedeems([address])
+          this.api.tx.homa.fastMatchRedeemsCompletely([address])
         ]) as SubmittableExtrinsic<T, ISubmittableResult>;
       }
 
