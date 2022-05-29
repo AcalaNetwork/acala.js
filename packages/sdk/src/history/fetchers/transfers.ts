@@ -88,7 +88,8 @@ export class Transfers extends BaseHistoryFetcher<TransfersFetchParams> {
             from: item.fromId,
             to: item.toId,
             amount: item.amount,
-            token: item.tokenId
+            token: item.tokenId,
+            timestamp: item.timestamp
           },
           message: this.createMessage(item.fromId, item.toId, item.tokenId, item.amount),
           resolveLinks: resolveLinks(

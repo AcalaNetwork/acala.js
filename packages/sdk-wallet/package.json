@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk-wallet",
-  "version": "4.1.2-28",
+  "version": "4.1.4-2",
   "description": "the wallet sdk for acala/karura network",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
@@ -15,8 +15,8 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
-    "@polkadot/api": "^7.1.1",
-    "@polkadot/types": "^7.1.1",
+    "@polkadot/api": "^8.5.1",
+    "@polkadot/types": "^8.5.1",
     "lodash": "^4.17.20",
     "rxjs": "^7.4.0"
   },

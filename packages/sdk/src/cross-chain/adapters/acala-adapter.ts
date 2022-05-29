@@ -52,7 +52,7 @@ export class BaseAcalaAdaptor extends BaseCrossChainAdapter {
       balance: this.wallet.subscribeBalance(token, address).pipe(map((i) => i.available))
     }).pipe(
       map(({ txFee, balance }) => {
-        const feeFactor = 0.02;
+        const feeFactor = 1.2;
         const fee = FixedPointNumber.fromInner(txFee, nativeToken.decimals || 12).mul(new FixedPointNumber(feeFactor));
 
         return balance.minus(fee);

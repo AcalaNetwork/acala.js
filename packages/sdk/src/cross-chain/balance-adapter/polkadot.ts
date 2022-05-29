@@ -19,17 +19,17 @@ export const createBalanceStorages = (api: AnyApi) => {
   };
 };
 
-interface KusamaBalanceAdapterConfigs {
+interface PolkadotBalanceAdapterConfigs {
   api: AnyApi;
 }
 
-export class KusamaBalanceAdapter implements BalanceAdapter {
+export class PolkadotBalanceAdapter implements BalanceAdapter {
   private storages: ReturnType<typeof createBalanceStorages>;
   readonly decimals: number;
   readonly ed: FN;
   readonly nativeToken: string;
 
-  constructor({ api }: KusamaBalanceAdapterConfigs) {
+  constructor({ api }: PolkadotBalanceAdapterConfigs) {
     this.storages = createBalanceStorages(api);
     this.decimals = api.registry.chainDecimals[0];
     this.ed = FN.fromInner(api.consts.balances.existentialDeposit.toString(), this.decimals);
