@@ -1,5 +1,5 @@
 import { Token } from '@acala-network/sdk-core';
-import { DexSource, TradingPair, TradingPath } from './types';
+import { DexSource, TradingPair, CompositeTradingPath } from './types';
 
 interface TradeNode {
   source: DexSource;
@@ -118,8 +118,8 @@ export class TradingGraph {
     return paths;
   }
 
-  private mapTradeNodesToTradePath(nodePath: TradeNode[]): TradingPath {
-    const path: TradingPath = [];
+  private mapTradeNodesToCompositeTradePath(nodePath: TradeNode[]): CompositeTradingPath {
+    const path: CompositeTradingPath = [];
 
     for (let i = 0; i < nodePath.length; i++) {
       const { source, token } = nodePath[i];
@@ -142,15 +142,34 @@ export class TradingGraph {
     const { start, end, aggreagetLimit } = configs;
 
     return this.searchPaths(start, end)
-      .map(this.mapTradeNodesToTradePath)
+      .map(this.mapTradeNodesToCompositeTradePath)
       .filter((i) => i.length <= aggreagetLimit);
   }
 
-  public static printPaths(data: TradeNode[][]) {
+  // convert trade nodes info to string for debug
+  public static tradeNodesToString(data: TradeNode[][]) {
     let temp = '';
 
     for (const values of data) {
       temp += `${values.map((i) => `(${i.source}, ${i.token.name})`).join(' -> ')}`;
+      temp += '\r\n';
+    }
+
+    return temp;
+  }
+
+  // convert paths info to string for debug
+  public static pathsToString(data: CompositeTradingPath[]) {
+    let temp = '';
+
+    for (const values of data) {
+      for (let i = 0; i < values.length; i++) {
+        const item = values[i];
+
+        temp += `${i !== 0 ? '->' : ''}(${item[0]}: ${item[1].map((j) => j.symbol).join('-')})${
+          i < data.length ? '->' : ''
+        }`;
+      }
       temp += '\r\n';
     }
 

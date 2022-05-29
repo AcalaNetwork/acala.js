@@ -18,6 +18,7 @@
     "@acala-network/api": "4.1.4-2",
     "@acala-network/bodhi": "^2.4.0",
     "@acala-network/type-definitions": "4.1.4-2",
+    "@nuts-finance/sdk-stable-asset": "^1.1.9",
     "@polkadot/api": "^8.5.1",
     "@polkadot/types": "^8.5.1",
     "@types/events": "^3.0.0",

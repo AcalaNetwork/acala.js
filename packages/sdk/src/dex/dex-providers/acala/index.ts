@@ -20,7 +20,8 @@ import {
   SwapResult,
   TradeType,
   TradingPair,
-  TradingPath
+  CompositeTradingPath,
+  TradingPathItem
 } from '../../types';
 import { ExchangeFee, ExpandPath, ExpandPathWithPositions, MidResult } from './types';
 import { calculateExchangeFeeRate, getSupplyAmount, getTargetAmount } from './utils/calculate-helper';
@@ -55,6 +56,9 @@ export class AcalaDex implements BaseSwap {
   private storages: ReturnType<typeof createStorages>;
   private exchangeFee: ExchangeFee;
   public readonly tradingPairs$: Observable<TradingPair[]>;
+  readonly configs: {
+    tradingPathLimit: number;
+  };
 
   constructor({ api, wallet }: AcalaDexConfigs) {
     this.api = api;
@@ -63,6 +67,9 @@ export class AcalaDex implements BaseSwap {
     this.exchangeFee = this.getExchangeFee();
 
     this.tradingPairs$ = this.initTradingPairs$();
+    this.configs = {
+      tradingPathLimit: Number(this.api.consts.dex.tradingPathLimit.toString())
+    };
   }
 
   private getExchangeFee(): ExchangeFee {
@@ -154,9 +161,9 @@ export class AcalaDex implements BaseSwap {
             ? this.swapWithExactInput(inputAmount, expandPath)
             : this.swapWithExactOutput(inputAmount, expandPath);
 
-        const tradingPath = [[this.source, path]] as [DexSource, Token[]][];
+        const CompositeTradingPath = [[this.source, path]] as [DexSource, Token[]][];
 
-        return this.getSwapResult(tradingPath, type, midResult);
+        return this.getSwapResult(CompositeTradingPath, type, midResult);
       })
     );
   }
@@ -186,7 +193,7 @@ export class AcalaDex implements BaseSwap {
     return temp.minus(outputAmount).div(temp);
   }
 
-  private getSwapResult(path: TradingPath, type: TradeType, data: MidResult): SwapResult {
+  private getSwapResult(path: CompositeTradingPath, type: TradeType, data: MidResult): SwapResult {
     return {
       source: this.source,
       type: type,
@@ -313,5 +320,11 @@ export class AcalaDex implements BaseSwap {
       exchangeFee: fee,
       exchangeFeeRate: feeRate
     };
+  }
+
+  public filterPath(path: TradingPathItem) {
+    if (path[0] !== this.source) return false;
+
+    return path[1].length <= this.configs.tradingPathLimit;
   }
 }

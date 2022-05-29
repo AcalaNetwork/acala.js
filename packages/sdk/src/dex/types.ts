@@ -13,7 +13,9 @@ export type DexSource = 'acala' | 'nuts';
  *    ["acala", ["LDOT", "lcDOT://13"]]
  * ]
  */
-export type TradingPath = [DexSource, Token[]][];
+export type TradingPathItem = [DexSource, Token[]];
+
+export type CompositeTradingPath = TradingPathItem[];
 
 /**
  * define the trading pair struct, tokens in trading pair should sorted
@@ -24,12 +26,12 @@ export type TradingPair = [Token, Token];
 export type TradeType = 'EXACT_INPUT' | 'EXACT_OUTPUT';
 
 // the swap of trade
-export type SwapSource = 'acala' | 'nuts' | 'aggregate';
+export type SwapSource = DexSource | 'aggregate';
 
 export interface SwapResult {
   source: SwapSource;
   type: TradeType;
-  path: TradingPath;
+  path: CompositeTradingPath;
   // actual input token and amount, no matter which trade type is
   input: {
     token: Token;
@@ -40,16 +42,14 @@ export interface SwapResult {
     token: Token;
     amount: FixedPointNumber;
   };
-  // get average price through trading
   midPrice: FixedPointNumber;
   // get price impact
   priceImpact: FixedPointNumber;
   // get price impact which subtract exchange fee
   naturalPriceImpact: FixedPointNumber;
-  // exchange fee
   exchangeFee: FixedPointNumber;
-  // exchange fee rate
   exchangeFeeRate: FixedPointNumber;
+  acceptiveSlippage?: number;
 }
 
 export interface SwapParams {
@@ -72,6 +72,7 @@ export interface AggregateDexSwapParams extends SwapParams {
 export interface BaseSwap {
   get source(): DexSource;
   get tradingPairs$(): Observable<TradingPair[]>;
+  filterPath(path: TradingPathItem): boolean;
   swap(params: SwapParamsWithExactPath): Observable<SwapResult>;
 }
 

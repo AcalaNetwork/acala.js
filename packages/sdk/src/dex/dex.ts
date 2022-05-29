@@ -1,14 +1,22 @@
-import { AnyApi, Token } from '@acala-network/sdk-core';
-import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, Observable, switchMap } from 'rxjs';
+import { AnyApi, FixedPointNumber, Token } from '@acala-network/sdk-core';
+import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, Observable, of, switchMap } from 'rxjs';
 import { BaseSDK } from '../types';
 import { Wallet } from '../wallet';
-import { NoSwapProvider } from './errors';
 import { TradingGraph } from './trading-graph';
-import { AggregateDexConfigs, AggregateDexSwapParams, BaseSwap, SwapParams, TradingPath } from './types';
+import {
+  AggregateDexConfigs,
+  AggregateDexSwapParams,
+  BaseSwap,
+  DexSource,
+  TradeType,
+  CompositeTradingPath,
+  SwapResult,
+  TradingPathItem
+} from './types';
 
 export class AggregateDex implements BaseSDK {
   private api: AnyApi;
-  private wallet: Wallet;
+  readonly wallet: Wallet;
   private providers: BaseSwap[];
   private tradingGraph: TradingGraph;
   private status: BehaviorSubject<boolean>;
@@ -36,7 +44,7 @@ export class AggregateDex implements BaseSDK {
 
   private getConfigs() {
     return {
-      aggregateLimit: this.api.consts.dex.tradingPathLimit.toNumber()
+      aggregateLimit: (this.api.consts.dex.tradingPathLimit as any).toNumber()
     };
   }
 
@@ -72,30 +80,91 @@ export class AggregateDex implements BaseSDK {
     return firstValueFrom(this.tradableTokens$);
   }
 
-  private subscribeSwap(path: TradingPath) {
-    const [source, tokenPath] = path[0];
+  public getTradingPaths(start: Token, end: Token): CompositeTradingPath[] {
+    return this.tradingGraph
+      .getTradingPaths({
+        start,
+        end,
+        aggreagetLimit: 3
+      })
+      .filter((path) => {
+        // check all path is validate
+        return path.reduce((acc, item) => {
+          const [source] = item;
+          const provider = this.providers.find((i) => i.source === source);
 
-    const provider = this.providers.find((i) => i.source === source);
+          if (!provider) return false;
 
-    if (!provider) throw new NoSwapProvider(source);
+          return acc && provider.filterPath(item);
+        }, true);
+      });
   }
 
-  private subscribeBestSwapResult(paths: TradingPath[]) {}
+  private findProvider(source: DexSource): BaseSwap {
+    // never failed
+    return this.providers.find((i) => i.source === source);
+  }
+
+  private swapWithCompositePath(type: TradeType, input: FixedPointNumber, path: CompositeTradingPath) {
+    const [first] = path;
+
+    const fn = (count: number, max: number, params: SwapResult) => {
+      const current = path[count];
+      const provider = this.findProvider(current[0]);
+
+      if (count === max) {
+        return of(params);
+      }
+
+      return provider
+        .swap({
+          source: current[0],
+          type,
+          input: params.output.amount,
+          acceptiveSlippage: 0,
+          path: current[1]
+        })
+        .pipe(
+          switchMap((result) => {
+            return fn(count + 1, max, result);
+          })
+        );
+    };
+
+    const createFirstTrading = (path: TradingPathItem) => {
+      const provider = this.findProvider(path[0]);
+
+      return provider.swap({
+        source: path[0],
+        type: type,
+        input,
+        acceptiveSlippage: 0,
+        path: path[1]
+      });
+    };
+
+    return createFirstTrading(first).pipe(
+      switchMap((result) => {
+        return fn(1, path.length - 1, result);
+      })
+    );
+  }
+
+  private subscribeBestSwapResult(paths: CompositeTradingPath[]) {}
 
   public swap(params: AggregateDexSwapParams) {
     const { path, source, type, input, acceptiveSlippage } = params;
-
-    let useablePaths = this.tradingGraph.getTradingPaths({
-      start: path[0],
-      end: path[1],
-      aggreagetLimit: this.configs.aggregateLimit
-    });
+    let useablePaths = this.getTradingPaths(path[0], path[1]);
 
     if (source !== 'aggregate') {
       // remove include other source path when source is not aggregate
-      useablePaths = useablePaths.filter((i) => {
-        return !i.find((node) => node.source !== source);
+      useablePaths = useablePaths.filter((path) => {
+        return path.reduce((acc, item) => {
+          return acc && source !== item[0];
+        }, true);
       });
     }
+
+    return combineLatest(useablePaths.map((path) => this.swapWithCompositePath(type, input, path)));
   }
 }
