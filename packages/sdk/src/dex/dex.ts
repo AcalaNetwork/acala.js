@@ -108,13 +108,13 @@ export class AggregateDex implements BaseSDK {
   private swapWithCompositePath(type: TradeType, input: FixedPointNumber, path: CompositeTradingPath) {
     const [first] = path;
 
-    const fn = (count: number, max: number, params: SwapResult) => {
-      const current = path[count];
-      const provider = this.findProvider(current[0]);
-
-      if (count === max) {
+    const fn = (count: number, max: number, params: SwapResult): Observable<SwapResult> => {
+      if (count >= max) {
         return of(params);
       }
+
+      const current = path[count];
+      const provider = this.findProvider(current[0]);
 
       return provider
         .swap({
@@ -150,10 +150,21 @@ export class AggregateDex implements BaseSDK {
     );
   }
 
-  private subscribeBestSwapResult(paths: CompositeTradingPath[]) {}
+  private getBestSwapResult(type: TradeType, resultList: SwapResult[]) {
+    if (type === 'EXACT_INPUT') {
+      return resultList.slice(1).reduce((acc, cur) => {
+        return acc.output.amount.gt(cur.output.amount) ? acc : cur;
+      }, resultList[0]);
+    }
+
+    // exact output
+    return resultList.slice(1).reduce((acc, cur) => {
+      return acc.input.amount.lt(cur.input.amount) ? acc : cur;
+    }, resultList[0]);
+  }
 
   public swap(params: AggregateDexSwapParams) {
-    const { path, source, type, input, acceptiveSlippage } = params;
+    const { path, source, type, input } = params;
     let useablePaths = this.getTradingPaths(path[0], path[1]);
 
     if (source !== 'aggregate') {
@@ -165,6 +176,8 @@ export class AggregateDex implements BaseSDK {
       });
     }
 
-    return combineLatest(useablePaths.map((path) => this.swapWithCompositePath(type, input, path)));
+    return combineLatest(useablePaths.map((path) => this.swapWithCompositePath(type, input, path))).pipe(
+      map((results) => this.getBestSwapResult(type, results))
+    );
   }
 }

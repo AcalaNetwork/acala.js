@@ -1,7 +1,7 @@
 import { options } from '@acala-network/api';
 import { FixedPointNumber } from '@acala-network/sdk-core';
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { map } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
 import { Wallet } from '../wallet';
 import { WalletConfigs } from '../wallet/type';
 import { AggregateDex } from './dex';
@@ -35,7 +35,7 @@ describe('dex', () => {
     });
   };
 
-  test('get tradable tokens shoule be ok', async () => {
+  test.skip('get tradable tokens shoule be ok', async () => {
     const sdk = await initSDK();
 
     await sdk.isReady;
@@ -45,7 +45,7 @@ describe('dex', () => {
     console.log(tokens.map((i) => i.symbol));
   });
 
-  test('get trading path should be ok', async () => {
+  test.skip('get trading path should be ok', async () => {
     const sdk = await initSDK();
 
     await sdk.isReady;
@@ -64,10 +64,19 @@ describe('dex', () => {
     const ksm = sdk.wallet.__getToken('KSM');
     const rmrk = sdk.wallet.__getToken('RMRK');
 
-    sdk.swap({ path: [ksm, rmrk], source: 'aggregate', type: 'EXACT_INPUT', input: FixedPointNumber.ONE }).subscribe({
-      next: (result) => {
-        console.log(result);
-      }
+    const result = await firstValueFrom(
+      sdk.swap({
+        path: [ksm, rmrk],
+        source: 'aggregate',
+        type: 'EXACT_INPUT',
+        input: new FixedPointNumber(1, ksm.decimals)
+      })
+    );
+
+    result.forEach((item) => {
+      console.log(item.path.map((i) => i[1].map((j) => j.symbol).join(',')));
+      console.log(item.input.amount.toString(), item.input.token.toString());
+      console.log(item.output.amount.toString(), item.output.token.toString());
     });
   });
 });

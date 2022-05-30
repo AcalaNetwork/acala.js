@@ -104,19 +104,21 @@ export class AcalaDex implements BaseSwap {
   }
 
   private getExpandPath(path: Token[]): ExpandPath {
-    return path.reduce((acc, cur, i) => {
-      if (i === path.length - 2) return acc;
+    const max = path.length;
 
-      const sortedTokenNames = Token.sort(cur, path[i + 1]).map((i) => i.name) as [string, string];
-      const dexShareTokenName = createDexShareName(...sortedTokenNames);
-      const dexShareToken = this.wallet.__getToken(dexShareTokenName);
+    return path.reduce((acc, cur, i) => {
+      if (i > max - 2) return acc;
+
+      const output = path[i + 1];
+      const sortedTokenNames = Token.sort(cur, output).map((i) => i.name) as [string, string];
+      const dexShareToken = this.wallet.__getToken(createDexShareName(...sortedTokenNames));
 
       return [
         ...acc,
         {
           dexShareToken,
           input: cur,
-          output: path[i + 1]
+          output
         }
       ];
     }, [] as ExpandPath);
@@ -133,10 +135,15 @@ export class AcalaDex implements BaseSwap {
           const originPosition = positions[i].amounts;
 
           // sort position
-          const position =
+          let position =
             poolTokenNames[0] === inputName
               ? originPosition
               : ([originPosition[1], originPosition[0]] as [FixedPointNumber, FixedPointNumber]);
+
+          // clear position decimals
+          position = position.map((item) => {
+            return FixedPointNumber.fromInner(item.toChainData());
+          }) as [FixedPointNumber, FixedPointNumber];
 
           return {
             ...item,
@@ -151,6 +158,7 @@ export class AcalaDex implements BaseSwap {
     const { input, path, type } = params;
 
     const expandPath = this.getExpandPath(path);
+
     // remove decimals
     const inputAmount = FixedPointNumber.fromInner(input.toChainData());
 
@@ -171,7 +179,7 @@ export class AcalaDex implements BaseSwap {
   private getMidPrice(path: ExpandPathWithPositions) {
     const prices: FixedPointNumber[] = [];
 
-    for (let i = 0; i < path.length - 1; i++) {
+    for (let i = 0; i < path.length; i++) {
       const { position } = path[i];
       const [balance1, balance2] = position;
 
@@ -203,7 +211,6 @@ export class AcalaDex implements BaseSwap {
   }
 
   private swapWithExactInput(inputAmount: FixedPointNumber, path: ExpandPathWithPositions): MidResult {
-    // temp result data
     const result = {
       input: {
         token: path[0].input,
@@ -215,7 +222,7 @@ export class AcalaDex implements BaseSwap {
       }
     };
 
-    for (let i = 0; i < path.length - 1; i++) {
+    for (let i = 0; i < path.length; i++) {
       const { position, dexShareToken } = path[i];
       const [supply, target] = position;
 
@@ -267,7 +274,7 @@ export class AcalaDex implements BaseSwap {
       }
     };
 
-    for (let i = path.length - 1; i > 0; i--) {
+    for (let i = path.length - 1; i >= 0; i--) {
       const { position, dexShareToken } = path[i];
       const [supply, target] = position;
 
