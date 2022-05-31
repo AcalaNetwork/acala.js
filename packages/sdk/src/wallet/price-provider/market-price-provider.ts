@@ -46,6 +46,7 @@ export class MarketPriceProvider implements PriceProvider {
 
   private queryPrice = async (currency: string) => {
     let result = await fetch.get(`${PRICE_API}?token=${currency}&from=market`).catch((e) => {
+      // doesn't throw error when try first endpoint
       console.error(e);
 
       return undefined;
@@ -59,7 +60,7 @@ export class MarketPriceProvider implements PriceProvider {
     // try get price from backup price
     result = await fetch.get(`${BACKUP_PRICE_API}?token=${currency}&from=market`);
 
-    if (result.status === 200) {
+    if (result?.status === 200) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       return new FN((result?.data?.data?.price?.[0] as string) || 0);
     }
