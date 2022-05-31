@@ -45,9 +45,13 @@ export class MarketPriceProvider implements PriceProvider {
   };
 
   private queryPrice = async (currency: string) => {
-    let result = await fetch.get(`${PRICE_API}?token=${currency}&from=market`);
+    let result = await fetch.get(`${PRICE_API}?token=${currency}&from=market`).catch((e) => {
+      console.error(e);
 
-    if (result.status === 200) {
+      return undefined;
+    });
+
+    if (result?.status === 200) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       return new FN((result?.data?.data?.price?.[0] as string) || 0);
     }
