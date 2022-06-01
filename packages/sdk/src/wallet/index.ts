@@ -30,6 +30,7 @@ import { AcalaExpandBalanceAdapter } from './balance-adapter/types';
 import { AcalaBalanceAdapter } from './balance-adapter/acala';
 import { TokenProvider } from './token-provider/type';
 import { AcalaTokenProvider } from './token-provider/acala';
+import { DIDWeb3Name } from './we3name/did';
 
 export class Wallet implements BaseSDK {
   private api: AnyApi;
@@ -47,8 +48,14 @@ export class Wallet implements BaseSDK {
 
   public isReady$: BehaviorSubject<boolean>;
   public consts!: WalletConsts;
+  readonly web3Name: DIDWeb3Name;
 
-  public constructor(api: AnyApi, configs?: WalletConfigs) {
+  public constructor(
+    api: AnyApi,
+    configs?: WalletConfigs
+    // tokenPriceFetchSource = defaultTokenPriceFetchSource,
+    // priceProviders?: Record<PriceProviderType, PriceProvider>
+  ) {
     this.api = api;
     this.isReady$ = new BehaviorSubject<boolean>(false);
     this.configs = {
@@ -64,9 +71,13 @@ export class Wallet implements BaseSDK {
       wsProvider: configs?.wsProvider
     });
 
-    // we should init sdk before init price provider
+    // init liquidty module
     this.liquidity = new Liquidity(this.api, this);
+    // init homa module
     this.homa = new Homa(this.api, this);
+    // init did-web3 name module
+    this.web3Name = new DIDWeb3Name();
+    // init price module
     const market = new MarketPriceProvider();
     const dex = new DexPriceProvider(this.liquidity);
     const aggregate = new AggregateProvider({ market, dex });

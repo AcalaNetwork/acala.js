@@ -45,3 +45,7 @@ export type TokenPriceFetchSource = {
     [t in string]: PriceProviderType;
   };
 };
+
+export interface BaseWeb3NameProvider {
+  getName(address: string): Promise<string | undefined>;
+}

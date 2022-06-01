@@ -4,7 +4,8 @@ import fetch from 'axios';
 import { PriceProvider } from './types';
 import { FixedPointNumber, FixedPointNumber as FN, Token } from '@acala-network/sdk-core';
 
-const PRICE_API = 'https://api.polkawallet.io/price-server/';
+const PRICE_API = 'https://api.polkawallet.io/price-server';
+const BACKUP_PRICE_API = 'https://pricesrv.aca-api.network';
 
 export class MarketPriceProvider implements PriceProvider {
   private interval: number;
@@ -44,9 +45,22 @@ export class MarketPriceProvider implements PriceProvider {
   };
 
   private queryPrice = async (currency: string) => {
-    const result = await fetch.get(`${PRICE_API}?token=${currency}&from=market`);
+    let result = await fetch.get(`${PRICE_API}?token=${currency}&from=market`).catch((e) => {
+      // doesn't throw error when try first endpoint
+      console.error(e);
 
-    if (result.status === 200) {
+      return undefined;
+    });
+
+    if (result?.status === 200) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      return new FN((result?.data?.data?.price?.[0] as string) || 0);
+    }
+
+    // try get price from backup price
+    result = await fetch.get(`${BACKUP_PRICE_API}?token=${currency}&from=market`);
+
+    if (result?.status === 200) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       return new FN((result?.data?.data?.price?.[0] as string) || 0);
     }
