@@ -1,11 +1,12 @@
 import { options } from '@acala-network/api';
 import { FixedPointNumber } from '@acala-network/sdk-core';
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { firstValueFrom, map } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { Wallet } from '../wallet';
 import { WalletConfigs } from '../wallet/type';
 import { AggregateDex } from './dex';
 import { AcalaDex } from './dex-providers/acala';
+import { NutsDex } from './dex-providers/nuts';
 import { TradingGraph } from './trading-graph';
 
 describe('dex', () => {
@@ -31,11 +32,11 @@ describe('dex', () => {
     return new AggregateDex({
       api,
       wallet,
-      providers: [new AcalaDex({ api, wallet })]
+      providers: [new AcalaDex({ api, wallet }), new NutsDex({ api, wallet })]
     });
   };
 
-  test.skip('get tradable tokens shoule be ok', async () => {
+  test('get tradable tokens shoule be ok', async () => {
     const sdk = await initSDK();
 
     await sdk.isReady;
@@ -73,10 +74,9 @@ describe('dex', () => {
       })
     );
 
-    result.forEach((item) => {
-      console.log(item.path.map((i) => i[1].map((j) => j.symbol).join(',')));
-      console.log(item.input.amount.toString(), item.input.token.toString());
-      console.log(item.output.amount.toString(), item.output.token.toString());
-    });
+    console.log(result.input.amount.toString());
+    console.log(result.input.token.toString());
+    console.log(result.output.amount.toString());
+    console.log(result.output.token.toString());
   });
 });

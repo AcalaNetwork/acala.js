@@ -44,6 +44,7 @@ export class AggregateDex implements BaseSDK {
 
   private getConfigs() {
     return {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       aggregateLimit: (this.api.consts.dex.tradingPathLimit as any).toNumber()
     };
   }
@@ -85,7 +86,7 @@ export class AggregateDex implements BaseSDK {
       .getTradingPaths({
         start,
         end,
-        aggreagetLimit: 3
+        aggreagetLimit: this.configs.aggregateLimit
       })
       .filter((path) => {
         // check all path is validate
@@ -96,13 +97,13 @@ export class AggregateDex implements BaseSDK {
           if (!provider) return false;
 
           return acc && provider.filterPath(item);
-        }, true);
+        }, true as boolean);
       });
   }
 
   private findProvider(source: DexSource): BaseSwap {
     // never failed
-    return this.providers.find((i) => i.source === source);
+    return this.providers.find((i) => i.source === source) as BaseSwap;
   }
 
   private swapWithCompositePath(type: TradeType, input: FixedPointNumber, path: CompositeTradingPath) {
@@ -172,7 +173,7 @@ export class AggregateDex implements BaseSDK {
       useablePaths = useablePaths.filter((path) => {
         return path.reduce((acc, item) => {
           return acc && source !== item[0];
-        }, true);
+        }, true as boolean);
       });
     }
 

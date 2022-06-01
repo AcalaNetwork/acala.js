@@ -45,7 +45,7 @@ describe('trading graph', () => {
 
     tradingGraph.genGraph();
 
-    console.log(TradingGraph.printPaths(tradingGraph.searchPaths(token0, token3)));
+    console.log(TradingGraph.tradeNodesToString(tradingGraph.searchPaths(token0, token3)));
     tradingGraph
       .getTradingPaths({
         start: token0,

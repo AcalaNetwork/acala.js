@@ -3,7 +3,6 @@ import { memoize } from '@polkadot/util';
 import { u16 } from '@polkadot/types';
 import { BehaviorSubject, combineLatest, firstValueFrom, map, Observable, shareReplay, switchMap } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { TokenProvider } from '../base-provider';
 import { BaseSDK } from '../types';
 import { getChainType } from '../utils/get-chain-type';
 import { createStorages } from './storages';
@@ -26,11 +25,12 @@ import { getUserLiquidTokenSummary } from './utils/get-user-liquid-token-summary
 import { ApiTypes, SubmittableExtrinsic } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { RequiredAddressInFastReddem } from './errors';
+import { Wallet } from '../wallet';
 
 export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
   private api: AnyApi;
   private storages: ReturnType<typeof createStorages>;
-  private tokenProvider: TokenProvider;
+  private wallet: Wallet;
   public consts!: {
     liquidToken: Token;
     stakingToken: Token;
@@ -43,12 +43,12 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
 
   public isReady$: BehaviorSubject<boolean>;
 
-  constructor(api: AnyApi, tokenProvider: TokenProvider) {
+  constructor(api: AnyApi, wallet: Wallet) {
     this.api = api;
 
     this.isReady$ = new BehaviorSubject<boolean>(false);
     this.storages = createStorages(this.api);
-    this.tokenProvider = tokenProvider;
+    this.wallet = wallet;
     this.init();
   }
 
@@ -58,8 +58,8 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
 
   private initConsts() {
     combineLatest({
-      liquidToken: this.tokenProvider.subscribeToken(this.api.consts.homa.liquidCurrencyId),
-      stakingToken: this.tokenProvider.subscribeToken(this.api.consts.homa.stakingCurrencyId)
+      liquidToken: this.wallet.subscribeToken(this.api.consts.homa.liquidCurrencyId),
+      stakingToken: this.wallet.subscribeToken(this.api.consts.homa.stakingCurrencyId)
     }).subscribe((data) => {
       this.consts = {
         ...data,
