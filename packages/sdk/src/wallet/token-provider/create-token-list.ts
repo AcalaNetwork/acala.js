@@ -47,7 +47,7 @@ function extractLocation(key: number, data: [StorageKey<[u16]>, Option<XcmV1Mult
 }
 
 interface Configs {
-  keepDisplayKUSD: boolean;
+  kusd2ausd: boolean;
   insertLCDOT: boolean;
 }
 
@@ -141,7 +141,7 @@ export function createTokenList(
         const value = item[1].unwrapOrDefault();
         const name = forceToCurrencyName(item[0].args[0].asNativeAssetId);
         const decimals = value.decimals.toNumber();
-        const display = name === 'KUSD' && configs.keepDisplayKUSD ? 'kUSD' : hexToString(value.symbol.toHex());
+        const display = name === 'KUSD' && configs.kusd2ausd ? 'aUSD' : hexToString(value.symbol.toHex());
 
         return [
           name,

@@ -1,18 +1,18 @@
 import { FixedPointNumber } from '@acala-network/sdk-core';
 import { PoolPositions } from '../types';
-import { TokenProvider } from '../../base-provider';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Wallet } from '@acala-network/sdk/wallet';
 
-export const getPoolTVL = (positions: PoolPositions, tokenProvider: TokenProvider): Observable<FixedPointNumber> => {
-  if (!tokenProvider.subscribePrice) return of(FixedPointNumber.ZERO);
+export const getPoolTVL = (positions: PoolPositions, wallet: Wallet): Observable<FixedPointNumber> => {
+  if (!wallet.subscribePrice) return of(FixedPointNumber.ZERO);
 
   const [token0, token1] = positions.info.pair;
   const [amount0, amount1] = positions.amounts;
 
   return combineLatest({
-    price0: tokenProvider.subscribePrice(token0),
-    price1: tokenProvider.subscribePrice(token1)
+    price0: wallet.subscribePrice(token0),
+    price1: wallet.subscribePrice(token1)
   }).pipe(
     map(({ price0, price1 }) => {
       if (price0.isPositive() && price1.isPositive()) {

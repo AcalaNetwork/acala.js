@@ -11,9 +11,9 @@ import { StorageKey } from '@polkadot/types';
 import { memoize } from '@polkadot/util';
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of } from 'rxjs';
 import { map, switchMap, filter } from 'rxjs/operators';
-import { TokenProvider } from '../base-provider';
 import { BaseSDK, ChainType } from '../types';
 import { getChainType } from '../utils/get-chain-type';
+import { Wallet } from '../wallet';
 import { TradingPairNotFound } from './errors';
 import { createStorages } from './storage';
 import {
@@ -34,7 +34,7 @@ import { getPoolTVL } from './utils/get-pool-tvl';
 export class Liquidity implements BaseSDK {
   private api: AnyApi;
   private storages: ReturnType<typeof createStorages>;
-  private tokenProvider: TokenProvider;
+  private wallet: Wallet;
 
   readonly consts: {
     runtimeChain: string;
@@ -42,10 +42,10 @@ export class Liquidity implements BaseSDK {
 
   public isReady$: BehaviorSubject<boolean>;
 
-  constructor(api: AnyApi, tokenProvider: TokenProvider) {
+  constructor(api: AnyApi, wallet: Wallet) {
     this.api = api;
     this.storages = createStorages(this.api);
-    this.tokenProvider = tokenProvider;
+    this.wallet = wallet;
     this.isReady$ = new BehaviorSubject<boolean>(true);
     this.consts = {
       runtimeChain: this.api.runtimeChain.toString()
@@ -101,7 +101,7 @@ export class Liquidity implements BaseSDK {
         return combineLatest(
           Object.fromEntries(
             Array.from(tokenCollections).map((item) => {
-              return [item, this.tokenProvider.subscribeToken(item)];
+              return [item, this.wallet.subscribeToken(item)];
             })
           )
         ).pipe(
@@ -187,7 +187,7 @@ export class Liquidity implements BaseSDK {
   public subscribePoolDetails = memoize((token: MaybeCurrency): Observable<PoolDetail> => {
     return this.subscribePoolPositions(token).pipe(
       switchMap((positions) =>
-        getPoolTVL(positions, this.tokenProvider).pipe(
+        getPoolTVL(positions, this.wallet).pipe(
           map((tvl) => {
             return {
               ...positions,
@@ -454,7 +454,7 @@ export class Liquidity implements BaseSDK {
         if (status.length === 0) return of(FixedPointNumber.ZERO);
 
         return combineLatest(status.map((i) => this.subscribePoolPositions(i.pool))).pipe(
-          switchMap((list) => calcDexPrice(token, list, this.tokenProvider))
+          switchMap((list) => calcDexPrice(token, list, this.wallet))
         );
       })
     );

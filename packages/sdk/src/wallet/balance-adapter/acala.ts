@@ -4,6 +4,7 @@ import {
   eventsFilterRx,
   FixedPointNumber,
   FixedPointNumber as FN,
+  forceToCurrencyName,
   getERC20TokenAddressFromName,
   Token
 } from '@acala-network/sdk-core';
@@ -14,9 +15,9 @@ import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { Contract, utils } from 'ethers';
 import { map, switchMap } from 'rxjs/operators';
 import { Option } from '@polkadot/types';
-import { AccountInfo, H160 } from '@polkadot/types/interfaces';
+import { AccountInfo, H160, Balance } from '@polkadot/types/interfaces';
 import { BalanceData } from '../type';
-import { BalanceAdapter } from './types';
+import { AcalaExpandBalanceAdapter } from './types';
 import { BehaviorSubject, from, Observable } from 'rxjs';
 import { NotSupportETHAddress, NotSupportEVMBalance } from '../errors';
 import { Storage } from '../../utils/storage';
@@ -45,11 +46,22 @@ const createStorages = (api: AnyApi) => {
         api: api,
         path: 'query.evmAccounts.evmAddresses',
         params: [address]
-      })
+      }),
+    issuance: (token: Token) => {
+      const nativeTokenName = api.registry.chainTokens[0];
+
+      const isNativeToken = forceToCurrencyName(nativeTokenName) === forceToCurrencyName(token);
+
+      return Storage.create<Balance>({
+        api: api,
+        path: isNativeToken ? 'query.balances.totalIssuance' : 'query.tokens.totalIssuance',
+        params: isNativeToken ? [] : [token.toChainData()]
+      });
+    }
   };
 };
 
-export class AcalaBalanceAdapter implements BalanceAdapter {
+export class AcalaBalanceAdapter implements AcalaExpandBalanceAdapter {
   private storages: ReturnType<typeof createStorages>;
   private nativeCurrency: string;
   private wsProvider!: WsProvider;
@@ -69,29 +81,25 @@ export class AcalaBalanceAdapter implements BalanceAdapter {
       });
     }
 
-    this.createEVMEvent$();
+    this.evmUpdate$ = this.subscribeEVMEvents();
   }
 
-  private createEVMEvent$() {
-    this.evmUpdate$ = new BehaviorSubject<number>(0);
+  private subscribeEVMEvents() {
+    const evmUpdate$ = new BehaviorSubject<number>(0);
+    let count = 0;
 
-    const eventFilterConfigs = [
-      {
-        section: 'evm',
-        method: '*'
-      }
-    ];
+    // TODO: should subscribe ERC20 transfer event
+    const eventFilterConfigs = [{ section: 'evm', method: '*' }];
+
     if (this.api.type === 'rxjs') {
-      eventsFilterRx(this.api as ApiRx, eventFilterConfigs, true).subscribe(() =>
-        this.evmUpdate$.next(this.evmUpdate$.value + 1)
-      );
+      eventsFilterRx(this.api as ApiRx, eventFilterConfigs, true).subscribe(() => evmUpdate$.next(++count));
     }
 
     if (this.api.type === 'promise') {
-      eventsFilterCallback(this.api as ApiPromise, eventFilterConfigs, true, () =>
-        this.evmUpdate$.next(this.evmUpdate$.value + 1)
-      );
+      eventsFilterCallback(this.api as ApiPromise, eventFilterConfigs, true, () => evmUpdate$.next(++count));
     }
+
+    return evmUpdate$;
   }
 
   private transformNative = (data: AccountInfo, token: Token) => {
@@ -177,5 +185,13 @@ export class AcalaBalanceAdapter implements BalanceAdapter {
 
   public getED(token: Token): FixedPointNumber {
     return token.ed;
+  }
+
+  public subscribeIssuance(token: Token): Observable<FixedPointNumber> {
+    const storage = this.storages.issuance(token);
+
+    const handleIssuance = (data: Balance, token: Token) => FN.fromInner(data.toString(), token.decimals);
+
+    return storage.observable.pipe(map((data) => handleIssuance(data, token)));
   }
 }
