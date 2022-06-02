@@ -18,7 +18,7 @@ export class AggregateDex implements BaseSDK {
   private api: AnyApi;
   readonly wallet: Wallet;
   private providers: BaseSwap[];
-  private tradingGraph: TradingGraph;
+  public readonly tradingGraph: TradingGraph;
   private status: BehaviorSubject<boolean>;
   private tokens$: BehaviorSubject<Token[]>;
   private configs: {
@@ -128,6 +128,16 @@ export class AggregateDex implements BaseSDK {
         .pipe(
           switchMap((result) => {
             return fn(count + 1, max, result);
+          }),
+          map((result) => {
+            return {
+              ...result,
+              input: {
+                token: first[1][0],
+                amount: input
+              },
+              path
+            };
           })
         );
     };
@@ -146,7 +156,7 @@ export class AggregateDex implements BaseSDK {
 
     return createFirstTrading(first).pipe(
       switchMap((result) => {
-        return fn(1, path.length - 1, result);
+        return fn(1, path.length, result);
       })
     );
   }
@@ -165,6 +175,12 @@ export class AggregateDex implements BaseSDK {
   }
 
   public swap(params: AggregateDexSwapParams) {
+    const { type } = params;
+
+    return this.swapWithAllTradeablePath(params).pipe(map((results) => this.getBestSwapResult(type, results)));
+  }
+
+  public swapWithAllTradeablePath(params: AggregateDexSwapParams) {
     const { path, source, type, input } = params;
     let useablePaths = this.getTradingPaths(path[0], path[1]);
 
@@ -177,8 +193,6 @@ export class AggregateDex implements BaseSDK {
       });
     }
 
-    return combineLatest(useablePaths.map((path) => this.swapWithCompositePath(type, input, path))).pipe(
-      map((results) => this.getBestSwapResult(type, results))
-    );
+    return combineLatest(useablePaths.map((path) => this.swapWithCompositePath(type, input, path)));
   }
 }

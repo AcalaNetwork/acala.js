@@ -100,7 +100,25 @@ export class AcalaDex implements BaseSwap {
   }
 
   public swap(params: SwapParamsWithExactPath): Observable<SwapResult> {
-    return this.doSwap(params);
+    const { input, path, type } = params;
+
+    const expandPath = this.getExpandPath(path);
+
+    // remove decimals
+    const inputAmount = FixedPointNumber.fromInner(input.toChainData());
+
+    return this.subscribeExpandPathWithPositions(expandPath).pipe(
+      map((expandPath) => {
+        const midResult =
+          type === 'EXACT_INPUT'
+            ? this.swapWithExactInput(inputAmount, expandPath)
+            : this.swapWithExactOutput(inputAmount, expandPath);
+
+        const CompositeTradingPath = [[this.source, path]] as [DexSource, Token[]][];
+
+        return this.getSwapResult(CompositeTradingPath, type, midResult);
+      })
+    );
   }
 
   private getExpandPath(path: Token[]): ExpandPath {
@@ -150,28 +168,6 @@ export class AcalaDex implements BaseSwap {
             position
           };
         });
-      })
-    );
-  }
-
-  private doSwap(params: SwapParamsWithExactPath): Observable<SwapResult> {
-    const { input, path, type } = params;
-
-    const expandPath = this.getExpandPath(path);
-
-    // remove decimals
-    const inputAmount = FixedPointNumber.fromInner(input.toChainData());
-
-    return this.subscribeExpandPathWithPositions(expandPath).pipe(
-      map((expandPath) => {
-        const midResult =
-          type === 'EXACT_INPUT'
-            ? this.swapWithExactInput(inputAmount, expandPath)
-            : this.swapWithExactOutput(inputAmount, expandPath);
-
-        const CompositeTradingPath = [[this.source, path]] as [DexSource, Token[]][];
-
-        return this.getSwapResult(CompositeTradingPath, type, midResult);
       })
     );
   }

@@ -1,6 +1,6 @@
 import { options } from '@acala-network/api';
 import { FixedPointNumber } from '@acala-network/sdk-core';
-import { ApiPromise, WsProvider } from '@polkadot/api';
+import { ApiRx, WsProvider } from '@polkadot/api';
 import { firstValueFrom } from 'rxjs';
 import { Wallet } from '../wallet';
 import { WalletConfigs } from '../wallet/type';
@@ -18,7 +18,7 @@ describe('dex', () => {
     if (sdk) return sdk;
 
     const provider = new WsProvider(endpoint);
-    const api = await ApiPromise.create(options({ provider }));
+    const api = await firstValueFrom(ApiRx.create(options({ provider })));
 
     await api.isReady;
 
@@ -36,7 +36,7 @@ describe('dex', () => {
     });
   };
 
-  test('get tradable tokens shoule be ok', async () => {
+  test.skip('get tradable tokens shoule be ok', async () => {
     const sdk = await initSDK();
 
     await sdk.isReady;
@@ -46,7 +46,7 @@ describe('dex', () => {
     console.log(tokens.map((i) => i.symbol));
   });
 
-  test.skip('get trading path should be ok', async () => {
+  test('get trading path should be ok', async () => {
     const sdk = await initSDK();
 
     await sdk.isReady;
@@ -66,7 +66,7 @@ describe('dex', () => {
     const rmrk = sdk.wallet.__getToken('RMRK');
 
     const result = await firstValueFrom(
-      sdk.swap({
+      sdk.swapWithAllTradeablePath({
         path: [ksm, rmrk],
         source: 'aggregate',
         type: 'EXACT_INPUT',
@@ -74,9 +74,12 @@ describe('dex', () => {
       })
     );
 
-    console.log(result.input.amount.toString());
-    console.log(result.input.token.toString());
-    console.log(result.output.amount.toString());
-    console.log(result.output.token.toString());
+    result.forEach((item) => {
+      console.log(item.input.amount.toString());
+      console.log(item.input.token.toString());
+      console.log(item.output.amount.toString());
+      console.log(item.output.token.toString());
+      console.log(TradingGraph.pathsToString([item.path]));
+    });
   });
 });

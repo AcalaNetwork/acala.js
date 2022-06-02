@@ -102,8 +102,6 @@ export class TradingGraph {
 
       this.dfs(paths, [...tracking], this.getNodeKey(n), target);
     }
-
-    return tracking;
   }
 
   public searchPaths(start: Token, end: Token) {
@@ -127,7 +125,7 @@ export class TradingGraph {
       const latest = path.pop();
 
       if (latest?.[0] === source) {
-        path.push([latest[0], [...latest[1], token]]);
+        path.push([source, [...latest[1], token]]);
       } else {
         if (latest) path.push(latest);
 
@@ -138,11 +136,16 @@ export class TradingGraph {
     return path;
   }
 
+  private removeSingleNodePath(data: CompositeTradingPath) {
+    return data.reduce((acc, cur) => cur[1].length > 1 && acc, true as boolean);
+  }
+
   public getTradingPaths(configs: { start: Token; end: Token; aggreagetLimit: number }) {
     const { start, end, aggreagetLimit } = configs;
 
     return this.searchPaths(start, end)
       .map(this.mapTradeNodesToCompositeTradePath)
+      .filter(this.removeSingleNodePath)
       .filter((i) => i.length <= aggreagetLimit);
   }
 
@@ -166,9 +169,7 @@ export class TradingGraph {
       for (let i = 0; i < values.length; i++) {
         const item = values[i];
 
-        temp += `${i !== 0 ? '->' : ''}(${item[0]}: ${item[1].map((j) => j.symbol).join('-')})${
-          i < data.length ? '->' : ''
-        }`;
+        temp += `${i !== 0 ? '->' : ''}(${item[0]}: ${item[1].map((j) => j.symbol).join('-')})`;
       }
       temp += '\r\n';
     }
