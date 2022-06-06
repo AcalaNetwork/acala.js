@@ -46,7 +46,7 @@ describe('dex', () => {
     console.log(tokens.map((i) => i.symbol));
   });
 
-  test('get trading path should be ok', async () => {
+  test.skip('get trading path should be ok', async () => {
     const sdk = await initSDK();
 
     await sdk.isReady;
@@ -57,7 +57,7 @@ describe('dex', () => {
     console.log(TradingGraph.pathsToString(sdk.getTradingPaths(ksm, rmrk)));
   });
 
-  test('swap should be ok', async () => {
+  test.skip('swap should be ok', async () => {
     const sdk = await initSDK();
 
     await sdk.isReady;
@@ -69,17 +69,17 @@ describe('dex', () => {
       sdk.swapWithAllTradeablePath({
         path: [ksm, rmrk],
         source: 'aggregate',
-        type: 'EXACT_INPUT',
+        mode: 'EXACT_INPUT',
         input: new FixedPointNumber(1, ksm.decimals)
       })
     );
 
     result.forEach((item) => {
-      console.log(item.input.amount.toString());
-      console.log(item.input.token.toString());
-      console.log(item.output.amount.toString());
-      console.log(item.output.token.toString());
-      console.log(TradingGraph.pathsToString([item.path]));
+      console.log(item.result.input.amount.toString());
+      console.log(item.result.input.token.toString());
+      console.log(item.result.output.amount.toString());
+      console.log(item.result.output.token.toString());
+      console.log(TradingGraph.pathsToString([item.result.path]));
     });
   });
 });

@@ -1,4 +1,5 @@
 import { AnyApi, FixedPointNumber, Token } from '@acala-network/sdk-core';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { Observable } from 'rxjs';
 import { Wallet } from '../wallet';
 
@@ -14,7 +15,6 @@ export type DexSource = 'acala' | 'nuts';
  * ]
  */
 export type TradingPathItem = [DexSource, Token[]];
-
 export type CompositeTradingPath = TradingPathItem[];
 
 /**
@@ -23,21 +23,21 @@ export type CompositeTradingPath = TradingPathItem[];
 export type TradingPair = [Token, Token];
 
 // the way of trade
-export type TradeType = 'EXACT_INPUT' | 'EXACT_OUTPUT';
+export type TradeMode = 'EXACT_INPUT' | 'EXACT_OUTPUT';
 
 // the swap of trade
 export type SwapSource = DexSource | 'aggregate';
 
 export interface SwapResult {
   source: SwapSource;
-  type: TradeType;
+  mode: TradeMode;
   path: CompositeTradingPath;
-  // actual input token and amount, no matter which trade type is
+  // actual input token and amount, no matter which trade mode is
   input: {
     token: Token;
     amount: FixedPointNumber;
   };
-  // actual output token and amount, no matter which trade type is
+  // actual output token and amount, no matter which trade mode is
   output: {
     token: Token;
     amount: FixedPointNumber;
@@ -50,11 +50,13 @@ export interface SwapResult {
   exchangeFee: FixedPointNumber;
   exchangeFeeRate: FixedPointNumber;
   acceptiveSlippage?: number;
+  call?: SubmittableExtrinsic<'rxjs'> | SubmittableExtrinsic<'promise'>;
+  callParams?: any[];
 }
 
 export interface SwapParams {
   source: SwapSource;
-  type: TradeType;
+  mode: TradeMode;
   // input amount
   input: FixedPointNumber;
   // acceptive slippage
@@ -74,10 +76,17 @@ export interface BaseSwap {
   get tradingPairs$(): Observable<TradingPair[]>;
   filterPath(path: TradingPathItem): boolean;
   swap(params: SwapParamsWithExactPath): Observable<SwapResult>;
+  getAggregateTradingPath(result: SwapResult): any;
+  getTradingTx(result: SwapResult): SubmittableExtrinsic<'promise'> | SubmittableExtrinsic<'rxjs'>;
 }
 
 export interface AggregateDexConfigs {
   api: AnyApi;
   wallet: Wallet;
   providers: BaseSwap[];
+}
+
+export interface AggregateDexSwapResult {
+  result: SwapResult;
+  mid: SwapResult[];
 }

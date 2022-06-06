@@ -39,3 +39,12 @@ export class NoSwapProvider extends Error {
     this.message = `no ${name} swap provider`;
   }
 }
+
+export class ParamsNotAcceptableForDexProvider extends Error {
+  constructor(name: string) {
+    super();
+
+    this.name = 'ParamsNotAcceptableForDexProvider';
+    this.message = `params not acceptable for ${name} dex provider`;
+  }
+}
