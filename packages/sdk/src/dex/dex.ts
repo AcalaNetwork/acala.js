@@ -107,16 +107,15 @@ export class AggregateDex implements BaseSDK {
     return this.providers.find((i) => i.source === source) as BaseSwap;
   }
 
-  private swapWithCompositePath(
-    mode: TradeMode,
+  private swapWithCompositePathInExactIntput(
     input: FixedPointNumber,
     path: CompositeTradingPath
   ): Observable<AggregateDexSwapResult> {
     const [first] = path;
-    const mid: Record<number, SwapResult> = {};
+    const tracker: Record<number, SwapResult> = {};
 
     const fn = (count: number, max: number, params: SwapResult): Observable<SwapResult> => {
-      mid[count - 1] = params;
+      tracker[count - 1] = params;
 
       if (count >= max) {
         return of(params);
@@ -128,7 +127,7 @@ export class AggregateDex implements BaseSDK {
       return provider
         .swap({
           source: current[0],
-          mode,
+          mode: 'EXACT_INPUT',
           input: params.output.amount,
           acceptiveSlippage: 0,
           path: current[1]
@@ -145,7 +144,7 @@ export class AggregateDex implements BaseSDK {
 
       return provider.swap({
         source: path[0],
-        mode,
+        mode: 'EXACT_INPUT',
         input,
         acceptiveSlippage: 0,
         path: path[1]
@@ -163,16 +162,104 @@ export class AggregateDex implements BaseSDK {
             token: first[1][0],
             amount: input
           },
-          path
+          path,
+          exchangeFee: FixedPointNumber.ZERO,
+          exchangeFeeRate: FixedPointNumber.ZERO,
+          priceImpact: FixedPointNumber.ZERO,
+          naturalPriceImpact: FixedPointNumber.ZERO,
+          midPrice: FixedPointNumber.ZERO
         };
       }),
       map((result) => {
         return {
           result,
-          mid: Object.values(mid)
+          tracker: Object.values(tracker)
         };
       })
     );
+  }
+
+  private swapWithCompositePathInExactOutput(
+    input: FixedPointNumber,
+    path: CompositeTradingPath
+  ): Observable<AggregateDexSwapResult> {
+    const len = path.length;
+    const last = path[len - 1];
+    const tracker: Record<number, SwapResult> = {};
+
+    const fn = (count: number, min: number, params: SwapResult): Observable<SwapResult> => {
+      tracker[count + 1] = params;
+
+      if (count <= min) {
+        return of(params);
+      }
+
+      const current = path[count];
+      const provider = this.getProvider(current[0]);
+
+      return provider
+        .swap({
+          source: current[0],
+          mode: 'EXACT_OUTPUT',
+          input: params.input.amount,
+          acceptiveSlippage: 0,
+          path: current[1]
+        })
+        .pipe(
+          switchMap((result) => {
+            return fn(count - 1, min, result);
+          })
+        );
+    };
+
+    const createLastTrading = () => {
+      const provider = this.getProvider(last[0]);
+
+      return provider.swap({
+        source: last[0],
+        mode: 'EXACT_OUTPUT',
+        input,
+        acceptiveSlippage: 0,
+        path: last[1]
+      });
+    };
+
+    return createLastTrading().pipe(
+      switchMap((result) => {
+        return fn(len - 2, 0, result);
+      }),
+      map((result) => {
+        return {
+          ...result,
+          output: {
+            token: last[1][0],
+            amount: input
+          },
+          path,
+          exchangeFee: FixedPointNumber.ZERO,
+          exchangeFeeRate: FixedPointNumber.ZERO,
+          priceImpact: FixedPointNumber.ZERO,
+          naturalPriceImpact: FixedPointNumber.ZERO,
+          midPrice: FixedPointNumber.ZERO
+        };
+      }),
+      map((result) => {
+        return {
+          result,
+          tracker: Object.values(tracker)
+        };
+      })
+    );
+  }
+
+  private swapWithCompositePath(
+    mode: TradeMode,
+    input: FixedPointNumber,
+    path: CompositeTradingPath
+  ): Observable<AggregateDexSwapResult> {
+    if (mode === 'EXACT_OUTPUT') return this.swapWithCompositePathInExactOutput(input, path);
+
+    return this.swapWithCompositePathInExactIntput(input, path);
   }
 
   private getBestSwapResult(mode: TradeMode, resultList: AggregateDexSwapResult[]) {
@@ -224,21 +311,23 @@ export class AggregateDex implements BaseSDK {
 
     const slippage = new FixedPointNumber(1 - (acceptiveSlippage || 0));
 
+    // only contains acala dex
     if (path.length === 1 && path[0][0] === 'acala') {
       const provider = this.getProvider('acala');
 
-      return provider.getTradingTx(result.mid[0]);
+      return provider.getTradingTx(result.tracker[0]);
     }
 
+    // only contains nuts dex
     if (path.length === 1 && path[0][0] === 'nuts') {
       const provider = this.getProvider('nuts');
 
-      return provider.getTradingTx(result.mid[0]);
+      return provider.getTradingTx(result.tracker[0]);
     }
 
-    // get aggregate tx
+    // create aggregate tx
     return this.api.tx.aggregatedDex.swapWithExactSupply(
-      this.convertCompositeTradingPathToTxParams(result.mid),
+      this.convertCompositeTradingPathToTxParams(result.tracker),
       input.amount.toChainData(),
       output.amount.mul(slippage).toChainData()
     );
