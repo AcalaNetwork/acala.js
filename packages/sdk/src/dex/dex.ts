@@ -113,9 +113,11 @@ export class AggregateDex implements BaseSDK {
     path: CompositeTradingPath
   ): Observable<AggregateDexSwapResult> {
     const [first] = path;
-    const mid: SwapResult[] = [];
+    const mid: Record<number, SwapResult> = {};
 
     const fn = (count: number, max: number, params: SwapResult): Observable<SwapResult> => {
+      mid[count - 1] = params;
+
       if (count >= max) {
         return of(params);
       }
@@ -152,11 +154,9 @@ export class AggregateDex implements BaseSDK {
 
     return createFirstTrading(first).pipe(
       switchMap((result) => {
-        mid.push(result);
         return fn(1, path.length, result);
       }),
       map((result) => {
-        mid.push(result);
         return {
           ...result,
           input: {
@@ -169,7 +169,7 @@ export class AggregateDex implements BaseSDK {
       map((result) => {
         return {
           result,
-          mid
+          mid: Object.values(mid)
         };
       })
     );
@@ -210,7 +210,7 @@ export class AggregateDex implements BaseSDK {
     return combineLatest(useablePaths.map((path) => this.swapWithCompositePath(mode, input, path)));
   }
 
-  private convertCompositeTradingPathToTxPawrams(list: SwapResult[]) {
+  private convertCompositeTradingPathToTxParams(list: SwapResult[]) {
     return list.map((item) => {
       const source = item.source;
       const provider = this.getProvider(source as DexSource);
@@ -238,7 +238,7 @@ export class AggregateDex implements BaseSDK {
 
     // get aggregate tx
     return this.api.tx.aggregatedDex.swapWithExactSupply(
-      this.convertCompositeTradingPathToTxPawrams(result.mid),
+      this.convertCompositeTradingPathToTxParams(result.mid),
       input.amount.toChainData(),
       output.amount.mul(slippage).toChainData()
     );

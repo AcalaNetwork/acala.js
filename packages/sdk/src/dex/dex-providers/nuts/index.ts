@@ -141,7 +141,7 @@ export class NutsDex implements BaseSwap {
   }
 
   public getAggregateTradingPath(result: SwapResult) {
-    return ['Taiga', result.callParams?.[0], result.callParams?.[1], result.callParams?.[2]];
+    return { Taiga: [result.callParams?.[0], result.callParams?.[1], result.callParams?.[2]] };
   }
 
   public getTradingTx(

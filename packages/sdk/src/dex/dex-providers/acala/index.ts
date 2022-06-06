@@ -333,7 +333,7 @@ export class AcalaDex implements BaseSwap {
   }
 
   public getAggregateTradingPath(result: SwapResult) {
-    return ['Dex', result.path[0][1].map((i) => i.toChainData())];
+    return { Dex: result.path[0][1].map((i) => i.toChainData()) };
   }
 
   public getTradingTx(result: SwapResult): SubmittableExtrinsic<'promise'> | SubmittableExtrinsic<'rxjs'> {
@@ -356,8 +356,8 @@ export class AcalaDex implements BaseSwap {
 
     return this.api.tx.dex.swapWithExactSupply(
       tradePath.map((i) => i.toChainData()),
-      output.amount.toChainData(),
-      input.amount.mul(slippage).toChainData()
+      input.amount.toChainData(),
+      output.amount.mul(slippage).toChainData()
     );
   }
 }
