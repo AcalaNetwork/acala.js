@@ -46,7 +46,7 @@ describe('dex', () => {
     console.log(tokens.map((i) => i.symbol));
   });
 
-  test('get trading path should be ok', async () => {
+  test.skip('get trading path should be ok', async () => {
     const sdk = await initSDK();
 
     await sdk.isReady;
@@ -57,7 +57,7 @@ describe('dex', () => {
     console.log(TradingGraph.pathsToString(sdk.getTradingPaths(ksm, rmrk)));
   });
 
-  test('swap should be ok', async () => {
+  test.skip('swap should be ok', async () => {
     const sdk = await initSDK();
 
     await sdk.isReady;
