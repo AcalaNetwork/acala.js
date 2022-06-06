@@ -60,9 +60,8 @@ export class NutsDex implements BaseSwap {
     return 'nuts';
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public filterPath(_path: TradingPathItem): boolean {
-    return true;
+  public filterPath(path: TradingPathItem): boolean {
+    return path[1].length === 2;
   }
 
   private getPoolInfo(data: PoolInfo[], token0: Token, token1: Token) {
@@ -92,6 +91,7 @@ export class NutsDex implements BaseSwap {
     result: SwapInResult | SwapOutResult
   ): SwapResult {
     const { mode } = params;
+
     return {
       source: this.source,
       mode,
@@ -104,11 +104,14 @@ export class NutsDex implements BaseSwap {
         token: result.outputToken,
         amount: result.outputAmount
       },
+      // no midPrice in nuts pool
       midPrice: FixedPointNumber.ZERO,
+      // no priceImpact in nuts pool
       priceImpact: FixedPointNumber.ZERO,
+      // no naturalPriceImpact in nuts pool
       naturalPriceImpact: FixedPointNumber.ZERO,
       exchangeFee: result.feeAmount,
-      exchangeFeeRate: result.feeAmount.div(result.inputAmount),
+      exchangeFeeRate: result.feeAmount.div(result.outputAmount),
       acceptiveSlippage: params.acceptiveSlippage,
       callParams: result.toChainData(),
       call: this.api.tx.stableAsset.swap(...result.toChainData())
@@ -124,17 +127,17 @@ export class NutsDex implements BaseSwap {
       pool: this.subscribePoolInfo(token0, token1)
     }).pipe(
       switchMap(({ homaEnv, pool }) => {
-        const exchnageRate = homaEnv.exchangeRate;
+        const exchangeRate = homaEnv.exchangeRate;
         const { poolId, token0Index, token1Index } = pool;
 
         if (mode === 'EXACT_OUTPUT') {
           return this.stableAsset
-            .getSwapInAmount(poolId, token0Index, token1Index, input, acceptiveSlippage || 0, exchnageRate)
+            .getSwapInAmount(poolId, token0Index, token1Index, input, acceptiveSlippage || 0, exchangeRate)
             .pipe(map((result) => this.mapStableSwapResultToSwapResult(params, result)));
         }
 
         return this.stableAsset
-          .getSwapOutAmount(poolId, token0Index, token1Index, input, acceptiveSlippage || 0, exchnageRate)
+          .getSwapOutAmount(poolId, token0Index, token1Index, input, acceptiveSlippage || 0, exchangeRate)
           .pipe(map((result) => this.mapStableSwapResultToSwapResult(params, result)));
       })
     );

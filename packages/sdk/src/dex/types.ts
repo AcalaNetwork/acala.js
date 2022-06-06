@@ -88,5 +88,5 @@ export interface AggregateDexConfigs {
 
 export interface AggregateDexSwapResult {
   result: SwapResult;
-  mid: SwapResult[];
+  tracker: SwapResult[];
 }
