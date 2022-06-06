@@ -16,6 +16,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@acala-network/api-derive@npm:4.1.4-3":
+  version: 4.1.4-3
+  resolution: "@acala-network/api-derive@npm:4.1.4-3"
+  dependencies:
+    "@acala-network/types": 4.1.4-3
+    "@babel/runtime": ^7.10.2
+    "@open-web3/orml-types": ^1.1.4
+    "@polkadot/api-derive": ^8.5.1
+  checksum: 6c77e7c00d81b3654d449b4b2ee71a10964da2f8f539cd436cba4f95a05ae14c8ee5a1ff26971174f812d10176d66f8c11c38e7119fb1cb4001ba00041f6f5a5
+  languageName: node
+  linkType: hard
+
 "@acala-network/api@4.1.4-6, @acala-network/api@workspace:packages/api":
   version: 0.0.0-use.local
   resolution: "@acala-network/api@workspace:packages/api"
@@ -31,6 +43,23 @@ __metadata:
     "@polkadot/types": ^8.5.1
   languageName: unknown
   linkType: soft
+
+"@acala-network/api@npm:4.1.4-3":
+  version: 4.1.4-3
+  resolution: "@acala-network/api@npm:4.1.4-3"
+  dependencies:
+    "@acala-network/api-derive": 4.1.4-3
+    "@acala-network/types": 4.1.4-3
+    "@babel/runtime": ^7.10.2
+    "@open-web3/orml-api-derive": ^1.1.4
+    "@polkadot/api": ^8.5.1
+    "@polkadot/rpc-core": ^8.5.1
+  peerDependencies:
+    "@polkadot/api": ^8.5.1
+    "@polkadot/types": ^8.5.1
+  checksum: 9a6c4cbda43ca111273dea266461b0e3723bdc975c7316e523cbeaeec93f7cae564580bc9a0a94fe2e00738c2f4adde3f363feb22bd7ebc34651fb084c5722d1
+  languageName: node
+  linkType: hard
 
 "@acala-network/app-util@workspace:packages/app-util":
   version: 0.0.0-use.local
@@ -138,17 +167,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@acala-network/sdk-core@npm:4.0.4-0":
-  version: 4.0.4-0
-  resolution: "@acala-network/sdk-core@npm:4.0.4-0"
+"@acala-network/sdk-core@npm:4.1.4-3":
+  version: 4.1.4-3
+  resolution: "@acala-network/sdk-core@npm:4.1.4-3"
   dependencies:
-    "@polkadot/api": ^7.1.1
-    "@polkadot/types": ^7.1.1
+    "@polkadot/api": ^8.5.1
+    "@polkadot/types": ^8.5.1
     "@types/events": ^3.0.0
     bignumber.js: ^9.0.0
     events: ^3.2.0
     lodash: ^4.17.20
-  checksum: 1d88e028c5a42b038f136a4236ca9a383acb762db247f460c35c5a63bf088dfdf37627621b2883a60168c0183c256b3445233b45643d6f024b02f47d9a7aadee
+  checksum: 52fec65026e4e57456ea0b15a6f9726dbb3a4922417bb22eb4b831871262fe4e0c62cd7e60b02a2a3b3a029c4199254988f606f85596947e42c11529f9f76221
   languageName: node
   linkType: hard
 
@@ -199,6 +228,29 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@acala-network/sdk@npm:4.1.4-3":
+  version: 4.1.4-3
+  resolution: "@acala-network/sdk@npm:4.1.4-3"
+  dependencies:
+    "@acala-network/api": 4.1.4-3
+    "@acala-network/bodhi": ^2.4.0
+    "@acala-network/type-definitions": 4.1.4-3
+    "@polkadot/api": ^8.5.1
+    "@polkadot/types": ^8.5.1
+    "@types/events": ^3.0.0
+    axios: ^0.24.0
+    bignumber.js: ^9.0.0
+    cross-fetch: ^3.1.4
+    ethers: ^5.6.2
+    events: ^3.2.0
+    graphql: ^16.3.0
+    graphql-request: ^4.1.0
+    lodash: ^4.17.20
+    rxjs: ^7.4.0
+  checksum: a14a4205eba6a8c01832a1fca17afde017fbe477678a27e895abdcb59eaeb303ed657b370de7699cf4c296b2dd6afdb43b9286bbfda2c686558b3fd84c575385
+  languageName: node
+  linkType: hard
+
 "@acala-network/sdk@workspace:packages/sdk":
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk@workspace:packages/sdk"
@@ -206,7 +258,7 @@ __metadata:
     "@acala-network/api": 4.1.4-6
     "@acala-network/bodhi": ^2.4.0
     "@acala-network/type-definitions": 4.1.4-6
-    "@nuts-finance/sdk-stable-asset": ^1.1.9
+    "@nuts-finance/sdk-stable-asset": ^1.1.12
     "@polkadot/api": ^8.5.1
     "@polkadot/types": ^8.5.1
     "@types/dotenv": ^8.2.0
@@ -232,21 +284,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@acala-network/type-definitions@npm:4.0.4-0":
-  version: 4.0.4-0
-  resolution: "@acala-network/type-definitions@npm:4.0.4-0"
-  dependencies:
-    "@open-web3/orml-type-definitions": ^1.0.2-4
-  checksum: 3c7d75699b319c3edb4d58c45233d69abc1c861825fda922195d4ab33f243346ffc67bf9594b4431389f94953b84bc21d676eec99d70c3f050abda3d276e755c
-  languageName: node
-  linkType: hard
-
 "@acala-network/type-definitions@npm:4.1.3":
   version: 4.1.3
   resolution: "@acala-network/type-definitions@npm:4.1.3"
   dependencies:
     "@open-web3/orml-type-definitions": ^1.1.4
   checksum: 7312c276224c3ba6d57e44aacf3205b76815fc00c8a9d31ad293969b6a8c7376057ffb30c1540bf413c6e83717e4e21fb34cd3a50218d48761745884cd7a1648
+  languageName: node
+  linkType: hard
+
+"@acala-network/type-definitions@npm:4.1.4-3":
+  version: 4.1.4-3
+  resolution: "@acala-network/type-definitions@npm:4.1.4-3"
+  dependencies:
+    "@open-web3/orml-type-definitions": ^1.1.4
+  checksum: 9e8581c8d36b01635c2ab9f901df20f7be403d56357b003e8575e6f5651396f84bec3cca3bd42c0fed08b4df95a73a37ccdc46a6b3410da1d832a0da5b9e9cd3
   languageName: node
   linkType: hard
 
@@ -268,22 +320,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@acala-network/types@npm:4.0.4-0":
-  version: 4.0.4-0
-  resolution: "@acala-network/types@npm:4.0.4-0"
+"@acala-network/types@npm:4.1.4-3":
+  version: 4.1.4-3
+  resolution: "@acala-network/types@npm:4.1.4-3"
   dependencies:
-    "@acala-network/type-definitions": 4.0.4-0
+    "@acala-network/type-definitions": 4.1.4-3
     "@babel/runtime": ^7.10.2
-    "@open-web3/api-mobx": ^1.0.2-4
-    "@open-web3/orml-types": ^1.0.2-4
-    "@polkadot/api": ^7.1.1
-    "@polkadot/typegen": ^7.1.1
-    "@polkadot/types": ^7.1.1
+    "@open-web3/api-mobx": ^1.1.4
+    "@open-web3/orml-types": ^1.1.4
   peerDependencies:
-    "@polkadot/api": ^7.1.1
-    "@polkadot/typegen": ^7.1.1
-    "@polkadot/types": ^7.1.1
-  checksum: 2fd6f3fc8226a18858a77820d3ad4115601ce962f61f104b5a2cdb7e24cb47fcaed9440680195c27b416e8acd07650f192a40352a34734ca4e91f6e256f7f117
+    "@polkadot/api": ">8.5.1"
+  checksum: dcf662bf8bff7c9c0e77155ebec8b251494befe8a09d4a0cd48272d3e912d40884429b3dd1af8fc75ecf42bea0655433986999fd6a60c1372c34d706ec4e9404
   languageName: node
   linkType: hard
 
@@ -2987,19 +3034,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nuts-finance/sdk-stable-asset@npm:^1.1.9":
-  version: 1.1.9
-  resolution: "@nuts-finance/sdk-stable-asset@npm:1.1.9"
+"@nuts-finance/sdk-stable-asset@npm:^1.1.12":
+  version: 1.1.13
+  resolution: "@nuts-finance/sdk-stable-asset@npm:1.1.13"
   dependencies:
-    "@acala-network/sdk-core": 4.0.4-0
-    "@acala-network/types": 4.0.4-0
-    "@polkadot/api": ^7.13.1
-    "@polkadot/types": ^7.13.1
+    "@acala-network/sdk": 4.1.4-3
+    "@acala-network/sdk-core": 4.1.4-3
+    "@acala-network/types": 4.1.4-3
+    "@polkadot/api": ^8.5.1
+    "@polkadot/types": ^8.5.1
     axios: ^0.27.2
     bignumber.js: ^9.0.0
     lodash: ^4.17.20
     rxjs: ^7.4.0
-  checksum: 23f92827ff2c53962ac81da41a2d89d1332702107875ced9b9545005dc79f0d8d5130d0fd257ebd5e36e78be980c2b4040a42b9f07cfe6b2647f70b6e9a05297
+  checksum: 9c8939ca83719734e3b5725207cd77574e5e414487746124dfd22bb1c508e06454777c28d1e109b910a9625c0ae0b69e445cbcb47319f8246c7302de8cc0373c
   languageName: node
   linkType: hard
 
@@ -3134,7 +3182,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@open-web3/api-mobx@npm:^1.0.2-4, @open-web3/api-mobx@npm:^1.1.4":
+"@open-web3/api-mobx@npm:^1.1.4":
   version: 1.1.4
   resolution: "@open-web3/api-mobx@npm:1.1.4"
   dependencies:
@@ -3251,7 +3299,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@open-web3/orml-type-definitions@npm:1.1.4, @open-web3/orml-type-definitions@npm:^1.0.2-4, @open-web3/orml-type-definitions@npm:^1.1.4":
+"@open-web3/orml-type-definitions@npm:1.1.4, @open-web3/orml-type-definitions@npm:^1.1.4":
   version: 1.1.4
   resolution: "@open-web3/orml-type-definitions@npm:1.1.4"
   dependencies:
@@ -3260,7 +3308,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@open-web3/orml-types@npm:^1.0.2-4, @open-web3/orml-types@npm:^1.1.4":
+"@open-web3/orml-types@npm:^1.1.4":
   version: 1.1.4
   resolution: "@open-web3/orml-types@npm:1.1.4"
   dependencies:
@@ -3422,37 +3470,6 @@ __metadata:
     mock-socket: ^9.1.3
     nock: ^13.2.4
   checksum: 4490be70e10614af02b8d6d688db2386b3c60b6a3bc70216672c7141d61a0c0b0468ac339b8dd236ca53381d9977ca8275040e99ade5b05bd3f08c76d905ff08
-  languageName: node
-  linkType: hard
-
-"@polkadot/typegen@npm:^7.1.1":
-  version: 7.15.1
-  resolution: "@polkadot/typegen@npm:7.15.1"
-  dependencies:
-    "@babel/core": ^7.17.8
-    "@babel/register": ^7.17.7
-    "@babel/runtime": ^7.17.8
-    "@polkadot/api": 7.15.1
-    "@polkadot/api-augment": 7.15.1
-    "@polkadot/rpc-augment": 7.15.1
-    "@polkadot/rpc-provider": 7.15.1
-    "@polkadot/types": 7.15.1
-    "@polkadot/types-augment": 7.15.1
-    "@polkadot/types-codec": 7.15.1
-    "@polkadot/types-create": 7.15.1
-    "@polkadot/types-support": 7.15.1
-    "@polkadot/util": ^8.7.1
-    "@polkadot/x-ws": ^8.7.1
-    handlebars: ^4.7.7
-    websocket: ^1.0.34
-    yargs: ^17.4.0
-  bin:
-    polkadot-types-chain-info: scripts/polkadot-types-chain-info.cjs
-    polkadot-types-from-chain: scripts/polkadot-types-from-chain.cjs
-    polkadot-types-from-defs: scripts/polkadot-types-from-defs.cjs
-    polkadot-types-internal-interfaces: scripts/polkadot-types-internal-interfaces.cjs
-    polkadot-types-internal-metadata: scripts/polkadot-types-internal-metadata.cjs
-  checksum: c1407eb48ba8bc00ef95973bb8e394c3c8877980f7b3c60e69643e442f7cbd777647e43f95edc7257e07a8493abe2c8f7aad70fcabfabe2c028ed6eb51dbc75c
   languageName: node
   linkType: hard
 
@@ -3695,15 +3712,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/x-global@npm:8.7.1":
-  version: 8.7.1
-  resolution: "@polkadot/x-global@npm:8.7.1"
-  dependencies:
-    "@babel/runtime": ^7.17.8
-  checksum: d2a888f2cfa31a8a99b92537799d5fd30115d8db7bd2b58f3e2a0ee929518fb9fc44b936dd6e98f79ac84420a587dd81fd2c592febc87f6176cddda436e622b3
-  languageName: node
-  linkType: hard
-
 "@polkadot/x-global@npm:9.2.1, @polkadot/x-global@npm:^9.2.1":
   version: 9.2.1
   resolution: "@polkadot/x-global@npm:9.2.1"
@@ -3740,18 +3748,6 @@ __metadata:
     "@babel/runtime": ^7.17.9
     "@polkadot/x-global": 9.2.1
   checksum: 9f2690a4b4cb9c02a9626b24580556349d85650e54e04ed4a4a7fa75afa7a89a209e649851f2fffb38c31c3e62515fd17a190ebb84ae6872dd2a4b6f0d2ce279
-  languageName: node
-  linkType: hard
-
-"@polkadot/x-ws@npm:^8.7.1":
-  version: 8.7.1
-  resolution: "@polkadot/x-ws@npm:8.7.1"
-  dependencies:
-    "@babel/runtime": ^7.17.8
-    "@polkadot/x-global": 8.7.1
-    "@types/websocket": ^1.0.5
-    websocket: ^1.0.34
-  checksum: 9137f955bf92f49bf831457ebc10370ca26bb9f0dce1dee3b2fae4eeab3a90377a176940f845b13a11836b483c03482713eda64fa49958a620ee182495e20b76
   languageName: node
   linkType: hard
 

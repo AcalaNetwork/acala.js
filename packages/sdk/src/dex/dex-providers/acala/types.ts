@@ -20,4 +20,4 @@ export interface ExchangeFee {
   numerator: FixedPointNumber;
 }
 
-export type MidResult = Omit<SwapResult, 'source' | 'type' | 'path'>;
+export type MidResult = Omit<SwapResult, 'source' | 'mode' | 'path'>;

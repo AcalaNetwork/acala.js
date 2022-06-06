@@ -69,17 +69,17 @@ describe('dex', () => {
       sdk.swapWithAllTradeablePath({
         path: [ksm, rmrk],
         source: 'aggregate',
-        type: 'EXACT_INPUT',
+        mode: 'EXACT_INPUT',
         input: new FixedPointNumber(1, ksm.decimals)
       })
     );
 
     result.forEach((item) => {
-      console.log(item.input.amount.toString());
-      console.log(item.input.token.toString());
-      console.log(item.output.amount.toString());
-      console.log(item.output.token.toString());
-      console.log(TradingGraph.pathsToString([item.path]));
+      console.log(item.result.input.amount.toString());
+      console.log(item.result.input.token.toString());
+      console.log(item.result.output.amount.toString());
+      console.log(item.result.output.token.toString());
+      console.log(TradingGraph.pathsToString([item.result.path]));
     });
   });
 });

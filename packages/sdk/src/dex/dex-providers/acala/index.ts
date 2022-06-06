@@ -8,17 +8,18 @@ import {
 } from '@acala-network/sdk-core';
 import { Wallet } from '@acala-network/sdk/wallet';
 import { AcalaPrimitivesTradingPair, ModuleDexTradingPairStatus } from '@acala-network/types/interfaces/types-lookup';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { StorageKey } from '@polkadot/types';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Storage } from '../../../utils/storage';
-import { AmountTooSmall, InsufficientLiquidityError } from '../../errors';
+import { AmountTooSmall, InsufficientLiquidityError, ParamsNotAcceptableForDexProvider } from '../../errors';
 import {
   BaseSwap,
   DexSource,
   SwapParamsWithExactPath,
   SwapResult,
-  TradeType,
+  TradeMode,
   TradingPair,
   CompositeTradingPath,
   TradingPathItem
@@ -100,7 +101,7 @@ export class AcalaDex implements BaseSwap {
   }
 
   public swap(params: SwapParamsWithExactPath): Observable<SwapResult> {
-    const { input, path, type } = params;
+    const { input, path, mode } = params;
 
     const expandPath = this.getExpandPath(path);
 
@@ -110,13 +111,13 @@ export class AcalaDex implements BaseSwap {
     return this.subscribeExpandPathWithPositions(expandPath).pipe(
       map((expandPath) => {
         const midResult =
-          type === 'EXACT_INPUT'
+          mode === 'EXACT_INPUT'
             ? this.swapWithExactInput(inputAmount, expandPath)
             : this.swapWithExactOutput(inputAmount, expandPath);
 
         const CompositeTradingPath = [[this.source, path]] as [DexSource, Token[]][];
 
-        return this.getSwapResult(CompositeTradingPath, type, midResult);
+        return this.getSwapResult(CompositeTradingPath, mode, midResult);
       })
     );
   }
@@ -197,10 +198,10 @@ export class AcalaDex implements BaseSwap {
     return temp.minus(outputAmount).div(temp);
   }
 
-  private getSwapResult(path: CompositeTradingPath, type: TradeType, data: MidResult): SwapResult {
+  private getSwapResult(path: CompositeTradingPath, mode: TradeMode, data: MidResult): SwapResult {
     return {
       source: this.source,
-      type: type,
+      mode,
       path: path,
       ...data
     };
@@ -329,5 +330,34 @@ export class AcalaDex implements BaseSwap {
     if (path[0] !== this.source) return false;
 
     return path[1].length <= this.configs.tradingPathLimit;
+  }
+
+  public getAggregateTradingPath(result: SwapResult) {
+    return ['Dex', result.path[0][1].map((i) => i.toChainData())];
+  }
+
+  public getTradingTx(result: SwapResult): SubmittableExtrinsic<'promise'> | SubmittableExtrinsic<'rxjs'> {
+    const { path, mode, output, input, acceptiveSlippage } = result;
+    const [source, tradePath] = path[0];
+
+    if (source !== this.source) throw new ParamsNotAcceptableForDexProvider(this.source);
+
+    if (mode === 'EXACT_OUTPUT') {
+      const slippage = new FixedPointNumber(1 + (acceptiveSlippage || 0));
+
+      return this.api.tx.dex.swapWithExactTarget(
+        tradePath.map((i) => i.toChainData()),
+        output.amount.toChainData(),
+        input.amount.mul(slippage).toChainData()
+      );
+    }
+
+    const slippage = new FixedPointNumber(1 - (acceptiveSlippage || 0));
+
+    return this.api.tx.dex.swapWithExactSupply(
+      tradePath.map((i) => i.toChainData()),
+      output.amount.toChainData(),
+      input.amount.mul(slippage).toChainData()
+    );
   }
 }
