@@ -2,6 +2,7 @@ import { AnyApi, FixedPointNumber, Token } from '@acala-network/sdk-core';
 import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, Observable, of, switchMap } from 'rxjs';
 import { BaseSDK } from '../types';
 import { Wallet } from '../wallet';
+import { NoTradingPathError } from './errors';
 import { TradingGraph } from './trading-graph';
 import {
   AggregateDexConfigs,
@@ -190,7 +191,7 @@ export class AggregateDex implements BaseSDK {
     const fn = (count: number, min: number, params: SwapResult): Observable<SwapResult> => {
       tracker[count + 1] = params;
 
-      if (count <= min) {
+      if (count < min) {
         return of(params);
       }
 
@@ -229,10 +230,12 @@ export class AggregateDex implements BaseSDK {
         return fn(len - 2, 0, result);
       }),
       map((result) => {
+        const lastPath = last[1];
+
         return {
           ...result,
           output: {
-            token: last[1][0],
+            token: lastPath[lastPath.length - 1],
             amount: input
           },
           path,
@@ -294,7 +297,15 @@ export class AggregateDex implements BaseSDK {
       });
     }
 
-    return combineLatest(useablePaths.map((path) => this.swapWithCompositePath(mode, input, path)));
+    return of(useablePaths).pipe(
+      switchMap((paths) => {
+        if (!paths.length) {
+          throw new NoTradingPathError();
+        }
+
+        return combineLatest(paths.map((path) => this.swapWithCompositePath(mode, input, path)));
+      })
+    );
   }
 
   private convertCompositeTradingPathToTxParams(list: SwapResult[]) {
