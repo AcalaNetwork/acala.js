@@ -311,8 +311,11 @@ export class AggregateDex implements BaseSDK {
             this.swapWithCompositePath(mode, input, path).pipe(
               map((result) => ({
                 ...result,
-                // reset acceptive slippage into result
-                acceptiveSlippage
+                result: {
+                  ...result.result,
+                  // reset acceptive slippage into result
+                  acceptiveSlippage
+                }
               }))
             )
           )
