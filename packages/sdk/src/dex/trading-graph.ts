@@ -25,6 +25,8 @@ export class TradingGraph {
   public genGraph() {
     const allSources = Object.keys(this.tradingPairs) as DexSource[];
 
+    this.graph.clear();
+
     for (const data of Object.entries(this.tradingPairs)) {
       const [source, tradingPairs] = data as unknown as [DexSource, TradingPair[]];
 
@@ -36,7 +38,9 @@ export class TradingGraph {
 
         // create token0-token1 edge
         if (this.graph.has(key0)) {
-          this.graph.get(key0)?.push({ source, token: token1 });
+          if (!this.isInPath(this.graph.get(key0) || [], { source, token: token1 })) {
+            this.graph.get(key0)?.push({ source, token: token1 });
+          }
         } else {
           this.graph.set(key0, [
             { source, token: token0 },
@@ -46,7 +50,9 @@ export class TradingGraph {
 
         // create token1-token0 edge
         if (this.graph.has(key1)) {
-          this.graph.get(key1)?.push({ source, token: token0 });
+          if (!this.isInPath(this.graph.get(key1) || [], { source, token: token0 })) {
+            this.graph.get(key1)?.push({ source, token: token0 });
+          }
         } else {
           this.graph.set(key1, [
             { source, token: token1 },
