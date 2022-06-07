@@ -13,7 +13,8 @@ import {
   CompositeTradingPath,
   SwapResult,
   TradingPathItem,
-  AggregateDexSwapResult
+  AggregateDexSwapResult,
+  SwapSource
 } from './types';
 
 export class AggregateDex implements BaseSDK {
@@ -159,6 +160,7 @@ export class AggregateDex implements BaseSDK {
       map((result) => {
         return {
           ...result,
+          source: 'aggregate' as SwapSource,
           input: {
             token: first[1][0],
             amount: input
@@ -234,6 +236,7 @@ export class AggregateDex implements BaseSDK {
 
         return {
           ...result,
+          source: 'aggregate' as SwapSource,
           output: {
             token: lastPath[lastPath.length - 1],
             amount: input
@@ -285,7 +288,7 @@ export class AggregateDex implements BaseSDK {
   }
 
   public swapWithAllTradeablePath(params: AggregateDexSwapParams) {
-    const { path, source, mode, input } = params;
+    const { path, source, mode, input, acceptiveSlippage } = params;
     let useablePaths = this.getTradingPaths(path[0], path[1]);
 
     if (source !== 'aggregate') {
@@ -303,7 +306,17 @@ export class AggregateDex implements BaseSDK {
           throw new NoTradingPathError();
         }
 
-        return combineLatest(paths.map((path) => this.swapWithCompositePath(mode, input, path)));
+        return combineLatest(
+          paths.map((path) =>
+            this.swapWithCompositePath(mode, input, path).pipe(
+              map((result) => ({
+                ...result,
+                // reset acceptive slippage into result
+                acceptiveSlippage
+              }))
+            )
+          )
+        );
       })
     );
   }
@@ -318,9 +331,7 @@ export class AggregateDex implements BaseSDK {
   }
 
   public getTradingTx(result: AggregateDexSwapResult) {
-    const { path, output, input, acceptiveSlippage } = result.result;
-
-    const slippage = new FixedPointNumber(1 - (acceptiveSlippage || 0));
+    const { path, output, input, acceptiveSlippage, mode } = result.result;
 
     // only contains acala dex
     if (path.length === 1 && path[0][0] === 'acala') {
@@ -335,6 +346,19 @@ export class AggregateDex implements BaseSDK {
 
       return provider.getTradingTx(result.tracker[0]);
     }
+
+    if (mode === 'EXACT_OUTPUT') {
+      const slippage = new FixedPointNumber(1 + (acceptiveSlippage || 0));
+
+      // create aggregate tx
+      return this.api.tx.aggregatedDex.swapWithExactSupply(
+        this.convertCompositeTradingPathToTxParams(result.tracker),
+        input.amount.mul(slippage).toChainData(),
+        output.amount.toChainData()
+      );
+    }
+
+    const slippage = new FixedPointNumber(1 - (acceptiveSlippage || 0));
 
     // create aggregate tx
     return this.api.tx.aggregatedDex.swapWithExactSupply(
