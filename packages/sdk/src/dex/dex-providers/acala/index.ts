@@ -101,7 +101,7 @@ export class AcalaDex implements BaseSwap {
   }
 
   public swap(params: SwapParamsWithExactPath): Observable<SwapResult> {
-    const { input, path, mode } = params;
+    const { input, path, mode, acceptiveSlippage } = params;
 
     const expandPath = this.getExpandPath(path);
 
@@ -117,7 +117,7 @@ export class AcalaDex implements BaseSwap {
 
         const CompositeTradingPath = [[this.source, path]] as [DexSource, Token[]][];
 
-        return this.getSwapResult(CompositeTradingPath, mode, midResult);
+        return this.getSwapResult(CompositeTradingPath, mode, midResult, acceptiveSlippage);
       })
     );
   }
@@ -198,11 +198,17 @@ export class AcalaDex implements BaseSwap {
     return temp.minus(outputAmount).div(temp);
   }
 
-  private getSwapResult(path: CompositeTradingPath, mode: TradeMode, data: MidResult): SwapResult {
+  private getSwapResult(
+    path: CompositeTradingPath,
+    mode: TradeMode,
+    data: MidResult,
+    acceptiveSlippage = 0
+  ): SwapResult {
     return {
       source: this.source,
       mode,
       path: path,
+      acceptiveSlippage,
       ...data
     };
   }

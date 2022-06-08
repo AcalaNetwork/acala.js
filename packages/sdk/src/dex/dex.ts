@@ -12,7 +12,6 @@ import {
   TradeMode,
   CompositeTradingPath,
   SwapResult,
-  TradingPathItem,
   AggregateDexSwapResult,
   SwapSource
 } from './types';
@@ -111,7 +110,8 @@ export class AggregateDex implements BaseSDK {
 
   private swapWithCompositePathInExactIntput(
     input: FixedPointNumber,
-    path: CompositeTradingPath
+    path: CompositeTradingPath,
+    acceptiveSlippage = 0
   ): Observable<AggregateDexSwapResult> {
     const [first] = path;
     const tracker: Record<number, SwapResult> = {};
@@ -131,7 +131,7 @@ export class AggregateDex implements BaseSDK {
           source: current[0],
           mode: 'EXACT_INPUT',
           input: params.output.amount,
-          acceptiveSlippage: 0,
+          acceptiveSlippage,
           path: current[1]
         })
         .pipe(
@@ -141,19 +141,20 @@ export class AggregateDex implements BaseSDK {
         );
     };
 
-    const createFirstTrading = (path: TradingPathItem) => {
+    const createFirstTrading = () => {
+      const path = first;
       const provider = this.getProvider(path[0]);
 
       return provider.swap({
         source: path[0],
         mode: 'EXACT_INPUT',
         input,
-        acceptiveSlippage: 0,
+        acceptiveSlippage,
         path: path[1]
       });
     };
 
-    return createFirstTrading(first).pipe(
+    return createFirstTrading().pipe(
       switchMap((result) => {
         return fn(1, path.length, result);
       }),
@@ -166,6 +167,7 @@ export class AggregateDex implements BaseSDK {
             amount: input
           },
           path,
+          // for aggregate result doesn't support those
           exchangeFee: FixedPointNumber.ZERO,
           exchangeFeeRate: FixedPointNumber.ZERO,
           priceImpact: FixedPointNumber.ZERO,
@@ -184,7 +186,8 @@ export class AggregateDex implements BaseSDK {
 
   private swapWithCompositePathInExactOutput(
     input: FixedPointNumber,
-    path: CompositeTradingPath
+    path: CompositeTradingPath,
+    acceptiveSlippage = 0
   ): Observable<AggregateDexSwapResult> {
     const len = path.length;
     const last = path[len - 1];
@@ -205,7 +208,7 @@ export class AggregateDex implements BaseSDK {
           source: current[0],
           mode: 'EXACT_OUTPUT',
           input: params.input.amount,
-          acceptiveSlippage: 0,
+          acceptiveSlippage,
           path: current[1]
         })
         .pipe(
@@ -222,7 +225,7 @@ export class AggregateDex implements BaseSDK {
         source: last[0],
         mode: 'EXACT_OUTPUT',
         input,
-        acceptiveSlippage: 0,
+        acceptiveSlippage,
         path: last[1]
       });
     };
@@ -242,6 +245,7 @@ export class AggregateDex implements BaseSDK {
             amount: input
           },
           path,
+          // for aggregate result doesn't support those
           exchangeFee: FixedPointNumber.ZERO,
           exchangeFeeRate: FixedPointNumber.ZERO,
           priceImpact: FixedPointNumber.ZERO,
@@ -261,11 +265,12 @@ export class AggregateDex implements BaseSDK {
   private swapWithCompositePath(
     mode: TradeMode,
     input: FixedPointNumber,
-    path: CompositeTradingPath
+    path: CompositeTradingPath,
+    acceptiveSlippage?: number
   ): Observable<AggregateDexSwapResult> {
-    if (mode === 'EXACT_OUTPUT') return this.swapWithCompositePathInExactOutput(input, path);
+    if (mode === 'EXACT_OUTPUT') return this.swapWithCompositePathInExactOutput(input, path, acceptiveSlippage);
 
-    return this.swapWithCompositePathInExactIntput(input, path);
+    return this.swapWithCompositePathInExactIntput(input, path, acceptiveSlippage);
   }
 
   private getBestSwapResult(mode: TradeMode, resultList: AggregateDexSwapResult[]) {
@@ -276,9 +281,13 @@ export class AggregateDex implements BaseSDK {
     }
 
     // exact output
-    return resultList.slice(1).reduce((acc, cur) => {
+    const result = resultList.slice(1).reduce((acc, cur) => {
       return acc.result.input.amount.lt(cur.result.input.amount) ? acc : cur;
     }, resultList[0]);
+
+    result.result.call = this.getTradingTx(result);
+
+    return result;
   }
 
   public swap(params: AggregateDexSwapParams) {
@@ -306,20 +315,7 @@ export class AggregateDex implements BaseSDK {
           throw new NoTradingPathError();
         }
 
-        return combineLatest(
-          paths.map((path) =>
-            this.swapWithCompositePath(mode, input, path).pipe(
-              map((result) => ({
-                ...result,
-                result: {
-                  ...result.result,
-                  // reset acceptive slippage into result
-                  acceptiveSlippage
-                }
-              }))
-            )
-          )
-        );
+        return combineLatest(paths.map((path) => this.swapWithCompositePath(mode, input, path, acceptiveSlippage)));
       })
     );
   }
