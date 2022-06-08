@@ -47,7 +47,7 @@ export class AggregateDex implements BaseSDK {
   private getConfigs() {
     return {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-      aggregateLimit: (this.api.consts.dex.tradingPathLimit as any).toNumber()
+      aggregateLimit: (this.api.consts.aggregatedDex.swapPathLimit as any).toNumber()
     };
   }
 
