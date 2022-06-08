@@ -304,7 +304,7 @@ export class AggregateDex implements BaseSDK {
       // remove include other source path when source is not aggregate
       useablePaths = useablePaths.filter((path) => {
         return path.reduce((acc, item) => {
-          return acc && source !== item[0];
+          return acc && source === item[0];
         }, true as boolean);
       });
     }
