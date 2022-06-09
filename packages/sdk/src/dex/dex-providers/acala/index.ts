@@ -115,9 +115,9 @@ export class AcalaDex implements BaseSwap {
             ? this.swapWithExactInput(inputAmount, expandPath)
             : this.swapWithExactOutput(inputAmount, expandPath);
 
-        const CompositeTradingPath = [[this.source, path]] as [DexSource, Token[]][];
+        const compositeTradingPath = [[this.source, path]] as [DexSource, Token[]][];
 
-        return this.getSwapResult(CompositeTradingPath, mode, midResult, acceptiveSlippage);
+        return this.getSwapResult(compositeTradingPath, mode, midResult, acceptiveSlippage);
       })
     );
   }
