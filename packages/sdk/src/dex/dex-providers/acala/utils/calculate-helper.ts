@@ -42,10 +42,12 @@ export function getSupplyAmount(
 }
 
 export function calculateExchangeFeeRate(path: ExpandPath, fee: FixedPointNumber) {
+  if (path.length === 1) return fee;
+
   const ONE = FixedPointNumber.ONE;
 
   return ONE.minus(
-    path.slice(1).reduce((acc) => {
+    path.reduce((acc) => {
       return acc.times(ONE.minus(fee));
     }, ONE)
   );

@@ -117,7 +117,7 @@ export class AggregateDex implements BaseSDK {
     const tracker: Record<number, SwapResult> = {};
 
     const fn = (count: number, max: number, params: SwapResult): Observable<SwapResult> => {
-      tracker[count - 1] = params;
+      tracker[count - 1] = { ...params };
 
       if (count >= max) {
         return of(params);
@@ -194,7 +194,7 @@ export class AggregateDex implements BaseSDK {
     const tracker: Record<number, SwapResult> = {};
 
     const fn = (count: number, min: number, params: SwapResult): Observable<SwapResult> => {
-      tracker[count + 1] = params;
+      tracker[count + 1] = { ...params };
 
       if (count < min) {
         return of(params);
@@ -275,9 +275,13 @@ export class AggregateDex implements BaseSDK {
 
   private getBestSwapResult(mode: TradeMode, resultList: AggregateDexSwapResult[]) {
     if (mode === 'EXACT_INPUT') {
-      return resultList.slice(1).reduce((acc, cur) => {
+      const result = resultList.slice(1).reduce((acc, cur) => {
         return acc.result.output.amount.gt(cur.result.output.amount) ? acc : cur;
       }, resultList[0]);
+
+      result.result.call = this.getTradingTx(result);
+
+      return result;
     }
 
     // exact output
