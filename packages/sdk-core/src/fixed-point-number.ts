@@ -393,7 +393,7 @@ export class FixedPointNumber {
   static ONE = new FixedPointNumber(1);
   static TWO = new FixedPointNumber(2);
   static THREE = new FixedPointNumber(3);
-  static FOUR = new FixedPointNumber(3);
+  static FOUR = new FixedPointNumber(4);
   static FIVE = new FixedPointNumber(5);
   static SIX = new FixedPointNumber(6);
   static TEN = new FixedPointNumber(10);
