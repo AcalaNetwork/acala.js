@@ -1,5 +1,5 @@
 import { Observable, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { ApiInterfaceRx } from '@polkadot/api/types';
 
 import { AccountId, Position } from '@acala-network/types/interfaces';
@@ -40,9 +40,12 @@ export function allLoans(
   api: ApiInterfaceRx
 ): (account: AccountId | string) => Observable<DerivedUserLoan[]> {
   return memo(instanceId, (account: AccountId | string) => {
-    const collateralCurrencyIds = getAllCollateralCurrencyIds(api);
     const loanQuery = loan(instanceId, api);
 
-    return combineLatest(collateralCurrencyIds.map((currency) => loanQuery(account, currency)));
+    return getAllCollateralCurrencyIds(api).pipe(
+      switchMap((collateralCurrencyIds) => {
+        return combineLatest(collateralCurrencyIds.map((currency) => loanQuery(account, currency)));
+      })
+    );
   });
 }

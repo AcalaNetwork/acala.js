@@ -1,5 +1,5 @@
 import { Observable, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 import { ApiInterfaceRx } from '@polkadot/api/types';
 import { memo } from '@polkadot/api-derive/util';
@@ -73,10 +73,13 @@ export function loanType(
  */
 export function allLoanTypes(instanceId: string, api: ApiInterfaceRx): () => Observable<DerivedLoanType[]> {
   return memo(instanceId, () => {
-    const collateralCurrencyIds = getAllCollateralCurrencyIds(api);
     const loanTypeQuery = loanType(instanceId, api);
 
-    return combineLatest(collateralCurrencyIds.map((currencyId) => loanTypeQuery(currencyId)));
+    return getAllCollateralCurrencyIds(api).pipe(
+      switchMap((collateralCurrencyIds) => {
+        return combineLatest(collateralCurrencyIds.map((currencyId) => loanTypeQuery(currencyId)));
+      })
+    );
   });
 }
 
@@ -106,9 +109,12 @@ export function loanOverview(
  */
 export function allLoanOverviews(instanceId: string, api: ApiInterfaceRx): () => Observable<DerivedLoanOverView[]> {
   return memo(instanceId, () => {
-    const collateralCurrencyIds = getAllCollateralCurrencyIds(api);
     const loanOverViewQuery = loanOverview(instanceId, api);
 
-    return combineLatest(collateralCurrencyIds.map((currencyId) => loanOverViewQuery(currencyId)));
+    return getAllCollateralCurrencyIds(api).pipe(
+      switchMap((collateralCurrencyIds) => {
+        return combineLatest(collateralCurrencyIds.map((currencyId) => loanOverViewQuery(currencyId)));
+      })
+    );
   });
 }
