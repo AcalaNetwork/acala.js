@@ -258,7 +258,7 @@ __metadata:
     "@acala-network/api": 4.1.4-18
     "@acala-network/bodhi": ^2.4.0
     "@acala-network/type-definitions": 4.1.4-18
-    "@nuts-finance/sdk-stable-asset": ^1.1.15
+    "@nuts-finance/sdk-stable-asset": ^1.1.16
     "@polkadot/api": ^8.5.1
     "@polkadot/types": ^8.5.1
     "@types/dotenv": ^8.2.0
@@ -3032,9 +3032,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nuts-finance/sdk-stable-asset@npm:^1.1.15":
-  version: 1.1.15
-  resolution: "@nuts-finance/sdk-stable-asset@npm:1.1.15"
+"@nuts-finance/sdk-stable-asset@npm:^1.1.16":
+  version: 1.1.16
+  resolution: "@nuts-finance/sdk-stable-asset@npm:1.1.16"
   dependencies:
     "@acala-network/sdk": 4.1.4-3
     "@acala-network/sdk-core": 4.1.4-3
