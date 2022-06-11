@@ -28,6 +28,6 @@
     "websocket": "^1.0.31"
   },
   "peerDependencies": {
-    "@polkadot/api": ">8.5.1"
+    "@polkadot/api": ">=8"
   }
 }

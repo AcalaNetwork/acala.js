@@ -23,7 +23,7 @@
     "@polkadot/rpc-core": "^8.5.1"
   },
   "peerDependencies": {
-    "@polkadot/api": "^8.5.1",
-    "@polkadot/types": "^8.5.1"
+    "@polkadot/api": ">=8",
+    "@polkadot/types": ">=8"
   }
 }

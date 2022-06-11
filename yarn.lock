@@ -39,8 +39,8 @@ __metadata:
     "@polkadot/api": ^8.5.1
     "@polkadot/rpc-core": ^8.5.1
   peerDependencies:
-    "@polkadot/api": ^8.5.1
-    "@polkadot/types": ^8.5.1
+    "@polkadot/api": ">=8"
+    "@polkadot/types": ">=8"
   languageName: unknown
   linkType: soft
 
@@ -316,7 +316,7 @@ __metadata:
     "@types/websocket": ^1.0.0
     websocket: ^1.0.31
   peerDependencies:
-    "@polkadot/api": ">8.5.1"
+    "@polkadot/api": ">=8"
   languageName: unknown
   linkType: soft
 
