@@ -6,13 +6,17 @@ const ENDPOINTS = ['wss://spiritnet.kilt.io/', 'wss://spiritnet.api.onfinality.i
 
 export class DIDWeb3Name {
   private api: ApiPromise;
+  private cached: Record<string, string>;
 
   constructor() {
     const provider = new WsProvider(ENDPOINTS);
     this.api = new ApiPromise({ provider });
+    this.cached = {};
   }
 
   public async getName(address: string) {
+    if (this.cached[address]) return this.cached[address];
+
     // check is connected first
     await this.api.isReady;
 
@@ -24,7 +28,11 @@ export class DIDWeb3Name {
       const web3name = await this.api.query.web3Names.names<Option<Bytes>>(didAccount);
 
       if (web3name.isSome) {
-        return web3name.unwrap().toUtf8();
+        const name = web3name.unwrap().toUtf8();
+
+        this.cached[address] = name;
+
+        return name;
       }
     }
 
