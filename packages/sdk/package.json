@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk",
-  "version": "4.1.5",
+  "version": "4.1.6-0",
   "description": "acala network sdk",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
@@ -15,9 +15,9 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
-    "@acala-network/api": "4.1.5",
+    "@acala-network/api": "4.1.6-0",
     "@acala-network/bodhi": "^2.4.0",
-    "@acala-network/type-definitions": "4.1.5",
+    "@acala-network/type-definitions": "4.1.6-0",
     "@nuts-finance/sdk-stable-asset": "^1.1.16",
     "@polkadot/api": "^8.5.1",
     "@polkadot/types": "^8.5.1",
