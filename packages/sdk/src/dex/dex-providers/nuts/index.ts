@@ -6,7 +6,7 @@ import { BaseSwap, DexSource, SwapParamsWithExactPath, SwapResult, TradingPair, 
 import { NutsDexOnlySupportApiRx } from './errors';
 import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { NoTradingPathError, ParamsNotAcceptableForDexProvider } from '../../errors';
+import { AmountTooSmall, NoTradingPathError, ParamsNotAcceptableForDexProvider } from '../../errors';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 
@@ -91,6 +91,16 @@ export class NutsDex implements BaseSwap {
     result: SwapInResult | SwapOutResult
   ): SwapResult {
     const { mode } = params;
+
+    if (
+      result.inputToken.symbol === 'AUSD' ||
+      result.inputToken.symbol === 'KUSD' ||
+      result.inputToken.symbol === 'USDT' ||
+      result.inputToken.symbol === 'USDC'
+    ) {
+      if (Number(result.inputAmount.toNumber()) <= 0.0001) throw new AmountTooSmall();
+      if (Number(result.outputAmount.toNumber()) <= 0.0001) throw new AmountTooSmall();
+    }
 
     return {
       source: this.source,
