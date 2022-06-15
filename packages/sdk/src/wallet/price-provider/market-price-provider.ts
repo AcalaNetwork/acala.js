@@ -32,9 +32,17 @@ export class MarketPriceProvider implements PriceProvider {
         switchMap(() =>
           from(
             (async () => {
-              const data = await this.batchQueryPrice(this.trackedCurrencies);
+              const groupedCurrencies = [];
+              const maxGroupSize = 10;
 
-              return Object.fromEntries(this.trackedCurrencies.map((name, i) => [name, data[i] || FN.ZERO]));
+              for (let i = 0; i < this.trackedCurrencies.length; i += maxGroupSize) {
+                groupedCurrencies.push(this.trackedCurrencies.slice(i, i + maxGroupSize));
+              }
+
+              const data = await Promise.all(groupedCurrencies.map(this.batchQueryPrice));
+              const flatData = data.flat();
+
+              return Object.fromEntries(this.trackedCurrencies.map((name, i) => [name, flatData[i]]));
             })()
           )
         )
@@ -57,7 +65,7 @@ export class MarketPriceProvider implements PriceProvider {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         result?.data?.data?.price?.map((elem: number) => {
           return new FN(elem || 0);
-        }) || []
+        }) || Array(currencies.length).fill(FN.ZERO)
       );
     }
 
@@ -69,11 +77,11 @@ export class MarketPriceProvider implements PriceProvider {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         result?.data?.data?.price?.map((elem: number) => {
           return new FN(elem || 0);
-        }) || []
+        }) || Array(currencies.length).fill(FN.ZERO)
       );
     }
 
-    return [];
+    return Array(currencies.length).fill(FN.ZERO);
   };
 
   subscribe(currency: Token): Observable<FN> {
