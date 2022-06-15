@@ -32,9 +32,17 @@ export class MarketPriceProvider implements PriceProvider {
         switchMap(() =>
           from(
             (async () => {
-              const data = await Promise.all(this.trackedCurrencies.map(this.queryPrice));
+              const groupedCurrencies = [];
+              const maxGroupSize = 10;
 
-              return Object.fromEntries(this.trackedCurrencies.map((name, i) => [name, data[i]]));
+              for (let i = 0; i < this.trackedCurrencies.length; i += maxGroupSize) {
+                groupedCurrencies.push(this.trackedCurrencies.slice(i, i + maxGroupSize));
+              }
+
+              const data = await Promise.all(groupedCurrencies.map(this.batchQueryPrice));
+              const flatData = data.flat();
+
+              return Object.fromEntries(this.trackedCurrencies.map((name, i) => [name, flatData[i]]));
             })()
           )
         )
@@ -44,8 +52,8 @@ export class MarketPriceProvider implements PriceProvider {
       });
   };
 
-  private queryPrice = async (currency: string) => {
-    let result = await fetch.get(`${PRICE_API}?token=${currency}&from=market`).catch((e) => {
+  private batchQueryPrice = async (currencies: string[]): Promise<FN[]> => {
+    let result = await fetch.get(`${PRICE_API}?token=${currencies.join(',')}&from=market`).catch((e) => {
       // doesn't throw error when try first endpoint
       console.error(e);
 
@@ -53,19 +61,27 @@ export class MarketPriceProvider implements PriceProvider {
     });
 
     if (result?.status === 200) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      return new FN((result?.data?.data?.price?.[0] as string) || 0);
+      return (
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        result?.data?.data?.price?.map((elem: number) => {
+          return new FN(elem || 0);
+        }) || Array(currencies.length).fill(FN.ZERO)
+      );
     }
 
     // try get price from backup price
-    result = await fetch.get(`${BACKUP_PRICE_API}?token=${currency}&from=market`);
+    result = await fetch.get(`${BACKUP_PRICE_API}?token=${currencies.join(',')}&from=market`);
 
     if (result?.status === 200) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      return new FN((result?.data?.data?.price?.[0] as string) || 0);
+      return (
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        result?.data?.data?.price?.map((elem: number) => {
+          return new FN(elem || 0);
+        }) || Array(currencies.length).fill(FN.ZERO)
+      );
     }
 
-    return FN.ZERO;
+    return Array(currencies.length).fill(FN.ZERO);
   };
 
   subscribe(currency: Token): Observable<FN> {
