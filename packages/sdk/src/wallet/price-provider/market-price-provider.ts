@@ -32,9 +32,9 @@ export class MarketPriceProvider implements PriceProvider {
         switchMap(() =>
           from(
             (async () => {
-              const data = await Promise.all(this.trackedCurrencies.map(this.queryPrice));
+              const data = await this.batchQueryPrice(this.trackedCurrencies);
 
-              return Object.fromEntries(this.trackedCurrencies.map((name, i) => [name, data[i]]));
+              return Object.fromEntries(this.trackedCurrencies.map((name, i) => [name, data[i] || FN.ZERO]));
             })()
           )
         )
@@ -44,8 +44,8 @@ export class MarketPriceProvider implements PriceProvider {
       });
   };
 
-  private queryPrice = async (currency: string) => {
-    let result = await fetch.get(`${PRICE_API}?token=${currency}&from=market`).catch((e) => {
+  private batchQueryPrice = async (currencies: string[]): Promise<FN[]> => {
+    let result = await fetch.get(`${PRICE_API}?token=${currencies.join(',')}&from=market`).catch((e) => {
       // doesn't throw error when try first endpoint
       console.error(e);
 
@@ -53,19 +53,27 @@ export class MarketPriceProvider implements PriceProvider {
     });
 
     if (result?.status === 200) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      return new FN((result?.data?.data?.price?.[0] as string) || 0);
+      return (
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        result?.data?.data?.price?.map((elem: number) => {
+          return new FN(elem || 0);
+        }) || []
+      );
     }
 
     // try get price from backup price
-    result = await fetch.get(`${BACKUP_PRICE_API}?token=${currency}&from=market`);
+    result = await fetch.get(`${BACKUP_PRICE_API}?token=${currencies.join(',')}&from=market`);
 
     if (result?.status === 200) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      return new FN((result?.data?.data?.price?.[0] as string) || 0);
+      return (
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        result?.data?.data?.price?.map((elem: number) => {
+          return new FN(elem || 0);
+        }) || []
+      );
     }
 
-    return FN.ZERO;
+    return [];
   };
 
   subscribe(currency: Token): Observable<FN> {
