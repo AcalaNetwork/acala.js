@@ -64,11 +64,11 @@ export interface CurrencyId extends Enum {
   readonly asErc20: EvmAddress;
   readonly isStableAssetPoolToken: boolean;
   readonly asStableAssetPoolToken: u32;
-  readonly isLiquidCroadloan: boolean;
-  readonly asLiquidCroadloan: u32;
+  readonly isLiquidCrowdloan: boolean;
+  readonly asLiquidCrowdloan: u32;
   readonly isForeignAsset: boolean;
   readonly asForeignAsset: u32;
-  readonly type: 'Token' | 'DexShare' | 'Erc20' | 'StableAssetPoolToken' | 'LiquidCroadloan' | 'ForeignAsset';
+  readonly type: 'Token' | 'DexShare' | 'Erc20' | 'StableAssetPoolToken' | 'LiquidCrowdloan' | 'ForeignAsset';
 }
 
 /** @name CurrencyIdOf */
