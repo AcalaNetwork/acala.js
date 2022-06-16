@@ -172,11 +172,11 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
       /**
        * Get supply amount
        **/
-      getSupplyAmount: AugmentedRpc<(supplyCurrencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, targetCurrencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, targetCurrencyAmount: BalanceRequest | { amount?: any } | string | Uint8Array) => Observable<BalanceWrapper>>;
+      getSupplyAmount: AugmentedRpc<(supplyCurrencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, targetCurrencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, targetCurrencyAmount: BalanceRequest | { amount?: any } | string | Uint8Array) => Observable<BalanceWrapper>>;
       /**
        * Get target amount
        **/
-      getTargetAmount: AugmentedRpc<(supplyCurrencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, targetCurrencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, supplyCurrencyAmount: BalanceRequest | { amount?: any } | string | Uint8Array) => Observable<BalanceWrapper>>;
+      getTargetAmount: AugmentedRpc<(supplyCurrencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, targetCurrencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, supplyCurrencyAmount: BalanceRequest | { amount?: any } | string | Uint8Array) => Observable<BalanceWrapper>>;
     };
     engine: {
       /**
@@ -416,7 +416,7 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
       /**
        * Retrieves the oracle value for a given key.
        **/
-      getValue: AugmentedRpc<(providerId: RpcDataProviderId | string, key: OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Observable<Option<TimestampedValue>>>;
+      getValue: AugmentedRpc<(providerId: RpcDataProviderId | string, key: OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Observable<Option<TimestampedValue>>>;
     };
     payment: {
       /**
@@ -618,7 +618,7 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
       /**
        * Query Existential Deposit for a given currency.
        **/
-      queryExistentialDeposit: AugmentedRpc<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCroadloan: any } | { ForeignAsset: any } | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Observable<NumberOrHex>>;
+      queryExistentialDeposit: AugmentedRpc<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Observable<NumberOrHex>>;
     };
     web3: {
       /**

@@ -44,7 +44,7 @@ export default {
         DEXShare: '(DexShare, DexShare)',
         ERC20: 'EvmAddress',
         StableAssetPoolToken: 'u32',
-        LiquidCroadloan: 'u32',
+        LiquidCrowdloan: 'u32',
         ForeignAsset: 'u32'
       }
     },
