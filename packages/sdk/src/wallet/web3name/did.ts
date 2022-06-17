@@ -9,7 +9,7 @@ export class DIDWeb3Name {
   private cached: Record<string, string>;
 
   constructor() {
-    const provider = new WsProvider(ENDPOINTS);
+    const provider = new WsProvider(ENDPOINTS, false);
     this.api = new ApiPromise({ provider });
     this.cached = {};
   }

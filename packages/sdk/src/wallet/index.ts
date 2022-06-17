@@ -30,7 +30,7 @@ import { AcalaExpandBalanceAdapter } from './balance-adapter/types';
 import { AcalaBalanceAdapter } from './balance-adapter/acala';
 import { TokenProvider } from './token-provider/type';
 import { AcalaTokenProvider } from './token-provider/acala';
-import { DIDWeb3Name } from './we3name/did';
+import { DIDWeb3Name } from './web3name/did';
 
 export class Wallet implements BaseSDK {
   private api: AnyApi;
