@@ -1,34 +1,32 @@
-import { BehaviorSubject, combineLatest, filter, firstValueFrom, Observable, timer } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, firstValueFrom, from, Observable, switchMap, timer } from 'rxjs';
 import { BaseFetchParams, HistoryFetcherConfig, HistoryRecord } from './types';
 
 export abstract class BaseHistoryFetcher<FetchParams extends BaseFetchParams> {
   protected configs: HistoryFetcherConfig;
   protected fetchParams: FetchParams | null;
   private forceUpdate: BehaviorSubject<number>;
-  private records$: BehaviorSubject<HistoryRecord[] | undefined>;
 
   constructor(configs: HistoryFetcherConfig) {
     this.configs = configs;
     this.forceUpdate = new BehaviorSubject<number>(0);
-    this.records$ = new BehaviorSubject<HistoryRecord[] | undefined>(undefined);
     this.fetchParams = null;
-
-    this.process();
   }
 
   private process() {
-    combineLatest({
+    return combineLatest({
       timer: timer(0, this.configs.poolInterval),
       forceUpdate: this.forceUpdate
-    }).subscribe({
-      next: async () => {
-        if (!this.fetchParams) return;
+    }).pipe(
+      switchMap(() => {
+        return from(
+          (async () => {
+            if (!this.fetchParams) return;
 
-        const records = await this.fetch(this.fetchParams);
-
-        this.records$.next(records || []);
-      }
-    });
+            return this.fetch(this.fetchParams);
+          })()
+        );
+      })
+    );
   }
 
   protected abstract fetch(params: FetchParams): Promise<HistoryRecord[]>;
@@ -43,7 +41,7 @@ export abstract class BaseHistoryFetcher<FetchParams extends BaseFetchParams> {
 
     this.forceUpdate.next(this.forceUpdate.value + 1);
 
-    return this.records$.pipe(filter((i) => Array.isArray(i))) as Observable<HistoryRecord[]>;
+    return this.process().pipe(filter((i) => Array.isArray(i))) as Observable<HistoryRecord[]>;
   }
 
   public getHistories(params: FetchParams): Promise<HistoryRecord[]> {
