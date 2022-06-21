@@ -84,6 +84,9 @@ export interface AggregateDexConfigs {
   api: AnyApi;
   wallet: Wallet;
   providers: BaseSwap[];
+  overwrite?: {
+    aggregateLimit: number;
+  };
 }
 
 export interface AggregateDexSwapResult {
