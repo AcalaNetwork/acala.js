@@ -35,7 +35,7 @@ export class AggregateDex implements BaseSDK {
     this.tradingGraph = new TradingGraph();
     this.status = new BehaviorSubject<boolean>(false);
     this.tokens$ = new BehaviorSubject<Token[]>([]);
-    this.configs = this.getConfigs();
+    this.configs = this.getConfigs(configs);
 
     this.init().subscribe({
       next: () => {
@@ -44,10 +44,12 @@ export class AggregateDex implements BaseSDK {
     });
   }
 
-  private getConfigs() {
+  private getConfigs(configs: AggregateDexConfigs) {
     return {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-      aggregateLimit: (this.api.consts.aggregatedDex.swapPathLimit as any).toNumber()
+      aggregateLimit:
+        configs.overwrite?.aggregateLimit ||
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        ((this.api.consts.aggregatedDex.swapPathLimit as any).toNumber() as unknown as number)
     };
   }
 
