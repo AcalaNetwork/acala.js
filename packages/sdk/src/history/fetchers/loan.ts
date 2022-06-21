@@ -57,7 +57,7 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
     };
 
     const paramsSchema = `$account: String`;
-    const updatePositionFilterSchema = `filter: { ownerId: { equalTo: $account }, isDerived: {equalTo: true} }`;
+    const updatePositionFilterSchema = `filter: { ownerId: { equalTo: $account }, isDerived: {equalTo: false} }`;
     const filterSchema = `filter: { ownerId: { equalTo: $account } }`;
     const updatePositionsResultShema = `
       nodes {
