@@ -19,6 +19,7 @@ interface updatePositionsNode {
   debitAdjustmentUSD: string;
   debitExchangeRate: string;
   blockId: string;
+  isDerived: boolean;
   extrinsicId: string;
   timestamp: Date;
 }
@@ -56,6 +57,7 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
     };
 
     const paramsSchema = `$account: String`;
+    const updatePositionFilterSchema = `filter: { ownerId: { equalTo: $account }, isDerived: {equalTo: false} }`;
     const filterSchema = `filter: { ownerId: { equalTo: $account } }`;
     const updatePositionsResultShema = `
       nodes {
@@ -67,6 +69,7 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
         collateralAdjustmentUSD
         debitAdjustmentUSD
         debitExchangeRate
+        isDerived
         blockId
         extrinsicId
         timestamp
@@ -92,7 +95,7 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
       gql`
         query(${paramsSchema}){
           updatePositions(
-            ${filterSchema}
+            ${updatePositionFilterSchema}
             first: 20
             orderBy: TIMESTAMP_DESC
           ) {
