@@ -37,12 +37,40 @@ interface liquidUnsavesNode {
   timestamp: Date;
 }
 
+interface closeByDexNode {
+  id: string;
+  collateralId: string;
+  debitVolumeUSD: string;
+  soldVolumeUSD: string;
+  refundVolumeUSD: string;
+  blockId: string;
+  extrinsicId: string;
+  debitExchangeRate: string;
+  timestamp: Date;
+}
+
+interface confiscatePositionNode {
+  id: string;
+  collateralId: string;
+  collateralAdjustment: string;
+  debitAdjustment: string;
+  blockId: string;
+  extrinsicId: string;
+  timestamp: Date;
+}
+
 interface FetchResult {
   updatePositions: {
     nodes: updatePositionsNode[];
   };
   liquidUnsaves: {
     nodes: liquidUnsavesNode[];
+  };
+  closeByDexes: {
+    nodes: closeByDexNode[];
+  };
+  confiscatePositions: {
+    nodes: confiscatePositionNode[];
   };
 }
 
@@ -90,6 +118,32 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
       }
     `;
 
+    const closeByDexParams = `
+      nodes {
+        id
+        collateralId
+        debitVolumeUSD
+        soldVolumeUSD
+        refundVolumeUSD
+        blockId
+        extrinsicId
+        debitExchangeRate
+        timestamp
+      }
+    `;
+
+    const confiscatePositionParams = `
+      nodes {
+        id
+        collateralId
+        collateralAdjustment
+        debitAdjustment
+        blockId
+        extrinsicId
+        timestamp
+      }
+    `;
+
     const result = await request<FetchResult>(
       this.configs.endpoint,
       gql`
@@ -107,6 +161,20 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
             orderBy: TIMESTAMP_DESC
           ) {
             ${liquidUnsavesResultShema}
+          }
+          closeByDexes(
+            ${filterSchema}
+            first: 20
+            orderBy: TIMESTAMP_DESC
+          ) {
+            ${closeByDexParams}
+          }
+          confiscatePositions(
+            ${filterSchema}
+            first: 20
+            orderBy: TIMESTAMP_DESC
+          ) {
+            ${confiscatePositionParams}
           }
         }
       `,
@@ -145,8 +213,38 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
       };
     });
 
+    const closeByDexes = data.closeByDexes.nodes.map((item) => {
+      return {
+        data: item,
+        message: this.createCloseByDexMessage(item),
+        resolveLinks: resolveLinks(
+          getChainType(this.configs.wallet.consts.runtimeChain),
+          item.extrinsicId,
+          item.blockId
+        ),
+        extrinsicHash: item.extrinsicId,
+        blockNumber: item.blockId
+      };
+    });
+
+    const confiscatePositions = data.confiscatePositions.nodes.map((item) => {
+      return {
+        data: item,
+        message: this.createConfiscateMessage(item),
+        resolveLinks: resolveLinks(
+          getChainType(this.configs.wallet.consts.runtimeChain),
+          item.extrinsicId,
+          item.blockId
+        ),
+        extrinsicHash: item.extrinsicId,
+        blockNumber: item.blockId
+      };
+    });
+
     return updatePositions
       .concat(liquidUnsaves as any)
+      .concat(closeByDexes as any)
+      .concat(confiscatePositions as any)
       .sort((a, b) => (new Date(b.data.timestamp) < new Date(a.data.timestamp) ? -1 : 1))
       .slice(0, 20);
   }
@@ -177,6 +275,28 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
     }
 
     return 'parse history data failed';
+  }
+
+  private createCloseByDexMessage(data: closeByDexNode) {
+    const collateralToken = this.configs.wallet.__getToken(data.collateralId);
+    const { stableToken } = this.configs.wallet.getPresetTokens();
+    const collateral = FixedPointNumber.fromInner(data.refundVolumeUSD, collateralToken?.decimals).add(
+      FixedPointNumber.fromInner(data.soldVolumeUSD, collateralToken?.decimals)
+    );
+    const debit = FixedPointNumber.fromInner(data.debitVolumeUSD, stableToken?.decimals);
+    return `${collateralToken?.display} position($${collateral.toNumber(6)} ${
+      collateralToken?.display
+    }, $${debit.toNumber(6)} ${stableToken?.display}) had been closed by dex`;
+  }
+
+  private createConfiscateMessage(data: confiscatePositionNode) {
+    const collateralToken = this.configs.wallet.__getToken(data.collateralId);
+    const { stableToken } = this.configs.wallet.getPresetTokens();
+    const collateral = FixedPointNumber.fromInner(data.collateralAdjustment, collateralToken?.decimals);
+    const debit = FixedPointNumber.fromInner(data.debitAdjustment, stableToken?.decimals);
+    return `${collateralToken?.display} position(-${collateral.toNumber(6)} ${
+      collateralToken?.display
+    }, -${debit.toNumber(6)} ${stableToken?.display}) had been confiscated`;
   }
 
   private createLiquidityMessage(data: liquidUnsavesNode) {
