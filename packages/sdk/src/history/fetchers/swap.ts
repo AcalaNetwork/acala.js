@@ -143,6 +143,7 @@ export class Swaps extends BaseHistoryFetcher<SwapFetchParams> {
             token1Id: node.token1Id,
             token0Amount: node.token0Amount,
             token1Amount: node.token1Amount,
+            shareAmount: node.shareAmount,
             blockId: node.blockId,
             extrinsicId: node.extrinsicId,
             timestamp: node.timestamp
