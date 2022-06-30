@@ -37,12 +37,27 @@ interface liquidUnsavesNode {
   timestamp: Date;
 }
 
+interface closeByDexNode {
+  id: string;
+  collateralId: string;
+  debitVolumeUSD: string;
+  soldAmount: string;
+  refundAmount: string;
+  blockId: string;
+  extrinsicId: string;
+  debitExchangeRate: string;
+  timestamp: Date;
+}
+
 interface FetchResult {
   updatePositions: {
     nodes: updatePositionsNode[];
   };
   liquidUnsaves: {
     nodes: liquidUnsavesNode[];
+  };
+  closeByDexes: {
+    nodes: closeByDexNode[];
   };
 }
 
@@ -90,6 +105,20 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
       }
     `;
 
+    const closeByDexParams = `
+      nodes {
+        id
+        collateralId
+        debitVolumeUSD
+        soldAmount
+        refundAmount
+        blockId
+        extrinsicId
+        debitExchangeRate
+        timestamp
+      }
+    `;
+
     const result = await request<FetchResult>(
       this.configs.endpoint,
       gql`
@@ -107,6 +136,13 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
             orderBy: TIMESTAMP_DESC
           ) {
             ${liquidUnsavesResultShema}
+          }
+          closeByDexes(
+            ${filterSchema}
+            first: 20
+            orderBy: TIMESTAMP_DESC
+          ) {
+            ${closeByDexParams}
           }
         }
       `,
@@ -145,8 +181,23 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
       };
     });
 
+    const closeByDexes = data.closeByDexes.nodes.map((item) => {
+      return {
+        data: item,
+        message: this.createCloseByDexMessage(item),
+        resolveLinks: resolveLinks(
+          getChainType(this.configs.wallet.consts.runtimeChain),
+          item.extrinsicId,
+          item.blockId
+        ),
+        extrinsicHash: item.extrinsicId,
+        blockNumber: item.blockId
+      };
+    });
+
     return updatePositions
       .concat(liquidUnsaves as any)
+      .concat(closeByDexes as any)
       .sort((a, b) => (new Date(b.data.timestamp) < new Date(a.data.timestamp) ? -1 : 1))
       .slice(0, 20);
   }
@@ -177,6 +228,18 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
     }
 
     return 'parse history data failed';
+  }
+
+  private createCloseByDexMessage(data: closeByDexNode) {
+    const collateralToken = this.configs.wallet.__getToken(data.collateralId);
+    const { stableToken } = this.configs.wallet.getPresetTokens();
+    const collateral = FixedPointNumber.fromInner(data.refundAmount, collateralToken.decimals || 12).add(
+      FixedPointNumber.fromInner(data.soldAmount, collateralToken.decimals || 12)
+    );
+    const debit = FixedPointNumber.fromInner(data.debitVolumeUSD, stableToken?.decimals);
+    return `${collateralToken?.display} position(${collateral.toNumber(6)} ${
+      collateralToken?.display
+    }, $${debit.toNumber(6)} ${stableToken?.display}) had been closed by dex`;
   }
 
   private createLiquidityMessage(data: liquidUnsavesNode) {

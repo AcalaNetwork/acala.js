@@ -64,6 +64,19 @@ export class Swaps extends BaseHistoryFetcher<SwapFetchParams> {
         timestamp
       }
     `;
+    const removeShema = `
+      nodes {
+        id
+        token0Id
+        token1Id
+        token0Amount
+        token1Amount
+        shareAmount
+        blockId
+        extrinsicId
+        timestamp
+      }
+    `;
     const swapResultShema = `
       nodes {
         id
@@ -107,7 +120,7 @@ export class Swaps extends BaseHistoryFetcher<SwapFetchParams> {
             first: 20
             orderBy: TIMESTAMP_DESC
           ) {
-            ${resultShema}
+            ${removeShema}
           }
         }
       `,
@@ -130,6 +143,7 @@ export class Swaps extends BaseHistoryFetcher<SwapFetchParams> {
             token1Id: node.token1Id,
             token0Amount: node.token0Amount,
             token1Amount: node.token1Amount,
+            shareAmount: node.shareAmount,
             blockId: node.blockId,
             extrinsicId: node.extrinsicId,
             timestamp: node.timestamp
