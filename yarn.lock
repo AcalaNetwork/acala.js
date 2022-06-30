@@ -5,11 +5,11 @@ __metadata:
   version: 6
   cacheKey: 8
 
-"@acala-network/api-derive@4.1.6-9, @acala-network/api-derive@workspace:packages/api-derive":
+"@acala-network/api-derive@4.1.6-10, @acala-network/api-derive@workspace:packages/api-derive":
   version: 0.0.0-use.local
   resolution: "@acala-network/api-derive@workspace:packages/api-derive"
   dependencies:
-    "@acala-network/types": 4.1.6-9
+    "@acala-network/types": 4.1.6-10
     "@babel/runtime": ^7.10.2
     "@open-web3/orml-types": ^1.1.4
     "@polkadot/api-derive": ^8.5.1
@@ -28,12 +28,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@acala-network/api@4.1.6-9, @acala-network/api@workspace:packages/api":
+"@acala-network/api@4.1.6-10, @acala-network/api@workspace:packages/api":
   version: 0.0.0-use.local
   resolution: "@acala-network/api@workspace:packages/api"
   dependencies:
-    "@acala-network/api-derive": 4.1.6-9
-    "@acala-network/types": 4.1.6-9
+    "@acala-network/api-derive": 4.1.6-10
+    "@acala-network/types": 4.1.6-10
     "@babel/runtime": ^7.10.2
     "@open-web3/orml-api-derive": ^1.1.4
     "@polkadot/api": ^8.5.1
@@ -153,7 +153,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@acala-network/sdk-core@4.1.6-9, @acala-network/sdk-core@workspace:packages/sdk-core":
+"@acala-network/sdk-core@4.1.6-10, @acala-network/sdk-core@workspace:packages/sdk-core":
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk-core@workspace:packages/sdk-core"
   dependencies:
@@ -185,7 +185,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk-homa@workspace:packages/sdk-homa"
   dependencies:
-    "@acala-network/sdk-core": 4.1.6-9
+    "@acala-network/sdk-core": 4.1.6-10
     "@types/lodash": ^4.14.161
     lodash: ^4.17.20
     rxjs: ^7.4.0
@@ -255,9 +255,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk@workspace:packages/sdk"
   dependencies:
-    "@acala-network/api": 4.1.6-9
+    "@acala-network/api": 4.1.6-10
     "@acala-network/bodhi": ^2.4.0
-    "@acala-network/type-definitions": 4.1.6-9
+    "@acala-network/type-definitions": 4.1.6-10
     "@nuts-finance/sdk-stable-asset": ^1.1.16
     "@polkadot/api": ^8.5.1
     "@polkadot/types": ^8.5.1
@@ -276,7 +276,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@acala-network/type-definitions@4.1.6-9, @acala-network/type-definitions@workspace:packages/type-definitions":
+"@acala-network/type-definitions@4.1.6-10, @acala-network/type-definitions@workspace:packages/type-definitions":
   version: 0.0.0-use.local
   resolution: "@acala-network/type-definitions@workspace:packages/type-definitions"
   dependencies:
@@ -302,11 +302,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@acala-network/types@4.1.6-9, @acala-network/types@workspace:packages/types":
+"@acala-network/types@4.1.6-10, @acala-network/types@workspace:packages/types":
   version: 0.0.0-use.local
   resolution: "@acala-network/types@workspace:packages/types"
   dependencies:
-    "@acala-network/type-definitions": 4.1.6-9
+    "@acala-network/type-definitions": 4.1.6-10
     "@babel/runtime": ^7.10.2
     "@open-web3/api-mobx": ^1.1.4
     "@open-web3/orml-types": ^1.1.4
