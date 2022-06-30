@@ -7,3 +7,4 @@ export * from './cross-chain';
 export * from './history';
 export * from './incentive';
 export * from './dex';
+export * from './auction';
