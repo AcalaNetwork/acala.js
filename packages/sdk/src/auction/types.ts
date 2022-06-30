@@ -1,39 +1,71 @@
 import { AnyApi, FixedPointNumber, Token } from '@acala-network/sdk-core';
 import { Wallet } from '../wallet';
 
-export interface AuctionData {
-  /// Refund recipient for may receive refund
-  refundRecipient: string;
-  /// Collateral type for sale
-  collateral: Token;
-  /// Initial collateral amount for sale
-  initialAmount: FixedPointNumber;
-  /// Current collateral amount for sale
-  amount: FixedPointNumber;
-  /// Target sales amount of this auction
-  /// if zero, collateral auction will never be reverse stage,
-  /// otherwise, target amount is the actual payment amount of active
-  /// bidder
-  target: FixedPointNumber;
-  /// Auction start time
-  startBlock: bigint;
-  /// Auction start time
-  endBlock?: bigint;
-  /// Current Bid Amount
-  currentBidAmount?: FixedPointNumber;
-  /// Current Bid Account
-  currentBidAccount?: string;
-  /// Minimum bind amount
-  minimumBidAmount: FixedPointNumber;
-}
-
 export interface AuctionManagerConfigs {
   api: AnyApi;
   wallet: Wallet;
+  // service endpoint
+  graphql: {
+    endpoint: string;
+  };
 }
 
 export interface AuctionConfigs {
   api: AnyApi;
   id: string;
   wallet: Wallet;
+  data: CollateralAuction;
+}
+
+export interface AuctionListQueryParams {
+  page?: number;
+  pageSize?: number;
+}
+
+export interface AuctionBid {
+  /**
+   * KICK: virtual record when auction created
+   * DENT: dent the auction
+   * DEX_TAKE: virtual record when dex take
+   */
+  type: 'KICK' | 'DENT' | 'DEX_TAKE';
+  bid: {
+    token: Token;
+    amount: FixedPointNumber;
+  };
+  lotSize: {
+    token: Token;
+    amount: FixedPointNumber;
+  };
+  bidPrice: FixedPointNumber;
+  timestamp: Date;
+  bidder: string;
+  tx: string;
+}
+
+export type AuctionStatus = 'DEX_TAKE' | 'IN_PROGRESS' | 'CANCELL' | 'DEALT' | 'DEX_TAKE' | 'ABORT';
+
+export interface CollateralAuction {
+  id: string;
+  status: AuctionStatus;
+  // auction collateral
+  collateral: Token;
+  // initial collateral amount for sale
+  initialAmount: FixedPointNumber;
+  // current collateral amount for sale
+  amount: FixedPointNumber;
+  // target sales amount fo this auction
+  // if zero, collateral auction will never be reverse stage
+  target: {
+    amount: FixedPointNumber;
+    token: Token;
+  };
+  /// Refund recipient for may receive refund
+  refundRecipient: string;
+  // winner account
+  winner?: string;
+  minimumBidAmount: FixedPointNumber;
+  bids: AuctionBid[];
+  startBlock: bigint;
+  endBlock: bigint;
 }

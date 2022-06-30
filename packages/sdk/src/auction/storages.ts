@@ -31,7 +31,8 @@ export const createAuctionManagerStorages = (api: AnyApi) => {
       Storage.create<StorageKey<u32[]>[]>({
         api: api,
         path: 'query.auctionManager.collateralAuctions.keys',
-        params: []
+        params: [],
+        triggleEvents: [{ method: 'NewCollateralAuction', section: 'auctionManager' }]
       })
   };
 };
