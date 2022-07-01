@@ -3,14 +3,13 @@
 ### 1. Init SDK
 ```javascript
 // for karura-kusama cross-chains,
-const karuraAdapter = new KaruraAdapter(karuraWalletSDK);
-const kusamaAdapter = new KusmaAdapter(kusamaApi);
-
-const crossChain = new CrossChain({
+ const sdk = new CrossChain({
   adapters: [
-    acalaAdapter,
-    kusamaAdapter
-  ]
+    new AcalaAdaptor({ wallet: acalaWallet, api: acalaApi }),
+    new KaruraAdaptor({ wallet: karuraWallet, api: karuraApi }),
+    new PolkadotAdapter({ api: polkadotApi }),
+    new KusamaAdapter({ api: kusamaApi }),
+  ],
 });
 ```
 
@@ -66,35 +65,26 @@ const froms = crossChain.router.getFromChains({ to: 'karura' });
 const tokens = crossChain.router.getAvailableTokens({ from: 'karura', to: 'kusama' });
 ```
 
-### 5. Query Transfer Configs   
-transfer configs contain the important information for the cross-chain transfer
+### 5. Query Transfer Input Configs
+transfer input configs is complex in normal way
+1. the maximum amount is defined at the **from** chain
+2. the minimum amount is defined at the **to** chain for **to** chain will have existential deposit
+
+the configs also contains some informations abount **destCrossChainFee**, **tokenDecimals**. 
 
 | name | desc |  
 | -- | -- |  
-| token | the token on origin chain |
-| balance | the token balances on origin chain |
-| warnings | some warning messages for the transfer | 
-| errors | some errors for the transfer if have |  
-| available | will be true when no errors |
 | minInput | the minimum amount used for user input |  
 | maxInput | the maximum amount used for user input |  
-| showKeepAlive | a switch to control whether display keepalive toggle |  
-| destinationED | the existential deposits config on destination chain |  
+| ss58Prefix | the ss58 prefix of to chain |  
 | destinationFee.fee | the fee amount charged on the destination chain |  
 | destinationFee.token | the fee token charged on the destination chain |  
+| tokenDecimals | the token's decimals |
 
 ```javascript
 ...init cross-chain SDK
 
-const ksm = await wallet.getToken('KSM');
-const transferConfigs = await crossChain.getTransferConfigs({
-  from: 'karura',
-  to: 'kusama',
-  account: ACCOUNT,
-  token: ksm
-});
-
-crossChain.subscribeTransferConfigs({
+sdk.subscribeInputConfigs({
   from: 'karura',
   to: 'kusama',
   account: ACCOUNT,
@@ -106,7 +96,7 @@ crossChain.subscribeTransferConfigs({
 
 ### 6. Create Cross Chain Transfer
 ```javascript
-const transfer = crossChain.createTransfer({
+const transfer = crossChain.createTx({
   from: 'karura',
   to: 'kusama',
   account: string,
@@ -131,28 +121,38 @@ const transfer = crossChain.createTransfer({
 
 await transfer.tx.signAndSend(ACCOUNT)
 
-transfer.watch({
+sdk.subscribeBalanceChanged({
+  token: 'ksm',
+  address: ADDRESS,
+  amount: new FixedPointNumber(1, 12),
   timeout: 3 * 60 * 1000 // will wait 3 mins for checking destiantion balance change
 }).subscribe({
-  next: () => {
-    // do something
+  next: (STATUS) => {
+    if (STATUS === BalanceChangedStatus.SUCCESS) {
+      console.log('transfer success');
+    }
   }
 })
 ```
 
 ## How To Support A New Chain
 1. add chain data at **configschains.tx**
-2. add **CrossChainAdapter** by creating a new **adapters/[CHIAN_NAME]Dapter.ts** file 
+2. add **CrossChainAdapter** by creating a new **adapters/[CHIAN_NAME]Adapter.ts** file 
 3. implement the adapter
   - propertes:
     1. chain
     2. routers
   - methods:
-    1. subscrineEnv
-    subscribe the transfer environments include min/max input amount, token ED.etc.
-    2. getCrossChainFeeConfigs
-    get the cross-chain fee configs
-    3. subscribeBalance
-    subscribe the balance informations for token
-    4. createTx
-    used for create cross-chain transfer
+    1. subscribeAvailableBalance
+    subscribe the available balance information
+    2. subscribeMinInput
+    subscribe the minimun input balnace
+    3. subscribeMmaxInput
+    subscribe the maximum input balnace
+    4. getCrossChainFee
+    return the cross chain fee configs
+    5. getCrossChainTokenDecimals
+    return the token decimals
+    6. createTx
+    return the submitable extrinsic object
+

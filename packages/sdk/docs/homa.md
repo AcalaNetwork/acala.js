@@ -18,34 +18,33 @@ yarn add @polkadot/api @acala-network/api@^4.0.2-17 @acala-network/sdk@^4.0.2-17
 ```javascript
 const { ApiPromise, WsProvider } = require('@polkadot/api')
 const { options } = require('@acala-network/api')
-const { Wallet, Homa } = require('@acala-network/sdk')
+const { Wallet } = require('@acala-network/sdk')
 
 async function main () {
-        const ENDPOINT = 'wss://karura.api.onfinality.io/public-ws'
+  const ENDPOINT = 'wss://karura.api.onfinality.io/public-ws'
 
-        const api = await ApiPromise.create(options({ provider: new WsProvider(ENDPOINT) }))
-        const wallet = new Wallet(api)
-        const homa = new Homa(api, wallet)
+  const api = await ApiPromise.create(options({ provider: new WsProvider(ENDPOINT) }))
+  const wallet = new Wallet(api)
 
-        // should wait homa sdk ready
-        await homa.isReady
+  await wallet.isReady
 
-        const env = await homa.getEnv();
+  const homa = wallet.homa
+  const env = await homa.getEnv()
 
-        // total staking token in homa
-        console.log(env.totalStaking.toString())
-        // total liquid token in homa
-        console.log(env.totalLiquidity.toString())
-        // homa apy
-        console.log(env.apy.toString())
-        // homa exchange apy
-        console.log(env.exchangeRate.toString())
-        // min mint threshold
-        console.log(env.mintThreshold.toString())
-        // min redeem threshold
-        console.log(env.redeemThreshold.toString())
-        // staking soft cap
-        console.log(env.stakingSoftCap.toString())
+  // total staking token in homa
+  console.log(env.totalStaking.toString())
+  // total liquid token in homa
+  console.log(env.totalLiquidity.toString())
+  // homa apy
+  console.log(env.apy.toString())
+  // homa exchange apy
+  console.log(env.exchangeRate.toString())
+  // min mint threshold
+  console.log(env.mintThreshold.toString())
+  // min redeem threshold
+  console.log(env.redeemThreshold.toString())
+  // staking soft cap
+  console.log(env.stakingSoftCap.toString())
 }
 
 ;main()
