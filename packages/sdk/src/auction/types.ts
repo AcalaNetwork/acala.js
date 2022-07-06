@@ -20,6 +20,7 @@ export interface AuctionConfigs {
 export interface AuctionListQueryParams {
   page?: number;
   pageSize?: number;
+  status?: string;
 }
 
 export interface AuctionBid {
