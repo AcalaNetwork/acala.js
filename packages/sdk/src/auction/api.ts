@@ -37,7 +37,7 @@ export const convertApiResult = (data: any, wallet: Wallet, configs: AuctionList
             type: item.type as unknown as AuctionBid['type'],
             bid: {
               token: stableToken,
-              amount: amount 
+              amount: amount
             },
             lotSize: {
               token: collateral,
@@ -71,8 +71,24 @@ export const fetchAuctionList = (endpoint: string, params?: AuctionListQueryPara
   const offset = (page - 1) * pageSize;
   let filter = '';
 
-  if (params?.status) {
-    filter = `filter: { status: { equalTo: ${params.status} } }`;
+  if (params?.filter) {
+    const temp: { and: any[] } = { and: [] };
+
+    if (params.filter.account) {
+      temp.and.push({
+        bidder: { contains: [`'${params.filter.account}'`] }
+      });
+    }
+
+    if (params.filter.status) {
+      temp.and.push({
+        status: { equalTo: params.filter.status }
+      });
+    }
+
+    if (temp.and.length !== 0) {
+      filter = 'filter:' + JSON.stringify(temp).replace(/"/g, '').replace(/'/g, '"');
+    }
   }
 
   return request(
