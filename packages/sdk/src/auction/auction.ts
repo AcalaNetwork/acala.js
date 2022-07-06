@@ -74,7 +74,9 @@ export class Auction {
       incrementSize = minimumIncrementSize.mul(FixedPointNumber.TWO);
     }
 
-    return target.max(last || FixedPointNumber.ZERO).mul(FixedPointNumber.ONE.add(incrementSize));
+    const lastBid = last || FixedPointNumber.ZERO;
+
+    return target.max(lastBid).mul(incrementSize).add(lastBid);
   }
 
   private getCurrentStatusFormBlock(block: ListenerBlock): AuctionStatus | undefined {
@@ -156,7 +158,7 @@ export class Auction {
         token: collateral,
         amount: collateralAmount
       },
-      bidPrice: stableTokenAmount.div(collateralAmount),
+      bidPrice: collateralAmount.div(stableTokenAmount),
       timestamp: block.timestamp,
       bidder: '',
       tx: ''
@@ -192,7 +194,7 @@ export class Auction {
         token: collateral,
         amount: collateralAmount
       },
-      bidPrice: stableTokenAmount.div(collateralAmount),
+      bidPrice: collateralAmount.div(stableTokenAmount),
       timestamp: block.timestamp,
       bidder: bidder,
       tx: tx ? tx.raw.hash.toString() : ''
@@ -217,6 +219,7 @@ export class Auction {
           const currentBlock = block.block.block.header.number.toBigInt();
           const amount = FixedPointNumber.fromInner(details.amount.toString(), collateral.decimals);
           const bid = auctionBidDetails?.unwrap();
+          const endBlock = BigInt(bid.end.toString());
           const bidDetails = bid.bid.unwrapOrDefault();
           const currentBidAccount = bidDetails[0] ? bidDetails[0].toString() : undefined;
           const currentBidAmount = bidDetails[1]
@@ -228,12 +231,13 @@ export class Auction {
             ...data,
             amount,
             winner: currentBidAccount,
+            endBlock,
             minimumBidAmount: this.getMinimumBidAmount(startBlock, currentBlock, target, currentBidAmount)
           };
         }
 
         // NOTE: handle bid event first when one block containes bid event and dex take event
-        // FIXME: the code is wrong in reverse stage
+        // FIXME: the code maybe wrong in reverse stage
         // insert bid event
         const bidRecord = this.createBidRecord(block, data.amount);
 

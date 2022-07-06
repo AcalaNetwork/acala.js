@@ -30,19 +30,20 @@ export const convertApiResult = (data: any, wallet: Wallet, configs: AuctionList
         // set zero as default
         minimumBidAmount: FixedPointNumber.ZERO,
         bids: item.bids.nodes.map((item: any) => {
-          const bidAmount = FixedPointNumber.fromInner(item.amount, stableToken.decimals);
+          const amount = FixedPointNumber.fromInner(item.amount, stableToken.decimals);
+          const collateralAmount = FixedPointNumber.fromInner(item.collateralAmount, collateral.decimals);
 
           return {
             type: item.type as unknown as AuctionBid['type'],
             bid: {
               token: stableToken,
-              amount: bidAmount
+              amount: amount 
             },
             lotSize: {
               token: collateral,
-              amount: amount
+              amount: collateralAmount
             },
-            bidPrice: amount.div(bidAmount),
+            bidPrice: collateralAmount.div(amount),
             timestap: new Date(item.timestamp),
             bidder: item.bidder,
             tx: item.extrinsic,
@@ -68,12 +69,17 @@ export const fetchAuctionList = (endpoint: string, params?: AuctionListQueryPara
   const page = params?.page || 1;
   const pageSize = params?.pageSize || DEFAULT_PAGE_SIZE;
   const offset = (page - 1) * pageSize;
+  let filter = '';
+
+  if (params?.status) {
+    filter = `filter: { status: { equalTo: ${params.status} } }`;
+  }
 
   return request(
     endpoint,
     gql`
     query {
-      collateralAuctions (offset: ${offset}, first:${pageSize}, orderBy: [CREATE_AT_DESC, ID_DESC]) {
+      collateralAuctions (offset: ${offset}, first:${pageSize}, ${filter}, orderBy: [CREATE_AT_DESC, ID_DESC]) {
         totalCount
         nodes {
           id
@@ -89,6 +95,7 @@ export const fetchAuctionList = (endpoint: string, params?: AuctionListQueryPara
               bidder
               type
               timestamp
+              collateralAmount
               extrinsic
             }
           }
