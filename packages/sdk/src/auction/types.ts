@@ -17,9 +17,15 @@ export interface AuctionConfigs {
   data: CollateralAuction;
 }
 
+export interface AuctionQueryFilter {
+  status?: AuctionStatus;
+  account?: string;
+}
+
 export interface AuctionListQueryParams {
   page?: number;
   pageSize?: number;
+  filter?: AuctionQueryFilter;
 }
 
 export interface AuctionBid {
