@@ -141,7 +141,7 @@ export class Auction {
 
     const oldVersion = event.event.data.length === 4;
     const eventData = event.event.data;
-    const amount = (eventData[2] as Balance).toBigInt();
+    const amount = (eventData[1] as Balance).toBigInt();
     const targetStableAmount = oldVersion ? (eventData[3] as Balance).toBigInt() : (eventData[4] as Balance).toBigInt();
     const stableToken = this.wallet.getPresetTokens().stableToken;
     const collateral = this.inner.collateral;
