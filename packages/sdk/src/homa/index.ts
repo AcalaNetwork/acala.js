@@ -78,7 +78,7 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
         )
       };
 
-      // set isReady to true when consts intizialized
+      // set isReady to true after consts intizialized
       this.isReady$.next(true);
     });
   }
@@ -87,23 +87,32 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
     return firstValueFrom(this.isReady$.asObservable().pipe(filter((i) => i)));
   }
 
-  private toBondPool$ = memoize((): Observable<FixedPointNumber> => {
+  public readonly totalStakingBonded$ = memoize(() => {
+    const { stakingToken } = this.consts;
+
+    return this.storages.totalStakingBonded().observable.pipe(
+      map((data) => FixedPointNumber.fromInner(data.toString(), stakingToken.decimals)),
+      shareReplay(1)
+    );
+  })();
+
+  public readonly toBondPool$ = memoize((): Observable<FixedPointNumber> => {
     return this.storages.toBondPool().observable.pipe(
       map((data) => FixedPointNumber.fromInner(data.toString(), this.consts.stakingToken.decimals)),
       shareReplay(1)
     );
-  });
+  })();
 
-  private totalVoidLiquid$ = memoize((): Observable<FixedPointNumber> => {
+  public readonly totalVoidLiquid$ = memoize((): Observable<FixedPointNumber> => {
     return this.storages.totalVoidLiquid().observable.pipe(
       map((data) => FixedPointNumber.fromInner(data.toString(), this.consts.liquidToken.decimals)),
       shareReplay(1)
     );
-  });
+  })();
 
-  private totalLiquidity$ = memoize((): Observable<FixedPointNumber> => {
+  public readonly totalLiquidity$ = memoize((): Observable<FixedPointNumber> => {
     return combineLatest({
-      totalVoidLiquid: this.totalVoidLiquid$(),
+      totalVoidLiquid: this.totalVoidLiquid$,
       totalIssuance: this.storages.issuance(this.consts.liquidToken).observable
     }).pipe(
       map(({ totalVoidLiquid, totalIssuance }) =>
@@ -111,51 +120,51 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
       ),
       shareReplay(1)
     );
-  });
+  })();
 
-  private fastMatchFeeRate$ = memoize((): Observable<FixedPointNumber> => {
+  public readonly fastMatchFeeRate$ = memoize((): Observable<FixedPointNumber> => {
     return this.storages.fastMatchFeeRate().observable.pipe(
       map((data) => FixedPointNumber.fromInner(data.toString())),
       shareReplay(1)
     );
-  });
+  })();
 
-  private commissionRate$ = memoize((): Observable<FixedPointNumber> => {
+  public readonly commissionRate$ = memoize((): Observable<FixedPointNumber> => {
     return this.storages.commissionRate().observable.pipe(
       map((data) => FixedPointNumber.fromInner(data.toString())),
       shareReplay(1)
     );
-  });
+  })();
 
-  private softBondedCapPerSubAccount$ = memoize((): Observable<FixedPointNumber> => {
+  public readonly softBondedCapPerSubAccount$ = memoize((): Observable<FixedPointNumber> => {
     return this.storages.softBondedCapPerSubAccount().observable.pipe(
       map((data) => FixedPointNumber.fromInner(data.toString(), this.consts.stakingToken.decimals)),
       shareReplay(1)
     );
-  });
+  })();
 
-  private stakingLedgers$ = memoize((): Observable<StakingLedger[]> => {
+  public readonly stakingLedgers$ = memoize((): Observable<StakingLedger[]> => {
     return this.storages.stakingLedgers().observable.pipe(
       map((data) => transformStakingLedger(data, this.consts.stakingToken)),
       shareReplay(1)
     );
-  });
+  })();
 
-  private eraFrequency$ = memoize((): Observable<number> => {
+  public readonly eraFrequency$ = memoize((): Observable<number> => {
     return this.storages.eraFrequency().observable.pipe(
       map((data) => data.toNumber()),
       shareReplay(1)
     );
-  });
+  })();
 
-  private estimatedRewardRatePerEra$ = memoize((): Observable<FixedPointNumber> => {
+  public readonly estimatedRewardRatePerEra$ = memoize((): Observable<FixedPointNumber> => {
     return this.storages.estimatedRewardRatePerEra().observable.pipe(
       map((data) => FixedPointNumber.fromInner(data.toString())),
       shareReplay(1)
     );
-  });
+  })();
 
-  private redeemRequest$ = memoize((address: string): Observable<[FixedPointNumber, boolean]> => {
+  public readonly getRedeemRequest$ = memoize((address: string): Observable<[FixedPointNumber, boolean]> => {
     return this.storages.redeemRequests(address).observable.pipe(
       map(
         (data) =>
@@ -168,11 +177,11 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
     );
   });
 
-  private relayChainCurrentEra$ = memoize((): Observable<number> => {
+  public readonly relayChainCurrentEra$ = memoize((): Observable<number> => {
     return this.storages.relayChainCurrentEra().observable.pipe(map((data) => data.toNumber()));
   });
 
-  private unbondings$ = (address: string): Observable<Unbonding[]> => {
+  public readonly getUnbondings$ = memoize((address: string): Observable<Unbonding[]> => {
     return this.storages.unbondings(address).observable.pipe(
       map((data) => {
         return data
@@ -185,28 +194,29 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
             };
           })
           .sort((a, b) => a.era - b.era);
-      })
+      }),
+      shareReplay(1)
     );
-  };
+  });
 
-  private env$ = memoize((): Observable<HomaEnvironment> => {
+  public env$ = memoize((): Observable<HomaEnvironment> => {
     return this.isReady$.pipe(
       filter((i) => i),
       switchMap(() => {
         return combineLatest({
-          stakingLedgers: this.stakingLedgers$(),
-          toBondPool: this.toBondPool$(),
-          totalLiquidity: this.totalLiquidity$(),
-          estimatedRewardRatePerEra: this.estimatedRewardRatePerEra$(),
-          fastMatchFeeRate: this.fastMatchFeeRate$(),
-          commissionRate: this.commissionRate$(),
-          eraFrequency: this.eraFrequency$(),
-          softBondedCapPerSubAccount: this.softBondedCapPerSubAccount$()
+          totalStakingBonded: this.totalStakingBonded$,
+          toBondPool: this.toBondPool$,
+          totalLiquidity: this.totalLiquidity$,
+          estimatedRewardRatePerEra: this.estimatedRewardRatePerEra$,
+          fastMatchFeeRate: this.fastMatchFeeRate$,
+          commissionRate: this.commissionRate$,
+          eraFrequency: this.eraFrequency$,
+          softBondedCapPerSubAccount: this.softBondedCapPerSubAccount$
         }).pipe(
           map(
             ({
+              totalStakingBonded,
               toBondPool,
-              stakingLedgers,
               totalLiquidity,
               estimatedRewardRatePerEra,
               fastMatchFeeRate,
@@ -215,10 +225,7 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
               softBondedCapPerSubAccount
             }) => {
               const { mintThreshold, redeemThreshold } = this.consts;
-              const totalInSubAccount = stakingLedgers.reduce((acc, cur) => {
-                return acc.add(cur.bonded);
-              }, new FixedPointNumber(0, this.consts.stakingToken.decimals));
-              const totalStaking = toBondPool.add(totalInSubAccount);
+              const totalStaking = toBondPool.add(totalStakingBonded);
 
               return {
                 totalStaking,
@@ -247,31 +254,27 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
         );
       })
     );
-  });
-
-  public subscribeEnv = (): Observable<HomaEnvironment> => {
-    return this.env$();
-  };
+  })();
 
   public async getEnv(): Promise<HomaEnvironment> {
-    return firstValueFrom(this.subscribeEnv());
+    return firstValueFrom(this.env$);
   }
 
   /**
-   * @name subscribeConvertor
+   * @name convertor$
    * @description return convertLiquidToStaking and convertStakingToLiquid
    */
-  public subscribeConvertor = memoize((): Observable<HomaConvertor> => {
-    return this.env$().pipe(
+  public convertor$ = memoize((): Observable<HomaConvertor> => {
+    return this.env$.pipe(
       map((env) => ({
         convertLiquidToStaking: (data: FixedPointNumber) => convertLiquidToStaking(env.exchangeRate, data),
         convertStakingToLiquid: (data: FixedPointNumber) => convertStakingToLiquid(env.exchangeRate, data)
       }))
     );
-  });
+  })();
 
   public async getConvertor(): Promise<HomaConvertor> {
-    return firstValueFrom(this.subscribeConvertor());
+    return firstValueFrom(this.convertor$);
   }
 
   /**
@@ -279,7 +282,7 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
    * @description subscrible estimate mint result
    */
   public subscribeEstimateMintResult = memoize((amount: FixedPointNumber): Observable<EstimateMintResult> => {
-    return this.env$().pipe(map((env) => getEstimateMintResult(amount, env)));
+    return this.env$.pipe(map((env) => getEstimateMintResult(amount, env)));
   });
 
   public async getEstimateMintResult(amount: FixedPointNumber): Promise<EstimateMintResult> {
@@ -291,7 +294,7 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
   });
 
   public subscribeEstimateRedeemResult = memoize((amount: FixedPointNumber, isFastRedeem: boolean) => {
-    return this.env$().pipe(map((env) => getEstimateRedeemResult(env, amount, isFastRedeem)));
+    return this.env$.pipe(map((env) => getEstimateRedeemResult(env, amount, isFastRedeem)));
   });
 
   public async getEstimateRedeemResult(amount: FixedPointNumber, isFastReddem: boolean): Promise<EstimateRedeemResult> {
@@ -315,8 +318,8 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
 
   public subscribeUserRedeemRequest = memoize((address: string): Observable<RedeemRequest> => {
     return combineLatest({
-      env: this.env$(),
-      request: this.redeemRequest$(address)
+      env: this.env$,
+      request: this.getRedeemRequest$(address)
     }).pipe(
       map((data) => {
         return {
@@ -333,10 +336,10 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
 
   public subscribeUserLiquidTokenSummary = memoize((address: string) => {
     return combineLatest({
-      env: this.env$(),
+      env: this.env$,
       currentEra: this.relayChainCurrentEra$(),
       redeemRequest: this.subscribeUserRedeemRequest(address),
-      unbondings: this.unbondings$(address)
+      unbondings: this.getUnbondings$(address)
     }).pipe(
       map(({ env, currentEra, redeemRequest, unbondings }) => {
         return getUserLiquidTokenSummary(env, currentEra, unbondings, redeemRequest);

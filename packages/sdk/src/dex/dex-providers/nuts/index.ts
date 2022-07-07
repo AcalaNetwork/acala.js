@@ -137,7 +137,7 @@ export class NutsDex implements BaseSwap {
     const [token0, token1] = path;
 
     return combineLatest({
-      homaEnv: this.wallet.homa.subscribeEnv(),
+      homaEnv: this.wallet.homa.env$,
       pool: this.subscribePoolInfo(token0, token1)
     }).pipe(
       switchMap(({ homaEnv, pool }) => {
