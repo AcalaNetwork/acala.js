@@ -298,7 +298,7 @@ export class Wallet implements BaseSDK {
     // get liquid token price when price type is market/aggergate/oracle
     if (isLiquidToken && stakingToken && type !== PriceProviderType.DEX) {
       // create homa sd for get exchange rate
-      return this.homa.subscribeEnv().pipe(
+      return this.homa.env$.pipe(
         filter((env) => !env.exchangeRate.isZero()),
         switchMap((env) =>
           this.subscribePrice(stakingToken, type).pipe(

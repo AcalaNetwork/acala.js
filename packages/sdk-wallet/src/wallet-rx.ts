@@ -175,7 +175,7 @@ export class WalletRx extends WalletBase<ApiRx> {
       switchMap(() => {
         return combineLatest({
           stakingTokenPrice: this.queryPriceFromOracle(stakingToken, at),
-          env: new Homa(this.api, this as any).subscribeEnv()
+          env: new Homa(this.api, this as any).env$
         });
       }),
       map(({ stakingTokenPrice, env }) => {

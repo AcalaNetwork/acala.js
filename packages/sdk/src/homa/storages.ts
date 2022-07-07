@@ -1,6 +1,6 @@
 import { AnyApi, Token } from '@acala-network/sdk-core';
 import { AcalaStakingLedge, AccountId, Rate } from '@acala-network/types/interfaces';
-import { StorageKey, U16, Option, Bool, u32 } from '@polkadot/types';
+import { StorageKey, U16, Option, Bool, u32, u128 } from '@polkadot/types';
 import { ITuple } from '@polkadot/types/types';
 import { Balance, EraIndex } from '@polkadot/types/interfaces';
 import { Storage } from '../utils/storage';
@@ -13,6 +13,12 @@ export const createStorages = (api: AnyApi) => {
         api,
         path: 'query.tokens.totalIssuance',
         params: [token.toChainData()]
+      }),
+    totalStakingBonded: () =>
+      Storage.create<u128>({
+        api,
+        path: 'query.homa.totalStakingBonded',
+        params: []
       }),
     stakingLedgers: () =>
       Storage.create<[StorageKey<[U16]>, Option<AcalaStakingLedge>][]>({
@@ -27,7 +33,7 @@ export const createStorages = (api: AnyApi) => {
         ]
       }),
     toBondPool: () =>
-      Storage.create<Balance>({
+      Storage.create<u128>({
         api,
         path: 'query.homa.toBondPool',
         params: []

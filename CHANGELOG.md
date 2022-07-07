@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 4.1.6-15 July 7, 2022
+Changes:
+  - Changes homa sdk interface name subscribeEnv -> env$
+
 ## 4.0.4-4 Mar 28, 2022
 Changes:
   - Read taiKSM oracle price as KSM price
