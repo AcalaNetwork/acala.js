@@ -217,8 +217,8 @@ export class Wallet implements BaseSDK {
               // const feeLockedBalance =
               //   forceToCurrencyName(feeToken) === nativeToken.name ? nativeLockedBalance : feeInfo.locked;
 
-              const targetFreeBalance = isNativeToken ? nativeFreeBalance : tokenInfo.free;
-              const targetLockedBalance = isNativeToken ? nativeLockedBalance : tokenInfo.locked;
+              const targetFreeBalance: FixedPointNumber = isNativeToken ? nativeFreeBalance : tokenInfo.free;
+              const targetLockedBalance: FixedPointNumber = isNativeToken ? nativeLockedBalance : tokenInfo.locked;
               const ed = token.ed;
 
               return getMaxAvailableBalance({

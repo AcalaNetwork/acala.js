@@ -195,12 +195,16 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
     return this.getEraFrequency$();
   }
 
-  private estimatedRewardRatePerEra$ = memoize((): Observable<FixedPointNumber> => {
+  private getEstimatedRewardRatePerEra$ = memoize((): Observable<FixedPointNumber> => {
     return this.storages.estimatedRewardRatePerEra().observable.pipe(
       map((data) => FixedPointNumber.fromInner(data.toString())),
       shareReplay(1)
     );
-  })();
+  });
+
+  public get estimatedRewardRatePerEra$() {
+    return this.getEstimatedRewardRatePerEra$();
+  }
 
   public getRedeemRequest$ = memoize((address: string): Observable<[FixedPointNumber, boolean]> => {
     return this.storages.redeemRequests(address).observable.pipe(
@@ -237,7 +241,7 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
     );
   });
 
-  public env$ = memoize((): Observable<HomaEnvironment> => {
+  private getEnv$ = memoize((): Observable<HomaEnvironment> => {
     return this.isReady$.pipe(
       filter((i) => i),
       switchMap(() => {
@@ -263,10 +267,10 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
               softBondedCapPerSubAccount
             }) => {
               const { mintThreshold, redeemThreshold } = this.consts;
-              const totalStaking = toBondPool.add(totalStakingBonded);
+              const totalStaking: FixedPointNumber = toBondPool.add(totalStakingBonded);
 
               return {
-                totalStaking,
+                totalStaking: totalStaking,
                 totalLiquidity,
                 exchangeRate: getExchangeRate(totalStaking, totalLiquidity),
                 toBondPool,
@@ -292,7 +296,11 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
         );
       })
     );
-  })();
+  });
+
+  public get env$() {
+    return this.getEnv$();
+  }
 
   public async getEnv(): Promise<HomaEnvironment> {
     return firstValueFrom(this.env$);
@@ -302,14 +310,18 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
    * @name convertor$
    * @description return convertLiquidToStaking and convertStakingToLiquid
    */
-  public convertor$ = memoize((): Observable<HomaConvertor> => {
+  private getConvertor$ = memoize((): Observable<HomaConvertor> => {
     return this.env$.pipe(
       map((env) => ({
         convertLiquidToStaking: (data: FixedPointNumber) => convertLiquidToStaking(env.exchangeRate, data),
         convertStakingToLiquid: (data: FixedPointNumber) => convertStakingToLiquid(env.exchangeRate, data)
       }))
     );
-  })();
+  });
+
+  public get convertor$() {
+    return this.getConvertor$();
+  }
 
   public async getConvertor(): Promise<HomaConvertor> {
     return firstValueFrom(this.convertor$);
