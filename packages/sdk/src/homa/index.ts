@@ -87,30 +87,44 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
     return firstValueFrom(this.isReady$.asObservable().pipe(filter((i) => i)));
   }
 
-  public readonly totalStakingBonded$ = memoize(() => {
+  private getTotalStakingBonded$ = memoize(() => {
     const { stakingToken } = this.consts;
 
     return this.storages.totalStakingBonded().observable.pipe(
       map((data) => FixedPointNumber.fromInner(data.toString(), stakingToken.decimals)),
       shareReplay(1)
     );
-  })();
+  });
 
-  public readonly toBondPool$ = memoize((): Observable<FixedPointNumber> => {
+  public get totalStakingBonded$() {
+    return this.getTotalStakingBonded$();
+  }
+
+  private getToBondPool$ = memoize((): Observable<FixedPointNumber> => {
+    const { stakingToken } = this.consts;
+
     return this.storages.toBondPool().observable.pipe(
-      map((data) => FixedPointNumber.fromInner(data.toString(), this.consts.stakingToken.decimals)),
+      map((data) => FixedPointNumber.fromInner(data.toString(), stakingToken.decimals)),
       shareReplay(1)
     );
-  })();
+  });
 
-  public readonly totalVoidLiquid$ = memoize((): Observable<FixedPointNumber> => {
+  public get toBondPool$() {
+    return this.getToBondPool$();
+  }
+
+  private getTotalVoidLiquid$ = memoize((): Observable<FixedPointNumber> => {
     return this.storages.totalVoidLiquid().observable.pipe(
       map((data) => FixedPointNumber.fromInner(data.toString(), this.consts.liquidToken.decimals)),
       shareReplay(1)
     );
-  })();
+  });
 
-  public readonly totalLiquidity$ = memoize((): Observable<FixedPointNumber> => {
+  public get totalVoidLiquid$() {
+    return this.getTotalVoidLiquid$();
+  }
+
+  private getTotalLiquidity$ = memoize((): Observable<FixedPointNumber> => {
     return combineLatest({
       totalVoidLiquid: this.totalVoidLiquid$,
       totalIssuance: this.storages.issuance(this.consts.liquidToken).observable
@@ -120,51 +134,75 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
       ),
       shareReplay(1)
     );
-  })();
+  });
 
-  public readonly fastMatchFeeRate$ = memoize((): Observable<FixedPointNumber> => {
+  public get totalLiquidity$() {
+    return this.getTotalLiquidity$();
+  }
+
+  private getFastMatchFeeRate$ = memoize((): Observable<FixedPointNumber> => {
     return this.storages.fastMatchFeeRate().observable.pipe(
       map((data) => FixedPointNumber.fromInner(data.toString())),
       shareReplay(1)
     );
-  })();
+  });
 
-  public readonly commissionRate$ = memoize((): Observable<FixedPointNumber> => {
+  public get fastMatchFeeRate$() {
+    return this.getFastMatchFeeRate$();
+  }
+
+  private getCommissionRate$ = memoize((): Observable<FixedPointNumber> => {
     return this.storages.commissionRate().observable.pipe(
       map((data) => FixedPointNumber.fromInner(data.toString())),
       shareReplay(1)
     );
-  })();
+  });
 
-  public readonly softBondedCapPerSubAccount$ = memoize((): Observable<FixedPointNumber> => {
+  public get commissionRate$() {
+    return this.getCommissionRate$();
+  }
+
+  private getSoftBondedCapPerSubAccount$ = memoize((): Observable<FixedPointNumber> => {
     return this.storages.softBondedCapPerSubAccount().observable.pipe(
       map((data) => FixedPointNumber.fromInner(data.toString(), this.consts.stakingToken.decimals)),
       shareReplay(1)
     );
-  })();
+  });
 
-  public readonly stakingLedgers$ = memoize((): Observable<StakingLedger[]> => {
+  public get softBondedCapPerSubAccount$() {
+    return this.getSoftBondedCapPerSubAccount$();
+  }
+
+  private getStakingLedgers$ = memoize((): Observable<StakingLedger[]> => {
     return this.storages.stakingLedgers().observable.pipe(
       map((data) => transformStakingLedger(data, this.consts.stakingToken)),
       shareReplay(1)
     );
-  })();
+  });
 
-  public readonly eraFrequency$ = memoize((): Observable<number> => {
+  public get stakingLedgers$() {
+    return this.getStakingLedgers$();
+  }
+
+  private getEraFrequency$ = memoize((): Observable<number> => {
     return this.storages.eraFrequency().observable.pipe(
       map((data) => data.toNumber()),
       shareReplay(1)
     );
-  })();
+  });
 
-  public readonly estimatedRewardRatePerEra$ = memoize((): Observable<FixedPointNumber> => {
+  public get eraFrequency$() {
+    return this.getEraFrequency$();
+  }
+
+  private estimatedRewardRatePerEra$ = memoize((): Observable<FixedPointNumber> => {
     return this.storages.estimatedRewardRatePerEra().observable.pipe(
       map((data) => FixedPointNumber.fromInner(data.toString())),
       shareReplay(1)
     );
   })();
 
-  public readonly getRedeemRequest$ = memoize((address: string): Observable<[FixedPointNumber, boolean]> => {
+  public getRedeemRequest$ = memoize((address: string): Observable<[FixedPointNumber, boolean]> => {
     return this.storages.redeemRequests(address).observable.pipe(
       map(
         (data) =>
