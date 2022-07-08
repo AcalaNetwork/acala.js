@@ -8,13 +8,13 @@ import { createAuctionStorages } from './storages';
 import { AuctionBid, AuctionConfigs, AuctionStatus, CollateralAuction } from './types';
 
 export class Auction {
-  private id: string;
   private api: AnyApi;
   private wallet: Wallet;
   private storages: ReturnType<typeof createAuctionStorages>;
   private inner: CollateralAuction;
   private chainListner: ChainListener;
-  private configs: {
+  public readonly id: string;
+  public readonly configs: {
     minimumIncrementSize: FixedPointNumber;
     auctionDurationSoftCap: bigint;
   };
