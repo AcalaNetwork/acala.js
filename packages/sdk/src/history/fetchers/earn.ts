@@ -142,6 +142,7 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
           item.extrinsicId,
           item.blockId
         ),
+        method: 'incentives.ClaimRewards',
         extrinsicHash: item.extrinsicId,
         blockNumber: item.blockId
       };
@@ -155,6 +156,7 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
           item.extrinsicId,
           item.blockId
         ),
+        method: 'incentives.PayoutRewards',
         extrinsicHash: item.extrinsicId,
         blockNumber: item.blockId
       };
@@ -169,6 +171,7 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
           item.extrinsicId,
           item.blockId
         ),
+        method: 'incentives.DepositDexShare',
         extrinsicHash: item.extrinsicId,
         blockNumber: item.blockId
       };
@@ -183,6 +186,7 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
           item.extrinsicId,
           item.blockId
         ),
+        method: 'incentives.WithdrawDexShare',
         extrinsicHash: item.extrinsicId,
         blockNumber: item.blockId
       };

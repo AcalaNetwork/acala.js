@@ -10,6 +10,7 @@ export interface HistoryRecord {
   extrinsicHash?: string;
   blokcNumber?: number;
   resolveLinks: ResolveLinks;
+  method: string;
 }
 
 export interface HistoryConfigs {

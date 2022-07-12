@@ -259,6 +259,7 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
           item.extrinsicId,
           item.blockId
         ),
+        method: 'homa.RequestedRedeem',
         extrinsicHash: item.extrinsicId,
         blockNumber: item.blockId
       };
@@ -272,6 +273,7 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
           item.extrinsicId,
           item.blockId
         ),
+        method: 'homaLite.RedeemRequested',
         extrinsicHash: item.extrinsicId,
         blockNumber: item.blockId
       };
@@ -287,6 +289,7 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
           item.extrinsicId,
           item.blockId
         ),
+        method: 'homa.Minted',
         extrinsicHash: item.extrinsicId,
         blockNumber: item.blockId
       };
@@ -300,6 +303,7 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
           item.extrinsicId,
           item.blockId
         ),
+        method: 'homa.RedeemRequestCancelled',
         extrinsicHash: item.extrinsicId,
         blockNumber: item.blockId
       };
@@ -318,6 +322,7 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
           item.extrinsicId,
           item.blockId
         ),
+        method: 'homaLite.Redeemed',
         extrinsicHash: item.extrinsicId,
         blockNumber: item.blockId
       };
@@ -336,6 +341,7 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
           item.extrinsicId,
           item.blockId
         ),
+        method: 'homa.RedeemedByUnbond',
         extrinsicHash: item.extrinsicId,
         blockNumber: item.blockId
       };
@@ -354,6 +360,7 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
           item.extrinsicId,
           item.blockId
         ),
+        method: 'homa.RedeemedByFastMatch',
         extrinsicHash: item.extrinsicId,
         blockNumber: item.blockId
       };
