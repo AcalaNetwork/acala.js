@@ -97,6 +97,7 @@ export class Transfers extends BaseHistoryFetcher<TransfersFetchParams> {
             item.extrinsicId,
             item.blockId
           ),
+          method: 'balances.Transfer',
           extrinsicHash: item.extrinsicId,
           blockNumber: item.blockId
         };

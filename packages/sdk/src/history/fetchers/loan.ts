@@ -162,6 +162,7 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
           item.extrinsicId,
           item.blockId
         ),
+        method: 'loans.PositionUpdated',
         extrinsicHash: item.extrinsicId,
         blockNumber: item.blockId
       };
@@ -176,6 +177,7 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
           item.extrinsicId,
           item.blockId
         ),
+        method: 'cdpEngine.LiquidateUnsafeCDP',
         extrinsicHash: item.extrinsicId,
         blockNumber: item.blockId
       };
@@ -190,6 +192,7 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
           item.extrinsicId,
           item.blockId
         ),
+        method: 'loans.CloseCDPInDebitByDEX',
         extrinsicHash: item.extrinsicId,
         blockNumber: item.blockId
       };

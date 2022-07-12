@@ -132,12 +132,12 @@ export class Swaps extends BaseHistoryFetcher<SwapFetchParams> {
 
   private transform({ addLiquidities, addProvisions, removeLiquidities, swaps }: FetchResult): HistoryRecord[] {
     const sortedNodes = addLiquidities.nodes
-      .map((node) => Object.assign(node, { type: 'addLiquidity' }))
-      .concat(addProvisions.nodes.map((node) => Object.assign(node, { type: 'addProvision' })))
+      .map((node) => Object.assign(node, { type: 'AddLiquidity' }))
+      .concat(addProvisions.nodes.map((node) => Object.assign(node, { type: 'AddProvision' })))
       .concat(
         removeLiquidities.nodes.map((node) => {
           return {
-            type: 'removeLiquidity',
+            type: 'RemoveLiquidity',
             id: node.id,
             token0Id: node.token0Id,
             token1Id: node.token1Id,
@@ -153,7 +153,7 @@ export class Swaps extends BaseHistoryFetcher<SwapFetchParams> {
       .concat(
         swaps.nodes.map((node) => {
           return {
-            type: 'swap',
+            type: 'Swap',
             id: node.id,
             token0Id: node.token0Id,
             token1Id: node.token1Id,
@@ -192,6 +192,7 @@ export class Swaps extends BaseHistoryFetcher<SwapFetchParams> {
             item.extrinsicId,
             item.blockId
           ),
+          method: `dex.${item.type}`,
           extrinsicHash: item.extrinsicId,
           blockNumber: item.blockId
         };
@@ -214,17 +215,17 @@ export class Swaps extends BaseHistoryFetcher<SwapFetchParams> {
     const amount0 = FixedPointNumber.fromInner(token0Amount, token0?.decimals).toNumber(6);
     const amount1 = FixedPointNumber.fromInner(token1Amount, token1?.decimals).toNumber(6);
 
-    if (type === 'swap') {
+    if (type === 'Swap') {
       return `Supply ${amount0} ${token0?.display} for ${amount1} ${token1?.display}`;
-    } else if (type === 'addLiquidity') {
+    } else if (type === 'AddLiquidity') {
       return `Add ${amount0} ${token0?.display} + ${amount1} ${token1?.display} to pool`;
-    } else if (type === 'removeLiquidity') {
+    } else if (type === 'RemoveLiquidity') {
       const [_t0, _t1] = Token.sortTokenNames(token0Id, token1Id);
       const shareTokenName = createDexShareName(_t0, _t1);
       const shareToken = this.configs.wallet.__getToken(shareTokenName);
       const amount = FixedPointNumber.fromInner(shareAmount || '0', shareToken?.decimals).toNumber(6);
       return `Remove ${amount} shares from ${shareToken?.display} pool`;
-    } else if (type === 'addProvision') {
+    } else if (type === 'AddProvision') {
       return `Add ${amount0} ${token0?.display} + ${amount1} ${token1?.display} in bootstrap`;
     } else {
       return 'parse history data failed';
