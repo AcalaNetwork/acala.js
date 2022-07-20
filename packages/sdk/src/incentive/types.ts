@@ -1,9 +1,15 @@
-import { FixedPointNumber, Token } from '@acala-network/sdk-core';
+import { AnyApi, FixedPointNumber, Token } from '@acala-network/sdk-core';
 import { ModuleIncentivesPoolId } from '@acala-network/types/interfaces/types-lookup';
+import { Wallet } from '../wallet';
 
 export enum IncentiveType {
   'LOANS',
   'DEX'
+}
+
+export interface IncentiveConfigs {
+  api: AnyApi;
+  wallet: Wallet;
 }
 
 export interface IncentiveReward {

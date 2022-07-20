@@ -8,6 +8,7 @@ import { IncentivePoolNotFound } from '../liquidity/errors';
 import { createStorages } from './storages';
 import {
   BaseIncentivePool,
+  IncentiveConfigs,
   IncentivePool,
   IncentiveReward,
   IncentiveRewardTokensConfigs,
@@ -30,7 +31,7 @@ export class Incentive implements BaseSDK {
     accumulatePeriod: number;
   };
 
-  constructor(api: AnyApi, wallet: Wallet) {
+  constructor({ api, wallet }: IncentiveConfigs) {
     this.api = api;
 
     this.storages = createStorages(this.api);
