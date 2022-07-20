@@ -119,7 +119,7 @@ export class Transfers extends BaseHistoryFetcher<TransfersFetchParams> {
     }
 
     if (to === current) {
-      action = `Receive ${amount} ${token?.display} to ${truncateAddress(to)}`;
+      action = `Receive ${amount} ${token?.display} from ${truncateAddress(from)}`;
     }
 
     return action;
