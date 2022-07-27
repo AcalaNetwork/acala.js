@@ -107,9 +107,10 @@ describe('ausd portal', () => {
       token: 'aUSD',
       fromChain: 'acala',
       toChain: 'karura',
+      toAddress: '25E8NfHMza8XaA7AQvwn1SMFMbk4nZmqmcXF2LbSCurWV2Cr',
       txHash: '0x74e8da00b81083c7c80bc143162a3cc4f399bf57a49120e6cc38ba07f1d90ae7'
     });
 
-    // console.log(call.toHex());
+    console.log(call.toHex());
   });
 });

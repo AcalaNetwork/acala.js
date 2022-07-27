@@ -1,16 +1,17 @@
 import { AnyApi } from '@acala-network/sdk-core';
 import { encodeAddress } from '@polkadot/util-crypto';
+import { NodeHttpTransport } from '@improbable-eng/grpc-web-node-http-transport';
 import {
   // eslint-disable-next-line camelcase
   TokenImplementation__factory,
   // eslint-disable-next-line camelcase
   Bridge__factory,
+  // eslint-disable-next-line camelcase
   Implementation__factory,
   CHAIN_ID_ACALA,
   CHAIN_ID_KARURA,
   createNonce,
   coalesceChainId,
-  parseSequenceFromLogEth,
   getSignedVAAWithRetry,
   getEmitterAddressEth
 } from '@certusone/wormhole-sdk';
@@ -309,21 +310,17 @@ export class WormholePortal implements BaseSDK {
   }
 
   public async redeem(params: RedeemParams) {
-    const { token, fromChain, toChain, txHash } = params;
+    const { token, fromChain, toChain, toAddress, txHash } = params;
 
     const fromProvider = this.getEthProviderByChainName(fromChain);
+    const toProvider = this.getEthProviderByChainName(toChain);
     const receipt = await fromProvider.getTXReceiptByHash(txHash);
     const tokenData = this.getToken(fromChain, token);
-    console.log('tx receiptent', receipt);
+    const toEVMAddress = await this.getEVMAddress(toChain, toAddress);
 
     if (!receipt) throw new QueryTxReceiptFailed(txHash);
 
-    receipt.logs.forEach((item) => {
-      console.log(item.topics);
-    });
-
-    const bridgeContract = this.getBridgeContract(fromChain, token);
-    // get implementation contract instance
+    const bridgeContract = this.getBridgeContract(toChain, token);
     // eslint-disable-next-line camelcase
     const implementationContract = new Implementation__factory();
 
@@ -332,8 +329,6 @@ export class WormholePortal implements BaseSDK {
       receipt.logs[2].data,
       receipt.logs[2].topics
     );
-
-    console.log(logMessagePublished.sequence.toString());
 
     const { vaaBytes } = await getSignedVAAWithRetry(
       [
@@ -346,11 +341,18 @@ export class WormholePortal implements BaseSDK {
       ],
       this.getChainId(fromChain),
       getEmitterAddressEth(tokenData.bridgeAddress),
-      logMessagePublished.sequence.toString()
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      logMessagePublished.sequence.toString(),
+      {
+        transport: NodeHttpTransport()
+      }
     );
 
-    // console.log('sequence', sequence);
-    console.log(test, vaaBytes);
+    const tx = await bridgeContract.populateTransaction.completeTransfer(vaaBytes);
+
+    tx.from = toEVMAddress;
+
+    return this.getEVMCallFromETHTransaction(tx, toProvider);
   }
 
   // public submitProof() {}

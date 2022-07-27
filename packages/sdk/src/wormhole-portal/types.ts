@@ -55,4 +55,6 @@ export interface RedeemParams {
   toChain: SupportChain;
   // the transaction hash sended token in from chain
   txHash: string;
+  // receive address
+  toAddress: string;
 }
