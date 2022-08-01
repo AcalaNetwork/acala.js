@@ -45,6 +45,7 @@ import { arrayify, getAddress, zeroPad } from 'ethers/lib/utils';
 import { toPromiseQuery } from '../utils/query';
 import { BigNumber } from 'ethers';
 import { ApiPromise } from '@polkadot/api';
+import { wormholeVAAAPIS } from './consts/wormhole-vaa-apis';
 
 export class WormholePortal implements BaseSDK {
   private apis: {
@@ -100,7 +101,7 @@ export class WormholePortal implements BaseSDK {
     return firstValueFrom(this.isReady$);
   }
 
-  private getSubstractAPIByChainName(chain: SupportChain): AnyApi {
+  public getSubstractAPIByChainName(chain: SupportChain): ApiPromise {
     const result = this.apis?.[chain as 'acala' | 'karura'];
 
     if (!result) throw new SubstractAPINotFound(chain);
@@ -108,7 +109,7 @@ export class WormholePortal implements BaseSDK {
     return result;
   }
 
-  private getEthProviderByChainName(chain: SupportChain) {
+  public getEthProviderByChainName(chain: SupportChain) {
     const temp = this.ethProviders?.[chain as 'acala' | 'karura'];
 
     if (!temp) throw new SubstractAPINotFound(chain);
@@ -331,14 +332,7 @@ export class WormholePortal implements BaseSDK {
     );
 
     const { vaaBytes } = await getSignedVAAWithRetry(
-      [
-        'https://wormhole-v2-mainnet-api.certus.one',
-        'https://wormhole.inotel.ro',
-        'https://wormhole-v2-mainnet-api.mcf.rocks',
-        'https://wormhole-v2-mainnet-api.chainlayer.network',
-        'https://wormhole-v2-mainnet-api.staking.fund',
-        'https://wormhole-v2-mainnet.01node.com'
-      ],
+      wormholeVAAAPIS,
       this.getChainId(fromChain),
       getEmitterAddressEth(tokenData.bridgeAddress),
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -354,8 +348,4 @@ export class WormholePortal implements BaseSDK {
 
     return this.getEVMCallFromETHTransaction(tx, toProvider);
   }
-
-  // public submitProof() {}
-
-  // public withdraw() {}
 }
