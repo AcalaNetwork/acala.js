@@ -54,6 +54,7 @@ export class AcalaTokenProvider implements TokenProvider {
     this.storages = createStorages(api);
     this.configs = {
       kusd2ausd: true,
+      ignoreCase: true,
       ...configs
     };
     this.chainType = getChainType(this.api.runtimeChain.toString());
@@ -95,25 +96,35 @@ export class AcalaTokenProvider implements TokenProvider {
     return firstValueFrom(this.isReady$);
   }
 
-  private isTokenEqual(a: string, b: Token): boolean {
+  /**
+   * @name is TokenEqual
+   * @description return true when `a` is equal to `b`'s name or symbol or fullname
+   * @param a string
+   * @param b Token
+   * @param ignoreCase boolean
+   * @returns boolean
+   */
+  private isTokenEqual(a: string, b: Token, ignoreCase = true): boolean {
+    const isEqual = (a: string, b: string) => (ignoreCase ? a.toLowerCase() === b.toLowerCase() : a === b);
+
     if (this.configs.kusd2ausd) {
       const upperName = a.toUpperCase();
 
       if (upperName === 'KUSD' || upperName === 'AUSD') {
         return (
-          b.display === 'AUSD' ||
-          b.display === 'KUSD' ||
-          b.symbol === 'AUSD' ||
-          b.symbol === 'KUSD' ||
-          b.name === 'AUSD' ||
-          b.name === 'KUSD' ||
-          b.fullname === 'AUSD' ||
-          b.fullname === 'KUSD'
+          isEqual(b.display, 'AUSD') ||
+          isEqual(b.display, 'KUSD') ||
+          isEqual(b.symbol, 'AUSD') ||
+          isEqual(b.symbol, 'KUSD') ||
+          isEqual(b.name, 'AUSD') ||
+          isEqual(b.name, 'KUSD') ||
+          isEqual(b.fullname, 'AUSD') ||
+          isEqual(b.fullname, 'KUSD')
         );
       }
     }
 
-    return b.display === a || b.symbol === a || b.name === a || b.fullname === a;
+    return isEqual(b.display, a) || isEqual(b.symbol, a) || isEqual(b.name, a) || isEqual(b.fullname, a);
   }
 
   public subscribeToken(token: MaybeCurrency): Observable<Token> {
