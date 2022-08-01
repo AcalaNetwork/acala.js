@@ -1,4 +1,3 @@
-import { AnyApi } from '@acala-network/sdk-core';
 import { encodeAddress } from '@polkadot/util-crypto';
 import { NodeHttpTransport } from '@improbable-eng/grpc-web-node-http-transport';
 import {
@@ -36,7 +35,7 @@ import {
   SupportToken,
   RedeemParams
 } from './types';
-import { Provider, TransactionRequest } from '@ethersproject/abstract-provider';
+import { TransactionRequest } from '@ethersproject/abstract-provider';
 import { BaseProvider } from '@acala-network/eth-providers';
 import { toBN } from '@acala-network/bodhi/lib/utils';
 import { DEFAULT_ROUTERS } from './consts/routers';
