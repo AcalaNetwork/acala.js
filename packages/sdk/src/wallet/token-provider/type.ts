@@ -18,5 +18,6 @@ export interface TokenProvider {
 }
 
 export interface TokenProviderConfigs {
-  kusd2ausd: boolean;
+  kusd2ausd?: boolean;
+  ignoreCase?: boolean;
 }

@@ -66,6 +66,7 @@ export class Wallet implements BaseSDK {
     this.tokenProvider = new AcalaTokenProvider(this.api, {
       kusd2ausd: this.configs.supportAUSD || true
     });
+
     this.balanceAdapter = new AcalaBalanceAdapter({
       api: this.api,
       wsProvider: configs?.wsProvider
