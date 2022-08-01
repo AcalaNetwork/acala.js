@@ -331,8 +331,8 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
       return {
         data: item,
         message: this.createRedeemedByUnbondsMessage(
-          item.eraIndexWhenUnbond,
           item.liquidAmount,
+          item.unbondingStakingAmount,
           liquidToken,
           stakingToken
         ),
@@ -402,9 +402,9 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
   }
 
   private createRedeemedByUnbondsMessage(burned: string, receive: string, liquidToken?: Token, stakingToken?: Token) {
-    return `UnStake ${FixedPointNumber.fromInner(burned, stakingToken?.decimals).toNumber(6)} ${
+    return `UnStake ${FixedPointNumber.fromInner(burned, liquidToken?.decimals).toNumber(6)} ${
       liquidToken?.display
-    } for ${FixedPointNumber.fromInner(receive, liquidToken?.decimals).toNumber(6)} ${stakingToken?.display}`;
+    } for ${FixedPointNumber.fromInner(receive, stakingToken?.decimals).toNumber(6)} ${stakingToken?.display}`;
   }
 
   private createFastMatchesMessage(burned: string, receive: string, liquidToken?: Token, stakingToken?: Token) {
