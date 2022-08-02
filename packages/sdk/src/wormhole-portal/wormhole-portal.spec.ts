@@ -77,8 +77,8 @@ describe.skip('ausd portal', () => {
       token: 'aUSD',
       fromChain: 'acala',
       toChain: 'karura',
-      fromAddress: '0xfff2c1b954a91802dc97f65af37378329041aa7b',
-      toAddress: '0xae9d7fe007b3327AA64A32824Aaac52C42a6E624',
+      fromAddress: '25E8NfHMza8XaA7AQvwn1SMFMbk4nZmqmcXF2LbSCurWV2Cr',
+      toAddress: '25E8NfHMza8XaA7AQvwn1SMFMbk4nZmqmcXF2LbSCurWV2Cr',
       amount: BigNumber.from(2 * 10 ** 12)
     });
 
@@ -92,8 +92,8 @@ describe.skip('ausd portal', () => {
       token: 'aUSD',
       fromChain: 'acala',
       toChain: 'karura',
-      fromAddress: '0xf957c5379c879ded7a64295750520d645f3a7727',
-      toAddress: '0x5b828c28C334EcB918A8b5405D630349940F347B',
+      fromAddress: '25E8NfHMza8XaA7AQvwn1SMFMbk4nZmqmcXF2LbSCurWV2Cr',
+      toAddress: '25E8NfHMza8XaA7AQvwn1SMFMbk4nZmqmcXF2LbSCurWV2Cr',
       amount: BigNumber.from(String(1100000 * 10 ** 12))
     });
 
