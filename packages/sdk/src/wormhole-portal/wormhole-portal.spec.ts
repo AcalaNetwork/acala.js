@@ -79,7 +79,7 @@ describe.skip('ausd portal', () => {
       toChain: 'karura',
       fromAddress: '25E8NfHMza8XaA7AQvwn1SMFMbk4nZmqmcXF2LbSCurWV2Cr',
       toAddress: '25E8NfHMza8XaA7AQvwn1SMFMbk4nZmqmcXF2LbSCurWV2Cr',
-      amount: BigNumber.from(1000 * 10 ** 12)
+      amount: BigNumber.from(2 * 10 ** 12)
     });
 
     console.log(call.toHex());
@@ -94,7 +94,7 @@ describe.skip('ausd portal', () => {
       toChain: 'karura',
       fromAddress: '25E8NfHMza8XaA7AQvwn1SMFMbk4nZmqmcXF2LbSCurWV2Cr',
       toAddress: '25E8NfHMza8XaA7AQvwn1SMFMbk4nZmqmcXF2LbSCurWV2Cr',
-      amount: BigNumber.from(1 * 10 ** 12)
+      amount: BigNumber.from(String(1100000 * 10 ** 12))
     });
 
     console.log(call.toHex());

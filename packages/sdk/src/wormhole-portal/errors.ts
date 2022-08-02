@@ -53,3 +53,11 @@ export class QueryTxReceiptFailed extends Error {
     this.message = `query ${hash} receipt failed, please retry later.`;
   }
 }
+
+export class TopicMismatch extends Error {
+  constructor() {
+    super();
+    this.name = 'TopicMismatch';
+    this.message = `fragment/topic mismatch`;
+  }
+}
