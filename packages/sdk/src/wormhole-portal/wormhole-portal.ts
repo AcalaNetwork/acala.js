@@ -25,7 +25,8 @@ import {
   NotSupportChain,
   NotSupportToken,
   QueryTxReceiptFailed,
-  SubstractAPINotFound
+  SubstractAPINotFound,
+  TopicMismatch
 } from './errors';
 import {
   WormholePortalConfigs,
@@ -140,7 +141,7 @@ export class WormholePortal implements BaseSDK {
     return TokenImplementation__factory.connect(token.address, provider);
   }
 
-  private getBridgeContract(chain: SupportChain, symbol: SupportToken) {
+  public getBridgeContract(chain: SupportChain, symbol: SupportToken) {
     const provider = this.getEthProviderByChainName(chain);
     const token = this.getToken(chain, symbol);
 
@@ -324,10 +325,18 @@ export class WormholePortal implements BaseSDK {
     // eslint-disable-next-line camelcase
     const implementationContract = new Implementation__factory();
 
+    const topicHash = implementationContract.interface.getEventTopic('LogMessagePublished');
+
+    console.log(topicHash);
+
+    const target = receipt.logs.find((item) => item.topics[0] === topicHash);
+
+    if (!target) throw new TopicMismatch();
+
     const logMessagePublished = implementationContract.interface.decodeEventLog(
       'LogMessagePublished',
-      receipt.logs[2].data,
-      receipt.logs[2].topics
+      target.data,
+      target.topics
     );
 
     const { vaaBytes } = await getSignedVAAWithRetry(
