@@ -9,6 +9,8 @@ export interface WormholePortalConfigs {
   };
   // overwrite default router configs if need
   routers?: WormholeRouter[];
+  // support tokens
+  supportTokens?: WormholeToken[];
 }
 
 export interface WormholeChain {
@@ -17,7 +19,7 @@ export interface WormholeChain {
 }
 
 // please update when add new token
-export type SupportToken = 'aUSD';
+export type SupportToken = 'aUSD' | 'waUSD';
 
 export interface WormholeToken {
   symbol: SupportToken;
@@ -30,7 +32,7 @@ export interface WormholeToken {
 export interface WormholeRouter {
   from: SupportChain;
   to: SupportChain;
-  token: WormholeToken;
+  token: SupportToken;
 }
 
 export interface TransferParams {
@@ -57,4 +59,11 @@ export interface RedeemParams {
   txHash: string;
   // receive address
   toAddress: string;
+}
+
+export interface ConvertParams {
+  from: SupportToken;
+  to: SupportToken;
+  address: string;
+  amount: 'all' | BigNumber;
 }

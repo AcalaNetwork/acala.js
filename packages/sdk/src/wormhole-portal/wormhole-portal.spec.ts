@@ -3,7 +3,7 @@ import { EvmRpcProvider } from '@acala-network/eth-providers';
 import { WormholePortal } from './wormhole-portal';
 import { BigNumber } from 'ethers';
 
-describe.skip('ausd portal', () => {
+describe('ausd portal', () => {
   let sdk: WormholePortal | undefined;
 
   jest.setTimeout(50000);
@@ -94,7 +94,7 @@ describe.skip('ausd portal', () => {
       toChain: 'karura',
       fromAddress: '25E8NfHMza8XaA7AQvwn1SMFMbk4nZmqmcXF2LbSCurWV2Cr',
       toAddress: '25E8NfHMza8XaA7AQvwn1SMFMbk4nZmqmcXF2LbSCurWV2Cr',
-      amount: BigNumber.from(String(1100000 * 10 ** 12))
+      amount: BigNumber.from(String(1 * 10 ** 12))
     });
 
     console.log(call.toHex());
@@ -107,7 +107,7 @@ describe.skip('ausd portal', () => {
       token: 'aUSD',
       fromChain: 'acala',
       toChain: 'karura',
-      toAddress: '25E8NfHMza8XaA7AQvwn1SMFMbk4nZmqmcXF2LbSCurWV2Cr',
+      toAddress: '0x5b828c28C334EcB918A8b5405D630349940F347B',
       txHash: '0x74e8da00b81083c7c80bc143162a3cc4f399bf57a49120e6cc38ba07f1d90ae7'
     });
 
