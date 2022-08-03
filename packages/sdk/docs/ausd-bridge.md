@@ -3,7 +3,6 @@
 ## Summary
 WormholePortal is an sdk support transfer aUSD form **acala** to **karura** with substract wallet.
 
-
 ### Transfer aUSD from acala to karura
 1. setup sdk
 ```javascript
@@ -15,8 +14,8 @@ const acalaProvider = new EvmRpcProvider(
 );
 
 const karuraProvider = new EvmRpcProvider(
-  'wss://acala-polkadot.api.onfinality.io/public-ws',
-  { subqlUrl: 'https://api.subquery.network/sq/AcalaNetwork/evm-acala' }
+  'wss://karura.api.onfinality.io/public-ws',
+  { subqlUrl: 'https://karura-evm-subql.aca-api.network' }
 );
 
 const sdk = new WormholePortal({
@@ -69,3 +68,22 @@ await convert.signAndSend(KEY, { nonce: -1 });
 ```
 
 6. Congratulate that transfer aUSD from **acala** to **karura** successfully.
+
+### Transfer aUSD From Karura to Acala
+Transfer aUSD from **karura** to **acala** is almost the same as from **acala** to **karura**, but should convert **aUSD** to **waUSD** at first.
+
+```javascript
+const convert = sdk.convert({ from: 'aUSD', to: 'waUSD', amount: 'total' });
+
+await convert.signAndSend(KEY, { nonce: -1 });
+
+const transferParams = {
+  token: 'waUSD',
+  formChain: 'karura',
+  toChain: 'acala',
+  fromAddress: '25XX...XX',
+  toAddress: '25XX...XXX'
+};
+
+/** should complete approve and transfer and redeem process **/
+```
