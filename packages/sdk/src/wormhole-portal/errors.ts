@@ -61,3 +61,11 @@ export class TopicMismatch extends Error {
     this.message = `fragment/topic mismatch`;
   }
 }
+
+export class ConvertAssetsShouldNotEqual extends Error {
+  constructor() {
+    super();
+    this.name = 'ConvertAssetsShouldNotEqual';
+    this.message = 'convert assets should not equal';
+  }
+}

@@ -1,15 +1,14 @@
 import { WormholeRouter } from '../types';
-import { AcalaAUSD, KaruraAUSD } from './tokens';
 
 export const DEFAULT_ROUTERS: WormholeRouter[] = [
   {
     from: 'acala',
     to: 'karura',
-    token: AcalaAUSD
+    token: 'aUSD'
   },
   {
     from: 'karura',
     to: 'acala',
-    token: KaruraAUSD
+    token: 'aUSD'
   }
 ];

@@ -20,6 +20,7 @@ import { map } from 'rxjs/operators';
 import { BaseSDK } from '../types';
 import { SupportChain } from './consts';
 import {
+  ConvertAssetsShouldNotEqual,
   CreateEVMTransactionFailed,
   NeedBindEVMAddress,
   NotSupportChain,
@@ -34,18 +35,18 @@ import {
   WormholeRouter,
   WormholeToken,
   SupportToken,
-  RedeemParams
+  RedeemParams,
+  ConvertParams
 } from './types';
 import { TransactionRequest } from '@ethersproject/abstract-provider';
 import { BaseProvider } from '@acala-network/eth-providers';
 import { toBN } from '@acala-network/bodhi/lib/utils';
 import { DEFAULT_ROUTERS } from './consts/routers';
-import { uniqBy } from 'lodash';
 import { arrayify, getAddress, zeroPad } from 'ethers/lib/utils';
-import { toPromiseQuery } from '../utils/query';
 import { BigNumber } from 'ethers';
 import { ApiPromise } from '@polkadot/api';
 import { wormholeVAAAPIS } from './consts/wormhole-vaa-apis';
+import { DEFAULT_TOKENS } from './consts/tokens';
 
 export class WormholePortal implements BaseSDK {
   private apis: {
@@ -58,14 +59,14 @@ export class WormholePortal implements BaseSDK {
     karura: BaseProvider;
   };
 
-  private routers: WormholeRouter[];
+  public readonly routers: WormholeRouter[];
 
-  private tokens: WormholeToken[];
+  public readonly tokens: WormholeToken[];
 
   // cache evm bind address
   private evmAddresses: Record<string, string>;
 
-  constructor({ ethProviders, routers }: WormholePortalConfigs) {
+  constructor({ ethProviders, routers, supportTokens }: WormholePortalConfigs) {
     this.ethProviders = ethProviders;
 
     // eject api form eth provider
@@ -78,17 +79,10 @@ export class WormholePortal implements BaseSDK {
 
     this.routers = routers || DEFAULT_ROUTERS;
     // eject tokens information from routers
-    this.tokens = this.getTokensFromRouters();
+    this.tokens = supportTokens || DEFAULT_TOKENS;
 
     // cached evm address
     this.evmAddresses = {};
-  }
-
-  private getTokensFromRouters() {
-    return uniqBy(
-      this.routers.map((i) => i.token),
-      (i) => `${i.address}-${i.chain}`
-    );
   }
 
   get isReady$(): Observable<boolean> {
@@ -181,22 +175,9 @@ export class WormholePortal implements BaseSDK {
     // hit cache
     if (this.evmAddresses[address]) return this.evmAddresses[address];
 
-    const api = this.getSubstractAPIByChainName(chain);
+    const provider = this.getEthProviderByChainName(chain);
 
-    return toPromiseQuery(api.query.evmAccounts.evmAddresses(address))
-      .then((result) => {
-        console.log('evm address', result.toString());
-
-        const evmAddress = result.unwrap().toString();
-
-        this.evmAddresses[address] = evmAddress;
-
-        return getAddress(evmAddress);
-      })
-      .catch(() => {
-        // ignore error
-        return undefined;
-      });
+    return provider.getEvmAddress(address);
   }
 
   public async getTokenBalance(chain: SupportChain, symbol: SupportToken, address: string): Promise<BigNumber> {
@@ -326,9 +307,6 @@ export class WormholePortal implements BaseSDK {
     const implementationContract = new Implementation__factory();
 
     const topicHash = implementationContract.interface.getEventTopic('LogMessagePublished');
-
-    console.log(topicHash);
-
     const target = receipt.logs.find((item) => item.topics[0] === topicHash);
 
     if (!target) throw new TopicMismatch();
@@ -355,5 +333,34 @@ export class WormholePortal implements BaseSDK {
     tx.from = toEVMAddress;
 
     return this.getEVMCallFromETHTransaction(tx, toProvider);
+  }
+
+  public async convert(params: ConvertParams) {
+    const { from, to, address, amount } = params;
+
+    if (from === to) throw new ConvertAssetsShouldNotEqual();
+
+    // the convert required only in karura
+    const api = this.getSubstractAPIByChainName('karura');
+
+    // convert waUSD to aUSD
+    if (from === 'waUSD') {
+      let sendAmount = amount;
+
+      if (amount === 'all') {
+        sendAmount = await this.getTokenBalance('karura', 'waUSD', address);
+      }
+
+      return api.tx.honzonBridge.fromBridged(sendAmount.toString());
+    }
+
+    // convert aUSD to waUSD
+    let sendAmount = BigNumber.from(0);
+
+    if (amount === 'all') {
+      sendAmount = await this.getTokenBalance('karura', 'aUSD', address);
+    }
+
+    return api.tx.honzonBridge.toBridged(sendAmount.toString());
   }
 }
