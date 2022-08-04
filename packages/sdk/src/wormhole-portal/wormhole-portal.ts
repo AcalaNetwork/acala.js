@@ -251,7 +251,7 @@ export class WormholePortal implements BaseSDK {
 
     const fromProvider = this.getEthProviderByChainName(fromChain) as BaseProvider;
     const tokenContract = this.getTokenContract(fromChain, token);
-    const tokenData = this.getToken('acala', token);
+    const tokenData = this.getToken(fromChain, token);
 
     // create tx payload
     const tx = await tokenContract.populateTransaction.approve(tokenData.bridgeAddress, amount.toString());
@@ -297,16 +297,15 @@ export class WormholePortal implements BaseSDK {
 
     const fromProvider = this.getEthProviderByChainName(fromChain);
     const toProvider = this.getEthProviderByChainName(toChain);
-    const receipt = await getTxReceiptWithRetry(fromProvider, txHash);
     const tokenData = this.getToken(fromChain, token);
     const toEVMAddress = await this.getEVMAddress(toChain, toAddress);
 
+    const receipt = await getTxReceiptWithRetry(fromProvider, txHash);
     if (!receipt) throw new QueryTxReceiptFailed(txHash);
 
     const bridgeContract = this.getBridgeContract(toChain, token);
     // eslint-disable-next-line camelcase
     const implementationContract = new Implementation__factory();
-
     const topicHash = implementationContract.interface.getEventTopic('LogMessagePublished');
     const target = receipt.logs.find((item) => item.topics[0] === topicHash);
 

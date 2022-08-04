@@ -20,5 +20,6 @@ export async function getTxReceiptWithRetry(
       }
     }
   }
+
   return result;
 }
