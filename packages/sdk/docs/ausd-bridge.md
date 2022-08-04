@@ -6,7 +6,7 @@ WormholePortal is an sdk support transfer aUSD form **acala** to **karura** with
 ### Transfer aUSD from acala to karura
 0. install
 ```bash
-yarn add @acala-network/bodhi.js @acala-network/sdk@4.1.6.26
+yarn add @acala-network/bodhi.js @acala-network/sdk@4.1.6.28
 ```
 1. setup sdk
 ```javascript
