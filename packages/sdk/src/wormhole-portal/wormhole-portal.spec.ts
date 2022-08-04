@@ -3,7 +3,7 @@ import { EvmRpcProvider } from '@acala-network/eth-providers';
 import { WormholePortal } from './wormhole-portal';
 import { BigNumber } from 'ethers';
 
-describe.skip('ausd portal', () => {
+describe('ausd portal', () => {
   let sdk: WormholePortal | undefined;
 
   jest.setTimeout(50000);
