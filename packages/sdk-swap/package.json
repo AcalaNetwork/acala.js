@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk-swap",
-  "version": "4.1.6-27",
+  "version": "4.1.6-28",
   "description": "the swap sub module in acala network sdk",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
