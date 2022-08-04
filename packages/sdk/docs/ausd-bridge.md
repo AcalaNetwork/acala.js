@@ -36,7 +36,7 @@ await sdk.isReady;
 2. parper the transfer params     
 **fromChain** and **toChain** address were both bounded the EVM address when cross aUSD is better.
 ```javascript
-const keyring = new Keyring({ type: 'ss25519' });
+const keyring = new Keyring({ type: 'sr25519' });
 const fromAccount = keyring.fromMenmonic('XXX);
 const toAccount = keyring.fromMenominc('XXX);
 
@@ -104,7 +104,7 @@ const transferParams = {
 /** should complete approve and transfer **/
 ```
 
-and then when the TX complated, we should redeem at **toChain**, but redeem *aUSD*.
+and then when the TX complated, we should redeem at **toChain**, but becareful this time should redeem *aUSD*.
 ```javascript
 const redeem = await sdk.redeem({ ...transferParams, token: 'aUSD', txHash: hash });
 
