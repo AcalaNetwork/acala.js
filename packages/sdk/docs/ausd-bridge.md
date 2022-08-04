@@ -33,7 +33,7 @@ const sdk = new WormholePortal({
 await sdk.isReady;
 ```
 
-2. parper the transfer params 
+2. parper the transfer params     
 **fromChain** and **toChain** address were both bounded the EVM address when cross aUSD is better.
 ```javascript
 const keyring = new Keyring({ type: 'ss25519' });
@@ -50,7 +50,7 @@ const transferParams = {
 };
 ```
 
-3. approve balance and send balance 
+3. approve balance and send balance        
 ```javascript
 const approve = await sdk.approve(tranfesrParams);
 
@@ -64,7 +64,7 @@ const hash = await transfer.signAndSend(fromAccount, { nonce: -1 });
 ```
 
 4. redeem  
-when the tranfser finished, we should get signedVAA information from wormhole and send an redeem TX in **toChain**
+when the tranfser finished, we should get signedVAA information from wormhole and send an redeem TX at **toChain**
 ```javascript
 // pass the transfer TX hash 
 const redeem = await sdk.redeem({ ...transferParams, txHash: hash });
@@ -74,7 +74,7 @@ await redeem.signAndSend(toAccount, { nonce: -1 });
 // SHOULD WAIT REDEEM SUCCES
 ```
 
-5. convert waUSD to aUSD 
+5. convert waUSD to aUSD        
 the **toAddress** in karura will receive the same amount of **waUSD** in the distance of **acala** to **karura** after redeem TX successed, so we should send an additional TX to convert **waUSD** to **aUSD**
 ```javascript
 const convert = sdk.convert({ from: 'waUSD', to: 'aUSD', amount: 'all' });
@@ -101,5 +101,12 @@ const transferParams = {
   toAddress: toAccount.address
 };
 
-/** should complete approve and transfer and redeem process **/
+/** should complete approve and transfer **/
+```
+
+and then when the TX complated, we should redeem at **toChain**, but redeem *aUSD*.
+```javascript
+const redeem = await sdk.redeem({ ...transferParams, token: 'aUSD', txHash: hash });
+
+await redeem.signAndSend(toAccount, { nonce: -1 });
 ```
