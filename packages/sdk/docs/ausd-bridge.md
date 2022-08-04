@@ -36,13 +36,17 @@ await sdk.isReady;
 2. parper the transfer params 
 **fromChain** and **toChain** address were both bounded the EVM address when cross aUSD is better.
 ```javascript
+const keyring = new Keyring({ type: 'ss25519' });
+const fromAccount = keyring.fromMenmonic('XXX);
+const toAccount = keyring.fromMenominc('XXX);
+
 const transferParams = {
   token: 'aUSD',
   fromChain: 'acala',
   toChain: 'karura',
   amount: BigNumber.from('1000000000000'),
-  fromAddress: '25XX...XX',
-  toAddress: '25XX...XXX'
+  fromAddress: fromAccount.addres,
+  toAddress: toAccount.addres
 };
 ```
 
@@ -50,11 +54,13 @@ const transferParams = {
 ```javascript
 const approve = await sdk.approve(tranfesrParams);
 
-await approve.signAndSend(FROM_KEY, { nonce: -1 });
+await approve.signAndSend(fromAccount, { nonce: -1 });
+
+// SHOULD WAIT APPROVE SUCCES
 
 const transfer = await sdk.transfer(transferParams);
 
-const hash = await transfer.signAndSend(FROM_KEY, { nonce: -1 });
+const hash = await transfer.signAndSend(fromAccount, { nonce: -1 });
 ```
 
 4. redeem  
@@ -63,9 +69,9 @@ when the tranfser finished, we should get signedVAA information from wormhole an
 // pass the transfer TX hash 
 const redeem = await sdk.redeem({ ...transferParams, txHash: hash });
 
-await redeem.signAndSend(KEY, { nonce: -1 });
+await redeem.signAndSend(toAccount, { nonce: -1 });
 
-// please waiting the tx execulted succese
+// SHOULD WAIT REDEEM SUCCES
 ```
 
 5. convert waUSD to aUSD 
@@ -73,26 +79,26 @@ the **toAddress** in karura will receive the same amount of **waUSD** in the dis
 ```javascript
 const convert = sdk.convert({ from: 'waUSD', to: 'aUSD', amount: 'all' });
 
-await convert.signAndSend(TO_KEY, { nonce: -1 });
+await convert.signAndSend(toAccount, { nonce: -1 });
 ```
 
 6. Congratulate that transfer aUSD from **acala** to **karura** successfully.
 
-### Transfer aUSD From Karura to Acala
+### Transfer aUSD From Karura to Acala   
 Transfer aUSD from **karura** to **acala** is almost the same as from **acala** to **karura**, but should convert **aUSD** to **waUSD** at first.
 
 ```javascript
 const convert = sdk.convert({ from: 'aUSD', to: 'waUSD', amount: 'all', address: transferParams.toAddress });
 
-await convert.signAndSend(KEY, { nonce: -1 });
+await convert.signAndSend(fromAccount, { nonce: -1 });
 
 const transferParams = {
   token: 'waUSD',
   fromChain: 'karura',
   toChain: 'acala',
   amount: BigNumber.from('1000000000000'),
-  fromAddress: '25XX...XX',
-  toAddress: '25XX...XXX'
+  fromAddress: fromAccount.address,
+  toAddress: toAccount.address
 };
 
 /** should complete approve and transfer and redeem process **/
