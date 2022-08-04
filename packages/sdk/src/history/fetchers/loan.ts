@@ -249,10 +249,8 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
     const collateralToken = this.configs.wallet.__getToken(data.collateralId);
     const { stableToken } = this.configs.wallet.getPresetTokens();
     const collateral = FixedPointNumber.fromInner(data.collateralAmount, collateralToken?.decimals);
-    const debit = FixedPointNumber.fromInner(data.badDebitVolumeUSD, stableToken?.decimals);
-    debit.forceSetPrecision(stableToken?.decimals || 12);
-    return `${collateralToken?.display} position(${collateral.toNumber(6)} ${
-      collateralToken?.display
-    }, ${debit.toNumber(6)} ${stableToken?.display}) had been liquidated through ${data.liquidationStrategy}`;
+    return `${collateralToken?.display} position(${collateral.toNumber(6)} ${collateralToken?.display}, ${
+      data.badDebitVolumeUSD
+    } ${stableToken?.display}) had been liquidated through ${data.liquidationStrategy}`;
   }
 }
