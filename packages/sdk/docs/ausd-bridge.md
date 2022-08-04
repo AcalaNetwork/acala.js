@@ -4,6 +4,10 @@
 WormholePortal is an sdk support transfer aUSD form **acala** to **karura** with substract wallet.
 
 ### Transfer aUSD from acala to karura
+0. install
+```bash
+yarn add @acala-network/bodhi.js @acala-network/sdk@4.1.6.26
+```
 1. setup sdk
 ```javascript
 import { EvmRpcProvider } from '@acala-network/eth-providers';
@@ -35,6 +39,7 @@ const transferParams = {
   token: 'aUSD',
   formChain: 'acala',
   toChain: 'karura',
+  amount: BigNumber.from('1000000000000'),
   fromAddress: '25XX...XX',
   toAddress: '25XX...XXX'
 };
@@ -62,7 +67,7 @@ await redeem.signedAndSend(KEY, { nonce: -1 });
 5. convert waUSD to aUSD
 the **toAddress** in karura will receive the same amount of **waUSD** in the distance of **acala** to **karura** after redeem TX successed, so we should send an additional TX to convert **waUSD** to **aUSD**
 ```javascript
-const convert = sdk.convert({ from: 'waUSD', to: 'aUSD', amount: 'total' });
+const convert = sdk.convert({ from: 'waUSD', to: 'aUSD', amount: 'all' });
 
 await convert.signAndSend(KEY, { nonce: -1 });
 ```
@@ -73,7 +78,7 @@ await convert.signAndSend(KEY, { nonce: -1 });
 Transfer aUSD from **karura** to **acala** is almost the same as from **acala** to **karura**, but should convert **aUSD** to **waUSD** at first.
 
 ```javascript
-const convert = sdk.convert({ from: 'aUSD', to: 'waUSD', amount: 'total' });
+const convert = sdk.convert({ from: 'aUSD', to: 'waUSD', amount: 'all' });
 
 await convert.signAndSend(KEY, { nonce: -1 });
 
@@ -81,6 +86,7 @@ const transferParams = {
   token: 'waUSD',
   formChain: 'karura',
   toChain: 'acala',
+  amount: BigNumber.from('1000000000000'),
   fromAddress: '25XX...XX',
   toAddress: '25XX...XXX'
 };
