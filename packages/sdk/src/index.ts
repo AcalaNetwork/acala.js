@@ -8,3 +8,4 @@ export * from './history';
 export * from './incentive';
 export * from './dex';
 export * from './auction';
+export * from './wormhole-portal';
