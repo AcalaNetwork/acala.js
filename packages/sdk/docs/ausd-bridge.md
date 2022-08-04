@@ -11,6 +11,7 @@ yarn add @acala-network/bodhi.js @acala-network/sdk@4.1.6.26
 1. setup sdk
 ```javascript
 import { EvmRpcProvider } from '@acala-network/eth-providers';
+import { BigNumber } from 'ethers';
 
 const acalaProvider = new EvmRpcProvider(
   'wss://acala-polkadot.api.onfinality.io/public-ws',
@@ -32,44 +33,47 @@ const sdk = new WormholePortal({
 await sdk.isReady;
 ```
 
-2. parper the transfer params
+2. parper the transfer params 
 **fromChain** and **toChain** address were both bounded the EVM address when cross aUSD is better.
 ```javascript
 const transferParams = {
   token: 'aUSD',
-  formChain: 'acala',
+  fromChain: 'acala',
   toChain: 'karura',
   amount: BigNumber.from('1000000000000'),
   fromAddress: '25XX...XX',
   toAddress: '25XX...XXX'
 };
 ```
-3. approve balance and send balance
+
+3. approve balance and send balance 
 ```javascript
 const approve = await sdk.approve(tranfesrParams);
 
-await approve.signAndSend(KEY, { nonce: -1 });
+await approve.signAndSend(FROM_KEY, { nonce: -1 });
 
 const transfer = await sdk.transfer(transferParams);
 
-const hash = await transfer.signAndSend(KEY, { nonce: -1 });
+const hash = await transfer.signAndSend(FROM_KEY, { nonce: -1 });
 ```
 
-4. redeem 
-when the tranfser finished, we should get signedVAA information from wormhole and send an redeem transaction in **toChain**
+4. redeem  
+when the tranfser finished, we should get signedVAA information from wormhole and send an redeem TX in **toChain**
 ```javascript
 // pass the transfer TX hash 
-const redeem = await sdk.redeem( ...tranfserParams, txHash: hash );
+const redeem = await sdk.redeem({ ...transferParams, txHash: hash });
 
-await redeem.signedAndSend(KEY, { nonce: -1 });
+await redeem.signAndSend(KEY, { nonce: -1 });
+
+// please waiting the tx execulted succese
 ```
 
-5. convert waUSD to aUSD
+5. convert waUSD to aUSD 
 the **toAddress** in karura will receive the same amount of **waUSD** in the distance of **acala** to **karura** after redeem TX successed, so we should send an additional TX to convert **waUSD** to **aUSD**
 ```javascript
 const convert = sdk.convert({ from: 'waUSD', to: 'aUSD', amount: 'all' });
 
-await convert.signAndSend(KEY, { nonce: -1 });
+await convert.signAndSend(TO_KEY, { nonce: -1 });
 ```
 
 6. Congratulate that transfer aUSD from **acala** to **karura** successfully.
@@ -78,13 +82,13 @@ await convert.signAndSend(KEY, { nonce: -1 });
 Transfer aUSD from **karura** to **acala** is almost the same as from **acala** to **karura**, but should convert **aUSD** to **waUSD** at first.
 
 ```javascript
-const convert = sdk.convert({ from: 'aUSD', to: 'waUSD', amount: 'all' });
+const convert = sdk.convert({ from: 'aUSD', to: 'waUSD', amount: 'all', address: transferParams.toAddress });
 
 await convert.signAndSend(KEY, { nonce: -1 });
 
 const transferParams = {
   token: 'waUSD',
-  formChain: 'karura',
+  fromChain: 'karura',
   toChain: 'acala',
   amount: BigNumber.from('1000000000000'),
   fromAddress: '25XX...XX',

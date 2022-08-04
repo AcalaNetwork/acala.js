@@ -47,6 +47,7 @@ import { BigNumber } from 'ethers';
 import { ApiPromise } from '@polkadot/api';
 import { wormholeVAAAPIS } from './consts/wormhole-vaa-apis';
 import { DEFAULT_TOKENS } from './consts/tokens';
+import { getTxReceiptWithRetry } from './utils';
 
 export class WormholePortal implements BaseSDK {
   private apis: {
@@ -296,7 +297,7 @@ export class WormholePortal implements BaseSDK {
 
     const fromProvider = this.getEthProviderByChainName(fromChain);
     const toProvider = this.getEthProviderByChainName(toChain);
-    const receipt = await fromProvider.getTXReceiptByHash(txHash);
+    const receipt = await getTxReceiptWithRetry(fromProvider, txHash);
     const tokenData = this.getToken(fromChain, token);
     const toEVMAddress = await this.getEVMAddress(toChain, toAddress);
 
