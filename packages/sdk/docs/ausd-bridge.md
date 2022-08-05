@@ -83,7 +83,7 @@ await redeem.signAndSend(toAccount, { nonce: -1 });
 5. convert waUSD to aUSD        
 the **toAddress** in karura will receive the same amount of **waUSD** in the distance of **acala** to **karura** after redeem TX successed, so we should send an additional TX to convert **waUSD** to **aUSD**
 ```javascript
-const convert = sdk.convert({ from: 'waUSD', to: 'aUSD', amount: 'all' });
+const convert = sdk.convert({ from: 'waUSD', to: 'aUSD', amount: 'all', address: transferParams.toAddress });
 
 await convert.signAndSend(toAccount, { nonce: -1 });
 ```
