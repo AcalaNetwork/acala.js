@@ -110,7 +110,7 @@ const transferParams = {
 /** should complete approve and transfer **/
 ```
 
-and then when the TX complated, we should redeem at **toChain**, but becareful this time should redeem *aUSD*.
+and then when the TX complated, we should redeem at **toChain**, but becareful should redeem *aUSD* this time.
 ```javascript
 const redeem = await sdk.redeem({ ...transferParams, token: 'aUSD', txHash: hash.toString() });
 
