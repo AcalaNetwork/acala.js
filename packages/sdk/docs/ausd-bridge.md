@@ -3,6 +3,11 @@
 ## Summary
 WormholePortal is an sdk support transfer aUSD form **acala** to **karura** with substract wallet.
 
+## Tips
+1. we recommend bounded the EVM address at first before transfer aUSD.
+2. please confirm that address in **fromChain** or **toChain** have enough native token as TX fee. the **approve**, **transfer** will charge fees at **fromChain** and the **redeem** will charge fess at **toChains**.
+3. the minimum transferable **aUSD** is 0.1 AUSD beacuse of that the **aUSD** existential deposit amount at *acala** is 0.1 and **waUSD** existential deposit at **karura** is 0.1.
+
 ### Transfer aUSD from acala to karura
 0. install
 ```bash
@@ -34,7 +39,6 @@ await sdk.isReady;
 ```
 
 2. parper the transfer params     
-**fromChain** and **toChain** address were both bounded the EVM address when cross aUSD is better.
 ```javascript
 const keyring = new Keyring({ type: 'sr25519' });
 const fromAccount = keyring.fromMenmonic('XXX);
