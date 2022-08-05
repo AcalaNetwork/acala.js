@@ -1,14 +1,14 @@
 ### AUSD Bridge SDK
 
 ## Summary
-WormholePortal is an sdk support transfer aUSD form **acala** to **karura** with substract wallet.
+WormholePortal is an sdk support transfer aUSD form **Acala** to **Karura** with substract wallet.
 
 ## Tips
 1. we recommend bounded the EVM address at first before transfer aUSD.
-2. please confirm that address in **fromChain** or **toChain** have enough native token as TX fee. the **approve**, **transfer** will charge fees at **fromChain** and the **redeem** will charge fees at **toChains**.
-3. the minimum transferable **aUSD** is 0.1 AUSD beacuse of that the **aUSD** existential deposit amount at *acala** is 0.1 and **waUSD** existential deposit at **karura** is 0.1.
+2. please confirm that address in **fromChain** or **toChain** have enough native token as TX fee. the **approve**, **transfer** will charge fees at **fromChain** and the **redeem** will charge fees at **toChain**.
+3. the minimum transferable **aUSD** is 0.1 AUSD beacuse of that the **aUSD** existential deposit amount at *Acala** is 0.1 and **waUSD** existential deposit at **Karura** is 0.1.
 
-### Transfer aUSD from acala to karura
+### Transfer aUSD From Acala To Karura
 0. install
 ```bash
 yarn add @acala-network/bodhi.js @acala-network/sdk@4.1.6.28
@@ -88,7 +88,7 @@ await convert.signAndSend(toAccount, { nonce: -1 });
 
 6. Congratulate that transfer aUSD from **acala** to **karura** successfully.
 
-### Transfer aUSD From Karura to Acala   
+### Transfer aUSD From Karura To Acala   
 Transfer aUSD from **karura** to **acala** is almost the same as from **acala** to **karura**, but should convert **aUSD** to **waUSD** at first.
 
 ```javascript
