@@ -73,7 +73,7 @@ const hash = await transfer.signAndSend(fromAccount, { nonce: -1 });
 when the tranfser finished, we should get signedVAA information from wormhole and send an redeem TX at **toChain**
 ```javascript
 // pass the transfer TX hash 
-const redeem = await sdk.redeem({ ...transferParams, txHash: hash });
+const redeem = await sdk.redeem({ ...transferParams, txHash: hash.toString() });
 
 await redeem.signAndSend(toAccount, { nonce: -1 });
 
@@ -112,7 +112,7 @@ const transferParams = {
 
 and then when the TX complated, we should redeem at **toChain**, but becareful this time should redeem *aUSD*.
 ```javascript
-const redeem = await sdk.redeem({ ...transferParams, token: 'aUSD', txHash: hash });
+const redeem = await sdk.redeem({ ...transferParams, token: 'aUSD', txHash: hash.toString() });
 
 await redeem.signAndSend(toAccount, { nonce: -1 });
 ```
