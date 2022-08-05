@@ -1,7 +1,7 @@
 ### AUSD Bridge SDK
 
 ## Summary
-WormholePortal is an sdk support transfer aUSD form **Acala** to **Karura** with substract wallet.
+WormholePortal is an sdk support transfer aUSD from **Acala** to **Karura** with substract wallet.
 
 ## Tips
 1. we recommend bounded the EVM address at first before transfer aUSD.
@@ -16,7 +16,9 @@ yarn add @acala-network/bodhi.js @acala-network/sdk@4.1.6.28
 1. setup sdk
 ```javascript
 import { EvmRpcProvider } from '@acala-network/eth-providers';
-import { BigNumber } from 'ethers';
+import { TransferParams, WormholePortal } from '@acala-network/sdk/wormhole-portal'
+import { BigNumber } from "ethers"
+import { Keyring } from '@polkadot/api';
 
 const acalaProvider = new EvmRpcProvider(
   'wss://acala-polkadot.api.onfinality.io/public-ws',
