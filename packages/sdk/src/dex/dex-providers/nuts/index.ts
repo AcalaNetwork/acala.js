@@ -96,11 +96,11 @@ export class NutsDex implements BaseSwap {
       result.inputToken.symbol === 'AUSD' ||
       result.inputToken.symbol === 'KUSD' ||
       result.inputToken.symbol === 'USDT' ||
-      result.inputToken.symbol === 'USDC' ||
+      result.inputToken.symbol === 'USDCet' ||
       result.outputToken.symbol === 'AUSD' ||
       result.outputToken.symbol === 'KUSD' ||
       result.outputToken.symbol === 'USDT' ||
-      result.outputToken.symbol === 'USDC'
+      result.outputToken.symbol === 'USDCet'
     ) {
       if (Number(result.inputAmount.toNumber()) <= 0.001) throw new AmountTooSmall();
       if (Number(result.outputAmount.toNumber()) <= 0.001) throw new AmountTooSmall();
