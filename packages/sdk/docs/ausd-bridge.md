@@ -27,7 +27,7 @@ const acalaProvider = new EvmRpcProvider(
 
 const karuraProvider = new EvmRpcProvider(
   'wss://karura.api.onfinality.io/public-ws',
-  { subqlUrl: 'https://karura-evm-subql.aca-api.network' }
+  { subqlUrl: 'https://api.subquery.network/sq/AcalaNetwork/evm-karura' }
 );
 
 const sdk = new WormholePortal({
