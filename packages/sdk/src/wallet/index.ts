@@ -69,7 +69,7 @@ export class Wallet implements BaseSDK {
 
     this.balanceAdapter = new AcalaBalanceAdapter({
       api: this.api,
-      wsProvider: configs?.wsProvider
+      evmProvider: configs?.evmProvider
     });
 
     // init liquidty module

@@ -7,8 +7,9 @@ import { options } from '@acala-network/api';
 import { TokenType } from '@acala-network/sdk-core';
 import { PriceProviderType } from './price-provider/types';
 import { WalletConfigs } from './type';
+import { EvmRpcProvider } from '@acala-network/eth-providers';
 
-describe.skip('wallet', () => {
+describe('wallet', () => {
   let sdk: Wallet | undefined;
 
   jest.setTimeout(50000);
@@ -18,11 +19,12 @@ describe.skip('wallet', () => {
 
     const provider = new WsProvider(endpoint);
     const api = await ApiPromise.create(options({ provider }));
+    const evmProvider = new EvmRpcProvider(endpoint);
 
     await api.isReady;
 
     const wallet = new Wallet(api, {
-      wsProvider: provider,
+      evmProvider,
       ...configs
     });
 
@@ -185,6 +187,8 @@ describe.skip('wallet', () => {
     const usdtBalance0 = await sdk.getBalance('USDT', '0x2804F43DDD8c08B66B61A1Cf8DcC744f1B109971');
     const usdtBalance1 = await sdk.getBalance('USDT', '5GREeQcGHt7na341Py6Y6Grr38KUYRvVoiFSiDB52Gt7VZiN');
     const usdtBalance2 = await sdk.getBalance('USDT', 'p62hgj46CwnVtZjP2MUAxLzoxG7SJdpFq5RYbBdy4SMzS9i');
+
+    console.log(usdtBalance0);
 
     expect(usdtBalance0.free.toString()).not.toBe('0');
     expect(usdtBalance1.free.toString()).not.toBe('0');
