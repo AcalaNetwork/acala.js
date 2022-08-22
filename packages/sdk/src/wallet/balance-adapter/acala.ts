@@ -1,30 +1,20 @@
-import {
-  AnyApi,
-  eventsFilterCallback,
-  eventsFilterRx,
-  FixedPointNumber,
-  FixedPointNumber as FN,
-  forceToCurrencyName,
-  getERC20TokenAddressFromName,
-  Token
-} from '@acala-network/sdk-core';
-import { ApiPromise, ApiRx, WsProvider } from '@polkadot/api';
-import { Provider as BodhiProvider } from '@acala-network/bodhi';
-import { ERC20_ABI } from '@acala-network/eth-providers/lib/consts';
+import { AnyApi, FixedPointNumber, FixedPointNumber as FN, forceToCurrencyName, Token } from '@acala-network/sdk-core';
+import { EvmRpcProvider } from '@acala-network/eth-providers';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
-import { Contract, utils } from 'ethers';
-import { map, switchMap } from 'rxjs/operators';
+import { utils } from 'ethers';
+import { map } from 'rxjs/operators';
 import { Option } from '@polkadot/types';
 import { AccountInfo, H160, Balance } from '@polkadot/types/interfaces';
 import { BalanceData } from '../type';
 import { AcalaExpandBalanceAdapter } from './types';
-import { BehaviorSubject, from, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { NotSupportETHAddress, NotSupportEVMBalance } from '../errors';
 import { Storage } from '../../utils/storage';
+import { ERC20Adapter } from './erc20-adapter';
 
 interface AcalaAdapterConfigs {
   api: AnyApi;
-  wsProvider?: WsProvider;
+  evmProvider?: EvmRpcProvider;
 }
 
 const createStorages = (api: AnyApi) => {
@@ -64,42 +54,19 @@ const createStorages = (api: AnyApi) => {
 export class AcalaBalanceAdapter implements AcalaExpandBalanceAdapter {
   private storages: ReturnType<typeof createStorages>;
   private nativeCurrency: string;
-  private wsProvider!: WsProvider;
-  private ethProvider!: BodhiProvider;
-  private evmUpdate$!: BehaviorSubject<number>;
+  private evmProvider!: EvmRpcProvider;
+  private erc20Adapter!: ERC20Adapter;
   private api: AnyApi;
 
-  constructor({ api, wsProvider }: AcalaAdapterConfigs) {
+  constructor({ api, evmProvider }: AcalaAdapterConfigs) {
     this.api = api;
-    this.storages = createStorages(api);
+    this.storages = createStorages(this.api);
     this.nativeCurrency = api.registry.chainTokens[0];
 
-    if (wsProvider) {
-      this.wsProvider = wsProvider;
-      this.ethProvider = new BodhiProvider({
-        provider: this.wsProvider
-      });
+    if (evmProvider) {
+      this.evmProvider = evmProvider;
+      this.erc20Adapter = new ERC20Adapter(this.evmProvider);
     }
-
-    this.evmUpdate$ = this.subscribeEVMEvents();
-  }
-
-  private subscribeEVMEvents() {
-    const evmUpdate$ = new BehaviorSubject<number>(0);
-    let count = 0;
-
-    // TODO: should subscribe ERC20 transfer event
-    const eventFilterConfigs = [{ section: 'evm', method: '*' }];
-
-    if (this.api.type === 'rxjs') {
-      eventsFilterRx(this.api as ApiRx, eventFilterConfigs, true).subscribe(() => evmUpdate$.next(++count));
-    }
-
-    if (this.api.type === 'promise') {
-      eventsFilterCallback(this.api as ApiPromise, eventFilterConfigs, true, () => evmUpdate$.next(++count));
-    }
-
-    return evmUpdate$;
   }
 
   private transformNative = (data: AccountInfo, token: Token) => {
@@ -122,39 +89,6 @@ export class AcalaBalanceAdapter implements AcalaExpandBalanceAdapter {
     return { available, free, locked, reserved };
   };
 
-  private queryERC20Balance = async (token: Token, address: string): Promise<BalanceData> => {
-    let ethAddress: string = address;
-
-    if (!utils.isAddress(address)) {
-      const evmAddress = await this.storages.evmAddress(address).query();
-
-      if (evmAddress.isEmpty || evmAddress.isNone) {
-        return {
-          free: FN.ZERO,
-          locked: FN.ZERO,
-          reserved: FN.ZERO,
-          available: FN.ZERO
-        };
-      }
-
-      ethAddress = evmAddress.unwrap().toHex();
-    }
-
-    const tokenAddress = getERC20TokenAddressFromName(token.name);
-    const tokenContract = new Contract(tokenAddress, ERC20_ABI, this.ethProvider);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const balance = await tokenContract.balanceOf(ethAddress);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const available = FN.fromInner(balance.toString(), token.decimals);
-
-    return {
-      free: available,
-      locked: FN.ZERO,
-      reserved: FN.ZERO,
-      available
-    };
-  };
-
   public subscribeBalance(token: Token, address: string): Observable<BalanceData> {
     const { nativeCurrency } = this;
     const isNativeToken = nativeCurrency === token.name;
@@ -163,12 +97,12 @@ export class AcalaBalanceAdapter implements AcalaExpandBalanceAdapter {
       throw new NotSupportETHAddress(address);
     }
 
-    if (token.isERC20 && !this.ethProvider) {
+    if (token.isERC20 && !this.evmProvider) {
       throw new NotSupportEVMBalance();
     }
 
     if (token.isERC20) {
-      return this.evmUpdate$.pipe(switchMap(() => from(this.queryERC20Balance(token, address))));
+      return this.erc20Adapter.subscribeBalance(token, address);
     }
 
     if (isNativeToken) {
@@ -188,6 +122,14 @@ export class AcalaBalanceAdapter implements AcalaExpandBalanceAdapter {
   }
 
   public subscribeIssuance(token: Token): Observable<FixedPointNumber> {
+    if (token.isERC20 && !this.evmProvider) {
+      throw new NotSupportEVMBalance();
+    }
+
+    if (token.isERC20) {
+      return this.erc20Adapter.subscribeIssuance(token);
+    }
+
     const storage = this.storages.issuance(token);
 
     const handleIssuance = (data: Balance, token: Token) => FN.fromInner(data.toString(), token.decimals);
