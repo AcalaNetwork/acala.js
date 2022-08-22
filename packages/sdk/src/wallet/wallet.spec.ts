@@ -9,7 +9,7 @@ import { PriceProviderType } from './price-provider/types';
 import { WalletConfigs } from './type';
 import { EvmRpcProvider } from '@acala-network/eth-providers';
 
-describe('wallet', () => {
+describe.skip('wallet', () => {
   let sdk: Wallet | undefined;
 
   jest.setTimeout(50000);
