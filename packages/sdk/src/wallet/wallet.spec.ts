@@ -14,7 +14,10 @@ describe.skip('wallet', () => {
 
   jest.setTimeout(50000);
 
-  const initSDK = async (configs?: Partial<WalletConfigs>, endpoint = 'wss://karura.api.onfinality.io/public-ws') => {
+  const karuraEndpoint = 'wss://karura.api.onfinality.io/public-ws';
+  const acalaEndpoint = 'wss://acala-polkadot.api.onfinality.io/public-ws';
+
+  const initSDK = async (endpoint = karuraEndpoint, configs?: Partial<WalletConfigs>) => {
     if (sdk) return sdk;
 
     const provider = new WsProvider(endpoint);
@@ -57,11 +60,11 @@ describe.skip('wallet', () => {
   test('get tokens should work', async () => {
     const sdk = await initSDK();
 
-    const tokens1 = sdk.getTokens(TokenType.BASIC);
-    const tokens2 = sdk.getTokens(TokenType.DEX_SHARE);
-    const tokens3 = sdk.getTokens([TokenType.BASIC, TokenType.DEX_SHARE]);
+    const tokens1 = await sdk.getTokens(TokenType.BASIC);
+    const tokens2 = await sdk.getTokens(TokenType.DEX_SHARE);
+    const tokens3 = await sdk.getTokens([TokenType.BASIC, TokenType.DEX_SHARE]);
 
-    expect(Object.values(tokens1).length).not.toBe('KAR');
+    expect(Object.values(tokens1).length).not.toBe(0);
     expect(Object.values(tokens2).length).not.toBe(0);
     expect(Object.values(tokens3).length).toEqual(Object.values(tokens1).length + Object.values(tokens2).length);
   });
@@ -80,6 +83,7 @@ describe.skip('wallet', () => {
 
   test('get aggregate price should work', async () => {
     const sdk = await initSDK();
+    const acalaSDK = await initSDK(acalaEndpoint);
 
     const price1 = await sdk.getPrice('KSM');
     const price2 = await sdk.getPrice('RMRK');
@@ -100,6 +104,18 @@ describe.skip('wallet', () => {
     expect(price5.toString()).not.toBe(undefined);
     expect(price6.toString()).not.toBe('0');
     expect(price6.toString()).not.toBe(undefined);
+
+    const aPrice1 = await acalaSDK.getPrice('ACA');
+    const aPrice2 = await acalaSDK.getPrice('DOT');
+    const aPrice3 = await acalaSDK.getPrice('IBTC');
+    const aPrice4 = await acalaSDK.getPrice('LCDOT');
+    const aPrice5 = await acalaSDK.getPrice('lp://ACA/DOT');
+
+    console.log(aPrice1.toString());
+    console.log(aPrice2.toString());
+    console.log(aPrice3.toString());
+    console.log(aPrice4.toString());
+    console.log(aPrice5.toString());
   });
 
   test('get market price should work', async () => {
@@ -113,8 +129,6 @@ describe.skip('wallet', () => {
     const price6 = await sdk.getPrice('MOVR', PriceProviderType.MARKET);
     const price7 = await sdk.getPrice('taiKSM', PriceProviderType.MARKET);
     const price8 = await sdk.getPrice('PHA', PriceProviderType.MARKET);
-
-    console.log(price8.toString());
 
     expect(price1.toString()).not.toBe('0');
     expect(price1.toString()).not.toBe(undefined);
@@ -164,31 +178,19 @@ describe.skip('wallet', () => {
   });
 
   test('support ausd should work', async () => {
-    const sdk0 = await initSDK({ supportAUSD: false });
-    const sdk1 = await initSDK();
+    const sdk0 = await initSDK();
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const token0 = await sdk0.getToken('AUSD').catch((i) => (i as any).toString());
-    const token1 = await sdk0.getToken('KUSD');
-    const token2 = await sdk1.getToken('AUSD');
-    const token3 = await sdk1.getToken('KUSD');
+    const token0 = await sdk0.getToken('AUSD');
 
-    expect(token0).toBe("CurrencyNotFound: can't find AUSD currency in current network");
-    expect(token1.display).toBe('kUSD');
-    expect(token2.display).toBe('aUSD');
-    expect(token3.display).toBe('aUSD');
-    expect(token2.symbol).toBe('KUSD');
-    expect(token3.symbol).toBe('KUSD');
+    expect(token0.display).toBe('aUSD');
   });
 
   test('query balance should work', async () => {
-    const sdk = await initSDK({}, 'wss://karura-dev.aca-dev.network/rpc/ws');
+    const sdk = await initSDK();
 
     const usdtBalance0 = await sdk.getBalance('USDT', '0x2804F43DDD8c08B66B61A1Cf8DcC744f1B109971');
     const usdtBalance1 = await sdk.getBalance('USDT', '5GREeQcGHt7na341Py6Y6Grr38KUYRvVoiFSiDB52Gt7VZiN');
     const usdtBalance2 = await sdk.getBalance('USDT', 'p62hgj46CwnVtZjP2MUAxLzoxG7SJdpFq5RYbBdy4SMzS9i');
-
-    console.log(usdtBalance0);
 
     expect(usdtBalance0.free.toString()).not.toBe('0');
     expect(usdtBalance1.free.toString()).not.toBe('0');

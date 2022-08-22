@@ -9,6 +9,9 @@
     "access": "public",
     "registry": "https://registry.npmjs.org"
   },
+  "scripts": {
+    "contract:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\""
+  },
   "repository": "https://github.com/AcalaNetwork/acala.js.git",
   "bugs": {
     "url": "https://github.com/AcalaNetwork/acala.js/issues"
@@ -37,7 +40,9 @@
     "rxjs": "^7.4.0"
   },
   "devDependencies": {
+    "@typechain/ethers-v5": "^10.1.0",
     "@types/dotenv": "^8.2.0",
-    "@types/lodash": "^4.14.161"
+    "@types/lodash": "^4.14.161",
+    "typechain": "^8.1.0"
   }
 }

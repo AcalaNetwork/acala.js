@@ -31,12 +31,6 @@ const createStorages = (api: AnyApi) => {
         path: 'query.tokens.accounts',
         params: [address, token.toChainData()]
       }),
-    evmAddress: (address: string) =>
-      Storage.create<Option<H160>>({
-        api: api,
-        path: 'query.evmAccounts.evmAddresses',
-        params: [address]
-      }),
     issuance: (token: Token) => {
       const nativeTokenName = api.registry.chainTokens[0];
 

@@ -14,7 +14,7 @@ import {
   FixedPointNumber
 } from '@acala-network/sdk-core';
 import { BehaviorSubject, combineLatest, Observable, of, firstValueFrom } from 'rxjs';
-import { map, switchMap, filter } from 'rxjs/operators';
+import { map, switchMap, filter, catchError } from 'rxjs/operators';
 import { TokenRecord, WalletConsts, BalanceData, PresetTokens, WalletConfigs, PriceProviders } from './type';
 import { ChainType, Homa, Liquidity, SDKNotReady } from '..';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
@@ -59,13 +59,10 @@ export class Wallet implements BaseSDK {
     this.api = api;
     this.isReady$ = new BehaviorSubject<boolean>(false);
     this.configs = {
-      supportAUSD: true,
       ...configs
     };
 
-    this.tokenProvider = new AcalaTokenProvider(this.api, {
-      kusd2ausd: this.configs.supportAUSD || true
-    });
+    this.tokenProvider = new AcalaTokenProvider(this.api);
 
     this.balanceAdapter = new AcalaBalanceAdapter({
       api: this.api,
@@ -293,7 +290,13 @@ export class Wallet implements BaseSDK {
 
     // if token is dex share, get dex share price form liquidity sdk
     if (isDexShare) {
-      return this.liquidity.subscribePoolDetails(name).pipe(map((data) => data.sharePrice));
+      return this.liquidity.subscribePoolDetails(name).pipe(
+        map((data) => data.sharePrice),
+        catchError(() => {
+          // return 0 when error occured
+          return of(FixedPointNumber.ZERO);
+        })
+      );
     }
 
     // get liquid token price when price type is market/aggergate/oracle
