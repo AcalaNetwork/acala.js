@@ -1,11 +1,13 @@
 import { EvmRpcProvider } from '@acala-network/eth-providers';
 import { FixedPointNumber, getERC20TokenAddressFromName, Token } from '@acala-network/sdk-core';
 // eslint-disable-next-line camelcase
-import { ERC20__factory } from '@certusone/wormhole-sdk';
+import { Erc20__factory } from '../../abis/types/factories/Erc20__factory';
 import { isAddress } from '@ethersproject/address';
 import { from, Observable, Subject } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, finalize } from 'rxjs/operators';
 import { BalanceData } from '../type';
+import { AnyFunction } from '@polkadot/types/types';
+import { NotERC20TokenName } from '@acala-network/sdk-core/errors';
 
 export class ERC20Adapter {
   constructor(private provider: EvmRpcProvider) {}
@@ -14,7 +16,7 @@ export class ERC20Adapter {
     if (!isAddress(address)) throw new Error('is not erc20 address');
 
     // eslint-disable-next-line camelcase
-    return ERC20__factory.connect(address, this.provider);
+    return Erc20__factory.connect(address, this.provider);
   }
 
   private getEVMAddress(address: string) {
@@ -24,6 +26,8 @@ export class ERC20Adapter {
   }
 
   subscribeBalance(token: Token, address: string) {
+    if (!token.isERC20) throw new NotERC20TokenName(token.name);
+
     const tokenAddress = getERC20TokenAddressFromName(token.name);
     const contract = this.getERC20Contract(tokenAddress);
     const balance$ = new Subject<BalanceData | undefined>();
@@ -33,8 +37,8 @@ export class ERC20Adapter {
       const balance = await contract.balanceOf(evmAddress);
 
       const formated = FixedPointNumber.fromInner(balance.toString(), token.decimals);
-      const fromAddress = contract.filters.Transfer(address, null);
-      const toAddress = contract.filters.Transfer(null, address);
+      const fromAddress = contract.filters.Transfer(evmAddress, null);
+      const toAddress = contract.filters.Transfer(null, evmAddress);
 
       balance$.next({
         free: formated.clone(),
@@ -43,41 +47,37 @@ export class ERC20Adapter {
         available: formated.clone()
       });
 
-      this.provider.addEventListener(
-        'NEW_LOGS',
-        async () => {
-          const balance = await contract.balanceOf(evmAddress);
-          const formated = FixedPointNumber.fromInner(balance.toString(), token.decimals);
+      const updateBalance = async () => {
+        const balance = await contract.balanceOf(evmAddress);
+        const formated = FixedPointNumber.fromInner(balance.toString(), token.decimals);
 
-          balance$.next({
-            free: formated.clone(),
-            locked: new FixedPointNumber(0, token.decimals),
-            reserved: new FixedPointNumber(0, token.decimals),
-            available: formated.clone()
-          });
-        },
-        fromAddress
-      );
-      this.provider.addEventListener(
-        'NEW_LOGS',
-        async () => {
-          const balance = await contract.balanceOf(evmAddress);
-          const formated = FixedPointNumber.fromInner(balance.toString(), token.decimals);
+        balance$.next({
+          free: formated.clone(),
+          locked: new FixedPointNumber(0, token.decimals),
+          reserved: new FixedPointNumber(0, token.decimals),
+          available: formated.clone()
+        });
+      };
 
-          balance$.next({
-            free: formated.clone(),
-            locked: new FixedPointNumber(0, token.decimals),
-            reserved: new FixedPointNumber(0, token.decimals),
-            available: formated.clone()
-          });
-        },
-        toAddress
-      );
+      const fromListener = this.provider.addEventListener('NEW_LOGS', updateBalance, fromAddress);
+      const toListener = this.provider.addEventListener('NEW_LOGS', updateBalance, toAddress);
+
+      return () => {
+        this.provider.removeEventListener(fromListener);
+        this.provider.removeEventListener(toListener);
+      };
     };
 
-    run();
+    let unsubscriber: AnyFunction | undefined;
 
-    return balance$.asObservable().pipe(filter((i) => !!i)) as Observable<BalanceData>;
+    run().then((unsub) => (unsubscriber = unsub));
+
+    return balance$.asObservable().pipe(
+      finalize(() => {
+        unsubscriber && unsubscriber();
+      }),
+      filter((i) => !!i)
+    ) as Observable<BalanceData>;
   }
 
   public subscribeIssuance(token: Token) {

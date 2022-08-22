@@ -18,8 +18,7 @@ export class AggregateProvider implements PriceProvider {
   }
 
   public subscribe(token: Token): Observable<FN> {
-    // query market price first, when market price is 0, try query dex price
-
+    // query market price first, try to query price from dex when the market price is zero
     const marketPriceProvider = this.marketPriceProvider;
     const dexPriceProvider = this.dexPriceProvider;
 

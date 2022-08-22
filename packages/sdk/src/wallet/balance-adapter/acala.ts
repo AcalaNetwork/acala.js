@@ -3,8 +3,7 @@ import { EvmRpcProvider } from '@acala-network/eth-providers';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { utils } from 'ethers';
 import { map } from 'rxjs/operators';
-import { Option } from '@polkadot/types';
-import { AccountInfo, H160, Balance } from '@polkadot/types/interfaces';
+import { AccountInfo, Balance } from '@polkadot/types/interfaces';
 import { BalanceData } from '../type';
 import { AcalaExpandBalanceAdapter } from './types';
 import { Observable } from 'rxjs';
@@ -30,12 +29,6 @@ const createStorages = (api: AnyApi) => {
         api: api,
         path: 'query.tokens.accounts',
         params: [address, token.toChainData()]
-      }),
-    evmAddress: (address: string) =>
-      Storage.create<Option<H160>>({
-        api: api,
-        path: 'query.evmAccounts.evmAddresses',
-        params: [address]
       }),
     issuance: (token: Token) => {
       const nativeTokenName = api.registry.chainTokens[0];

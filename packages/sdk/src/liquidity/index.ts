@@ -88,8 +88,11 @@ export class Liquidity implements BaseSDK {
       map(transformStatus),
       map(filterByPoolInfos),
       switchMap((data) => {
-        // collection all useable token to currencyId
+        if (!data.length) {
+          return of([]);
+        }
 
+        // collection all useable token to currencyId
         data.forEach((item) => {
           const token1 = item[0].args[0][0];
           const token2 = item[0].args[0][1];
@@ -446,7 +449,7 @@ export class Liquidity implements BaseSDK {
 
     // filter opened pools
     const availableBasePools$ = combineLatest(basePools.map((pool) => this.subscribeIsPoolEnabled(pool))).pipe(
-      map((result) => basePools.map((pool, i) => ({ pool, isOpen: result[i] })).filter((i) => i.isOpen))
+      map((result) => basePools.map((pool, i) => ({ pool, isOpen: result[i] })).filter((item) => item.isOpen))
     );
 
     return availableBasePools$.pipe(
