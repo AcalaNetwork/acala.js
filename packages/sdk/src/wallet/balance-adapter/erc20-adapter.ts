@@ -33,7 +33,7 @@ export class ERC20Adapter {
 
     const evmAddress = await this.provider._api.query.evmAccounts.evmAddresses(address);
 
-    return evmAddress.isEmpty ?  computeDefaultEvmAddress(address) : evmAddress.toString();
+    return evmAddress.isEmpty ? computeDefaultEvmAddress(address) : evmAddress.toString();
   }
 
   subscribeBalance(token: Token, address: string) {
@@ -46,7 +46,7 @@ export class ERC20Adapter {
 
     const tokenAddress = getERC20TokenAddressFromName(token.name);
     const contract = this.getERC20Contract(tokenAddress);
-    const balance$ = new Subject<BalanceData >();
+    const balance$ = new Subject<BalanceData>();
 
     this.caches[cacheKey] = balance$.pipe(shareReplay(1));
 
