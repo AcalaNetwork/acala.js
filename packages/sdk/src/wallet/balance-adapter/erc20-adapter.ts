@@ -1,16 +1,23 @@
 import { EvmRpcProvider } from '@acala-network/eth-providers';
+import { computeDefaultEvmAddress } from '@acala-network/eth-providers/lib/utils';
 import { FixedPointNumber, getERC20TokenAddressFromName, Token } from '@acala-network/sdk-core';
 // eslint-disable-next-line camelcase
 import { Erc20__factory } from '../../abis/types/factories/Erc20__factory';
 import { isAddress } from '@ethersproject/address';
 import { from, Observable, Subject } from 'rxjs';
-import { filter, finalize } from 'rxjs/operators';
+import { filter, finalize, shareReplay } from 'rxjs/operators';
 import { BalanceData } from '../type';
 import { AnyFunction } from '@polkadot/types/types';
 import { NotERC20TokenName } from '@acala-network/sdk-core/errors';
 
 export class ERC20Adapter {
-  constructor(private provider: EvmRpcProvider) {}
+  private provider: EvmRpcProvider;
+  private caches: Record<string, Observable<BalanceData>>;
+
+  constructor(provider: EvmRpcProvider) {
+    this.provider = provider;
+    this.caches = {};
+  }
 
   private getERC20Contract(address: string) {
     if (!isAddress(address)) throw new Error('is not erc20 address');
@@ -19,20 +26,33 @@ export class ERC20Adapter {
     return Erc20__factory.connect(address, this.provider);
   }
 
-  private getEVMAddress(address: string) {
+  private async getEVMAddress(address: string) {
     if (address.startsWith('0x') && isAddress(address)) return address;
 
-    return this.provider.getEvmAddress(address);
+    if (!this.provider._api) throw new Error(`can't get api from evm providier`);
+
+    const evmAddress = await this.provider._api.query.evmAccounts.evmAddresses(address);
+
+    return evmAddress.isEmpty ? computeDefaultEvmAddress(address) : evmAddress.toString();
   }
 
   subscribeBalance(token: Token, address: string) {
     if (!token.isERC20) throw new NotERC20TokenName(token.name);
 
+    const cacheKey = `${token.name}-${address}`;
+
+    // hit caches
+    if (this.caches?.[cacheKey]) return this.caches[cacheKey];
+
     const tokenAddress = getERC20TokenAddressFromName(token.name);
     const contract = this.getERC20Contract(tokenAddress);
-    const balance$ = new Subject<BalanceData | undefined>();
+    const balance$ = new Subject<BalanceData>();
+
+    this.caches[cacheKey] = balance$.pipe(shareReplay(1));
 
     const run = async () => {
+      await this.provider.isReady();
+
       const evmAddress = await this.getEVMAddress(address);
       const balance = await contract.balanceOf(evmAddress);
 
@@ -72,7 +92,7 @@ export class ERC20Adapter {
 
     run().then((unsub) => (unsubscriber = unsub));
 
-    return balance$.asObservable().pipe(
+    return this.caches[cacheKey].pipe(
       finalize(() => {
         unsubscriber && unsubscriber();
       }),
