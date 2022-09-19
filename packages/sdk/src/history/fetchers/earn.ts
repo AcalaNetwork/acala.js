@@ -12,8 +12,8 @@ export interface EarnFetchParams extends BaseFetchParams {
 interface Node {
   id: string;
   addressId: string;
-  blockId: string;
-  extrinsicId: string;
+  blockNumber: string;
+  extrinsic: string;
   timestamp: string;
   tokenId: string;
   // DepositDexShare or WithdrawDexShare
@@ -62,8 +62,8 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
         pool
         actualAmount
         deductionAmount
-        blockId
-        extrinsicId
+        blockNumber
+        extrinsic
         timestamp
       }
     `;
@@ -75,8 +75,8 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
         pool
         actualPayout
         deductionAmount
-        blockId
-        extrinsicId
+        blockNumber
+        extrinsic
         timestamp
       }
     `;
@@ -86,8 +86,8 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
         addressId
         tokenId
         amount
-        blockId
-        extrinsicId
+        blockNumber
+        extrinsic
         timestamp
       }
     `;
@@ -139,12 +139,12 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
         message: this.createMessage('claimRewards', item),
         resolveLinks: resolveLinks(
           getChainType(this.configs.wallet.consts.runtimeChain),
-          item.extrinsicId,
-          item.blockId
+          item.extrinsic,
+          item.blockNumber
         ),
         method: 'incentives.ClaimRewards',
-        extrinsicHash: item.extrinsicId,
-        blockNumber: item.blockId
+        extrinsicHash: item.extrinsic,
+        blockNumber: item.blockNumber
       };
     });
     const payoutRewards = data.payoutRewards.nodes.map((item) => {
@@ -153,12 +153,12 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
         message: this.createMessage('payoutRewards', item),
         resolveLinks: resolveLinks(
           getChainType(this.configs.wallet.consts.runtimeChain),
-          item.extrinsicId,
-          item.blockId
+          item.extrinsic,
+          item.blockNumber
         ),
         method: 'incentives.PayoutRewards',
-        extrinsicHash: item.extrinsicId,
-        blockNumber: item.blockId
+        extrinsicHash: item.extrinsic,
+        blockNumber: item.blockNumber
       };
     });
 
@@ -168,12 +168,12 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
         message: this.createMessage('depositDexShares', item),
         resolveLinks: resolveLinks(
           getChainType(this.configs.wallet.consts.runtimeChain),
-          item.extrinsicId,
-          item.blockId
+          item.extrinsic,
+          item.blockNumber
         ),
         method: 'incentives.DepositDexShare',
-        extrinsicHash: item.extrinsicId,
-        blockNumber: item.blockId
+        extrinsicHash: item.extrinsic,
+        blockNumber: item.blockNumber
       };
     });
 
@@ -183,12 +183,12 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
         message: this.createMessage('withdrawDexShares', item),
         resolveLinks: resolveLinks(
           getChainType(this.configs.wallet.consts.runtimeChain),
-          item.extrinsicId,
-          item.blockId
+          item.extrinsic,
+          item.blockNumber
         ),
         method: 'incentives.WithdrawDexShare',
-        extrinsicHash: item.extrinsicId,
-        blockNumber: item.blockId
+        extrinsicHash: item.extrinsic,
+        blockNumber: item.blockNumber
       };
     });
 
