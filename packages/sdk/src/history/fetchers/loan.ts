@@ -172,13 +172,10 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
       return {
         data: item,
         message: this.createLiquidityMessage(item),
-        resolveLinks: resolveLinks(
-          getChainType(this.configs.wallet.consts.runtimeChain),
-          item.extrinsicId,
-          item.blockId
-        ),
+        // ignore the extrinsic of liquid unsafes position event for that subscan can't resolve the link correctly
+        resolveLinks: resolveLinks(getChainType(this.configs.wallet.consts.runtimeChain), undefined, item.blockId),
         method: 'cdpEngine.LiquidateUnsafeCDP',
-        extrinsicHash: item.extrinsicId,
+        extrinsicHash: '',
         blockNumber: item.blockId
       };
     });
@@ -250,7 +247,7 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
     const { stableToken } = this.configs.wallet.getPresetTokens();
     const collateral = FixedPointNumber.fromInner(data.collateralAmount, collateralToken?.decimals);
     const liquidationStrategy = FixedPointNumber.fromInner(data.liquidationStrategy, stableToken.decimals);
-    const debit = FixedPointNumber.fromInner(data.badDebitVolumeUSD, stableToken?.decimals);
+    const debit = FixedPointNumber.fromInner(data.badDebitVolumeUSD);
     debit.forceSetPrecision(stableToken?.decimals || 12);
     return `${collateralToken?.display} position(${collateral.toNumber(6)} ${
       collateralToken?.display
