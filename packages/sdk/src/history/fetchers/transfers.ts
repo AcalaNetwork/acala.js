@@ -18,9 +18,9 @@ interface FetchResult {
       fromId: string;
       toId: string;
       tokenId: string;
-      blockId: string;
+      blockNumber: string;
       amount: string;
-      extrinsicId: string;
+      extrinsic: string;
       timestamp: Date;
     }[];
   };
@@ -54,9 +54,9 @@ export class Transfers extends BaseHistoryFetcher<TransfersFetchParams> {
         fromId
         toId
         tokenId
-        blockId
+        blockNumber
         amount
-        extrinsicId
+        extrinsic
         timestamp
       }
     `;
@@ -94,12 +94,12 @@ export class Transfers extends BaseHistoryFetcher<TransfersFetchParams> {
           message: this.createMessage(item.fromId, item.toId, item.tokenId, item.amount),
           resolveLinks: resolveLinks(
             getChainType(this.configs.wallet.consts.runtimeChain),
-            item.extrinsicId,
-            item.blockId
+            item.extrinsic,
+            item.blockNumber
           ),
           method: 'balances.Transfer',
-          extrinsicHash: item.extrinsicId,
-          blockNumber: item.blockId
+          extrinsicHash: item.extrinsic,
+          blockNumber: item.blockNumber
         };
       });
     }

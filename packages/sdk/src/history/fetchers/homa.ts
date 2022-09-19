@@ -16,8 +16,8 @@ interface FetchResult {
       addressId: string;
       amount: string;
       allowFastMatch: string;
-      blockId: string;
-      extrinsicId: string;
+      blockNumber: string;
+      extrinsic: string;
       timestamp: string;
     }[];
   };
@@ -27,8 +27,8 @@ interface FetchResult {
       addressId: string;
       amount: string;
       extraFee: string;
-      blockId: string;
-      extrinsicId: string;
+      blockNumber: string;
+      extrinsic: string;
       timestamp: string;
     }[];
   };
@@ -41,8 +41,8 @@ interface FetchResult {
       stakingCurrencyAmount: string;
       liquidAmountReceived: string;
       liquidAmountAddedToVoid: string;
-      blockId: string;
-      extrinsicId: string;
+      blockNumber: string;
+      extrinsic: string;
       timestamp: string;
     }[];
   };
@@ -51,8 +51,8 @@ interface FetchResult {
       id: string;
       addressId: string;
       amount: string;
-      blockId: string;
-      extrinsicId: string;
+      blockNumber: string;
+      extrinsic: string;
       timestamp: string;
     }[];
   };
@@ -62,8 +62,8 @@ interface FetchResult {
       addressId: string;
       stakingAmountRedeemed: string;
       liquidAmountDeducted: string;
-      blockId: string;
-      extrinsicId: string;
+      blockNumber: string;
+      extrinsic: string;
       timestamp: string;
     }[];
   };
@@ -74,8 +74,8 @@ interface FetchResult {
       eraIndexWhenUnbond: string;
       liquidAmount: string;
       unbondingStakingAmount: string;
-      blockId: string;
-      extrinsicId: string;
+      blockNumber: string;
+      extrinsic: string;
       timestamp: string;
     }[];
   };
@@ -86,8 +86,8 @@ interface FetchResult {
       matchedLiquidAmount: string;
       feeInLiquid: string;
       redeemedStakingAmount: string;
-      blockId: string;
-      extrinsicId: string;
+      blockNumber: string;
+      extrinsic: string;
       timestamp: string;
     }[];
   };
@@ -111,8 +111,8 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
         addressId
         amount
         allowFastMatch
-        blockId
-        extrinsicId
+        blockNumber
+        extrinsic 
         timestamp
       }
     `;
@@ -122,8 +122,8 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
         addressId
         amount
         extraFee
-        blockId
-        extrinsicId
+        blockNumber
+        extrinsic 
         timestamp
       }
     `;
@@ -136,8 +136,8 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
         stakingCurrencyAmount
         liquidAmountReceived
         liquidAmountAddedToVoid
-        blockId
-        extrinsicId
+        blockNumber
+        extrinsic 
         timestamp
       }
     `;
@@ -146,8 +146,8 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
         id
         addressId
         amount
-        blockId
-        extrinsicId
+        blockNumber
+        extrinsic 
         timestamp
       }
     `;
@@ -157,8 +157,8 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
         addressId
         stakingAmountRedeemed
         liquidAmountDeducted
-        blockId
-        extrinsicId
+        blockNumber
+        extrinsic 
         timestamp
       }
     `;
@@ -169,8 +169,8 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
         eraIndexWhenUnbond
         liquidAmount
         unbondingStakingAmount
-        blockId
-        extrinsicId
+        blockNumber
+        extrinsic 
         timestamp
       }
     `;
@@ -181,8 +181,8 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
         matchedLiquidAmount
         feeInLiquid
         redeemedStakingAmount
-        blockId
-        extrinsicId
+        blockNumber
+        extrinsic 
         timestamp
       }
     `;
@@ -256,12 +256,12 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
         message: this.createRequestedRedeemsMessage(item.amount, liquidToken),
         resolveLinks: resolveLinks(
           getChainType(this.configs.wallet.consts.runtimeChain),
-          item.extrinsicId,
-          item.blockId
+          item.extrinsic,
+          item.blockNumber
         ),
         method: 'homa.RequestedRedeem',
-        extrinsicHash: item.extrinsicId,
-        blockNumber: item.blockId
+        extrinsicHash: item.extrinsic,
+        blockNumber: item.blockNumber
       };
     });
     const redeemRequesteds = data.redeemRequesteds.nodes.map((item) => {
@@ -270,12 +270,12 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
         message: this.createRequestedRedeemsMessage(item.amount, liquidToken),
         resolveLinks: resolveLinks(
           getChainType(this.configs.wallet.consts.runtimeChain),
-          item.extrinsicId,
-          item.blockId
+          item.extrinsic,
+          item.blockNumber
         ),
         method: 'homaLite.RedeemRequested',
-        extrinsicHash: item.extrinsicId,
-        blockNumber: item.blockId
+        extrinsicHash: item.extrinsic,
+        blockNumber: item.blockNumber
       };
     });
     const mints = data.mints.nodes.map((item) => {
@@ -286,12 +286,12 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
         message: this.createMintsMessage(staked, minted, liquidToken, stakingToken),
         resolveLinks: resolveLinks(
           getChainType(this.configs.wallet.consts.runtimeChain),
-          item.extrinsicId,
-          item.blockId
+          item.extrinsic,
+          item.blockNumber
         ),
         method: 'homa.Minted',
-        extrinsicHash: item.extrinsicId,
-        blockNumber: item.blockId
+        extrinsicHash: item.extrinsic,
+        blockNumber: item.blockNumber
       };
     });
     const redeemRequestCancelleds = data.redeemRequestCancelleds.nodes.map((item) => {
@@ -300,12 +300,12 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
         message: this.createCamcelledsMessage(item.amount, liquidToken),
         resolveLinks: resolveLinks(
           getChainType(this.configs.wallet.consts.runtimeChain),
-          item.extrinsicId,
-          item.blockId
+          item.extrinsic,
+          item.blockNumber
         ),
         method: 'homa.RedeemRequestCancelled',
-        extrinsicHash: item.extrinsicId,
-        blockNumber: item.blockId
+        extrinsicHash: item.extrinsic,
+        blockNumber: item.blockNumber
       };
     });
     const redeemeds = data.redeemeds.nodes.map((item) => {
@@ -319,12 +319,12 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
         ),
         resolveLinks: resolveLinks(
           getChainType(this.configs.wallet.consts.runtimeChain),
-          item.extrinsicId,
-          item.blockId
+          item.extrinsic,
+          item.blockNumber
         ),
         method: 'homaLite.Redeemed',
-        extrinsicHash: item.extrinsicId,
-        blockNumber: item.blockId
+        extrinsicHash: item.extrinsic,
+        blockNumber: item.blockNumber
       };
     });
     const redeemedByUnbonds = data.redeemedByUnbonds.nodes.map((item) => {
@@ -338,12 +338,12 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
         ),
         resolveLinks: resolveLinks(
           getChainType(this.configs.wallet.consts.runtimeChain),
-          item.extrinsicId,
-          item.blockId
+          item.extrinsic,
+          item.blockNumber
         ),
         method: 'homa.RedeemedByUnbond',
-        extrinsicHash: item.extrinsicId,
-        blockNumber: item.blockId
+        extrinsicHash: item.extrinsic,
+        blockNumber: item.blockNumber
       };
     });
     const redeemedByFastMatches = data.redeemedByFastMatches.nodes.map((item) => {
@@ -357,12 +357,12 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
         ),
         resolveLinks: resolveLinks(
           getChainType(this.configs.wallet.consts.runtimeChain),
-          item.extrinsicId,
-          item.blockId
+          item.extrinsic,
+          item.blockNumber
         ),
         method: 'homa.RedeemedByFastMatch',
-        extrinsicHash: item.extrinsicId,
-        blockNumber: item.blockId
+        extrinsicHash: item.extrinsic,
+        blockNumber: item.blockNumber
       };
     });
 
