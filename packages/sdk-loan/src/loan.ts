@@ -107,6 +107,7 @@ export class LoanRx {
           const requiredCollateral = this.getRequiredCollateral(debitAmount, requiredCollateralRatio, price);
 
           const canGenerate = this.getCanGenerate(
+            params,
             collateralAmount,
             debitAmount,
             requiredCollateralRatio,
@@ -195,12 +196,22 @@ export class LoanRx {
   }
 
   private getCanGenerate(
+    params: LoanParams,
     collateralAmount: FixedPointNumber,
     currentDebitAmount: FixedPointNumber,
     requiredCollateralRatio: FixedPointNumber,
     stableCoinPrice: FixedPointNumber,
     slippage = FixedPointNumber.ZERO
   ): FixedPointNumber {
+    const currentTotalDebit = FixedPointNumber.fromInner(
+      params.totalDebit.toString(),
+      this.stableCoinToken.decimals
+    ).mul(params.debitExchangeRate);
+    const maximumTotalDebitValue = FixedPointNumber.fromInner(
+      params.maximumTotalDebitValue.toString(),
+      this.stableCoinToken.decimals
+    );
+
     const result = collateralAmount
       .div(requiredCollateralRatio)
       .minus(currentDebitAmount)
@@ -209,7 +220,7 @@ export class LoanRx {
 
     if (result.isLessThan(FixedPointNumber.ZERO) || !result.isFinaite()) return FixedPointNumber.ZERO;
 
-    return result;
+    return maximumTotalDebitValue.sub(currentTotalDebit).min(result);
   }
 
   private getLoanParams() {
