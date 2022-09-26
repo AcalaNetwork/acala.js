@@ -344,7 +344,7 @@ __metadata:
     "@certusone/wormhole-sdk": ^0.5.0
     "@grpc/grpc-js": ^1.6.8
     "@improbable-eng/grpc-web-node-http-transport": ^0.15.0
-    "@nuts-finance/sdk-stable-asset": ^1.1.16
+    "@nuts-finance/sdk-stable-asset": ^1.2.0
     "@polkadot/api": ^8.5.1
     "@polkadot/types": ^8.5.1
     "@typechain/ethers-v5": ^10.1.0
@@ -3243,9 +3243,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nuts-finance/sdk-stable-asset@npm:^1.1.16":
-  version: 1.1.16
-  resolution: "@nuts-finance/sdk-stable-asset@npm:1.1.16"
+"@nuts-finance/sdk-stable-asset@npm:^1.2.0":
+  version: 1.2.7
+  resolution: "@nuts-finance/sdk-stable-asset@npm:1.2.7"
   dependencies:
     "@acala-network/sdk": 4.1.4-3
     "@acala-network/sdk-core": 4.1.4-3
@@ -3256,7 +3256,7 @@ __metadata:
     bignumber.js: ^9.0.0
     lodash: ^4.17.20
     rxjs: ^7.4.0
-  checksum: cf0ef63a57c711d1641bb6361ece796b05bcdc9ac4c57d95a2c95a4a27f0f5b4fe2316d9f18bf94e5eff714ded05e877eead8d83e132e6ed26a83614ffca133b
+  checksum: 9891256b20b0f78434a70e15e4bd70bf7a43aa93fe7f769fe976d154661df330d874a01880af29d128f2dbe63e4aded80be7e7cfc8434d1578af1462c031616b
   languageName: node
   linkType: hard
 
