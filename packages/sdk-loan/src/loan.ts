@@ -15,6 +15,8 @@ export interface LoanParams {
   liquidationRatio: FixedPointNumber;
   requiredCollateralRatio: FixedPointNumber;
   interestRatePerSec: FixedPointNumber;
+  maximumTotalDebitValue: FixedPointNumber;
+  totalDebit: FixedPointNumber;
 }
 
 export interface LoanPosition extends LoanParams {
@@ -112,7 +114,7 @@ export class LoanRx {
             FixedPointNumber.ZERO
           );
 
-          const maxGenerate = this.getMaxGenerate(collateralAmount, requiredCollateralRatio);
+          const maxGenerate = this.getMaxGenerate(params, collateralAmount, requiredCollateralRatio);
           const minCollateral = debitAmount.isZero() ? token.ed.mul(new FixedPointNumber(100)) : FixedPointNumber.ZERO;
 
           return {
@@ -136,8 +138,24 @@ export class LoanRx {
     }
   );
 
-  private getMaxGenerate(collateralAmount: FixedPointNumber, requiredCollateralRatio: FixedPointNumber) {
-    return collateralAmount.div(requiredCollateralRatio);
+  private getMaxGenerate(
+    params: LoanParams,
+    collateralAmount: FixedPointNumber,
+    requiredCollateralRatio: FixedPointNumber
+  ) {
+    const currentTotalDebit = FixedPointNumber.fromInner(
+      params.totalDebit.toString(),
+      this.stableCoinToken.decimals
+    ).mul(params.debitExchangeRate);
+    const maximumTotalDebitValue = FixedPointNumber.fromInner(
+      params.maximumTotalDebitValue.toString(),
+      this.stableCoinToken.decimals
+    );
+
+    return maximumTotalDebitValue
+      .sub(currentTotalDebit)
+      .min(collateralAmount.div(requiredCollateralRatio))
+      .max(FixedPointNumber.ZERO);
   }
 
   private getRequiredCollateral(
@@ -195,14 +213,19 @@ export class LoanRx {
   }
 
   private getLoanParams() {
-    /* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */
-    return ((this.api.derive as any).loan.loanType(this.currency) as Observable<DerivedLoanType>).pipe(
-      map((params: DerivedLoanType): LoanParams => {
+    return combineLatest({
+      totalPositions: this.api.query.loans.totalPositions(this.currency),
+      /* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */
+      params: (this.api.derive as any).loan.loanType(this.currency) as Observable<DerivedLoanType>
+    }).pipe(
+      map(({ totalPositions, params }) => {
         return {
           debitExchangeRate: FixedPointNumber.fromInner(params.debitExchangeRate.toString()),
           liquidationRatio: FixedPointNumber.fromInner(params.liquidationRatio.toString()),
           requiredCollateralRatio: FixedPointNumber.fromInner(params.requiredCollateralRatio.toString()),
-          interestRatePerSec: FixedPointNumber.fromInner(params.interestRatePerSec.toString())
+          interestRatePerSec: FixedPointNumber.fromInner(params.interestRatePerSec.toString()),
+          maximumTotalDebitValue: FixedPointNumber.fromInner(params.maximumTotalDebitValue.toString()),
+          totalDebit: FixedPointNumber.fromInner(totalPositions.debit.toString())
         };
       })
     );
