@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk-wallet",
-  "version": "4.1.7-5",
+  "version": "4.1.7-6",
   "description": "the wallet sdk for acala/karura network",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
