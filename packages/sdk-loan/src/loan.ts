@@ -152,7 +152,10 @@ export class LoanRx {
       this.stableCoinToken.decimals
     );
 
-    return maximumTotalDebitValue.mul(currentTotalDebit).min(collateralAmount.div(requiredCollateralRatio));
+    return maximumTotalDebitValue
+      .sub(currentTotalDebit)
+      .min(collateralAmount.div(requiredCollateralRatio))
+      .max(FixedPointNumber.ZERO);
   }
 
   private getRequiredCollateral(
