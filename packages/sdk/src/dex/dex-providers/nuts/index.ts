@@ -13,6 +13,7 @@ import { ISubmittableResult } from '@polkadot/types/types';
 interface NutsDexConfigs {
   api: AnyApi;
   wallet: Wallet;
+  stableAssets?: StableAssetRx;
 }
 
 export class NutsDex implements BaseSwap {
@@ -22,7 +23,7 @@ export class NutsDex implements BaseSwap {
   public readonly tradingPairs$: Observable<TradingPair[]>;
   private availablePools$: BehaviorSubject<PoolInfo[]>;
 
-  constructor({ api, wallet }: NutsDexConfigs) {
+  constructor({ api, wallet, stableAssets }: NutsDexConfigs) {
     this.api = api;
     this.wallet = wallet;
 
@@ -30,7 +31,7 @@ export class NutsDex implements BaseSwap {
       throw new NutsDexOnlySupportApiRx();
     }
 
-    this.stableAsset = new StableAssetRx(this.api as ApiRx);
+    this.stableAsset = stableAssets ?? new StableAssetRx(this.api as ApiRx);
     this.tradingPairs$ = this.initTradingPairs$();
     this.availablePools$ = new BehaviorSubject<PoolInfo[]>([]);
   }

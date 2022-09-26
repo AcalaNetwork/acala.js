@@ -1,7 +1,7 @@
 import * as dex from '../dex';
 import { Fixed18 } from '../fixed-18';
 
-describe('calcault target amount', () => {
+describe.skip('calcault target amount', () => {
   const fee = Fixed18.fromRational(1, 100);
   test('swap target amount should work', () => {
     const supplyPool = 10000;
