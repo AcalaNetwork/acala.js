@@ -83,7 +83,7 @@ export const subscribeLiquidCrowdloanTokenPrice = (api: AnyApi, stakingTokenPric
         const args = extrinsic.method.args[0] as any as CumulusPrimitivesParachainInherentParachainInherentData;
         const relayChainBlockNumber = args?.validationData?.relayParentNumber?.toNumber();
 
-        if (!CROWDLOAN_TOKEN_LEASE[lease]) return FixedPointNumber.ZERO;
+        if (!LEASE_BLOCK_NUMBERS[lease]) return FixedPointNumber.ZERO;
 
         return getLiquidCrowdloanPrice(api, lease, relayChainBlockNumber, stakingTokenPrice);
       }
