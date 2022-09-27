@@ -69,7 +69,7 @@ export class MarketPriceProvider implements PriceProvider {
       );
     }
 
-    // try get price from backup price
+    // fetch prices from backup price when base prices service failed
     result = await fetch.get(`${BACKUP_PRICE_API}?token=${currencies.join(',')}&from=market`);
 
     if (result?.status === 200) {
