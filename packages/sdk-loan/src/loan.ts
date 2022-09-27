@@ -47,8 +47,15 @@ export class LoanRx {
   private wallet: Wallet;
   private loanPosition$: Observable<Position>;
   private readonly loanParams$: Observable<LoanParams>;
+  private priceProvider: PriceProviderType;
 
-  constructor(api: ApiRx, currency: MaybeCurrency, address: string, wallet: Wallet) {
+  constructor(
+    api: ApiRx,
+    currency: MaybeCurrency,
+    address: string,
+    wallet: Wallet,
+    priceProvider: PriceProviderType = PriceProviderType.ORACLE
+  ) {
     const collateralToken = wallet.__getToken(currency);
     const stableCoinToken = wallet.__getToken(api.consts.cdpEngine.getStableCurrencyId);
 
@@ -60,6 +67,7 @@ export class LoanRx {
     this.collateralToken = collateralToken;
     this.stableCoinToken = stableCoinToken;
     this.wallet = wallet;
+    this.priceProvider = priceProvider;
 
     this.loanPosition$ = this.getLoanPosition();
     this.loanParams$ = this.getLoanParams();
@@ -88,7 +96,7 @@ export class LoanRx {
       return combineLatest({
         params: this.loanParams$,
         position: this.loanPosition$,
-        price: this.wallet.subscribePrice(this.currency, PriceProviderType.ORACLE),
+        price: this.wallet.subscribePrice(this.currency, this.priceProvider),
         token: this.wallet.subscribeToken(this.currency)
       }).pipe(
         map(({ params, position, price, token }) => {

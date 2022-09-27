@@ -11,7 +11,9 @@ import {
   forceToCurrencyName,
   TokenType,
   isDexShareName,
-  FixedPointNumber
+  FixedPointNumber,
+  isLiquidCrowdloanName,
+  getLiquidCrowdloanIdFromName
 } from '@acala-network/sdk-core';
 import { BehaviorSubject, combineLatest, Observable, of, firstValueFrom } from 'rxjs';
 import { map, switchMap, filter, catchError } from 'rxjs/operators';
@@ -31,6 +33,7 @@ import { AcalaBalanceAdapter } from './balance-adapter/acala';
 import { TokenProvider } from './token-provider/type';
 import { AcalaTokenProvider } from './token-provider/acala';
 import { DIDWeb3Name } from './web3name/did';
+import { subscribeLiquidCrowdloanTokenPrice } from './utils/get-liquid-crowdloan-token-price';
 
 export class Wallet implements BaseSDK {
   private api: AnyApi;
@@ -299,9 +302,8 @@ export class Wallet implements BaseSDK {
       );
     }
 
-    // get liquid token price when price type is market/aggergate/oracle
+    // get liquid token price when type price type isn't dex
     if (isLiquidToken && stakingToken && type !== PriceProviderType.DEX) {
-      // create homa sd for get exchange rate
       return this.homa.env$.pipe(
         filter((env) => !env.exchangeRate.isZero()),
         switchMap((env) =>
@@ -311,6 +313,13 @@ export class Wallet implements BaseSDK {
             })
           )
         )
+      );
+    }
+
+    // get liquid crowdloan token price when the price type is not dex
+    if (isLiquidCrowdloanName(name) && type !== PriceProviderType.DEX) {
+      return this.subscribePrice(stakingToken, type).pipe(
+        switchMap((price) => subscribeLiquidCrowdloanTokenPrice(this.api, price, getLiquidCrowdloanIdFromName(name)))
       );
     }
 
