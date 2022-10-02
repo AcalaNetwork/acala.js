@@ -153,11 +153,11 @@ export class LoanRx {
     requiredCollateralRatio: FixedPointNumber
   ) {
     const currentTotalDebit = FixedPointNumber.fromInner(
-      params.totalDebit.toString(),
+      params.totalDebit.toChainData(),
       this.stableCoinToken.decimals
     ).mul(params.debitExchangeRate);
     const maximumTotalDebitValue = FixedPointNumber.fromInner(
-      params.maximumTotalDebitValue.toString(),
+      params.maximumTotalDebitValue.toChainData(),
       this.stableCoinToken.decimals
     );
 
@@ -212,11 +212,11 @@ export class LoanRx {
     slippage = FixedPointNumber.ZERO
   ): FixedPointNumber {
     const currentTotalDebit = FixedPointNumber.fromInner(
-      params.totalDebit.toString(),
+      params.totalDebit.toChainData(),
       this.stableCoinToken.decimals
     ).mul(params.debitExchangeRate);
     const maximumTotalDebitValue = FixedPointNumber.fromInner(
-      params.maximumTotalDebitValue.toString(),
+      params.maximumTotalDebitValue.toChainData(),
       this.stableCoinToken.decimals
     );
 
