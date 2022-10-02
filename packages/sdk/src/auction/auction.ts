@@ -98,7 +98,7 @@ export class Auction {
     return FixedPointNumber.ZERO;
   }
 
-  public getActualPayByExpectReceive(amount: FixedPointNumber) {
+  public getActualBidAmountByReceive(amount: FixedPointNumber) {
     const { target, initialAmount, stage } = this.inner;
 
     if (stage === 'NORMAL') {
