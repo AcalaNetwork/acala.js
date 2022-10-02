@@ -5,7 +5,7 @@ import { BehaviorSubject, combineLatest, filter, map, Observable, Subscription }
 import { ChainListener, ListenerBlock } from '../utils/chain-listener';
 import { Wallet } from '../wallet';
 import { createAuctionStorages } from './storages';
-import { AuctionBid, AuctionConfigs, AuctionStatus, CollateralAuction } from './types';
+import { AuctionBid, AuctionConfigs, AuctionStage, AuctionStatus, CollateralAuction } from './types';
 
 export class Auction {
   private api: AnyApi;
@@ -60,6 +60,7 @@ export class Auction {
   }
 
   private getMinimumBidAmount(
+    stage: AuctionStage,
     startBlock: bigint,
     currentBlock: bigint,
     target: FixedPointNumber,
@@ -76,7 +77,39 @@ export class Auction {
 
     const lastBid = last || FixedPointNumber.ZERO;
 
+    if (stage === 'REVERSE' && lastBid.isZero()) {
+      return target;
+    }
+
     return target.max(lastBid).mul(incrementSize).add(lastBid);
+  }
+
+  public getActualReceiveByBidAmount(amount: FixedPointNumber) {
+    const { target, initialAmount, stage } = this.inner;
+
+    if (stage === 'NORMAL') {
+      return initialAmount;
+    }
+
+    if (stage === 'REVERSE') {
+      return initialAmount.mul(amount.div(target.amount));
+    }
+
+    return FixedPointNumber.ZERO;
+  }
+
+  public getActualBidAmountByReceive(amount: FixedPointNumber) {
+    const { target, initialAmount, stage } = this.inner;
+
+    if (stage === 'NORMAL') {
+      return target.amount;
+    }
+
+    if (stage === 'REVERSE') {
+      return initialAmount.div(amount).mul(target.amount);
+    }
+
+    return FixedPointNumber.ZERO;
   }
 
   private getCurrentStatusFormBlock(block: ListenerBlock): AuctionStatus | undefined {
@@ -232,7 +265,7 @@ export class Auction {
             amount,
             winner: currentBidAccount,
             endBlock,
-            minimumBidAmount: this.getMinimumBidAmount(startBlock, currentBlock, target, currentBidAmount)
+            minimumBidAmount: this.getMinimumBidAmount(data.stage, startBlock, currentBlock, target, currentBidAmount)
           };
         }
 
@@ -257,7 +290,7 @@ export class Auction {
           const bidRecord = this.createDexTakeBidRecord(block);
           if (bidRecord) {
             data.bids = [bidRecord, ...data.bids];
-            // clear winner for no winner
+            // clear winner beacuse no winner but dex
             data.winner = '';
           }
         }

@@ -51,11 +51,18 @@ export interface AuctionBid {
 
 export type AuctionStatus = 'DEX_TAKE' | 'IN_PROGRESS' | 'CANCELL' | 'DEALT' | 'DEX_TAKE' | 'ABORT';
 
+export type AuctionStage = 'NORMAL' | 'REVERSE';
+
 export interface CollateralAuction {
   id: string;
   status: AuctionStatus;
   // auction collateral
   collateral: Token;
+  // in current version, the auction has two stages
+  // 1. normal: the target is zero so that the user can increase bid value anyway.
+  // 2. reverse: the target is not zero and the use will pay a fixed bid value and decrase the receive collateral amount.
+  // set stage to normal when target amount is zero, otherwise set stage to reverse
+  stage: AuctionStage;
   // initial collateral amount for sale
   initialAmount: FixedPointNumber;
   // current collateral amount for sale
