@@ -14,6 +14,7 @@ export const convertApiResult = (data: any, wallet: Wallet, configs: AuctionList
       const collateral = wallet.__getToken(item.collateral);
       const initAmount = FixedPointNumber.fromInner(item.initAmount, collateral.decimals);
       const amount = FixedPointNumber.fromInner(item.amount, collateral.decimals);
+      const targetAmount = FixedPointNumber.fromInner(item.target || '0', stableToken.decimals);
 
       return {
         id: item.id,
@@ -22,13 +23,14 @@ export const convertApiResult = (data: any, wallet: Wallet, configs: AuctionList
         initialAmount: initAmount,
         amount,
         target: {
-          amount: FixedPointNumber.fromInner(item.target, stableToken.decimals),
+          amount: targetAmount,
           token: stableToken,
         },
+        stage: targetAmount.isZero() ? 'NORMAL' : 'REVERSE',
         refundRecipient: item.refundRecipient,
         winner: item.winner,
         // set zero as default
-        minimumBidAmount: FixedPointNumber.ZERO,
+        minimumBidAmount: targetAmount,
         bids: item.bids.nodes.map((item: any) => {
           const amount = FixedPointNumber.fromInner(item.amount, stableToken.decimals);
           const collateralAmount = FixedPointNumber.fromInner(item.collateralAmount, collateral.decimals);
