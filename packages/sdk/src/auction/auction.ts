@@ -92,7 +92,7 @@ export class Auction {
     }
 
     if (stage === 'REVERSE') {
-      return initialAmount.mul(amount.div(target.amount));
+      return initialAmount.mul(target.amount.div(amount));
     }
 
     return FixedPointNumber.ZERO;
@@ -106,7 +106,7 @@ export class Auction {
     }
 
     if (stage === 'REVERSE') {
-      return initialAmount.div(amount).mul(target.amount);
+      return target.amount.mul(initialAmount.div(amount));
     }
 
     return FixedPointNumber.ZERO;
