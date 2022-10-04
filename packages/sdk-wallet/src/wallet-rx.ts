@@ -250,21 +250,26 @@ export class WalletRx extends WalletBase<ApiRx> {
         return (this.api.rpc as any).oracle.getAllValues(oracleProvider) as Observable<[[OracleKey, TimestampedValue]]>;
       }),
       map((result) => {
-        return result.map((item) => {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          const token = this.tokenMap.get(item[0].asToken.toString())!;
-          const price = FN.fromInner(
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            (item[1]?.value as any)?.value.toString() || '0'
-          );
+        return (
+          result
+            // TODO: should remove
+            .filter((item) => item[0].isToken)
+            .map((item) => {
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              const token = this.tokenMap.get(item[0].asToken.toString())!;
+              const price = FN.fromInner(
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                (item[1]?.value as any)?.value.toString() || '0'
+              );
 
-          return {
-            token,
-            price,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            timestamp: new Date((item[1]?.value as any)?.timestamp.toNumber())
-          };
-        });
+              return {
+                token,
+                price,
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                timestamp: new Date((item[1]?.value as any)?.timestamp.toNumber())
+              };
+            })
+        );
       }),
       shareReplay(1)
     );
