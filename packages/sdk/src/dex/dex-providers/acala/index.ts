@@ -22,7 +22,8 @@ import {
   TradeMode,
   TradingPair,
   CompositeTradingPath,
-  TradingPathItem
+  TradingPathItem,
+  OverwriteCallParams
 } from '../../types';
 import { ExchangeFee, ExpandPath, ExpandPathWithPositions, MidResult } from './types';
 import { calculateExchangeFeeRate, getSupplyAmount, getTargetAmount } from './utils/calculate-helper';
@@ -342,7 +343,10 @@ export class AcalaDex implements BaseSwap {
     return { Dex: result.path[0][1].map((i) => i.toChainData()) };
   }
 
-  public getTradingTx(result: SwapResult): SubmittableExtrinsic<'promise'> | SubmittableExtrinsic<'rxjs'> {
+  public getTradingTx(
+    result: SwapResult,
+    overwrite?: OverwriteCallParams
+  ): SubmittableExtrinsic<'promise'> | SubmittableExtrinsic<'rxjs'> {
     const { path, mode, output, input, acceptiveSlippage } = result;
     const [source, tradePath] = path[0];
 
@@ -353,8 +357,8 @@ export class AcalaDex implements BaseSwap {
 
       return this.api.tx.dex.swapWithExactTarget(
         tradePath.map((i) => i.toChainData()),
-        output.amount.toChainData(),
-        input.amount.mul(slippage).toChainData()
+        overwrite?.output ? overwrite.output.toChainData() : output.amount.toChainData(),
+        overwrite?.input ? overwrite.input.toChainData() : input.amount.mul(slippage).toChainData()
       );
     }
 
@@ -362,8 +366,8 @@ export class AcalaDex implements BaseSwap {
 
     return this.api.tx.dex.swapWithExactSupply(
       tradePath.map((i) => i.toChainData()),
-      input.amount.toChainData(),
-      output.amount.mul(slippage).toChainData()
+      overwrite?.input ? overwrite.input.toChainData() : input.amount.toChainData(),
+      overwrite?.output ? overwrite.output.toChainData() : output.amount.mul(slippage).toChainData()
     );
   }
 }
