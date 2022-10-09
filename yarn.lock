@@ -95,42 +95,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@acala-network/bodhi@npm:^2.4.20":
-  version: 2.4.20
-  resolution: "@acala-network/bodhi@npm:2.4.20"
-  dependencies:
-    "@acala-network/eth-providers": 2.4.20
-    "@ethersproject/abstract-provider": ~5.5.0
-    "@ethersproject/abstract-signer": ~5.5.0
-    "@ethersproject/address": ~5.5.0
-    "@ethersproject/bignumber": ~5.5.0
-    "@ethersproject/bytes": ~5.5.0
-    "@ethersproject/logger": ~5.5.0
-    "@ethersproject/properties": ~5.5.0
-    "@ethersproject/strings": ~5.5.0
-    "@polkadot/api": 8.1.1
-    "@polkadot/keyring": ^9.0.1
-    "@polkadot/types": 8.1.1
-    "@polkadot/util": ^9.0.1
-    "@polkadot/util-crypto": ^9.0.1
-    "@types/bn.js": ~5.1.0
-    bn.js: ~5.2.0
-    ethers: ~5.5.0
-  checksum: 7fc1a16047ac18c91f62a91a9a3c470c86b3d6aa3f8f2bc92cc002c0a01ed04e90d28d05943d48f4eddb9cc46028b26fc4afb15ad05c36e805edfbdd19494e27
-  languageName: node
-  linkType: hard
-
 "@acala-network/contracts@npm:~4.2.0":
   version: 4.2.1
   resolution: "@acala-network/contracts@npm:4.2.1"
   checksum: 9efb65e80daca0ac553918d3b8d18e6ecdcf9a6d54525b9ba8a7e5bdbc7b591514985d3731e355739c09ddb551c71725c3ccc5176b6b14ce329ceb70b8187de5
-  languageName: node
-  linkType: hard
-
-"@acala-network/contracts@npm:~4.3.2":
-  version: 4.3.2
-  resolution: "@acala-network/contracts@npm:4.3.2"
-  checksum: 072a477078040a124ccb0c2fda509f4ffc386e5e896b9cdd6dd1297ec2a9a13d13ff6d2915c1e33c326da3b65d54257aa25a14f809915b999852c8fd4e337b29
   languageName: node
   linkType: hard
 
@@ -167,39 +135,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@acala-network/eth-providers@npm:2.4.20":
-  version: 2.4.20
-  resolution: "@acala-network/eth-providers@npm:2.4.20"
-  dependencies:
-    "@acala-network/contracts": ~4.3.2
-    "@acala-network/eth-transactions": 2.4.20
-    "@acala-network/types": ~4.1.5
-    "@ethersproject/abstract-provider": ~5.5.0
-    "@ethersproject/address": ~5.5.0
-    "@ethersproject/bignumber": ~5.5.0
-    "@ethersproject/bytes": ~5.5.0
-    "@ethersproject/contracts": ~5.5.0
-    "@ethersproject/logger": ~5.5.0
-    "@ethersproject/networks": ~5.5.0
-    "@ethersproject/properties": ~5.5.0
-    "@ethersproject/providers": ~5.5.0
-    "@ethersproject/transactions": ~5.5.0
-    "@ethersproject/wallet": ~5.5.0
-    "@polkadot/api": 8.1.1
-    "@polkadot/api-augment": 8.1.1
-    "@polkadot/api-derive": 8.1.1
-    "@polkadot/keyring": ^9.0.1
-    "@polkadot/types": 8.1.1
-    "@polkadot/util": ^9.0.1
-    "@polkadot/util-crypto": ^9.0.1
-    ethers: ~5.5.0
-    graphql: ~16.0.1
-    graphql-request: ~3.6.1
-    lru-cache: ~7.8.2
-  checksum: b8cc462fb13c4ecf569ba211b7c9a77ac6550c241aec9580ca673412eae207dfc4efe5a9ca87366a6c08e6ff0170f68c32b10edd6e34f26a0928861a1ab54453
-  languageName: node
-  linkType: hard
-
 "@acala-network/eth-transactions@npm:2.4.12":
   version: 2.4.12
   resolution: "@acala-network/eth-transactions@npm:2.4.12"
@@ -215,24 +150,6 @@ __metadata:
     "@ethersproject/wallet": ~5.5.0
     "@polkadot/util-crypto": ^9.0.1
   checksum: 6abf3fe91b889b58aae280f7273b15f9b51095dc81eede75dec134c6c96b899a95155985fdaa54f914745b1ecb846f8da2951b31ba5e94cb8152b26eab770fdc
-  languageName: node
-  linkType: hard
-
-"@acala-network/eth-transactions@npm:2.4.20":
-  version: 2.4.20
-  resolution: "@acala-network/eth-transactions@npm:2.4.20"
-  dependencies:
-    "@ethersproject/address": ~5.5.0
-    "@ethersproject/bignumber": ~5.5.0
-    "@ethersproject/bytes": ~5.5.0
-    "@ethersproject/constants": ~5.5.0
-    "@ethersproject/hash": ~5.5.0
-    "@ethersproject/logger": ~5.5.0
-    "@ethersproject/rlp": ~5.5.0
-    "@ethersproject/transactions": ~5.5.0
-    "@ethersproject/wallet": ~5.5.0
-    "@polkadot/util-crypto": ^9.0.1
-  checksum: f5bc00115e2b6060b1241f61c9aff3307683eb1c2fe116bdefd59b702069ad695c66862a66c78f6507645b156d92432ad13818950ee97da6e3d81c042d8108a0
   languageName: node
   linkType: hard
 
@@ -339,9 +256,9 @@ __metadata:
   resolution: "@acala-network/sdk@workspace:packages/sdk"
   dependencies:
     "@acala-network/api": 4.1.7-13
-    "@acala-network/bodhi": ^2.4.20
     "@acala-network/type-definitions": 4.1.7-13
     "@certusone/wormhole-sdk": ^0.5.0
+    "@ethersproject/bignumber": ^5.7.0
     "@grpc/grpc-js": ^1.6.8
     "@improbable-eng/grpc-web-node-http-transport": ^0.15.0
     "@nuts-finance/sdk-stable-asset": ^1.2.0
@@ -423,7 +340,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@acala-network/types@npm:~4.1.2-11, @acala-network/types@npm:~4.1.5":
+"@acala-network/types@npm:~4.1.2-11":
   version: 4.1.5
   resolution: "@acala-network/types@npm:4.1.5"
   dependencies:
@@ -2165,6 +2082,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ethersproject/bignumber@npm:^5.7.0":
+  version: 5.7.0
+  resolution: "@ethersproject/bignumber@npm:5.7.0"
+  dependencies:
+    "@ethersproject/bytes": ^5.7.0
+    "@ethersproject/logger": ^5.7.0
+    bn.js: ^5.2.1
+  checksum: 8c9a134b76f3feb4ec26a5a27379efb4e156b8fb2de0678a67788a91c7f4e30abe9d948638458e4b20f2e42380da0adacc7c9389d05fce070692edc6ae9b4904
+  languageName: node
+  linkType: hard
+
 "@ethersproject/bytes@npm:5.5.0, @ethersproject/bytes@npm:~5.5.0":
   version: 5.5.0
   resolution: "@ethersproject/bytes@npm:5.5.0"
@@ -2180,6 +2108,15 @@ __metadata:
   dependencies:
     "@ethersproject/logger": ^5.6.0
   checksum: d06ffe3bf12aa8a6588d99b82e40b46a2cbb8b057fc650aad836e3e8c95d4559773254eeeb8fed652066dcf8082e527e37cd2b9fff7ac8cabc4de7c49459a7eb
+  languageName: node
+  linkType: hard
+
+"@ethersproject/bytes@npm:^5.7.0":
+  version: 5.7.0
+  resolution: "@ethersproject/bytes@npm:5.7.0"
+  dependencies:
+    "@ethersproject/logger": ^5.7.0
+  checksum: 66ad365ceaab5da1b23b72225c71dce472cf37737af5118181fa8ab7447d696bea15ca22e3a0e8836fdd8cfac161afe321a7c67d0dde96f9f645ddd759676621
   languageName: node
   linkType: hard
 
@@ -2382,6 +2319,13 @@ __metadata:
   version: 5.6.0
   resolution: "@ethersproject/logger@npm:5.6.0"
   checksum: 6eee38a973c7a458552278971c109a3e5df3c257e433cb959da9a287ea04628d1f510d41b83bd5f9da5ddc05d97d307ed2162a9ba1b4fcc50664e4f60061636c
+  languageName: node
+  linkType: hard
+
+"@ethersproject/logger@npm:^5.7.0":
+  version: 5.7.0
+  resolution: "@ethersproject/logger@npm:5.7.0"
+  checksum: 075ab2f605f1fd0813f2e39c3308f77b44a67732b36e712d9bc085f22a84aac4da4f71b39bee50fe78da3e1c812673fadc41180c9970fe5e486e91ea17befe0d
   languageName: node
   linkType: hard
 
