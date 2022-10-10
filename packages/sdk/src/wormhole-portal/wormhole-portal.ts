@@ -40,14 +40,13 @@ import {
 } from './types';
 import { TransactionRequest } from '@ethersproject/abstract-provider';
 import { BaseProvider } from '@acala-network/eth-providers';
-import { toBN } from '@acala-network/bodhi/lib/utils';
 import { DEFAULT_ROUTERS } from './consts/routers';
 import { arrayify, getAddress, zeroPad } from 'ethers/lib/utils';
 import { BigNumber } from 'ethers';
 import { ApiPromise } from '@polkadot/api';
 import { wormholeVAAAPIS } from './consts/wormhole-vaa-apis';
 import { DEFAULT_TOKENS } from './consts/tokens';
-import { getTxReceiptWithRetry } from './utils';
+import { getTxReceiptWithRetry, toBN } from './utils';
 
 export class WormholePortal implements BaseSDK {
   private apis: {
