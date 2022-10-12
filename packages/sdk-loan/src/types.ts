@@ -9,12 +9,11 @@ export interface LoanSDKParams {
 
 export interface LoanType {
   collateral: Token;
-  debitExchangeRate: FixedPointNumber;
   liquidationRatio: FixedPointNumber;
   requiredCollateralRatio: FixedPointNumber;
   interestRatePerSec: FixedPointNumber;
-  maximumTotalDebitValaue: FixedPointNumber;
-  stableFeeAPR: FixedPointNumber;
+  maximumTotalDebitValue: FixedPointNumber;
+  stableFeeAPR: number;
 }
 
 export type LoanTypes = LoanType[];
