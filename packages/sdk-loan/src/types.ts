@@ -1,10 +1,11 @@
 import { Wallet } from '@acala-network/sdk';
 import { AnyApi, FixedPointNumber, Token } from '@acala-network/sdk-core';
-import { Observable } from 'rxjs';
+import { PriceProviderType } from '@acala-network/sdk/wallet/price-provider/types';
 
 export interface LoanSDKParams {
   api: AnyApi;
   wallet: Wallet;
+  priceProviderType?: PriceProviderType;
 }
 
 export interface LoanType {
@@ -14,33 +15,24 @@ export interface LoanType {
   interestRatePerSec: FixedPointNumber;
   maximumTotalDebitValue: FixedPointNumber;
   stableFeeAPR: number;
+  minimumDebitValue: FixedPointNumber;
 }
 
 export type LoanTypes = LoanType[];
 
 export interface GlobalLoan {
   type: LoanType;
-  totalDebitAmount: FixedPointNumber;
-  totalDebitValue: FixedPointNumber;
-  totalCollateral: FixedPointNumber;
+  debitAmount: FixedPointNumber;
+  debitValue: FixedPointNumber;
+  collateralAmount: FixedPointNumber;
 }
 
-export interface UserLoanStats {
+export interface UserLoan {
+  address: string;
   type: LoanType;
   debitAmount: FixedPointNumber;
   debitValue: FixedPointNumber;
   collateralAmount: FixedPointNumber;
-  collateralValue: FixedPointNumber;
-  collateralRatio: FixedPointNumber;
-  requiredCollateral: FixedPointNumber;
-  liquidationPrice: FixedPointNumber;
-  liquidationRatio: FixedPointNumber;
-}
-
-export interface LoanSDKInterface {
-  getLoanTypes: () => Promise<LoanTypes>;
-  subscribeGlobalLoan: (collateral: Token) => Observable<GlobalLoan>;
-  subscribeUesrLoan: (address: string, collateral: Token) => Observable<UserLoanStats>;
 }
 
 export interface AdjustLoanParams {
@@ -49,6 +41,8 @@ export interface AdjustLoanParams {
   collateral?: FixedPointNumber;
 }
 
-export interface LoanCalculator {
-  adjust: (loan: UserLoanStats, params: AdjustLoanParams) => UserLoanStats;
+export enum LoanStatus {
+  'WARNING',
+  'SAFE',
+  'DANGEROUS'
 }

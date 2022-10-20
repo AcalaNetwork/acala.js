@@ -6,7 +6,7 @@ import {
   ModuleCdpEngineRiskManagementParams,
   AcalaPrimitivesCurrencyCurrencyId
 } from '@acala-network/types/interfaces/types-lookup';
-import { StorageKey } from '@polkadot/types';
+import { StorageKey, Option, u128 } from '@polkadot/types';
 
 export const createStorages = (api: AnyApi) => {
   return {
@@ -18,10 +18,26 @@ export const createStorages = (api: AnyApi) => {
       });
     }),
     allCollateralParams: memoize(() => {
-      return Storage.create<[StorageKey<[AcalaPrimitivesCurrencyCurrencyId]>, ModuleCdpEngineRiskManagementParams][]>({
+      return Storage.create<
+        [StorageKey<[AcalaPrimitivesCurrencyCurrencyId]>, Option<ModuleCdpEngineRiskManagementParams>][]
+      >({
         api: api,
         path: 'query.cdpEngine.collateralParams.entries',
         params: []
+      });
+    }),
+    globalPositions: memoize((token: Token) => {
+      return Storage.create<ModuleLoansPosition>({
+        api: api,
+        path: 'query.loans.totalPositions',
+        params: [token.toChainData()]
+      });
+    }),
+    exchangeRate: memoize((token: Token) => {
+      return Storage.create<Option<u128>>({
+        api: api,
+        path: 'query.cdpEngine.debitExchangeRate',
+        params: [token.toChainData()]
       });
     })
   };
