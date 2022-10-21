@@ -1,5 +1,15 @@
 import { AnyApi, FixedPointNumber, Token } from '@acala-network/sdk-core';
-import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, Observable, of, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  combineLatest,
+  filter,
+  firstValueFrom,
+  map,
+  Observable,
+  of,
+  switchMap
+} from 'rxjs';
 import { BaseSDK } from '../types';
 import { Wallet } from '../wallet';
 import { NoTradingPathError } from './errors';
@@ -13,8 +23,7 @@ import {
   CompositeTradingPath,
   SwapResult,
   AggregateDexSwapResult,
-  SwapSource,
-  OverwriteCallParams
+  SwapSource
 } from './types';
 
 export class AggregateDex implements BaseSDK {
@@ -183,6 +192,14 @@ export class AggregateDex implements BaseSDK {
           result,
           tracker: Object.values(tracker)
         };
+      }),
+      catchError((e) => {
+        return of({
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          error: e,
+          result: undefined as any as SwapResult,
+          tracker: []
+        });
       })
     );
   }
@@ -261,6 +278,14 @@ export class AggregateDex implements BaseSDK {
           result,
           tracker: Object.values(tracker)
         };
+      }),
+      catchError((e) => {
+        return of({
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          error: e,
+          result: undefined as any as SwapResult,
+          tracker: []
+        });
       })
     );
   }
@@ -277,10 +302,14 @@ export class AggregateDex implements BaseSDK {
   }
 
   private getBestSwapResult(mode: TradeMode, resultList: AggregateDexSwapResult[]) {
+    const successedList = resultList.filter((item) => !!item.result);
+
+    if (successedList.length === 0) throw resultList[0].error;
+
     if (mode === 'EXACT_INPUT') {
-      const result = resultList.slice(1).reduce((acc, cur) => {
+      const result = successedList.slice(1).reduce((acc, cur) => {
         return acc.result.output.amount.gt(cur.result.output.amount) ? acc : cur;
-      }, resultList[0]);
+      }, successedList[0]);
 
       result.result.call = this.getTradingTx(result);
 
@@ -288,9 +317,9 @@ export class AggregateDex implements BaseSDK {
     }
 
     // exact output
-    const result = resultList.slice(1).reduce((acc, cur) => {
+    const result = successedList.slice(1).reduce((acc, cur) => {
       return acc.result.input.amount.lt(cur.result.input.amount) ? acc : cur;
-    }, resultList[0]);
+    }, successedList[0]);
 
     result.result.call = this.getTradingTx(result);
 
@@ -336,21 +365,21 @@ export class AggregateDex implements BaseSDK {
     });
   }
 
-  public getTradingTx(result: AggregateDexSwapResult, overwrite?: OverwriteCallParams) {
+  public getTradingTx(result: AggregateDexSwapResult) {
     const { path, output, input, acceptiveSlippage, mode } = result.result;
 
     // only contains acala dex
     if (path.length === 1 && path[0][0] === 'acala') {
       const provider = this.getProvider('acala');
 
-      return provider.getTradingTx(result.tracker[0], overwrite);
+      return provider.getTradingTx(result.tracker[0]);
     }
 
     // only contains nuts dex
     if (path.length === 1 && path[0][0] === 'nuts') {
       const provider = this.getProvider('nuts');
 
-      return provider.getTradingTx(result.tracker[0], overwrite);
+      return provider.getTradingTx(result.tracker[0]);
     }
 
     if (mode === 'EXACT_OUTPUT') {
@@ -359,8 +388,8 @@ export class AggregateDex implements BaseSDK {
       // create aggregate tx
       return this.api.tx.aggregatedDex.swapWithExactSupply(
         this.convertCompositeTradingPathToTxParams(result.tracker),
-        overwrite?.input ? overwrite.input.toChainData() : input.amount.mul(slippage).toChainData(),
-        overwrite?.output ? overwrite.output.toChainData() : output.amount.toChainData()
+        input.amount.mul(slippage).toChainData(),
+        output.amount.toChainData()
       );
     }
 

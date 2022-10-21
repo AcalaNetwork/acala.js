@@ -93,6 +93,7 @@ export interface AggregateDexConfigs {
 }
 
 export interface AggregateDexSwapResult {
+  error?: Error;
   result: SwapResult;
   tracker: SwapResult[];
 }
