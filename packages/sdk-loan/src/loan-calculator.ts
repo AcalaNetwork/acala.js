@@ -103,6 +103,13 @@ export class LoanCalculator {
     }).pipe(map(({ collateral, debit }) => collateral.div(debit)));
   }
 
+  get minimumCollateralRatio$() {
+    return combineLatest({
+      collateral: this.collateralValue$,
+      type: this.loanType$
+    }).pipe(map(({ collateral, type }) => collateral.div(type.minimumDebitValue)));
+  }
+
   get loanType$() {
     return this.params.globalLoan$.pipe(map((i) => i.type));
   }
@@ -111,7 +118,7 @@ export class LoanCalculator {
   get priceAtliquidationRatio$() {
     return combineLatest({
       loanType: this.loanType$,
-      collateral: this.collateralValue$,
+      collateral: this.collateralAmount$,
       debit: this.debitValue$
     }).pipe(
       map(({ loanType, collateral, debit }) => {
@@ -130,7 +137,7 @@ export class LoanCalculator {
   get priceAtRequiredRatio$() {
     return combineLatest({
       loanType: this.loanType$,
-      collateral: this.collateralValue$,
+      collateral: this.collateralAmount$,
       debit: this.debitValue$
     }).pipe(
       map(({ collateral, debit, loanType }) => {
