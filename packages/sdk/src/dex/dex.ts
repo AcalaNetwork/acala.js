@@ -23,7 +23,8 @@ import {
   CompositeTradingPath,
   SwapResult,
   AggregateDexSwapResult,
-  SwapSource
+  SwapSource,
+  OverwriteCallParams
 } from './types';
 
 export class AggregateDex implements BaseSDK {
@@ -365,21 +366,21 @@ export class AggregateDex implements BaseSDK {
     });
   }
 
-  public getTradingTx(result: AggregateDexSwapResult) {
+  public getTradingTx(result: AggregateDexSwapResult, overwrite?: OverwriteCallParams) {
     const { path, output, input, acceptiveSlippage, mode } = result.result;
 
     // only contains acala dex
     if (path.length === 1 && path[0][0] === 'acala') {
       const provider = this.getProvider('acala');
 
-      return provider.getTradingTx(result.tracker[0]);
+      return provider.getTradingTx(result.tracker[0], overwrite);
     }
 
     // only contains nuts dex
     if (path.length === 1 && path[0][0] === 'nuts') {
       const provider = this.getProvider('nuts');
 
-      return provider.getTradingTx(result.tracker[0]);
+      return provider.getTradingTx(result.tracker[0], overwrite);
     }
 
     if (mode === 'EXACT_OUTPUT') {
@@ -388,8 +389,8 @@ export class AggregateDex implements BaseSDK {
       // create aggregate tx
       return this.api.tx.aggregatedDex.swapWithExactSupply(
         this.convertCompositeTradingPathToTxParams(result.tracker),
-        input.amount.mul(slippage).toChainData(),
-        output.amount.toChainData()
+        overwrite?.input ? overwrite.input.toChainData() : input.amount.mul(slippage).toChainData(),
+        overwrite?.output ? overwrite.output.toChainData() : output.amount.toChainData()
       );
     }
 
@@ -398,8 +399,8 @@ export class AggregateDex implements BaseSDK {
     // create aggregate tx
     return this.api.tx.aggregatedDex.swapWithExactSupply(
       this.convertCompositeTradingPathToTxParams(result.tracker),
-      input.amount.toChainData(),
-      output.amount.mul(slippage).toChainData()
+      overwrite?.input ? overwrite.input.toChainData() : input.amount.toChainData(),
+      overwrite?.output ? overwrite.output.toChainData() : output.amount.mul(slippage).toChainData()
     );
   }
 }
