@@ -1,5 +1,15 @@
 import { AnyApi, FixedPointNumber, Token } from '@acala-network/sdk-core';
-import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, Observable, of, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  combineLatest,
+  filter,
+  firstValueFrom,
+  map,
+  Observable,
+  of,
+  switchMap
+} from 'rxjs';
 import { BaseSDK } from '../types';
 import { Wallet } from '../wallet';
 import { NoTradingPathError } from './errors';
@@ -183,6 +193,14 @@ export class AggregateDex implements BaseSDK {
           result,
           tracker: Object.values(tracker)
         };
+      }),
+      catchError((e) => {
+        return of({
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          error: e,
+          result: undefined as any as SwapResult,
+          tracker: []
+        });
       })
     );
   }
@@ -261,6 +279,14 @@ export class AggregateDex implements BaseSDK {
           result,
           tracker: Object.values(tracker)
         };
+      }),
+      catchError((e) => {
+        return of({
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          error: e,
+          result: undefined as any as SwapResult,
+          tracker: []
+        });
       })
     );
   }
@@ -277,10 +303,14 @@ export class AggregateDex implements BaseSDK {
   }
 
   private getBestSwapResult(mode: TradeMode, resultList: AggregateDexSwapResult[]) {
+    const successedList = resultList.filter((item) => !!item.result);
+
+    if (successedList.length === 0) throw resultList[0].error;
+
     if (mode === 'EXACT_INPUT') {
-      const result = resultList.slice(1).reduce((acc, cur) => {
+      const result = successedList.slice(1).reduce((acc, cur) => {
         return acc.result.output.amount.gt(cur.result.output.amount) ? acc : cur;
-      }, resultList[0]);
+      }, successedList[0]);
 
       result.result.call = this.getTradingTx(result);
 
@@ -288,9 +318,9 @@ export class AggregateDex implements BaseSDK {
     }
 
     // exact output
-    const result = resultList.slice(1).reduce((acc, cur) => {
+    const result = successedList.slice(1).reduce((acc, cur) => {
       return acc.result.input.amount.lt(cur.result.input.amount) ? acc : cur;
-    }, resultList[0]);
+    }, successedList[0]);
 
     result.result.call = this.getTradingTx(result);
 
@@ -369,8 +399,8 @@ export class AggregateDex implements BaseSDK {
     // create aggregate tx
     return this.api.tx.aggregatedDex.swapWithExactSupply(
       this.convertCompositeTradingPathToTxParams(result.tracker),
-      input.amount.toChainData(),
-      output.amount.mul(slippage).toChainData()
+      overwrite?.input ? overwrite.input.toChainData() : input.amount.toChainData(),
+      overwrite?.output ? overwrite.output.toChainData() : output.amount.mul(slippage).toChainData()
     );
   }
 }
