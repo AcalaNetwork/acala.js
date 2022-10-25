@@ -115,7 +115,7 @@ export class LoanCalculator {
   }
 
   // subscribe liquidation price
-  get priceAtliquidationRatio$() {
+  get priceAtLiquidationRatio$() {
     return combineLatest({
       loanType: this.loanType$,
       collateral: this.collateralAmount$,
