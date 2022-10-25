@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk",
-  "version": "4.1.7-12",
+  "version": "4.1.7-16",
   "description": "acala network sdk",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
@@ -18,10 +18,10 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
-    "@acala-network/api": "4.1.7-12",
-    "@acala-network/bodhi": "^2.4.20",
-    "@acala-network/type-definitions": "4.1.7-12",
+    "@acala-network/api": "4.1.7-16",
+    "@acala-network/type-definitions": "4.1.7-16",
     "@certusone/wormhole-sdk": "^0.5.0",
+    "@ethersproject/bignumber": "^5.7.0",
     "@grpc/grpc-js": "^1.6.8",
     "@improbable-eng/grpc-web-node-http-transport": "^0.15.0",
     "@nuts-finance/sdk-stable-asset": "^1.2.0",

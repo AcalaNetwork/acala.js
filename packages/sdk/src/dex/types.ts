@@ -77,7 +77,10 @@ export interface BaseSwap {
   filterPath(path: TradingPathItem): boolean;
   swap(params: SwapParamsWithExactPath): Observable<SwapResult>;
   getAggregateTradingPath(result: SwapResult): any;
-  getTradingTx(result: SwapResult): SubmittableExtrinsic<'promise'> | SubmittableExtrinsic<'rxjs'>;
+  getTradingTx(
+    result: SwapResult,
+    overwrite?: OverwriteCallParams
+  ): SubmittableExtrinsic<'promise'> | SubmittableExtrinsic<'rxjs'>;
 }
 
 export interface AggregateDexConfigs {
@@ -90,6 +93,12 @@ export interface AggregateDexConfigs {
 }
 
 export interface AggregateDexSwapResult {
+  error?: Error;
   result: SwapResult;
   tracker: SwapResult[];
+}
+
+export interface OverwriteCallParams {
+  input?: FixedPointNumber;
+  output?: FixedPointNumber;
 }

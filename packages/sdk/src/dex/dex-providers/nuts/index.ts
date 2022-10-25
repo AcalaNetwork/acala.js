@@ -2,7 +2,15 @@ import { ApiRx } from '@polkadot/api';
 import { AnyApi, FixedPointNumber, forceToCurrencyName, Token } from '@acala-network/sdk-core';
 import { Wallet } from '@acala-network/sdk/wallet';
 import { StableAssetRx, PoolInfo, SwapInResult, SwapOutResult } from '@nuts-finance/sdk-stable-asset';
-import { BaseSwap, DexSource, SwapParamsWithExactPath, SwapResult, TradingPair, TradingPathItem } from '../../types';
+import {
+  BaseSwap,
+  DexSource,
+  OverwriteCallParams,
+  SwapParamsWithExactPath,
+  SwapResult,
+  TradingPair,
+  TradingPathItem
+} from '../../types';
 import { NutsDexOnlySupportApiRx } from './errors';
 import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -22,6 +30,7 @@ export class NutsDex implements BaseSwap {
   private stableAsset: StableAssetRx;
   public readonly tradingPairs$: Observable<TradingPair[]>;
   private availablePools$: BehaviorSubject<PoolInfo[]>;
+  private exchangeRate: FixedPointNumber;
 
   constructor({ api, wallet, stableAssets }: NutsDexConfigs) {
     this.api = api;
@@ -34,6 +43,16 @@ export class NutsDex implements BaseSwap {
     this.stableAsset = stableAssets ?? new StableAssetRx(this.api as ApiRx);
     this.tradingPairs$ = this.initTradingPairs$();
     this.availablePools$ = new BehaviorSubject<PoolInfo[]>([]);
+    this.exchangeRate = FixedPointNumber.TEN;
+    this.updateExchangeRate();
+  }
+
+  private updateExchangeRate() {
+    this.wallet.homa.env$.subscribe({
+      next: (env) => {
+        this.exchangeRate = env.exchangeRate;
+      }
+    });
   }
 
   private initTradingPairs$() {
@@ -128,8 +147,7 @@ export class NutsDex implements BaseSwap {
       exchangeFee: result.feeAmount,
       exchangeFeeRate: result.feeAmount.div(result.outputAmount),
       acceptiveSlippage: params.acceptiveSlippage,
-      callParams: result.toChainData(),
-      call: this.api.tx.stableAsset.swap(...result.toChainData())
+      callParams: result.toChainData()
     };
   }
 
@@ -163,15 +181,33 @@ export class NutsDex implements BaseSwap {
   }
 
   public getTradingTx(
-    result: SwapResult
+    result: SwapResult,
+    overwrite?: OverwriteCallParams
   ): SubmittableExtrinsic<'promise', ISubmittableResult> | SubmittableExtrinsic<'rxjs', ISubmittableResult> {
     const { path } = result;
     const [source] = path[0];
 
     if (source !== this.source) throw new ParamsNotAcceptableForDexProvider(this.source);
+    // never failed, just to avoid type check error
+    if (!result.callParams) throw new Error(`can't find call params in result`);
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return result.call!;
+    const params = result.callParams;
+
+    if (overwrite?.input) {
+      const { liquidToken } = this.wallet.getPresetTokens();
+      params[3] = result.input.token.isEqual(liquidToken)
+        ? overwrite.input.mul(this.exchangeRate).toChainData()
+        : overwrite.input.toChainData();
+    }
+
+    if (overwrite?.output) {
+      const { liquidToken } = this.wallet.getPresetTokens();
+      params[4] = result.output.token.isEqual(liquidToken)
+        ? overwrite.output.mul(this.exchangeRate).toChainData()
+        : overwrite.output.toChainData();
+    }
+
+    return this.api.tx.stableAsset.swap(...(params as [any, any, any, any, any, any]));
   }
 }
 

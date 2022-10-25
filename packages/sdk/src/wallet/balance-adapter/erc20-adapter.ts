@@ -105,7 +105,7 @@ export class ERC20Adapter {
     const contract = this.getERC20Contract(tokenAddress);
 
     const run = async () => {
-      const issuance = await contract.totalSupply;
+      const issuance = await contract.totalSupply();
       const formated = FixedPointNumber.fromInner(issuance.toString(), token.decimals);
 
       return formated;
