@@ -207,7 +207,8 @@ export class LoanCalculator {
       minimumCollateral: this.minimumCollateralAmount$
     }).pipe(
       map(({ debitValue, price, type, minimumCollateral }) => {
-        if (price.isZero() || debitValue.isLessOrEqualTo(FixedPointNumber.ZERO)) return minimumCollateral;
+        if (price.isZero() || debitValue.isLessOrEqualTo(FixedPointNumber.ZERO))
+          return new FixedPointNumber(0, type.collateral.decimals);
 
         return debitValue.times(type.requiredCollateralRatio).div(price).max(minimumCollateral);
       })
