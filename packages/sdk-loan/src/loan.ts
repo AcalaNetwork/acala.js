@@ -53,7 +53,7 @@ export class Loan implements BaseSDK {
             minimumDebitValue: FixedPointNumber.fromInner(
               this.api.consts.cdpEngine.minimumDebitValue.toString(),
               stableToken.decimals
-            ),
+            )
           };
         });
       })
