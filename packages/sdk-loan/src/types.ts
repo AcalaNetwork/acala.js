@@ -11,6 +11,7 @@ export interface LoanSDKParams {
 export interface LoanType {
   collateral: Token;
   liquidationRatio: FixedPointNumber;
+  liquidationPenalty: FixedPointNumber;
   requiredCollateralRatio: FixedPointNumber;
   interestRatePerSec: FixedPointNumber;
   maximumTotalDebitValue: FixedPointNumber;

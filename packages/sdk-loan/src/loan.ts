@@ -42,6 +42,7 @@ export class Loan implements BaseSDK {
           return {
             collateral: this.wallet.__getToken(key.args[0]),
             liquidationRatio: FixedPointNumber.fromInner(value.liquidationRatio.toString()),
+            liquidationPenalty: FixedPointNumber.fromInner(value.liquidationPenalty.toString()),
             requiredCollateralRatio: FixedPointNumber.fromInner(value.requiredCollateralRatio.toString()),
             interestRatePerSec,
             maximumTotalDebitValue: FixedPointNumber.fromInner(
