@@ -57,8 +57,8 @@ export class ERC20Adapter {
       const balance = await contract.balanceOf(evmAddress);
 
       const formated = FixedPointNumber.fromInner(balance.toString(), token.decimals);
-      const fromAddress = contract.filters.Transfer(evmAddress, null);
-      const toAddress = contract.filters.Transfer(null, evmAddress);
+      const fromAddressFilter = contract.filters.Transfer(evmAddress, null);
+      const toAddressFilter = contract.filters.Transfer(null, evmAddress);
 
       balance$.next({
         free: formated.clone(),
@@ -79,8 +79,8 @@ export class ERC20Adapter {
         });
       };
 
-      const fromListener = this.provider.addEventListener('NEW_LOGS', updateBalance, fromAddress);
-      const toListener = this.provider.addEventListener('NEW_LOGS', updateBalance, toAddress);
+      const fromListener = this.provider.addEventListener('logs', updateBalance, fromAddressFilter);
+      const toListener = this.provider.addEventListener('logs', updateBalance, toAddressFilter);
 
       return () => {
         this.provider.removeEventListener(fromListener);
