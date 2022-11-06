@@ -1,6 +1,6 @@
 import { MaybeCurrency, Token, TokenType } from '@acala-network/sdk-core';
 import { Observable } from 'rxjs';
-import { TokenRecord } from '../type';
+import { TokenRecord } from '../types';
 
 export interface TokenProvider {
   get isReady$(): Observable<boolean>;

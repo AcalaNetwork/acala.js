@@ -10,8 +10,7 @@ import {
   of,
   switchMap
 } from 'rxjs';
-import { BaseSDK } from '../types';
-import { Wallet } from '../wallet';
+import { Wallet, BaseSDK } from '@acala-network/sdk';
 import { NoTradingPathError } from './errors';
 import { TradingGraph } from './trading-graph';
 import {

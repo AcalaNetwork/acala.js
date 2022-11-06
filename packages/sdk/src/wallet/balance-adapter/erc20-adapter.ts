@@ -6,7 +6,7 @@ import { Erc20__factory } from '../../abis/types/factories/Erc20__factory';
 import { isAddress } from '@ethersproject/address';
 import { from, Observable, Subject } from 'rxjs';
 import { filter, finalize, shareReplay } from 'rxjs/operators';
-import { BalanceData } from '../type';
+import { BalanceData } from '../types';
 import { AnyFunction } from '@polkadot/types/types';
 import { NotERC20TokenName } from '@acala-network/sdk-core/errors';
 

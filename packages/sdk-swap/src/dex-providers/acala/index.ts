@@ -12,7 +12,7 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { StorageKey } from '@polkadot/types';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Storage } from '../../../utils/storage';
+import { Storage } from '@acala-network/sdk/utils/storage';
 import { AmountTooSmall, InsufficientLiquidityError, ParamsNotAcceptableForDexProvider } from '../../errors';
 import {
   BaseSwap,

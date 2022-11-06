@@ -1,6 +1,6 @@
 import { FixedPointNumber, Token } from '@acala-network/sdk-core';
 import { Observable } from 'rxjs';
-import { BalanceData } from '../type';
+import { BalanceData } from '../types';
 
 export interface BalanceAdapter {
   subscribeBalance(token: Token | string, address: string): Observable<BalanceData>;

@@ -6,7 +6,7 @@ import { ApiPromise } from '@polkadot/api';
 import { options } from '@acala-network/api';
 import { TokenType } from '@acala-network/sdk-core';
 import { PriceProviderType } from './price-provider/types';
-import { WalletConfigs } from './type';
+import { WalletConfigs } from './types';
 import { EvmRpcProvider } from '@acala-network/eth-providers';
 
 describe.skip('wallet', () => {

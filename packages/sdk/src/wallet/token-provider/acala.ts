@@ -12,7 +12,7 @@ import { Storage } from '../../utils/storage';
 import { createTokenList } from './create-token-list';
 import { ChainType } from '@acala-network/sdk/types';
 import { getChainType } from '@acala-network/sdk/utils/get-chain-type';
-import { TokenRecord } from '../type';
+import { TokenRecord } from '../types';
 import { CurrencyNotFound } from '../errors';
 import { TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
 

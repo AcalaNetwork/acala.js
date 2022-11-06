@@ -25,7 +25,6 @@
     "@ethersproject/bignumber": "^5.7.0",
     "@grpc/grpc-js": "^1.6.8",
     "@improbable-eng/grpc-web-node-http-transport": "^0.15.0",
-    "@nuts-finance/sdk-stable-asset": "^1.2.0",
     "@polkadot/api": "^8.5.1",
     "@polkadot/types": "^8.5.1",
     "@types/events": "^3.0.0",
