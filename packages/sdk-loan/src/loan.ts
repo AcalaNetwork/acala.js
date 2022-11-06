@@ -40,7 +40,7 @@ export class Loan implements BaseSDK {
           const interestRatePerSec = FixedPointNumber.fromInner(value.interestRatePerSec.toString());
 
           return {
-            collateral: this.wallet.__getToken(key.args[0]),
+            collateral: this.wallet.getToken(key.args[0]),
             liquidationRatio: FixedPointNumber.fromInner(value.liquidationRatio.toString()),
             liquidationPenalty: FixedPointNumber.fromInner(value.liquidationPenalty.toString()),
             requiredCollateralRatio: FixedPointNumber.fromInner(value.requiredCollateralRatio.toString()),

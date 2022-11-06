@@ -6,7 +6,7 @@ import {
   XcmV1MultiLocation
 } from '@acala-network/types/interfaces/types-lookup';
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable } from 'rxjs';
-import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
+import { filter, map, shareReplay, take } from 'rxjs/operators';
 import { TokenProvider, TokenProviderConfigs } from './type';
 import { Storage } from '../../utils/storage';
 import { createTokenList } from './create-token-list';
@@ -79,6 +79,7 @@ export class AcalaTokenProvider implements TokenProvider {
       assetMetadatas: assetMetadatas$,
       foreignAssetLocations: foreignAssetLocations$
     }).pipe(
+      take(1),
       map(({ tradingPairs, assetMetadatas, foreignAssetLocations }) => {
         return createTokenList(tradingPairs, assetMetadatas, foreignAssetLocations, {
           kusd2ausd: !this.configs.kusd2ausd,
@@ -130,8 +131,7 @@ export class AcalaTokenProvider implements TokenProvider {
   public subscribeToken(token: MaybeCurrency): Observable<Token> {
     const name = forceToCurrencyName(token);
 
-    return this.isReady$.pipe(
-      switchMap(() => this.tokens$),
+    return this.tokens$.pipe(
       filter((data) => !!data),
       map((tokens) => {
         const result = Object.values(tokens).find((item) => this.isTokenEqual(name, item));
@@ -143,11 +143,7 @@ export class AcalaTokenProvider implements TokenProvider {
     );
   }
 
-  public async getToken(token: MaybeCurrency): Promise<Token> {
-    return firstValueFrom(this.subscribeToken(token));
-  }
-
-  public __getToken(token: MaybeCurrency): Token {
+  public getToken(token: MaybeCurrency): Token {
     const name = forceToCurrencyName(token);
     const result = Object.values(this.tokens$.getValue() || {}).find((item) => this.isTokenEqual(name, item));
 
@@ -157,9 +153,7 @@ export class AcalaTokenProvider implements TokenProvider {
   }
 
   public subscribeTokens(types?: TokenType | TokenType[]): Observable<TokenRecord> {
-    return this.isReady$.pipe(
-      switchMap(() => this.tokens$),
-      filter((data) => !!data),
+    return this.tokens$.pipe(
       map((data) => {
         if (types === undefined) return data || {};
 
@@ -178,7 +172,7 @@ export class AcalaTokenProvider implements TokenProvider {
     );
   }
 
-  public __getAllTokens() {
+  public getAllTokens() {
     if (this.ready$.getValue() === false) {
       console.warn(`__getAllToken need sdk ready`);
     }

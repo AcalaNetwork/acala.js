@@ -246,7 +246,7 @@ export class Auction {
 
         if (auctionDetails && auctionDetails.isSome) {
           const details = auctionDetails.unwrap() as ModuleAuctionManagerCollateralAuctionItem;
-          const collateral = this.wallet.__getToken(details.currencyId);
+          const collateral = this.wallet.getToken(details.currencyId);
           const stableToken = this.wallet.getPresetTokens().stableToken;
           const startBlock = details.startTime.toBigInt();
           const currentBlock = block.block.block.header.number.toBigInt();

@@ -91,7 +91,7 @@ export class AcalaDex implements BaseSwap {
         return data
           .filter(([, value]) => value.isEnabled)
           .map(([key]) => {
-            return [this.wallet.__getToken(key.args[0][0]), this.wallet.__getToken(key.args[0][1])] as TradingPair;
+            return [this.wallet.getToken(key.args[0][0]), this.wallet.getToken(key.args[0][1])] as TradingPair;
           });
       })
     );
@@ -131,7 +131,7 @@ export class AcalaDex implements BaseSwap {
 
       const output = path[i + 1] as Token;
       const sortedTokenNames = Token.sort(cur, output).map((i) => i.name) as [string, string];
-      const dexShareToken = this.wallet.__getToken(createDexShareName(...sortedTokenNames));
+      const dexShareToken = this.wallet.getToken(createDexShareName(...sortedTokenNames));
 
       return [
         ...acc,

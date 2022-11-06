@@ -138,13 +138,9 @@ export class Wallet implements BaseSDK {
     return this.tokenProvider.subscribeToken(target);
   });
 
-  public async getToken(target: MaybeCurrency): Promise<Token> {
-    return firstValueFrom(this.subscribeToken(target));
-  }
-
   // direct get token no need await, must be called after wallet sdk is ready
-  public __getToken(target: MaybeCurrency): Token {
-    return this.tokenProvider.__getToken(target);
+  public getToken(target: MaybeCurrency): Token {
+    return this.tokenProvider.getToken(target);
   }
 
   /**
@@ -153,8 +149,10 @@ export class Wallet implements BaseSDK {
    * @param token
    * @param address
    */
-  public subscribeBalance = memoize((token: MaybeCurrency, address: string): Observable<BalanceData> => {
-    return this.subscribeToken(token).pipe(switchMap((token) => this.balanceAdapter.subscribeBalance(token, address)));
+  public subscribeBalance = memoize((symbol: MaybeCurrency, address: string): Observable<BalanceData> => {
+    const token = this.tokenProvider.getToken(symbol);
+
+    return this.balanceAdapter.subscribeBalance(token, address);
   });
 
   public async getBalance(token: MaybeCurrency, address: string): Promise<BalanceData> {
@@ -166,8 +164,10 @@ export class Wallet implements BaseSDK {
    * @description subscribe `token` issuance amount
    * @param token
    */
-  public subscribeIssuance = memoize((token: MaybeCurrency): Observable<FN> => {
-    return this.subscribeToken(token).pipe(switchMap((token) => this.balanceAdapter.subscribeIssuance(token)));
+  public subscribeIssuance = memoize((symbol: MaybeCurrency): Observable<FN> => {
+    const token = this.tokenProvider.getToken(symbol);
+
+    return this.balanceAdapter.subscribeIssuance(token);
   });
 
   public async getIssuance(token: MaybeCurrency): Promise<FN> {
@@ -182,7 +182,7 @@ export class Wallet implements BaseSDK {
    */
   public subscribeSuggestInput = memoize(
     (
-      token: MaybeCurrency,
+      symbol: MaybeCurrency,
       address: string,
       isAllowDeath: boolean,
       fee: {
@@ -190,12 +190,13 @@ export class Wallet implements BaseSDK {
         amount: FN;
       }
     ): Observable<FN> => {
+      const token = this.tokenProvider.getToken(symbol);
+
       return combineLatest({
-        token: this.subscribeToken(token),
         nativeToken: this.subscribeToken(this.consts.nativeCurrency),
         feeToken: this.subscribeToken(fee.currency)
       }).pipe(
-        switchMap(({ token, nativeToken, feeToken }) => {
+        switchMap(({ nativeToken, feeToken }) => {
           const isNativeToken = forceToCurrencyName(token) === nativeToken.name;
           const isFeeToken = forceToCurrencyName(feeToken) === forceToCurrencyName(token);
 
@@ -254,11 +255,9 @@ export class Wallet implements BaseSDK {
   }
 
   public getPresetTokens(): PresetTokens {
-    if (this.isReady$.value === false) {
-      throw new SDKNotReady('wallet');
-    }
+    if (this.isReady$.value === false) throw new SDKNotReady('wallet');
 
-    const tokens = this.tokenProvider.__getAllTokens();
+    const tokens = this.tokenProvider.getAllTokens();
 
     const data: PresetTokens = {
       nativeToken: tokens[forceToCurrencyName(this.consts.nativeCurrency)],
@@ -284,8 +283,8 @@ export class Wallet implements BaseSDK {
    * @name subscribePrice
    * @description subscirbe the price of `token`
    */
-  public subscribePrice = memoize((token: MaybeCurrency, type = PriceProviderType.AGGREGATE): Observable<FN> => {
-    const name = forceToCurrencyName(token);
+  public subscribePrice = memoize((symbol: MaybeCurrency, type = PriceProviderType.AGGREGATE): Observable<FN> => {
+    const name = forceToCurrencyName(symbol);
     const isDexShare = isDexShareName(name);
     const presetTokens = this.getPresetTokens();
     const isLiquidToken = presetTokens?.liquidToken?.name === name;
@@ -328,34 +327,22 @@ export class Wallet implements BaseSDK {
       return this.subscribePrice(stakingToken, type);
     }
 
+    const token = this.tokenProvider.getToken(symbol);
+
     if (type === PriceProviderType.MARKET && this.priceProviders[PriceProviderType.MARKET]) {
-      return this.subscribeToken(token).pipe(
-        switchMap(
-          (token) => this.priceProviders[PriceProviderType.MARKET]?.subscribe(token) || of(FixedPointNumber.ZERO)
-        )
-      );
+      return this.priceProviders[PriceProviderType.MARKET]?.subscribe(token) || of(FixedPointNumber.ZERO);
     }
 
     if (type === PriceProviderType.AGGREGATE && this.priceProviders[PriceProviderType.AGGREGATE]) {
-      return this.subscribeToken(token).pipe(
-        switchMap(
-          (token) => this.priceProviders[PriceProviderType.AGGREGATE]?.subscribe(token) || of(FixedPointNumber.ZERO)
-        )
-      );
+      return this.priceProviders[PriceProviderType.AGGREGATE]?.subscribe(token) || of(FixedPointNumber.ZERO);
     }
 
     if (type === PriceProviderType.DEX && this.priceProviders[PriceProviderType.DEX]) {
-      return this.subscribeToken(token).pipe(
-        switchMap((token) => this.priceProviders[PriceProviderType.DEX]?.subscribe(token) || of(FixedPointNumber.ZERO))
-      );
+      return this.priceProviders[PriceProviderType.DEX]?.subscribe(token) || of(FixedPointNumber.ZERO);
     }
 
     if (type === PriceProviderType.ORACLE && this.priceProviders[PriceProviderType.ORACLE]) {
-      return this.subscribeToken(token).pipe(
-        switchMap(
-          (token) => this.priceProviders[PriceProviderType.ORACLE]?.subscribe(token) || of(FixedPointNumber.ZERO)
-        )
-      );
+      return this.priceProviders[PriceProviderType.ORACLE]?.subscribe(token) || of(FixedPointNumber.ZERO);
     }
 
     return of(FixedPointNumber.ZERO);

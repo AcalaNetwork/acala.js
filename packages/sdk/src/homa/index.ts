@@ -57,30 +57,26 @@ export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
   }
 
   private initConsts() {
-    combineLatest({
-      liquidToken: this.wallet.subscribeToken(this.api.consts.homa.liquidCurrencyId),
-      stakingToken: this.wallet.subscribeToken(this.api.consts.homa.stakingCurrencyId)
-    }).subscribe((data) => {
-      this.consts = {
-        ...data,
-        chain: this.api.runtimeChain.toString(),
-        defaultExchangeRate: FixedPointNumber.fromInner(this.api.consts.homa.defaultExchangeRate.toString()),
-        activeSubAccountsIndexList: (this.api.consts.homa.activeSubAccountsIndexList as unknown as u16[]).map((item) =>
-          item.toNumber()
-        ),
-        mintThreshold: FixedPointNumber.fromInner(
-          this.api.consts.homa.mintThreshold.toString(),
-          data.stakingToken.decimals
-        ),
-        redeemThreshold: FixedPointNumber.fromInner(
-          this.api.consts.homa.redeemThreshold.toString(),
-          data.stakingToken.decimals
-        )
-      };
+    const liquidToken = this.wallet.getToken(this.api.consts.homa.liquidCurrencyId);
+    const stakingToken = this.wallet.getToken(this.api.consts.homa.stakingCurrencyId);
 
-      // set isReady to true after consts intizialized
-      this.isReady$.next(true);
-    });
+    this.consts = {
+      liquidToken,
+      stakingToken,
+      chain: this.api.runtimeChain.toString(),
+      defaultExchangeRate: FixedPointNumber.fromInner(this.api.consts.homa.defaultExchangeRate.toString()),
+      activeSubAccountsIndexList: (this.api.consts.homa.activeSubAccountsIndexList as unknown as u16[]).map((item) =>
+        item.toNumber()
+      ),
+      mintThreshold: FixedPointNumber.fromInner(this.api.consts.homa.mintThreshold.toString(), stakingToken.decimals),
+      redeemThreshold: FixedPointNumber.fromInner(
+        this.api.consts.homa.redeemThreshold.toString(),
+        stakingToken.decimals
+      )
+    };
+
+    // set isReady to true after consts intizialized
+    this.isReady$.next(true);
   }
 
   public get isReady(): Promise<boolean> {

@@ -63,12 +63,12 @@ export class BaseAcalaAdaptor extends BaseCrossChainAdapter {
   public getCrossChainFee(token: string): TokenBalance {
     return {
       token,
-      balance: FixedPointNumber.fromInner(crossChainFeeConfigs[token] ?? '0', this.wallet.__getToken(token).decimals)
+      balance: FixedPointNumber.fromInner(crossChainFeeConfigs[token] ?? '0', this.wallet.getToken(token).decimals)
     };
   }
 
   public getCrossChainTokenDecimals(token: string): number {
-    return this.wallet.__getToken(token).decimals;
+    return this.wallet.getToken(token).decimals;
   }
 
   // all token's destination weight in karura/acala is same
@@ -79,7 +79,7 @@ export class BaseAcalaAdaptor extends BaseCrossChainAdapter {
 
   public createTx(params: CrossChainTransferParams): SubmittableExtrinsic<'rxjs'> | SubmittableExtrinsic<'promise'> {
     const { to, token, address, amount } = params;
-    const tokenFormSDK = this.wallet.__getToken(token);
+    const tokenFormSDK = this.wallet.getToken(token);
     const accountId = this.api.createType('AccountId32', address).toHex();
     const toChain = chains[to];
 

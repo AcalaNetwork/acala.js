@@ -53,14 +53,10 @@ export class Incentive implements BaseSDK {
     });
   }
 
-  // subscribe `list` tokens informations from wallet sdk
-  private subscribeTokens = (list: string[]): Observable<Record<string, Token>> => {
-    return combineLatest(
-      Object.fromEntries(
-        Array.from(new Set(list.map(forceToCurrencyName))).map(
-          (item) => [item, this.wallet.subscribeToken(item)] as const
-        )
-      )
+  // get `list` tokens informations from wallet sdk
+  private getTokens = (list: string[]): Record<string, Token> => {
+    return Object.fromEntries(
+      Array.from(new Set(list.map(forceToCurrencyName))).map((item) => [item, this.wallet.getToken(item)] as const)
     );
   };
 
@@ -99,36 +95,33 @@ export class Incentive implements BaseSDK {
   // subscirbe all incentive reward amounts config
   private rewardTokensConfigs$ = memoize((): Observable<IncentiveRewardTokensConfigs> => {
     return this.storages.incentiveRewardAmounts().observable.pipe(
-      switchMap((data) => {
+      map((data) => {
         const allRewardTokens = data.map((item) => forceToCurrencyName(item[0].args[1]));
 
-        return this.subscribeTokens(allRewardTokens).pipe(
-          map((tokens) => {
-            const result: IncentiveRewardTokensConfigs = {};
+        const tokens = this.getTokens(allRewardTokens);
+        const result: IncentiveRewardTokensConfigs = {};
 
-            data.forEach((item) => {
-              const pool = item[0].args[0];
-              const rewardCurrencyId = item[0].args[1];
-              const rewardToken = tokens[forceToCurrencyName(rewardCurrencyId)];
-              const rewardAmount = FixedPointNumber.fromInner(item[1].toString(), rewardToken.decimals);
-              const id = getPoolId(pool);
+        data.forEach((item) => {
+          const pool = item[0].args[0];
+          const rewardCurrencyId = item[0].args[1];
+          const rewardToken = tokens[forceToCurrencyName(rewardCurrencyId)];
+          const rewardAmount = FixedPointNumber.fromInner(item[1].toString(), rewardToken.decimals);
+          const id = getPoolId(pool);
 
-              // insert rewards config if poolId is exists
-              if (result[id]) {
-                result[id].push({
-                  token: rewardToken,
-                  amount: rewardAmount
-                });
-
-                return;
-              }
-
-              result[id] = [{ token: rewardToken, amount: rewardAmount }];
+          // insert rewards config if poolId is exists
+          if (result[id]) {
+            result[id].push({
+              token: rewardToken,
+              amount: rewardAmount
             });
 
-            return result;
-          })
-        );
+            return;
+          }
+
+          result[id] = [{ token: rewardToken, amount: rewardAmount }];
+        });
+
+        return result;
       })
     );
   });
@@ -136,39 +129,39 @@ export class Incentive implements BaseSDK {
   // subscribe all pool infomations
   private poolInfos$ = memoize((): Observable<BaseIncentivePool[]> => {
     return this.storages.poolInfos().observable.pipe(
-      switchMap((data) => {
-        const tokens = data.map((item) => getPoolToken(item[0].args[0])) as unknown as string[];
+      map((data) => {
         const allRewardTokens = data.flatMap((item) =>
           Array.from(item[1].rewards.entries()).map(([key]) => forceToCurrencyName(key))
         );
 
-        return this.subscribeTokens([...tokens, ...allRewardTokens]).pipe(
-          map((tokens) => {
-            return data.map((item) => {
-              const rawId = item[0].args[0];
-              const id = getPoolId(rawId);
-              const type = rawId.isDex ? IncentiveType.DEX : IncentiveType.LOANS;
-              const collateral = tokens[forceToCurrencyName(getPoolToken(rawId))];
-              const totalShares = FixedPointNumber.fromInner(item[1].totalShares.toString(), collateral.decimals);
+        const tokens = this.getTokens([
+          ...(data.map((item) => getPoolToken(item[0].args[0])) as unknown as string[]),
+          ...allRewardTokens
+        ]);
 
-              // format rewards infomations
-              const rewards: IncentiveReward[] = Array.from(item[1].rewards.entries()).map(([key, values]) => {
-                const token = tokens[forceToCurrencyName(key)];
-                const total = FixedPointNumber.fromInner(values[0].toString(), token.decimals);
-                const withdrawn = FixedPointNumber.fromInner(values[1].toString(), token.decimals);
+        return data.map((item) => {
+          const rawId = item[0].args[0];
+          const id = getPoolId(rawId);
+          const type = rawId.isDex ? IncentiveType.DEX : IncentiveType.LOANS;
+          const collateral = tokens[forceToCurrencyName(getPoolToken(rawId))];
+          const totalShares = FixedPointNumber.fromInner(item[1].totalShares.toString(), collateral.decimals);
 
-                return {
-                  rewardToken: token,
-                  totalReward: total,
-                  withdrawnReward: withdrawn,
-                  claimableReward: total.minus(withdrawn).max(new FixedPointNumber(0, collateral.decimals))
-                };
-              });
+          // format rewards infomations
+          const rewards: IncentiveReward[] = Array.from(item[1].rewards.entries()).map(([key, values]) => {
+            const token = tokens[forceToCurrencyName(key)];
+            const total = FixedPointNumber.fromInner(values[0].toString(), token.decimals);
+            const withdrawn = FixedPointNumber.fromInner(values[1].toString(), token.decimals);
 
-              return { collateral, type, id, rawId, totalShares, rewards };
-            });
-          })
-        );
+            return {
+              rewardToken: token,
+              totalReward: total,
+              withdrawnReward: withdrawn,
+              claimableReward: total.minus(withdrawn).max(new FixedPointNumber(0, collateral.decimals))
+            };
+          });
+
+          return { collateral, type, id, rawId, totalShares, rewards };
+        });
       })
     );
   });
@@ -225,68 +218,64 @@ export class Incentive implements BaseSDK {
           pendingRewards: this.storages.pendingRewards(info.rawId, address).observable
         });
       }),
-      switchMap(({ info, sharesAndWithdrawn, pendingRewards }) => {
-        const tokens = [
+      map(({ info, sharesAndWithdrawn, pendingRewards }) => {
+        const tokens = this.getTokens([
           ...Array.from(sharesAndWithdrawn[1].entries()).map((item) => {
             return forceToCurrencyName(item[0]);
           }),
           ...Array.from(pendingRewards.entries()).map((item) => {
             return forceToCurrencyName(item[0]);
           })
-        ];
+        ]);
 
-        return this.subscribeTokens(tokens).pipe(
-          map((tokens) => {
-            const userShares = FixedPointNumber.fromInner(sharesAndWithdrawn[0].toString(), info.collateral.decimals);
-            const withdrawns = Array.from(sharesAndWithdrawn[1].entries()).map((entry) => {
-              const tokenName = forceToCurrencyName(entry[0]);
-              const token = tokens[tokenName];
-              const withdrawnReward = FixedPointNumber.fromInner(entry[1].toString(), token.decimals);
+        const userShares = FixedPointNumber.fromInner(sharesAndWithdrawn[0].toString(), info.collateral.decimals);
+        const withdrawns = Array.from(sharesAndWithdrawn[1].entries()).map((entry) => {
+          const tokenName = forceToCurrencyName(entry[0]);
+          const token = tokens[tokenName];
+          const withdrawnReward = FixedPointNumber.fromInner(entry[1].toString(), token.decimals);
 
-              return { token, withdrawnReward };
-            });
+          return { token, withdrawnReward };
+        });
 
-            const pendings = Array.from(pendingRewards.entries()).map((entry) => {
-              const tokenName = forceToCurrencyName(entry[0]);
-              const token = tokens[tokenName];
-              const reward = FixedPointNumber.fromInner(entry[1].toString(), token.decimals);
+        const pendings = Array.from(pendingRewards.entries()).map((entry) => {
+          const tokenName = forceToCurrencyName(entry[0]);
+          const token = tokens[tokenName];
+          const reward = FixedPointNumber.fromInner(entry[1].toString(), token.decimals);
 
-              return { reward, token };
-            });
+          return { reward, token };
+        });
 
-            const ratio = userShares.div(info.totalShares);
+        const ratio = userShares.div(info.totalShares);
 
-            const rewards: UserIncentiveReward[] = info.rewards.map((item) => {
-              const token = item.rewardToken;
+        const rewards: UserIncentiveReward[] = info.rewards.map((item) => {
+          const token = item.rewardToken;
 
-              const pendingReward = pendings.find((pending) => pending.token.isEqual(token));
-              const withdrawnReward = withdrawns.find((withdrawn) => withdrawn.token.isEqual(token));
+          const pendingReward = pendings.find((pending) => pending.token.isEqual(token));
+          const withdrawnReward = withdrawns.find((withdrawn) => withdrawn.token.isEqual(token));
 
-              const claimableReward = ratio
-                .mul(item.claimableReward)
-                .minus(withdrawnReward?.withdrawnReward || FixedPointNumber.ZERO)
-                .add(pendingReward?.reward || FixedPointNumber.ZERO)
-                .max(FixedPointNumber.ZERO);
+          const claimableReward = ratio
+            .mul(item.claimableReward)
+            .minus(withdrawnReward?.withdrawnReward || FixedPointNumber.ZERO)
+            .add(pendingReward?.reward || FixedPointNumber.ZERO)
+            .max(FixedPointNumber.ZERO);
 
-              const claimableRewardWithDeduction = claimableReward
-                .minus(claimableReward.mul(info.deductionRate || FixedPointNumber.ZERO))
-                .max(FixedPointNumber.ZERO);
+          const claimableRewardWithDeduction = claimableReward
+            .minus(claimableReward.mul(info.deductionRate || FixedPointNumber.ZERO))
+            .max(FixedPointNumber.ZERO);
 
-              return {
-                rewardToken: token,
-                withdrawnReward: withdrawnReward ? withdrawnReward.withdrawnReward : FixedPointNumber.ZERO,
-                claimableReward,
-                claimableRewardWithDeduction
-              };
-            });
+          return {
+            rewardToken: token,
+            withdrawnReward: withdrawnReward ? withdrawnReward.withdrawnReward : FixedPointNumber.ZERO,
+            claimableReward,
+            claimableRewardWithDeduction
+          };
+        });
 
-            return {
-              shares: userShares,
-              rewards,
-              pool: info
-            };
-          })
-        );
+        return {
+          shares: userShares,
+          rewards,
+          pool: info
+        };
       })
     );
   });

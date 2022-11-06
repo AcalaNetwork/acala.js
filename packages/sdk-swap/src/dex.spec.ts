@@ -50,8 +50,8 @@ describe('dex', () => {
 
     await sdk.isReady;
 
-    const ksm = sdk.wallet.__getToken('KSM');
-    const rmrk = sdk.wallet.__getToken('RMRK');
+    const ksm = sdk.wallet.getToken('KSM');
+    const rmrk = sdk.wallet.getToken('RMRK');
 
     console.log(TradingGraph.pathsToString(sdk.getTradingPaths(ksm, rmrk)));
   });
@@ -61,8 +61,8 @@ describe('dex', () => {
 
     await sdk.isReady;
 
-    const ksm = sdk.wallet.__getToken('KSM');
-    const rmrk = sdk.wallet.__getToken('RMRK');
+    const ksm = sdk.wallet.getToken('KSM');
+    const rmrk = sdk.wallet.getToken('RMRK');
 
     const result = await firstValueFrom(
       sdk.swapWithAllTradeablePath({

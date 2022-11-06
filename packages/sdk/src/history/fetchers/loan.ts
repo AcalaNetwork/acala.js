@@ -203,7 +203,7 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
   }
 
   private createUpdateMessage(data: updatePositionsNode) {
-    const collateralToken = this.configs.wallet.__getToken(data.collateralId);
+    const collateralToken = this.configs.wallet.getToken(data.collateralId);
     const { stableToken } = this.configs.wallet.getPresetTokens();
     const collateral = FixedPointNumber.fromInner(data.collateralAdjustment, collateralToken?.decimals);
     const debit = FixedPointNumber.fromInner(data.debitAdjustment).times(
@@ -231,7 +231,7 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
   }
 
   private createCloseByDexMessage(data: closeByDexNode) {
-    const collateralToken = this.configs.wallet.__getToken(data.collateralId);
+    const collateralToken = this.configs.wallet.getToken(data.collateralId);
     const { stableToken } = this.configs.wallet.getPresetTokens();
     const collateral = FixedPointNumber.fromInner(data.refundAmount, collateralToken.decimals || 12).add(
       FixedPointNumber.fromInner(data.soldAmount, collateralToken.decimals || 12)
@@ -243,7 +243,7 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
   }
 
   private createLiquidityMessage(data: liquidUnsavesNode) {
-    const collateralToken = this.configs.wallet.__getToken(data.collateralId);
+    const collateralToken = this.configs.wallet.getToken(data.collateralId);
     const { stableToken } = this.configs.wallet.getPresetTokens();
     const collateral = FixedPointNumber.fromInner(data.collateralAmount, collateralToken?.decimals);
     const liquidationStrategy = FixedPointNumber.fromInner(data.liquidationStrategy, stableToken.decimals);
