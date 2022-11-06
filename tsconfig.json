@@ -64,6 +64,12 @@
       "@acala-network/sdk/*": [
         "packages/sdk/src/*"
       ],
+      "@acala-network/wormhole-portal": [
+        "packages/wormhole-portal/src"
+      ],
+      "@acala-network/wormhole-portal/*": [
+        "packages/wromhole-portal/src/*"
+      ],
     },
     "skipLibCheck": true,
     "typeRoots": [

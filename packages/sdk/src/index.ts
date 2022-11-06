@@ -7,4 +7,3 @@ export * from './cross-chain';
 export * from './history';
 export * from './incentive';
 export * from './auction';
-export * from './wormhole-portal';
