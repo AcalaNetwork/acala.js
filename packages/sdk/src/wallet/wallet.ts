@@ -138,6 +138,14 @@ export class Wallet implements BaseSDK {
     return this.tokenProvider.subscribeToken(target);
   });
 
+  /**
+   * @name __getToken
+   * @deprecated change to `getToke`
+   */
+  public __getToken(target: MaybeCurrency): Token {
+    return this.tokenProvider.getToken(target);
+  }
+
   // direct get token no need await, must be called after wallet sdk is ready
   public getToken(target: MaybeCurrency): Token {
     return this.tokenProvider.getToken(target);
