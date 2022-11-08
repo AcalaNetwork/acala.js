@@ -2,7 +2,7 @@ import { options } from '@acala-network/api';
 import { FixedPointNumber } from '@acala-network/sdk-core';
 import { ApiRx, WsProvider } from '@polkadot/api';
 import { firstValueFrom } from 'rxjs';
-import { Wallet, WalletConfigs } from '@acala-network/sdk';
+import { Wallet, WalletConfigs } from '@acala-network/sdk/wallet';
 import { AggregateDex } from './dex';
 import { AcalaDex } from './dex-providers/acala';
 import { NutsDex } from './dex-providers/nuts';

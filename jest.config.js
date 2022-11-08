@@ -7,9 +7,9 @@ module.exports = Object.assign({}, config, {
     '@acala-network/types(.*)$': '<rootDir>/packages/types/src/$1',
     '@acala-network/type-definitions(.*)$': '<rootDir>/packages/type-definitions/src/$1',
     '@acala-network/sdk-core(.*)$': '<rootDir>/packages/sdk-core/src/$1',
-    '@acala-network/sdk-swap(.*)$': '<rootDir>/packages/sdk-swapcore/src/$1',
+    '@acala-network/sdk-swap(.*)$': '<rootDir>/packages/sdk-swap/src/$1',
     '@acala-network/sdk/(.*)$': '<rootDir>/packages/sdk/src/$1',
-    '@acala-network/wormhole-portal/(.*)$': '<rootDir>/packages/sdk/wormhole-portal/$1',
+    '@acala-network/wormhole-portal(.*)$': '<rootDir>/packages/sdk/wormhole-portal/$1'
   },
   modulePathIgnorePatterns: [
     '<rootDir>/build',
