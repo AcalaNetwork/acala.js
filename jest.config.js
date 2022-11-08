@@ -8,7 +8,8 @@ module.exports = Object.assign({}, config, {
     '@acala-network/type-definitions(.*)$': '<rootDir>/packages/type-definitions/src/$1',
     '@acala-network/sdk-core(.*)$': '<rootDir>/packages/sdk-core/src/$1',
     '@acala-network/sdk-swap(.*)$': '<rootDir>/packages/sdk-swapcore/src/$1',
-    '@acala-network/sdk/(.*)$': '<rootDir>/packages/sdk/src/$1'
+    '@acala-network/sdk/(.*)$': '<rootDir>/packages/sdk/src/$1',
+    '@acala-network/wormhole-portal/(.*)$': '<rootDir>/packages/sdk/wormhole-portal/$1',
   },
   modulePathIgnorePatterns: [
     '<rootDir>/build',
@@ -18,7 +19,8 @@ module.exports = Object.assign({}, config, {
     '<rootDir>/packages/type-definitions/build',
     '<rootDir>/packages/sdk-core/build',
     '<rootDir>/packages/sdk-swap/build',
-    '<rootDir>/packages/sdk/build'
+    '<rootDir>/packages/sdk/build',
+    '<rootDir>/packages/wormhole-portal/build'
   ],
   transformIgnorePatterns: ['/node_modules/(?!@polkadot|@babel/runtime/helpers/esm/)']
 });
