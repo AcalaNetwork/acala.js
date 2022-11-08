@@ -38,27 +38,22 @@ import { subscribeLiquidCrowdloanTokenPrice } from './utils/get-liquid-crowdloan
 export class Wallet implements BaseSDK {
   private api: AnyApi;
   // readed from chain information
-  private storages: ReturnType<typeof createStorages>;
-  private configs: WalletConfigs;
+  private storages!: ReturnType<typeof createStorages>;
+  private configs!: WalletConfigs;
 
-  private balanceAdapter: AcalaExpandBalanceAdapter;
-  private tokenProvider: TokenProvider;
-  private priceProviders: PriceProviders;
+  private balanceAdapter!: AcalaExpandBalanceAdapter;
+  private tokenProvider!: TokenProvider;
+  private priceProviders!: PriceProviders;
 
   // inject liquidity, homa sdk by default for easy using
-  public readonly liquidity: Liquidity;
-  public readonly homa: Homa;
+  public liquidity!: Liquidity;
+  public homa!: Homa;
+  public web3Name!: DIDWeb3Name;
 
   public isReady$: BehaviorSubject<boolean>;
   public consts!: WalletConsts;
-  readonly web3Name: DIDWeb3Name;
 
-  public constructor(
-    api: AnyApi,
-    configs?: WalletConfigs
-    // tokenPriceFetchSource = defaultTokenPriceFetchSource,
-    // priceProviders?: Record<PriceProviderType, PriceProvider>
-  ) {
+  public constructor(api: AnyApi, configs?: WalletConfigs) {
     this.api = api;
     this.isReady$ = new BehaviorSubject<boolean>(false);
     this.configs = {
@@ -66,34 +61,6 @@ export class Wallet implements BaseSDK {
     };
 
     this.tokenProvider = new AcalaTokenProvider(this.api);
-
-    this.balanceAdapter = new AcalaBalanceAdapter({
-      api: this.api,
-      evmProvider: configs?.evmProvider
-    });
-
-    // init liquidty module
-    this.liquidity = new Liquidity(this.api, this);
-    // init homa module
-    this.homa = new Homa(this.api, this);
-    // init did-web3 name module
-    this.web3Name = new DIDWeb3Name();
-    // init price module
-    const market = new MarketPriceProvider();
-    const dex = new DexPriceProvider(this.liquidity);
-    const aggregate = new AggregateProvider({ market, dex });
-    const oracle = new OraclePriceProvider(this.api);
-
-    this.priceProviders = {
-      // default price provider
-      [PriceProviderType.AGGREGATE]: aggregate,
-      [PriceProviderType.MARKET]: market,
-      [PriceProviderType.ORACLE]: oracle,
-      [PriceProviderType.DEX]: dex,
-      ...this.configs?.priceProviders
-    };
-    this.storages = createStorages(this.api);
-
     this.init();
   }
 
@@ -106,7 +73,32 @@ export class Wallet implements BaseSDK {
     this.initConsts();
 
     this.tokenProvider.isReady$.subscribe({
-      next: (status) => this.isReady$.next(status)
+      next: (status) => {
+        this.balanceAdapter = new AcalaBalanceAdapter({
+          api: this.api,
+          evmProvider: this.configs?.evmProvider
+        });
+        this.liquidity = new Liquidity(this.api, this);
+        this.homa = new Homa(this.api, this);
+        this.web3Name = new DIDWeb3Name();
+
+        const market = new MarketPriceProvider();
+        const dex = new DexPriceProvider(this.liquidity);
+        const aggregate = new AggregateProvider({ market, dex });
+        const oracle = new OraclePriceProvider(this.api);
+
+        this.priceProviders = {
+          // default price provider
+          [PriceProviderType.AGGREGATE]: aggregate,
+          [PriceProviderType.MARKET]: market,
+          [PriceProviderType.ORACLE]: oracle,
+          [PriceProviderType.DEX]: dex,
+          ...this.configs?.priceProviders
+        };
+        this.storages = createStorages(this.api);
+
+        this.isReady$.next(status);
+      }
     });
   }
 

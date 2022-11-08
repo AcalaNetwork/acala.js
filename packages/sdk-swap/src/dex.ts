@@ -95,7 +95,7 @@ export class AggregateDex implements BaseSDK {
     return firstValueFrom(this.tradableTokens$);
   }
 
-  public getTradingPaths(start: Token, end: Token): CompositeTradingPath[] {
+  public getTradingPaths(start: Token, end: Token, source?: DexSource): CompositeTradingPath[] {
     return this.tradingGraph
       .getTradingPaths({
         start,
@@ -105,17 +105,23 @@ export class AggregateDex implements BaseSDK {
       .filter((path) => {
         // check all path is validate
         return path.reduce((acc, item) => {
-          const [source] = item;
-          const provider = this.providers.find((i) => i.source === source);
+          const provider = this.getProvider(item[0]);
 
           if (!provider) return false;
 
           return acc && provider.filterPath(item);
         }, true as boolean);
+      })
+      .filter((path) => {
+        if (source) {
+          return path.length === 1 && path[0][0] === source;
+        }
+
+        return path;
       });
   }
 
-  private getProvider(source: DexSource): BaseSwap {
+  public getProvider(source: DexSource): BaseSwap {
     // never failed
     return this.providers.find((i) => i.source === source) as BaseSwap;
   }
