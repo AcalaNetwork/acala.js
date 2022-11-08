@@ -11,7 +11,7 @@ export const convertApiResult = (data: any, wallet: Wallet, configs: AuctionList
 
   const list: CollateralAuction[] =
     data?.collateralAuctions?.nodes?.map((item: any) => {
-      const collateral = wallet.__getToken(item.collateral);
+      const collateral = wallet.getToken(item.collateral);
       const initAmount = FixedPointNumber.fromInner(item.initAmount, collateral.decimals);
       const amount = FixedPointNumber.fromInner(item.amount, collateral.decimals);
       const targetAmount = FixedPointNumber.fromInner(item.target || '0', stableToken.decimals);

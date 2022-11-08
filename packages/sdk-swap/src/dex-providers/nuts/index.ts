@@ -66,7 +66,7 @@ export class NutsDex implements BaseSwap {
 
           for (let i = 0; i < assets.length; i++) {
             for (let j = i + 1; j < assets.length; j++) {
-              tradingPairs.push([this.wallet.__getToken(assets[i]), this.wallet.__getToken(assets[j])] as TradingPair);
+              tradingPairs.push([this.wallet.getToken(assets[i]), this.wallet.getToken(assets[j])] as TradingPair);
             }
           }
         });

@@ -201,11 +201,11 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
   }
 
   private getPoolId = (pool?: string) => {
-    return pool?.includes('-') ? this.configs.wallet.__getToken(pool.split('-')[1])?.display : pool;
+    return pool?.includes('-') ? this.configs.wallet.getToken(pool.split('-')[1])?.display : pool;
   };
 
   private createMessage(type: string, data: Node) {
-    const token = this.configs.wallet.__getToken(forceToCurrencyName(data.tokenId));
+    const token = this.configs.wallet.getToken(forceToCurrencyName(data.tokenId));
 
     if (type === 'claimRewards') {
       const amount = FixedPointNumber.fromInner(data.actualAmount || '0', token?.decimals || 12).toNumber(6);

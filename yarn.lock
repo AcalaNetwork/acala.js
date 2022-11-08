@@ -267,11 +267,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk-swap@workspace:packages/sdk-swap"
   dependencies:
-    "@polkadot/api": ^8.5.1
-    "@polkadot/types": ^8.5.1
+    "@acala-network/sdk": ^4.1.7-20
+    "@nuts-finance/sdk-stable-asset": ^1.2.0
     "@types/lodash": ^4.14.161
-    lodash: ^4.17.20
-    rxjs: ^7.4.0
   languageName: unknown
   linkType: soft
 
@@ -284,6 +282,34 @@ __metadata:
     "@types/lodash": ^4.14.161
     lodash: ^4.17.20
     rxjs: ^7.4.0
+  languageName: unknown
+  linkType: soft
+
+"@acala-network/sdk@^4.1.7-20, @acala-network/sdk@workspace:packages/sdk":
+  version: 0.0.0-use.local
+  resolution: "@acala-network/sdk@workspace:packages/sdk"
+  dependencies:
+    "@acala-network/api": 4.1.7-20
+    "@acala-network/eth-providers": ^2.5.3
+    "@acala-network/type-definitions": 4.1.7-20
+    "@ethersproject/bignumber": ^5.7.0
+    "@polkadot/api": ^8.5.1
+    "@polkadot/types": ^8.5.1
+    "@typechain/ethers-v5": ^10.1.0
+    "@types/dotenv": ^8.2.0
+    "@types/events": ^3.0.0
+    "@types/lodash": ^4.14.161
+    axios: ^0.24.0
+    bignumber.js: ^9.0.0
+    cross-fetch: ^3.1.4
+    ethers: ^5.6.2
+    events: ^3.2.0
+    graphql: ^16.3.0
+    graphql-request: ^4.1.0
+    grpc: ^1.24.11
+    lodash: ^4.17.20
+    rxjs: ^7.4.0
+    typechain: ^8.1.0
   languageName: unknown
   linkType: soft
 
@@ -309,38 +335,6 @@ __metadata:
   checksum: a14a4205eba6a8c01832a1fca17afde017fbe477678a27e895abdcb59eaeb303ed657b370de7699cf4c296b2dd6afdb43b9286bbfda2c686558b3fd84c575385
   languageName: node
   linkType: hard
-
-"@acala-network/sdk@workspace:packages/sdk":
-  version: 0.0.0-use.local
-  resolution: "@acala-network/sdk@workspace:packages/sdk"
-  dependencies:
-    "@acala-network/api": 4.1.7-20
-    "@acala-network/eth-providers": ^2.5.3
-    "@acala-network/type-definitions": 4.1.7-20
-    "@certusone/wormhole-sdk": ^0.5.0
-    "@ethersproject/bignumber": ^5.7.0
-    "@grpc/grpc-js": ^1.6.8
-    "@improbable-eng/grpc-web-node-http-transport": ^0.15.0
-    "@nuts-finance/sdk-stable-asset": ^1.2.0
-    "@polkadot/api": ^8.5.1
-    "@polkadot/types": ^8.5.1
-    "@typechain/ethers-v5": ^10.1.0
-    "@types/dotenv": ^8.2.0
-    "@types/events": ^3.0.0
-    "@types/lodash": ^4.14.161
-    axios: ^0.24.0
-    bignumber.js: ^9.0.0
-    cross-fetch: ^3.1.4
-    ethers: ^5.6.2
-    events: ^3.2.0
-    graphql: ^16.3.0
-    graphql-request: ^4.1.0
-    grpc: ^1.24.11
-    lodash: ^4.17.20
-    rxjs: ^7.4.0
-    typechain: ^8.1.0
-  languageName: unknown
-  linkType: soft
 
 "@acala-network/type-definitions@4.1.7-20, @acala-network/type-definitions@workspace:packages/type-definitions":
   version: 0.0.0-use.local
@@ -413,6 +407,19 @@ __metadata:
   checksum: 09f250147daf7e9702e6004ee8949c5a977d9652bf8b3dca53a90f0ad9da4138384ab888cfde93a08de3d1cc59286d62b71cf43a3de37ec39aaf18a5a1cd839e
   languageName: node
   linkType: hard
+
+"@acala-network/wormhole-portal@workspace:packages/wormhole-portal":
+  version: 0.0.0-use.local
+  resolution: "@acala-network/wormhole-portal@workspace:packages/wormhole-portal"
+  dependencies:
+    "@acala-network/sdk": ^4.1.7-20
+    "@certusone/wormhole-sdk": ^0.5.0
+    "@ethersproject/bignumber": ^5.7.0
+    "@grpc/grpc-js": ^1.6.8
+    "@improbable-eng/grpc-web-node-http-transport": ^0.15.0
+    "@types/lodash": ^4.14.161
+  languageName: unknown
+  linkType: soft
 
 "@ampproject/remapping@npm:^2.1.0":
   version: 2.2.0

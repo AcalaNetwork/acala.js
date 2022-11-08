@@ -1,6 +1,5 @@
-export * from './trade-graph';
-export * from './swap-rx';
-export * from './swap-promise';
+export * from './dex';
 export * from './errors';
-export * from './types';
-export * from './liquidity-pool';
+
+export * from './dex-providers/acala';
+export * from './dex-providers/nuts';

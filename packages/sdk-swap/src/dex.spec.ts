@@ -2,8 +2,7 @@ import { options } from '@acala-network/api';
 import { FixedPointNumber } from '@acala-network/sdk-core';
 import { ApiRx, WsProvider } from '@polkadot/api';
 import { firstValueFrom } from 'rxjs';
-import { Wallet } from '../wallet';
-import { WalletConfigs } from '../wallet/type';
+import { Wallet, WalletConfigs } from '@acala-network/sdk/wallet';
 import { AggregateDex } from './dex';
 import { AcalaDex } from './dex-providers/acala';
 import { NutsDex } from './dex-providers/nuts';
@@ -51,8 +50,8 @@ describe('dex', () => {
 
     await sdk.isReady;
 
-    const ksm = sdk.wallet.__getToken('KSM');
-    const rmrk = sdk.wallet.__getToken('RMRK');
+    const ksm = sdk.wallet.getToken('KSM');
+    const rmrk = sdk.wallet.getToken('RMRK');
 
     console.log(TradingGraph.pathsToString(sdk.getTradingPaths(ksm, rmrk)));
   });
@@ -62,8 +61,8 @@ describe('dex', () => {
 
     await sdk.isReady;
 
-    const ksm = sdk.wallet.__getToken('KSM');
-    const rmrk = sdk.wallet.__getToken('RMRK');
+    const ksm = sdk.wallet.getToken('KSM');
+    const rmrk = sdk.wallet.getToken('RMRK');
 
     const result = await firstValueFrom(
       sdk.swapWithAllTradeablePath({

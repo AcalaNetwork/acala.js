@@ -17,7 +17,7 @@ import {
 
 import { combineLatest, firstValueFrom, from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BaseSDK } from '../types';
+import { BaseSDK } from '@acala-network/sdk';
 import { SupportChain } from './consts';
 import {
   ConvertAssetsShouldNotEqual,

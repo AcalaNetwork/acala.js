@@ -4,7 +4,7 @@ import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { utils } from 'ethers';
 import { map } from 'rxjs/operators';
 import { AccountInfo, Balance } from '@polkadot/types/interfaces';
-import { BalanceData } from '../type';
+import { BalanceData } from '../types';
 import { AcalaExpandBalanceAdapter } from './types';
 import { Observable } from 'rxjs';
 import { NotSupportETHAddress, NotSupportEVMBalance } from '../errors';

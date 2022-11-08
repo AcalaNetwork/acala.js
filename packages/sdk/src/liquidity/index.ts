@@ -87,9 +87,9 @@ export class Liquidity implements BaseSDK {
     return this.storages.tradingPairs().observable.pipe(
       map(transformStatus),
       map(filterByPoolInfos),
-      switchMap((data) => {
+      map((data) => {
         if (!data.length) {
-          return of([]);
+          return [];
         }
 
         // collection all useable token to currencyId
@@ -101,26 +101,21 @@ export class Liquidity implements BaseSDK {
           tokenCollections.add(forceToCurrencyName(token2));
         });
 
-        return combineLatest(
-          Object.fromEntries(
-            Array.from(tokenCollections).map((item) => {
-              return [item, this.wallet.subscribeToken(item)];
-            })
-          )
-        ).pipe(
-          map((tokens) => {
-            return data.map((item) => {
-              const token1 = tokens[forceToCurrencyName(item[0].args[0][0])];
-              const token2 = tokens[forceToCurrencyName(item[0].args[0][1])];
-
-              return {
-                token: Token.fromTokens(token1, token2),
-                pair: [token1, token2] as [Token, Token],
-                status: item[2]
-              };
-            });
+        const tokens = Object.fromEntries(
+          Array.from(tokenCollections).map((item) => {
+            return [item, this.wallet.getToken(item)];
           })
         );
+        return data.map((item) => {
+          const token1 = tokens[forceToCurrencyName(item[0].args[0][0])];
+          const token2 = tokens[forceToCurrencyName(item[0].args[0][1])];
+
+          return {
+            token: Token.fromTokens(token1, token2),
+            pair: [token1, token2] as [Token, Token],
+            status: item[2]
+          };
+        });
       })
     );
   });

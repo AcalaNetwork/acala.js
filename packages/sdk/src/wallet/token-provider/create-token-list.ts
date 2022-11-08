@@ -16,7 +16,7 @@ import {
   XcmV1MultiLocation
 } from '@acala-network/types/interfaces/types-lookup';
 import { hexToString } from '@polkadot/util';
-import { TokenRecord } from '../type';
+import { TokenRecord } from '../types';
 
 function extractLocation(key: number, data: [StorageKey<[u16]>, Option<XcmV1MultiLocation>][]) {
   const location = data.find((item) => item[0].args[0].toNumber() === key)?.[1]?.unwrapOrDefault();

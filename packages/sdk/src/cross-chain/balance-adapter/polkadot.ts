@@ -1,6 +1,6 @@
 import { AnyApi, FixedPointNumber as FN, Token } from '@acala-network/sdk-core';
 import { map } from 'rxjs/operators';
-import { BalanceData } from '../../wallet/type';
+import { BalanceData } from '../../wallet/types';
 import { BalanceAdapter } from '../../wallet/balance-adapter/types';
 import { Observable } from 'rxjs';
 import { Storage } from '../../utils/storage';

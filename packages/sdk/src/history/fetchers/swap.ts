@@ -210,8 +210,8 @@ export class Swaps extends BaseHistoryFetcher<SwapFetchParams> {
     token1Amount: string,
     shareAmount?: string
   ) {
-    const token0 = this.configs.wallet.__getToken(token0Id);
-    const token1 = this.configs.wallet.__getToken(token1Id);
+    const token0 = this.configs.wallet.getToken(token0Id);
+    const token1 = this.configs.wallet.getToken(token1Id);
     const amount0 = FixedPointNumber.fromInner(token0Amount, token0?.decimals).toNumber(6);
     const amount1 = FixedPointNumber.fromInner(token1Amount, token1?.decimals).toNumber(6);
 
@@ -222,7 +222,7 @@ export class Swaps extends BaseHistoryFetcher<SwapFetchParams> {
     } else if (type === 'RemoveLiquidity') {
       const [_t0, _t1] = Token.sortTokenNames(token0Id, token1Id);
       const shareTokenName = createDexShareName(_t0, _t1);
-      const shareToken = this.configs.wallet.__getToken(shareTokenName);
+      const shareToken = this.configs.wallet.getToken(shareTokenName);
       const amount = FixedPointNumber.fromInner(shareAmount || '0', shareToken?.decimals).toNumber(6);
       return `Remove ${amount} shares from ${shareToken?.display} pool`;
     } else if (type === 'AddProvision') {

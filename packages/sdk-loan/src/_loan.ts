@@ -56,8 +56,8 @@ export class LoanRx {
     wallet: Wallet,
     priceProvider: PriceProviderType = PriceProviderType.ORACLE
   ) {
-    const collateralToken = wallet.__getToken(currency);
-    const stableCoinToken = wallet.__getToken(api.consts.cdpEngine.getStableCurrencyId);
+    const collateralToken = wallet.getToken(currency);
+    const stableCoinToken = wallet.getToken(api.consts.cdpEngine.getStableCurrencyId);
 
     assert(collateralToken && stableCoinToken, `init the loan sdk failed, can't find useable token in currency chain`);
 
