@@ -61,7 +61,7 @@ export class SubStorage<T = unknown> {
 
     if (events) {
       this.chainListener.subscribeByEvents(events).subscribe({
-        next: this.queryData
+        next: () => this.queryData()
       });
     }
   }
