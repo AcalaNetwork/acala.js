@@ -23,6 +23,7 @@ export class ChainListener {
 
   static create({ api, key }: ChainListenerConfigs): ChainListener {
     const instanceKey = key || api.runtimeChain.toString();
+
     if (this.instances?.[instanceKey]) return this.instances[instanceKey];
 
     const instance = new ChainListener({ api });

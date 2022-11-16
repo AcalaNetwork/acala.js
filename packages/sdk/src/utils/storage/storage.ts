@@ -18,8 +18,9 @@ export class SubStorage<T = unknown> {
   constructor(configs: StorageConfig) {
     this.configs = configs;
     this.subject = new ReplaySubject<T>(1);
-    this.subscribe();
     this.chainListener = ChainListener.create({ api: configs.api });
+
+    this.subscribe();
   }
 
   private subscribe() {
