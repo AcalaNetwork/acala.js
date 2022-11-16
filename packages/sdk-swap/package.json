@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk-swap",
-  "version": "4.1.7-23",
+  "version": "4.1.7-24",
   "description": "the swap sub module in acala network sdk",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
@@ -15,7 +15,7 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
-    "@acala-network/sdk": "^4.1.7-23",
+    "@acala-network/sdk": "^4.1.7-24",
     "@nuts-finance/sdk-stable-asset": "^1.2.0"
   },
   "devDependencies": {
