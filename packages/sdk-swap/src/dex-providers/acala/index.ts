@@ -38,7 +38,7 @@ export const createStorages = (api: AnyApi) => {
         api: api,
         path: 'query.dex.tradingPairStatuses.entries',
         params: [],
-        triggleEvents: [
+        events: [
           { method: 'EnableTradingPair', section: 'dex' },
           { method: 'ProvisioningToEnabled', section: 'dex' },
           { method: 'DisableTradingPair', section: 'dex' }

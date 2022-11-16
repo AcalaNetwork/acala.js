@@ -2,7 +2,7 @@ import { AnyApi, FixedPointNumber } from '@acala-network/sdk-core';
 import { ModuleAuctionManagerCollateralAuctionItem } from '@acala-network/types/interfaces/types-lookup';
 import { Balance } from '@polkadot/types/interfaces';
 import { BehaviorSubject, combineLatest, filter, map, Observable, Subscription } from 'rxjs';
-import { ChainListener, ListenerBlock } from '../utils/chain-listener';
+import { ChainListener, BlockDetails } from '../utils/chain-listener';
 import { Wallet } from '../wallet';
 import { createAuctionStorages } from './storages';
 import { AuctionBid, AuctionConfigs, AuctionStage, AuctionStatus, CollateralAuction } from './types';
@@ -12,7 +12,7 @@ export class Auction {
   private wallet: Wallet;
   private storages: ReturnType<typeof createAuctionStorages>;
   private inner: CollateralAuction;
-  private chainListner: ChainListener;
+  private chainListener: ChainListener;
   public readonly id: string;
   public readonly configs: {
     minimumIncrementSize: FixedPointNumber;
@@ -27,7 +27,7 @@ export class Auction {
     this.id = id;
     this.wallet = wallet;
     this.storages = createAuctionStorages(this.api);
-    this.chainListner = ChainListener.create({ api, instanceKey: this.wallet.consts.runtimeChain.toString() });
+    this.chainListener = ChainListener.create({ api });
     this.configs = {
       auctionDurationSoftCap: this.api.consts.auctionManager.auctionDurationSoftCap.toBigInt(),
       minimumIncrementSize: FixedPointNumber.fromInner(
@@ -112,7 +112,7 @@ export class Auction {
     return FixedPointNumber.ZERO;
   }
 
-  private getCurrentStatusFormBlock(block: ListenerBlock): AuctionStatus | undefined {
+  private getCurrentStatusFormBlock(block: BlockDetails): AuctionStatus | undefined {
     const cancelEvent = block.events.find((item) => {
       return (
         item.event.section.toString() === 'auctionManager' &&
@@ -161,7 +161,7 @@ export class Auction {
     return undefined;
   }
 
-  private createDexTakeBidRecord(block: ListenerBlock): AuctionBid | undefined {
+  private createDexTakeBidRecord(block: BlockDetails): AuctionBid | undefined {
     const event = block.events.find((item) => {
       return (
         item.event.section.toString() === 'auctionManager' &&
@@ -198,7 +198,7 @@ export class Auction {
     };
   }
 
-  private createBidRecord(block: ListenerBlock, collateralAmount: FixedPointNumber): AuctionBid | undefined {
+  private createBidRecord(block: BlockDetails, collateralAmount: FixedPointNumber): AuctionBid | undefined {
     const event = block.events.find((item) => {
       return (
         item.event.section.toString() === 'auction' &&
@@ -236,7 +236,7 @@ export class Auction {
 
   private subscribeData(): Observable<CollateralAuction> {
     return combineLatest({
-      block: this.chainListner.subscribe(),
+      block: this.chainListener.block$,
       auctionDetails: this.storages.collateralAuctions(this.id).observable,
       auctionBidDetails: this.storages.auction(this.id).observable
     }).pipe(

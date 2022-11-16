@@ -1,4 +1,4 @@
-import { Observable, BehaviorSubject, Subscription, firstValueFrom, combineLatest } from 'rxjs';
+import { Observable, ReplaySubject, Subscription, firstValueFrom, combineLatest } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { PriceProvider } from './types';
 import { TimestampedValue } from '@open-web3/orml-types/interfaces';
@@ -19,8 +19,8 @@ import { getAllLiquidCrowdloanTokenPrice } from '../utils/get-liquid-crowdloan-t
 export class OraclePriceProvider implements PriceProvider {
   private api: AnyApi;
   private oracleProvider: string;
-  private subject: BehaviorSubject<Record<string, FN> | undefined>;
-  private liquidCrowdloanSubject: BehaviorSubject<Record<string, FN>>;
+  private subject: ReplaySubject<Record<string, FN>>;
+  private liquidCrowdloanSubject: ReplaySubject<Record<string, FN>>;
   private processSubscriber: Subscription;
   private crowdloanPriceProcessSubscriber: Subscription;
   private consts: {
@@ -31,8 +31,8 @@ export class OraclePriceProvider implements PriceProvider {
   constructor(api: AnyApi, oracleProvider = 'Aggregated') {
     this.api = api;
     this.oracleProvider = oracleProvider;
-    this.subject = new BehaviorSubject(undefined) as BehaviorSubject<Record<string, FN> | undefined>;
-    this.liquidCrowdloanSubject = new BehaviorSubject({});
+    this.subject = new ReplaySubject<Record<string, FN>>(1);
+    this.liquidCrowdloanSubject = new ReplaySubject(1);
 
     this.consts = {
       stakingCurrency: api.consts.prices.getStakingCurrencyId,
@@ -85,7 +85,7 @@ export class OraclePriceProvider implements PriceProvider {
       api: this.api,
       path: 'rpc.oracle.getAllValues',
       params: [this.oracleProvider],
-      triggleEvents: [{ section: '*', method: 'NewFeedData' }]
+      events: [{ section: '*', method: 'NewFeedData' }]
     }).observable;
 
     return storage$.subscribe({

@@ -8,28 +8,25 @@ export interface Extrinsic {
   events: FrameSystemEventRecord[];
 }
 
-export interface ListenerBlock {
+export interface BlockDetails {
   block: SignedBlock;
   extrinsics: Extrinsic[];
   events: FrameSystemEventRecord[];
   timestamp: Date;
 }
 
-export interface EventFilterConfigs {
-  events: {
-    section: string;
-    method: string;
-  }[];
-}
+export type EventFilterConfigs = {
+  section: string;
+  method: string;
+}[];
 
 export interface ListenerEvent {
   raw: FrameSystemEventRecord;
   extrinsic: Extrinsic;
-  blcok: ListenerBlock;
+  blcok: BlockDetails;
 }
 
 export interface ChainListenerConfigs {
   api: AnyApi;
-  // suggest use the chain name as instance key for that the sdk can create an singteton instances
-  instanceKey: string;
+  key?: string;
 }
