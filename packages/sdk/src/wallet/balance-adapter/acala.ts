@@ -21,13 +21,13 @@ const createStorages = (api: AnyApi) => {
     nativeBalance: (address: string) =>
       Storage.create<AccountInfo>({
         api: api,
-        path: 'query.system.account',
+        query: api.query.system.account,
         params: [address]
       }),
     nonNativeBalance: (token: Token, address: string) =>
       Storage.create<OrmlAccountData>({
         api: api,
-        path: 'query.tokens.accounts',
+        query: api.query.tokens.accounts,
         params: [address, token.toChainData()]
       }),
     issuance: (token: Token) => {
@@ -37,7 +37,7 @@ const createStorages = (api: AnyApi) => {
 
       return Storage.create<Balance>({
         api: api,
-        path: isNativeToken ? 'query.balances.totalIssuance' : 'query.tokens.totalIssuance',
+        query: isNativeToken ? api.query.balances.totalIssuance : api.query.tokens.totalIssuance,
         params: isNativeToken ? [] : [token.toChainData()]
       });
     }

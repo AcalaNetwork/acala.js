@@ -18,13 +18,13 @@ describe.skip('chain listener', () => {
 
     await api.isReady;
 
-    return ChainListener.create({ api, instanceKey: 'karura' });
+    return ChainListener.create({ api });
   };
 
   test('subscribe should work', async () => {
     const sdk = await initSDK();
 
-    sdk.filterByEvents({ events: [{ section: 'tokens', method: '*' }] }).subscribe((data) => {
+    sdk.subscribeByEvents([{ section: 'tokens', method: '*' }]).subscribe((data) => {
       // do
       console.log(
         data.extrinsics?.map((item) => item.raw.toHuman()),

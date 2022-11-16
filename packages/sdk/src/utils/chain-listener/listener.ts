@@ -1,41 +1,38 @@
 import { AnyApi, eventsFilter } from '@acala-network/sdk-core';
 import { ApiPromise, ApiRx } from '@polkadot/api';
-import { BehaviorSubject, combineLatest, Observable, Subscription, from } from 'rxjs';
+import { combineLatest, Observable, Subscription, from, ReplaySubject } from 'rxjs';
 import { map, switchMap, filter } from 'rxjs/operators';
-import { ChainListenerConfigs, EventFilterConfigs, ListenerBlock } from './type';
+import { ChainListenerConfigs, EventFilterConfigs, BlockDetails } from './types';
 
 export class ChainListener {
   private api: AnyApi;
-  public readonly block$: BehaviorSubject<ListenerBlock | undefined>;
+  public readonly block$: ReplaySubject<BlockDetails>;
   private subscriptions: Subscription[];
-  private static instances: Record<string, ChainListener>;
+  private static instances: Record<string, ChainListener> = {};
 
   constructor({ api }: ChainListenerConfigs) {
     this.api = api;
-    this.block$ = new BehaviorSubject<ListenerBlock | undefined>(undefined);
+    this.block$ = new ReplaySubject<BlockDetails>(1);
 
     this.subscriptions = [
       this.subscribeBlock().subscribe({
         next: (data) => this.block$.next(data)
       })
     ];
-
-    if (!ChainListener.instances) {
-      ChainListener.instances = {};
-    }
   }
 
-  static create({ api, instanceKey }: ChainListenerConfigs): ChainListener {
+  static create({ api, key }: ChainListenerConfigs): ChainListener {
+    const instanceKey = key || api.runtimeChain.toString();
     if (this.instances?.[instanceKey]) return this.instances[instanceKey];
 
-    const instance = new ChainListener({ api, instanceKey });
+    const instance = new ChainListener({ api });
 
     this.instances[instanceKey] = instance;
 
     return instance;
   }
 
-  private subscribeBlockRx(): Observable<ListenerBlock> {
+  private subscribeBlockRx(): Observable<BlockDetails> {
     const api = this.api as ApiRx;
 
     return api.rpc.chain.subscribeNewHeads().pipe(
@@ -73,7 +70,7 @@ export class ChainListener {
     );
   }
 
-  private subscribeBlockPromise(): Observable<ListenerBlock> {
+  private subscribeBlockPromise(): Observable<BlockDetails> {
     const api = this.api as ApiPromise;
 
     return new Observable((subscriber) => {
@@ -116,10 +113,10 @@ export class ChainListener {
     this.subscriptions.forEach((item) => item.unsubscribe());
   }
 
-  public filterByEvents(configs: EventFilterConfigs) {
-    return this.subscribe().pipe(
+  public subscribeByEvents(configs: EventFilterConfigs) {
+    return this.block$.pipe(
       map((data) => {
-        const filter = eventsFilter(configs.events);
+        const filter = eventsFilter(configs);
 
         const extrinsics = data.extrinsics.filter((item) => {
           return item.events.reduce((acc, cur) => {
@@ -132,11 +129,10 @@ export class ChainListener {
         });
 
         return { ...data, extrinsics, events };
+      }),
+      filter((data) => {
+        return data.events.length !== 0;
       })
     );
-  }
-
-  public subscribe(): Observable<ListenerBlock> {
-    return this.block$.pipe(filter((item) => !!item)) as any as Observable<ListenerBlock>;
   }
 }

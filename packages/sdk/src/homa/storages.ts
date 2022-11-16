@@ -25,7 +25,7 @@ export const createStorages = (api: AnyApi) => {
         api,
         path: 'query.homa.stakingLedgers.entries',
         params: [],
-        triggleEvents: [
+        events: [
           { section: 'homa', method: 'LedgerBondedReset' },
           { section: 'homa', method: 'LedgerUnlockingReset' },
           { section: 'homa', method: 'CurrentEraBumped' },
@@ -79,7 +79,7 @@ export const createStorages = (api: AnyApi) => {
         api,
         path: 'query.homa.unbondings.entries',
         params: [address],
-        triggleEvents: [
+        events: [
           { section: 'homa', method: 'CurrentEraReset' },
           { section: 'homa', method: 'CurrentEraBumped' },
           { section: 'homa', method: 'RequestedRedeem' },
