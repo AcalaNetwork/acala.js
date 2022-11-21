@@ -1,110 +1,187 @@
-import { eventsFilterCallback, eventsFilterRx } from '@acala-network/sdk-core';
 import { ApiPromise, ApiRx } from '@polkadot/api';
-import { BehaviorSubject, Observable, Subject, Subscription, firstValueFrom } from 'rxjs';
-import { switchMap, filter } from 'rxjs/operators';
-import { NoQueryPath } from './error';
-import { StorageConfigs } from './types';
+import { ApiDecoration, ApiTypes, QueryableStorageEntry } from '@polkadot/api/types';
+import { AnyTuple } from '@polkadot/types/types';
+import LRUCache from 'lru-cache';
+import { firstValueFrom, isObservable, Observable, ReplaySubject, tap } from 'rxjs';
+import { ChainListener } from '../chain-listener';
+import { RequiredQueryPathOrQuery } from './error';
+import { StorageConfig } from './types';
 
-export class Storage<T = unknown> {
-  private configs: StorageConfigs;
-  private subject: Subject<T>;
-  private subscriber!: Subscription;
+/**
+ * a tool to create same query interfaces for apiPromise and apiRx
+ */
+export class SubStorage<T = unknown> {
+  private configs: StorageConfig;
+  private subject: ReplaySubject<T>;
+  private chainListener: ChainListener;
 
-  constructor(configs: StorageConfigs) {
+  constructor(configs: StorageConfig) {
     this.configs = configs;
-    this.subject = new BehaviorSubject<T>(undefined as unknown as T);
-    this.doSubscriber();
+    this.subject = new ReplaySubject<T>(1);
+    this.chainListener = ChainListener.create({ api: configs.api });
+
+    this.subscribe();
   }
 
-  static create<T = unknown>(configs: StorageConfigs): Storage<T> {
-    return new Storage<T>(configs);
-  }
-
-  private doSubscriber() {
-    this.subscriber = this.process().subscribe({
-      next: (data) => {
-        this.subject.next(data);
-      }
-    });
-  }
-
-  private process() {
+  private subscribe() {
     const { api } = this.configs;
 
     if (api.type === 'promise') {
-      return this.processWithApiPromise();
-    } else {
-      return this.processWithApiRx();
+      this.subscribeWithPromiseApi();
+    }
+
+    if (api.type === 'rxjs') {
+      this.subscribeWithRxApi();
+    }
+
+    this.triggerByEvents();
+  }
+
+  private getQuery(
+    api: ApiPromise | ApiRx | ApiDecoration<'promise'> | ApiDecoration<'rxjs'>
+  ): QueryableStorageEntry<ApiTypes, any> {
+    const { path, query } = this.configs;
+
+    if (query) return query;
+
+    if (path) {
+      const queryPath = path.split('.');
+
+      return queryPath.reduce((acc, i) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        return (acc as any)[i];
+      }, api) as any as QueryableStorageEntry<ApiTypes, AnyTuple>;
+    }
+
+    throw new RequiredQueryPathOrQuery();
+  }
+
+  private triggerByEvents() {
+    const { events } = this.configs;
+
+    if (events) {
+      this.chainListener.subscribeByEvents(events).subscribe({
+        next: () => this.queryData()
+      });
     }
   }
 
-  private getQueryFN(api: ApiRx | ApiPromise, path: string, at?: string): any {
-    const arr = path.split('.');
-    const start = at ? api.at(at) : api;
+  private async queryData() {
+    const { api, params } = this.configs;
 
-    return arr.reduce((acc, pathItem) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      return (acc as any)[pathItem];
-    }, start);
+    const query = await this.getQuery(api);
+
+    if (api.type === 'promise') {
+      const data = (await query(...params)) as unknown as T;
+
+      this.subject.next(data);
+    }
+
+    if (api.type === 'rxjs') {
+      const data = await firstValueFrom(query(...params) as unknown as Observable<T>);
+
+      this.subject.next(data);
+    }
   }
 
-  private processWithApiRx(): Observable<T> {
-    const { path, params, at, triggleEvents } = this.configs;
-    const api = this.configs.api as ApiRx;
+  private async subscribeWithPromiseApi() {
+    const { at, params } = this.configs;
 
-    const inner = (atHash?: string) => {
-      const func = this.getQueryFN(api, path, atHash) as (...params: any[]) => Observable<T>;
-
-      if (func) {
-        return func(...params);
-      }
-
-      throw new NoQueryPath(path);
-    };
+    let api: ApiPromise | ApiDecoration<'promise'> = this.configs.api as ApiPromise;
 
     if (at) {
-      return api.rpc.chain.getBlockHash(at).pipe(switchMap((hash) => inner(hash.toString())));
+      const blockHash = await (api as ApiPromise).rpc.chain.getBlockHash(at);
+
+      api = await (api as ApiPromise).at(blockHash);
     }
 
-    if (triggleEvents) {
-      return eventsFilterRx(api, triggleEvents, true).pipe(switchMap(() => inner()));
-    }
+    params.push((result: T) => this.subject.next(result));
 
-    return inner();
+    const func = this.getQuery(api);
+
+    if (!func) return;
+
+    func(...params);
   }
 
-  private processWithApiPromise(): Observable<T> {
-    const { path, params, at, triggleEvents } = this.configs;
-    const api = this.configs.api as ApiPromise;
+  private async subscribeWithRxApi() {
+    const { at, params } = this.configs;
 
-    return new Observable((subscriber) => {
-      (async () => {
-        const atHash = at ? await api.rpc.chain.getBlockHash(at) : '';
+    let api: ApiRx | ApiDecoration<'rxjs'> = this.configs.api as ApiRx;
 
-        const func = this.getQueryFN(api, path, atHash.toString()) as (...params: any[]) => void;
+    if (at) {
+      const blockHash = await firstValueFrom((api as ApiRx).rpc.chain.getBlockHash(at));
 
-        params.push((result: T) => subscriber.next(result));
+      api = await (api as ApiRx).at(blockHash);
 
-        if (triggleEvents) {
-          eventsFilterCallback(api, triggleEvents, true, () => {
-            func(...params);
-          });
-        } else {
-          func(...params);
-        }
-      })();
+      const func = this.getQuery(api);
+
+      if (!func) return;
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+      const storage$ = (func as any)(...params);
+
+      if (isObservable(storage$)) {
+        (storage$ as unknown as Observable<T>).pipe(tap((result) => this.subject.next(result))).subscribe();
+      }
+    }
+
+    (api as ApiRx).isReady.subscribe(() => {
+      const func = this.getQuery(api);
+
+      if (!func) return;
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+      const storage$ = (func as any).call(api, ...params);
+
+      if (isObservable(storage$)) {
+        (storage$ as unknown as Observable<T>).pipe(tap((result) => this.subject.next(result))).subscribe();
+      }
     });
   }
 
-  public unsub(): void {
-    this.subscriber.unsubscribe();
+  public get observable() {
+    return this.subject.asObservable();
   }
 
-  get observable(): Observable<T> {
-    return this.subject.asObservable().pipe(filter((i) => !!i));
-  }
-
-  public async query(): Promise<T> {
+  public async query() {
     return firstValueFrom(this.observable);
+  }
+
+  public complated() {
+    this.subject.complete();
+  }
+}
+
+function getSubStorageKey(configs: StorageConfig) {
+  const { api, path, query, params } = configs;
+
+  if (query) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    return [api.type, (query as any).section, (query as any).method, JSON.stringify(params)].join(',');
+  }
+
+  return [
+    api.type,
+    path,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    JSON.stringify(params)
+  ].join('-');
+}
+
+export class Storage {
+  static subStorages = new LRUCache<string, SubStorage<any>>({ max: 5000 });
+
+  static create<T = unknown>(configs: StorageConfig) {
+    const key = getSubStorageKey(configs);
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    if (this.subStorages.has(key)) return this.subStorages.get(key)! as SubStorage<T>;
+
+    const subStorage = new SubStorage<T>(configs);
+
+    this.subStorages.set(key, subStorage);
+
+    return subStorage;
   }
 }

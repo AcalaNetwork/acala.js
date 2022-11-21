@@ -1,2 +1,2 @@
 export * from './listener';
-export * from './type';
+export * from './types';

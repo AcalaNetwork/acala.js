@@ -1,5 +1,25 @@
 import type { OverrideVersionedType } from '@polkadot/types/types';
 
+const sharedTypes = {
+  CompactAssignments: 'CompactAssignmentsWith16',
+  DispatchErrorModule: 'DispatchErrorModuleU8',
+  RawSolution: 'RawSolutionWith16',
+  Keys: 'SessionKeys6',
+  ProxyType: {
+    _enum: {
+      Any: 0,
+      NonTransfer: 1,
+      Governance: 2,
+      Staking: 3,
+      UnusedSudoBalances: 4,
+      IdentityJudgement: 5,
+      CancelProxy: 6,
+      Auction: 7
+    }
+  },
+  Weight: 'WeightV1'
+};
+
 const xcmV0 = {
   MultiLocation: 'MultiLocationV0',
   MultiAsset: 'MultiAssetV0',
@@ -71,6 +91,7 @@ const versioned: OverrideVersionedType[] = [
   {
     minmax: [600, 699],
     types: {
+      ...sharedTypes,
       ...xcmV0,
       ...poolIdV0,
       ...addressV0,
@@ -82,6 +103,7 @@ const versioned: OverrideVersionedType[] = [
   {
     minmax: [700, 719],
     types: {
+      ...sharedTypes,
       ...xcmV0,
       ...poolIdV0,
       ...addressV1,
@@ -93,6 +115,7 @@ const versioned: OverrideVersionedType[] = [
   {
     minmax: [720, 722],
     types: {
+      ...sharedTypes,
       ...addressV1,
       ...xcmV0,
       ...poolIdV0,
@@ -123,6 +146,7 @@ const versioned: OverrideVersionedType[] = [
   {
     minmax: [723, 729],
     types: {
+      ...sharedTypes,
       ...addressV1,
       ...xcmV0,
       ...poolIdV1,
@@ -153,6 +177,7 @@ const versioned: OverrideVersionedType[] = [
   {
     minmax: [730, 1007],
     types: {
+      ...sharedTypes,
       ...addressV1,
       ...xcmV0,
       ...poolIdV1,
@@ -177,6 +202,7 @@ const versioned: OverrideVersionedType[] = [
   {
     minmax: [1008, 1008],
     types: {
+      ...sharedTypes,
       ...addressV1,
       ...xcmV0,
       ...poolIdV1,
@@ -199,6 +225,7 @@ const versioned: OverrideVersionedType[] = [
   {
     minmax: [1008, 1009],
     types: {
+      ...sharedTypes,
       ...addressV1,
       ...xcmV0,
       ...poolIdV1
@@ -207,6 +234,7 @@ const versioned: OverrideVersionedType[] = [
   {
     minmax: [1010, 1013],
     types: {
+      ...sharedTypes,
       ...addressV1,
       ...xcmV0
     }
@@ -214,6 +242,7 @@ const versioned: OverrideVersionedType[] = [
   {
     minmax: [1014, 1018],
     types: {
+      ...sharedTypes,
       ...addressV1,
       ...xcmV1
     }

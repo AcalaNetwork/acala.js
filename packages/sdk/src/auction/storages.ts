@@ -32,7 +32,7 @@ export const createAuctionManagerStorages = (api: AnyApi) => {
         api: api,
         path: 'query.auctionManager.collateralAuctions.keys',
         params: [],
-        triggleEvents: [{ method: 'NewCollateralAuction', section: 'auctionManager' }]
+        events: [{ method: 'NewCollateralAuction', section: 'auctionManager' }]
       })
   };
 };
