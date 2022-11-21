@@ -40,7 +40,8 @@
     "postinstall": "polkadot-dev-yarn-only",
     "test": "polkadot-dev-run-test --coverage --forceExit",
     "check-deps": "./node_modules/@open-web3/util/scripts/check-deps.js yarn.lock @polkadot/ @open-web3/",
-    "update-metadata": "ts-node --project ./tsconfig.json packages/types/scripts/updateMetadata.ts"
+    "update-metadata": "ts-node --project ./tsconfig.json packages/types/scripts/updateMetadata.ts",
+    "generate-types": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --input packages/types/src/interfaces/ --package @acala-network/types/interfaces --endpoint packages/types/src/metadata/static-latest.json"
   },
   "devDependencies": {
     "@babel/core": "^7.14.3",
