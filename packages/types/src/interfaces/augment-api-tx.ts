@@ -5,7 +5,7 @@ import type { ApiTypes } from '@polkadot/api-base/types';
 import type { BTreeMap, Bytes, Compact, Option, U8aFixed, Vec, WrapperKeepOpaque, bool, i128, u128, u16, u32, u64, u8 } from '@polkadot/types-codec';
 import type { AnyNumber, IMethod, ITuple } from '@polkadot/types-codec/types';
 import type { AccountId32, Call, H160, H256, MultiAddress, Perbill } from '@polkadot/types/interfaces/runtime';
-import type { AcalaPrimitivesAuthoritysOriginId, AcalaPrimitivesCurrencyAssetMetadata, AcalaPrimitivesCurrencyCurrencyId, CumulusPrimitivesParachainInherentParachainInherentData, EthereumTransactionAccessListItem, EthereumTransactionTransactionAction, FrameSupportScheduleDispatchTime, FrameSupportScheduleMaybeHashed, KaruraRuntimeOriginCaller, KaruraRuntimeScheduledTasks, KaruraRuntimeSessionKeys, ModuleHomaModuleUnlockChunk, ModuleSupportDexAggregatedSwapPath, ModuleSupportDexSwapLimit, ModuleSupportIncentivesPoolId, ModuleXcmInterfaceModuleXcmInterfaceOperation, OrmlTraitsChangeOption, OrmlTraitsChangeU128, OrmlVestingVestingSchedule, PalletDemocracyConviction, PalletDemocracyVoteAccountVote, PalletMultisigTimepoint, RuntimeCommonProxyType, SpRuntimeHeader, SpRuntimeMultiSignature, XcmV1MultiLocation, XcmV2WeightLimit, XcmVersionedMultiAsset, XcmVersionedMultiAssets, XcmVersionedMultiLocation, XcmVersionedXcm } from '@polkadot/types/lookup';
+import type { AcalaPrimitivesAuthoritysOriginId, AcalaPrimitivesCurrencyAssetMetadata, AcalaPrimitivesCurrencyCurrencyId, AcalaRuntimeOriginCaller, AcalaRuntimeScheduledTasks, AcalaRuntimeSessionKeys, CumulusPrimitivesParachainInherentParachainInherentData, EthereumTransactionAccessListItem, EthereumTransactionTransactionAction, FrameSupportScheduleDispatchTime, FrameSupportScheduleMaybeHashed, ModuleHomaModuleUnlockChunk, ModuleSupportDexAggregatedSwapPath, ModuleSupportDexSwapLimit, ModuleSupportIncentivesPoolId, ModuleXcmInterfaceModuleXcmInterfaceOperation, OrmlTraitsChangeOption, OrmlTraitsChangeU128, OrmlVestingVestingSchedule, PalletDemocracyConviction, PalletDemocracyVoteAccountVote, PalletMultisigTimepoint, RuntimeCommonProxyType, SpRuntimeHeader, SpRuntimeMultiSignature, XcmV1MultiLocation, XcmV2WeightLimit, XcmVersionedMultiAsset, XcmVersionedMultiAssets, XcmVersionedMultiLocation, XcmVersionedXcm } from '@polkadot/types/lookup';
 
 declare module '@polkadot/api-base/types/submittable' {
   export interface AugmentedSubmittables<ApiType extends ApiTypes> {
@@ -55,10 +55,10 @@ declare module '@polkadot/api-base/types/submittable' {
     };
     authority: {
       authorizeCall: AugmentedSubmittable<(call: Call | IMethod | string | Uint8Array, caller: Option<AccountId32> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [Call, Option<AccountId32>]>;
-      cancelScheduledDispatch: AugmentedSubmittable<(initialOrigin: KaruraRuntimeOriginCaller | { system: any } | { Void: any } | { PolkadotXcm: any } | { CumulusXcm: any } | { Authority: any } | { GeneralCouncil: any } | { FinancialCouncil: any } | { HomaCouncil: any } | { TechnicalCommittee: any } | string | Uint8Array, taskId: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [KaruraRuntimeOriginCaller, u32]>;
-      delayScheduledDispatch: AugmentedSubmittable<(initialOrigin: KaruraRuntimeOriginCaller | { system: any } | { Void: any } | { PolkadotXcm: any } | { CumulusXcm: any } | { Authority: any } | { GeneralCouncil: any } | { FinancialCouncil: any } | { HomaCouncil: any } | { TechnicalCommittee: any } | string | Uint8Array, taskId: u32 | AnyNumber | Uint8Array, additionalDelay: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [KaruraRuntimeOriginCaller, u32, u32]>;
+      cancelScheduledDispatch: AugmentedSubmittable<(initialOrigin: AcalaRuntimeOriginCaller | { system: any } | { Void: any } | { PolkadotXcm: any } | { CumulusXcm: any } | { Authority: any } | { GeneralCouncil: any } | { FinancialCouncil: any } | { HomaCouncil: any } | { TechnicalCommittee: any } | string | Uint8Array, taskId: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaRuntimeOriginCaller, u32]>;
+      delayScheduledDispatch: AugmentedSubmittable<(initialOrigin: AcalaRuntimeOriginCaller | { system: any } | { Void: any } | { PolkadotXcm: any } | { CumulusXcm: any } | { Authority: any } | { GeneralCouncil: any } | { FinancialCouncil: any } | { HomaCouncil: any } | { TechnicalCommittee: any } | string | Uint8Array, taskId: u32 | AnyNumber | Uint8Array, additionalDelay: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaRuntimeOriginCaller, u32, u32]>;
       dispatchAs: AugmentedSubmittable<(asOrigin: AcalaPrimitivesAuthoritysOriginId | 'Root' | 'Treasury' | 'HonzonTreasury' | 'HomaTreasury' | 'TreasuryReserve' | number | Uint8Array, call: Call | IMethod | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaPrimitivesAuthoritysOriginId, Call]>;
-      fastTrackScheduledDispatch: AugmentedSubmittable<(initialOrigin: KaruraRuntimeOriginCaller | { system: any } | { Void: any } | { PolkadotXcm: any } | { CumulusXcm: any } | { Authority: any } | { GeneralCouncil: any } | { FinancialCouncil: any } | { HomaCouncil: any } | { TechnicalCommittee: any } | string | Uint8Array, taskId: u32 | AnyNumber | Uint8Array, when: FrameSupportScheduleDispatchTime | { At: any } | { After: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [KaruraRuntimeOriginCaller, u32, FrameSupportScheduleDispatchTime]>;
+      fastTrackScheduledDispatch: AugmentedSubmittable<(initialOrigin: AcalaRuntimeOriginCaller | { system: any } | { Void: any } | { PolkadotXcm: any } | { CumulusXcm: any } | { Authority: any } | { GeneralCouncil: any } | { FinancialCouncil: any } | { HomaCouncil: any } | { TechnicalCommittee: any } | string | Uint8Array, taskId: u32 | AnyNumber | Uint8Array, when: FrameSupportScheduleDispatchTime | { At: any } | { After: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaRuntimeOriginCaller, u32, FrameSupportScheduleDispatchTime]>;
       removeAuthorizedCall: AugmentedSubmittable<(hash: H256 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [H256]>;
       scheduleDispatch: AugmentedSubmittable<(when: FrameSupportScheduleDispatchTime | { At: any } | { After: any } | string | Uint8Array, priority: u8 | AnyNumber | Uint8Array, withDelayedOrigin: bool | boolean | Uint8Array, call: Call | IMethod | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [FrameSupportScheduleDispatchTime, u8, bool, Call]>;
       triggerCall: AugmentedSubmittable<(hash: H256 | string | Uint8Array, callWeightBound: Compact<u64> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [H256, Compact<u64>]>;
@@ -358,17 +358,8 @@ declare module '@polkadot/api-base/types/submittable' {
        **/
       [key: string]: SubmittableExtrinsicFunction<ApiType>;
     };
-    honzonBridge: {
-      fromBridged: AugmentedSubmittable<(amount: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Compact<u128>]>;
-      setBridgedStableCoinAddress: AugmentedSubmittable<(address: H160 | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [H160]>;
-      toBridged: AugmentedSubmittable<(amount: Compact<u128> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>, [Compact<u128>]>;
-      /**
-       * Generic tx
-       **/
-      [key: string]: SubmittableExtrinsicFunction<ApiType>;
-    };
     idleScheduler: {
-      scheduleTask: AugmentedSubmittable<(task: KaruraRuntimeScheduledTasks | { EvmTask: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [KaruraRuntimeScheduledTasks]>;
+      scheduleTask: AugmentedSubmittable<(task: AcalaRuntimeScheduledTasks | { EvmTask: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaRuntimeScheduledTasks]>;
       /**
        * Generic tx
        **/
@@ -514,7 +505,7 @@ declare module '@polkadot/api-base/types/submittable' {
     };
     session: {
       purgeKeys: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>, []>;
-      setKeys: AugmentedSubmittable<(keys: KaruraRuntimeSessionKeys | { aura?: any } | string | Uint8Array, proof: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [KaruraRuntimeSessionKeys, Bytes]>;
+      setKeys: AugmentedSubmittable<(keys: AcalaRuntimeSessionKeys | { aura?: any } | string | Uint8Array, proof: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaRuntimeSessionKeys, Bytes]>;
       /**
        * Generic tx
        **/
@@ -649,7 +640,7 @@ declare module '@polkadot/api-base/types/submittable' {
       asDerivative: AugmentedSubmittable<(index: u16 | AnyNumber | Uint8Array, call: Call | IMethod | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [u16, Call]>;
       batch: AugmentedSubmittable<(calls: Vec<Call> | (Call | IMethod | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<Call>]>;
       batchAll: AugmentedSubmittable<(calls: Vec<Call> | (Call | IMethod | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<Call>]>;
-      dispatchAs: AugmentedSubmittable<(asOrigin: KaruraRuntimeOriginCaller | { system: any } | { Void: any } | { PolkadotXcm: any } | { CumulusXcm: any } | { Authority: any } | { GeneralCouncil: any } | { FinancialCouncil: any } | { HomaCouncil: any } | { TechnicalCommittee: any } | string | Uint8Array, call: Call | IMethod | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [KaruraRuntimeOriginCaller, Call]>;
+      dispatchAs: AugmentedSubmittable<(asOrigin: AcalaRuntimeOriginCaller | { system: any } | { Void: any } | { PolkadotXcm: any } | { CumulusXcm: any } | { Authority: any } | { GeneralCouncil: any } | { FinancialCouncil: any } | { HomaCouncil: any } | { TechnicalCommittee: any } | string | Uint8Array, call: Call | IMethod | string | Uint8Array) => SubmittableExtrinsic<ApiType>, [AcalaRuntimeOriginCaller, Call]>;
       forceBatch: AugmentedSubmittable<(calls: Vec<Call> | (Call | IMethod | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>, [Vec<Call>]>;
       /**
        * Generic tx

@@ -190,14 +190,6 @@ declare module '@polkadot/api-base/types/consts' {
        **/
       [key: string]: Codec;
     };
-    honzonBridge: {
-      honzonBridgeAccount: AccountId32 & AugmentedConst<ApiType>;
-      stableCoinCurrencyId: AcalaPrimitivesCurrencyCurrencyId & AugmentedConst<ApiType>;
-      /**
-       * Generic const
-       **/
-      [key: string]: Codec;
-    };
     idleScheduler: {
       disableBlockThreshold: u32 & AugmentedConst<ApiType>;
       minimumWeightRemainInBlock: u64 & AugmentedConst<ApiType>;

@@ -5,7 +5,7 @@ import type { ApiTypes } from '@polkadot/api-base/types';
 import type { Bytes, Null, Option, Result, U8aFixed, Vec, bool, i128, i32, u128, u16, u32, u64, u8 } from '@polkadot/types-codec';
 import type { ITuple } from '@polkadot/types-codec/types';
 import type { AccountId32, H160, H256 } from '@polkadot/types/interfaces/runtime';
-import type { AcalaPrimitivesCurrencyAssetIds, AcalaPrimitivesCurrencyAssetMetadata, AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesTradingPair, EthereumLog, EvmCoreErrorExitReason, FrameSupportScheduleLookupError, FrameSupportTokensMiscBalanceStatus, FrameSupportWeightsDispatchInfo, KaruraRuntimeOriginCaller, KaruraRuntimeScheduledTasks, ModuleHomaModuleUnlockChunk, ModuleSupportIncentivesPoolId, ModuleXcmInterfaceModuleXcmInterfaceOperation, OrmlVestingVestingSchedule, PalletDemocracyVoteAccountVote, PalletDemocracyVoteThreshold, PalletMultisigTimepoint, RuntimeCommonProxyType, SpRuntimeDispatchError, XcmV1MultiAsset, XcmV1MultiLocation, XcmV1MultiassetMultiAssets, XcmV2Response, XcmV2TraitsError, XcmV2TraitsOutcome, XcmV2Xcm, XcmVersionedMultiAssets, XcmVersionedMultiLocation } from '@polkadot/types/lookup';
+import type { AcalaPrimitivesCurrencyAssetIds, AcalaPrimitivesCurrencyAssetMetadata, AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesTradingPair, AcalaRuntimeOriginCaller, AcalaRuntimeScheduledTasks, EthereumLog, EvmCoreErrorExitReason, FrameSupportScheduleLookupError, FrameSupportTokensMiscBalanceStatus, FrameSupportWeightsDispatchInfo, ModuleHomaModuleUnlockChunk, ModuleSupportIncentivesPoolId, ModuleXcmInterfaceModuleXcmInterfaceOperation, OrmlVestingVestingSchedule, PalletDemocracyVoteAccountVote, PalletDemocracyVoteThreshold, PalletMultisigTimepoint, RuntimeCommonProxyType, SpRuntimeDispatchError, XcmV1MultiAsset, XcmV1MultiLocation, XcmV1MultiassetMultiAssets, XcmV2Response, XcmV2TraitsError, XcmV2TraitsOutcome, XcmV2Xcm, XcmVersionedMultiAssets, XcmVersionedMultiLocation } from '@polkadot/types/lookup';
 
 declare module '@polkadot/api-base/types/events' {
   export interface AugmentedEvents<ApiType extends ApiTypes> {
@@ -46,12 +46,12 @@ declare module '@polkadot/api-base/types/events' {
     };
     authority: {
       AuthorizedCall: AugmentedEvent<ApiType, [H256, Option<AccountId32>]>;
-      Cancelled: AugmentedEvent<ApiType, [KaruraRuntimeOriginCaller, u32]>;
-      Delayed: AugmentedEvent<ApiType, [KaruraRuntimeOriginCaller, u32, u32]>;
+      Cancelled: AugmentedEvent<ApiType, [AcalaRuntimeOriginCaller, u32]>;
+      Delayed: AugmentedEvent<ApiType, [AcalaRuntimeOriginCaller, u32, u32]>;
       Dispatched: AugmentedEvent<ApiType, [Result<Null, SpRuntimeDispatchError>]>;
-      FastTracked: AugmentedEvent<ApiType, [KaruraRuntimeOriginCaller, u32, u32]>;
+      FastTracked: AugmentedEvent<ApiType, [AcalaRuntimeOriginCaller, u32, u32]>;
       RemovedAuthorizedCall: AugmentedEvent<ApiType, [H256]>;
-      Scheduled: AugmentedEvent<ApiType, [KaruraRuntimeOriginCaller, u32]>;
+      Scheduled: AugmentedEvent<ApiType, [AcalaRuntimeOriginCaller, u32]>;
       TriggeredCallBy: AugmentedEvent<ApiType, [H256, AccountId32]>;
       /**
        * Generic event
@@ -333,17 +333,8 @@ declare module '@polkadot/api-base/types/events' {
        **/
       [key: string]: AugmentedEvent<ApiType>;
     };
-    honzonBridge: {
-      BridgedStableCoinCurrencyIdSet: AugmentedEvent<ApiType, [AcalaPrimitivesCurrencyCurrencyId]>;
-      FromBridged: AugmentedEvent<ApiType, [AccountId32, u128]>;
-      ToBridged: AugmentedEvent<ApiType, [AccountId32, u128]>;
-      /**
-       * Generic event
-       **/
-      [key: string]: AugmentedEvent<ApiType>;
-    };
     idleScheduler: {
-      TaskAdded: AugmentedEvent<ApiType, [u32, KaruraRuntimeScheduledTasks]>;
+      TaskAdded: AugmentedEvent<ApiType, [u32, AcalaRuntimeScheduledTasks]>;
       TaskDispatched: AugmentedEvent<ApiType, [u32, Result<Null, SpRuntimeDispatchError>]>;
       /**
        * Generic event

@@ -422,13 +422,6 @@ declare module '@polkadot/api-base/types/errors' {
        **/
       [key: string]: AugmentedError<ApiType>;
     };
-    honzonBridge: {
-      BridgedStableCoinCurrencyIdNotSet: AugmentedError<ApiType>;
-      /**
-       * Generic error
-       **/
-      [key: string]: AugmentedError<ApiType>;
-    };
     incentives: {
       InvalidCurrencyId: AugmentedError<ApiType>;
       InvalidPoolId: AugmentedError<ApiType>;
