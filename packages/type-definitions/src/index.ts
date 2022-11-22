@@ -104,4 +104,3 @@ export const typesBundleForPolkadot = {
 };
 
 export const signedExtensions = acalaSignedExtensions;
-
