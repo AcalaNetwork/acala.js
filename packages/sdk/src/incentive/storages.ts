@@ -7,7 +7,7 @@ import {
   ModuleIncentivesPoolId,
   OrmlRewardsPoolInfo,
   PalletSchedulerScheduledV3
-} from '@acala-network/types/interfaces/types-lookup';
+} from '@polkadot/types/lookup';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const createStorages = (api: AnyApi) => {

@@ -68,7 +68,7 @@
         "packages/wormhole-portal/src"
       ],
       "@acala-network/wormhole-portal/*": [
-        "packages/wromhole-portal/src/*"
+        "packages/wormhole-portal/src/*"
       ],
     },
     "skipLibCheck": true,

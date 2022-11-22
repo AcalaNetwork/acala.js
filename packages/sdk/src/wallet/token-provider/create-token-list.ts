@@ -14,7 +14,7 @@ import {
   ModuleAssetRegistryModuleAssetIds,
   ModuleAssetRegistryModuleAssetMetadata,
   XcmV1MultiLocation
-} from '@acala-network/types/interfaces/types-lookup';
+} from '@polkadot/types/lookup';
 import { hexToString } from '@polkadot/util';
 import { TokenRecord } from '../types';
 

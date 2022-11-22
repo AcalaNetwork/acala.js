@@ -12,7 +12,7 @@ import { getAllCollateralCurrencyIds } from '../utils';
 import {
   AcalaPrimitivesCurrencyCurrencyId,
   ModuleCdpEngineRiskManagementParams
-} from '@acala-network/types/interfaces/types-lookup';
+} from '@polkadot/types/lookup';
 
 /**
  * @name loanConstants

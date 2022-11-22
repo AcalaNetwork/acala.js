@@ -6,7 +6,7 @@ import { Position } from '@acala-network/types/interfaces';
 import { DerivedLoanType } from '@acala-network/api-derive';
 import { ApiRx } from '@polkadot/api';
 import { memoize } from 'lodash';
-import { AcalaPrimitivesCurrencyCurrencyId, ModuleLoansPosition } from '@acala-network/types/interfaces/types-lookup';
+import { AcalaPrimitivesCurrencyCurrencyId, ModuleLoansPosition } from '@polkadot/types/lookup';
 import { Wallet } from '@acala-network/sdk';
 import { PriceProviderType } from '@acala-network/sdk/wallet/price-provider/types';
 

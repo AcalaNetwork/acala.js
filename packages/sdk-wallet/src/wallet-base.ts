@@ -14,7 +14,7 @@ import {
   createLiquidCrowdloanName
 } from '@acala-network/sdk-core';
 import { getChainType } from '@acala-network/sdk/utils/get-chain-type';
-import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/interfaces/types-lookup';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
 
 import { ApiRx, ApiPromise } from '@polkadot/api';
 import { SubmittableExtrinsic } from '@polkadot/api/types';

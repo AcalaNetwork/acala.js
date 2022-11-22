@@ -4,7 +4,7 @@ import { Storage } from '../utils/storage';
 import {
   ModuleAuctionManagerCollateralAuctionItem,
   OrmlTraitsAuctionAuctionInfo
-} from '@acala-network/types/interfaces/types-lookup';
+} from '@polkadot/types/lookup';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const createAuctionStorages = (api: AnyApi) => {
