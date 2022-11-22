@@ -4,19 +4,7 @@ const sharedTypes = {
   CompactAssignments: 'CompactAssignmentsWith16',
   DispatchErrorModule: 'DispatchErrorModuleU8',
   RawSolution: 'RawSolutionWith16',
-  Keys: 'SessionKeys6',
-  ProxyType: {
-    _enum: {
-      Any: 0,
-      NonTransfer: 1,
-      Governance: 2,
-      Staking: 3,
-      UnusedSudoBalances: 4,
-      IdentityJudgement: 5,
-      CancelProxy: 6,
-      Auction: 7
-    }
-  },
+  Keys: 'SessionKeys1',
   Weight: 'WeightV1'
 };
 

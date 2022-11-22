@@ -531,16 +531,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -596,7 +594,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -948,16 +946,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -1013,7 +1009,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -1373,16 +1369,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -1438,7 +1432,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -1800,16 +1794,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -1865,7 +1857,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -2223,16 +2215,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -2288,7 +2278,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -2646,16 +2636,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -2711,7 +2699,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -3074,16 +3062,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -3139,7 +3125,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -3498,16 +3484,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -3563,7 +3547,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -3922,16 +3906,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -3987,7 +3969,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -4972,16 +4954,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -5037,7 +5017,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -5389,16 +5369,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -5454,7 +5432,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -5814,16 +5792,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -5879,7 +5855,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -6241,16 +6217,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -6306,7 +6280,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -6664,16 +6638,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -6729,7 +6701,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -7087,16 +7059,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -7152,7 +7122,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -7515,16 +7485,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -7580,7 +7548,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -7939,16 +7907,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -8004,7 +7970,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -8363,16 +8329,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -8428,7 +8392,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -9413,16 +9377,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -9478,7 +9440,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -9830,16 +9792,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -9895,7 +9855,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -10255,16 +10215,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -10320,7 +10278,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -10682,16 +10640,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -10747,7 +10703,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -11105,16 +11061,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -11170,7 +11124,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -11528,16 +11482,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -11593,7 +11545,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -11956,16 +11908,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -12021,7 +11971,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -12380,16 +12330,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -12445,7 +12393,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
@@ -12804,16 +12752,14 @@
                         "OracleKey": "CurrencyId",
                         "AsOriginId": "AuthoritysOriginId",
                         "ProxyType": {
-                            "_enum": {
-                                "Any": 0,
-                                "NonTransfer": 1,
-                                "Governance": 2,
-                                "Staking": 3,
-                                "UnusedSudoBalances": 4,
-                                "IdentityJudgement": 5,
-                                "CancelProxy": 6,
-                                "Auction": 7
-                            }
+                            "_enum": [
+                                "Any",
+                                "CancelProxy",
+                                "Governance",
+                                "Auction",
+                                "Swap",
+                                "Loan"
+                            ]
                         },
                         "AtLeast64BitUnsigned": "u128",
                         "StableAssetPoolId": "u32",
@@ -12869,7 +12815,7 @@
                         "DestAddress": "Vec<u8>",
                         "PoolTokenIndex": "u32",
                         "AssetId": "CurrencyId",
-                        "Keys": "SessionKeys6",
+                        "Keys": "SessionKeys1",
                         "CompactAssignments": "CompactAssignmentsWith16",
                         "DispatchErrorModule": "DispatchErrorModuleU8",
                         "RawSolution": "RawSolutionWith16",
