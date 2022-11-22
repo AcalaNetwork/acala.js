@@ -2,7 +2,6 @@
 /* eslint-disable */
 
 import type { AuthoritysOriginId, CurrencyId } from '@acala-network/types/interfaces/primitives';
-import type { Price } from '@open-web3/orml-types/interfaces/traits';
 import type { GenericAccountId, GenericAccountIndex, GenericBlock, GenericCall, GenericConsensusEngineId, GenericEthereumAccountId, GenericLookupSource, GenericMultiAddress, StorageKey } from '@polkadot/types';
 import type { Bytes, Compact, DoNotConstruct, Enum, Int, Null, Option, Struct, U8aFixed, UInt, Vec, u128, u16, u32, u64, u8 } from '@polkadot/types-codec';
 import type { ITuple } from '@polkadot/types-codec/types';
