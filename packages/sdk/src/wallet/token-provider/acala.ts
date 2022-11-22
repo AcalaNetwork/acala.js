@@ -1,10 +1,12 @@
 import { AnyApi, forceToCurrencyName, MaybeCurrency, Token, TokenType } from '@acala-network/sdk-core';
 import { StorageKey, Option, u16 } from '@polkadot/types';
 import {
-  ModuleAssetRegistryModuleAssetIds,
-  ModuleAssetRegistryModuleAssetMetadata,
+  AcalaPrimitivesTradingPair,
+  ModuleDexTradingPairStatus,
+  AcalaPrimitivesCurrencyAssetIds,
+  AcalaPrimitivesCurrencyAssetMetadata,
   XcmV1MultiLocation
-} from '@polkadot/types/lookup';
+} from '@acala-network/types/lookup';
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable } from 'rxjs';
 import { filter, map, shareReplay, take } from 'rxjs/operators';
 import { TokenProvider, TokenProviderConfigs } from './type';
@@ -14,7 +16,6 @@ import { ChainType } from '@acala-network/sdk/types';
 import { getChainType } from '@acala-network/sdk/utils/get-chain-type';
 import { TokenRecord } from '../types';
 import { CurrencyNotFound } from '../errors';
-import { TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
 
 export const createStorages = (api: AnyApi) => {
   return {
@@ -25,15 +26,13 @@ export const createStorages = (api: AnyApi) => {
         params: []
       }),
     assetMetadatas: () =>
-      Storage.create<
-        [StorageKey<[ModuleAssetRegistryModuleAssetIds]>, Option<ModuleAssetRegistryModuleAssetMetadata>][]
-      >({
+      Storage.create<[StorageKey<[AcalaPrimitivesCurrencyAssetIds]>, Option<AcalaPrimitivesCurrencyAssetMetadata>][]>({
         api: api,
         path: 'query.assetRegistry.assetMetadatas.entries',
         params: []
       }),
     tradingPairs: () =>
-      Storage.create<[StorageKey<[TradingPair]>, TradingPairStatus][]>({
+      Storage.create<[StorageKey<[AcalaPrimitivesTradingPair]>, ModuleDexTradingPairStatus][]>({
         api: api,
         path: 'query.dex.tradingPairStatuses.entries',
         params: []

@@ -1,4 +1,4 @@
-import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/lookup';
 import { ApiInterfaceRx } from '@polkadot/api/types';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';

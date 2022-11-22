@@ -1,7 +1,7 @@
 import { ApiPromise, ApiRx } from '@polkadot/api';
 import { Vec } from '@polkadot/types';
 import { EventRecord } from '@polkadot/types/interfaces';
-import { FrameSystemEventRecord } from '@polkadot/types/lookup';
+import { FrameSystemEventRecord } from '@acala-network/types/lookup';
 import { from, Observable } from 'rxjs';
 import { startWith, filter, switchMap, shareReplay } from 'rxjs/operators';
 

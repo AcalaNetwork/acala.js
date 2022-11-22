@@ -15,10 +15,10 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
-    "@polkadot/api": "^8.5.1",
-    "@polkadot/types": "^8.5.1",
+    "@polkadot/api": "^9.9.1",
+    "@polkadot/types": "^9.9.1",
     "lodash": "^4.17.20",
-    "rxjs": "^7.4.0"
+    "rxjs": "^7.5.7"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.161"

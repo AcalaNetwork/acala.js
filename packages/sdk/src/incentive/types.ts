@@ -1,5 +1,5 @@
 import { AnyApi, FixedPointNumber, Token } from '@acala-network/sdk-core';
-import { ModuleIncentivesPoolId } from '@polkadot/types/lookup';
+import { ModuleSupportIncentivesPoolId } from '@acala-network/types/lookup';
 import { Wallet } from '../wallet';
 
 export enum IncentiveType {
@@ -50,7 +50,7 @@ export interface BaseIncentivePool {
   // pool id
   id: string;
   // raw pool id
-  rawId: ModuleIncentivesPoolId;
+  rawId: ModuleSupportIncentivesPoolId;
   // the colateral token required by the pool
   collateral: Token;
   // total shares belone to the pool

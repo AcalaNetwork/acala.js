@@ -1,5 +1,5 @@
 import { AnyApi, FixedPointNumber } from '@acala-network/sdk-core';
-import { ModuleAuctionManagerCollateralAuctionItem } from '@polkadot/types/lookup';
+import { ModuleAuctionManagerCollateralAuctionItem } from '@acala-network/types/lookup';
 import { Balance } from '@polkadot/types/interfaces';
 import { BehaviorSubject, combineLatest, filter, map, Observable, Subscription } from 'rxjs';
 import { ChainListener, BlockDetails } from '../utils/chain-listener';

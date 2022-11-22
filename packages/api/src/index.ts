@@ -1,5 +1,4 @@
 import { derive as ormlDerives } from '@open-web3/orml-api-derive';
-import { derive as acalaDerives } from '@acala-network/api-derive';
 import {
   rpc as acalaRpc,
   types as acalaTypes,
@@ -35,8 +34,7 @@ export const options = ({
   },
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   derives: {
-    ...ormlDerives,
-    ...acalaDerives
+    ...ormlDerives
   },
   typesBundle: {
     ...typesBundle,

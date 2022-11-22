@@ -1,8 +1,5 @@
 import { Token } from '@acala-network/sdk-core/token';
-import {
-  AcalaPrimitivesCurrencyCurrencyId,
-  AcalaPrimitivesTradingPair
-} from '@polkadot/types/lookup';
+import { AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesTradingPair } from '@acala-network/types/lookup';
 import { assert } from '@polkadot/util';
 import { AnyApi } from './types';
 

@@ -16,7 +16,7 @@ import {
   AcalaPrimitivesCurrencyDexShare,
   AcalaPrimitivesCurrencyTokenSymbol,
   AcalaPrimitivesTradingPair
-} from '@polkadot/types/lookup';
+} from '@acala-network/types/lookup';
 
 export interface StableAsset {
   poolId: number;

@@ -2,9 +2,10 @@ import { AnyApi, forceToCurrencyName, Token } from '@acala-network/sdk-core';
 import { Storage } from '../utils/storage';
 import { StorageKey, U128 } from '@polkadot/types';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
-import { Balance, TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
+import { AcalaPrimitivesTradingPair, ModuleDexTradingPairStatus } from '@acala-network/types/lookup';
 import { getNativeTokenName } from '../utils/get-native-token-name';
 import { ITuple } from '@polkadot/types/types';
+import { Balance } from '@acala-network/types/interfaces';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const createStorages = (api: AnyApi) => {
@@ -31,7 +32,7 @@ export const createStorages = (api: AnyApi) => {
       });
     },
     tradingPairs: () => {
-      return Storage.create<[StorageKey<[TradingPair]>, TradingPairStatus][]>({
+      return Storage.create<[StorageKey<[AcalaPrimitivesTradingPair]>, ModuleDexTradingPairStatus][]>({
         api: api,
         path: 'query.dex.tradingPairStatuses.entries',
         params: []

@@ -1,7 +1,7 @@
 import { AnyApi, createLiquidCrowdloanName, FixedPointNumber } from '@acala-network/sdk-core';
 import { u128 } from '@polkadot/types-codec';
 import { Extrinsic, SignedBlock } from '@polkadot/types/interfaces';
-import { CumulusPrimitivesParachainInherentParachainInherentData } from '@polkadot/types/lookup';
+import { CumulusPrimitivesParachainInherentParachainInherentData } from '@acala-network/types/lookup';
 import { Storage } from '../../utils/storage';
 import { map } from 'rxjs/operators';
 

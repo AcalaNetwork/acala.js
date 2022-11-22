@@ -17,7 +17,7 @@
   "dependencies": {
     "@acala-network/sdk-core": "4.1.8-0",
     "lodash": "^4.17.20",
-    "rxjs": "^7.4.0"
+    "rxjs": "^7.5.7"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.161"

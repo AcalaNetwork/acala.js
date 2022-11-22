@@ -1,7 +1,6 @@
-import { CurrencyId } from '@acala-network/types/interfaces';
 import { ApiPromise, ApiRx } from '@polkadot/api';
 import { AccountId } from '@polkadot/types/interfaces';
-import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/lookup';
 import { Codec, Observable } from '@polkadot/types/types';
 import { Token } from './token';
 
@@ -9,14 +8,7 @@ export type AnyApi = ApiPromise | ApiRx;
 
 export type ObOrPromiseResult<T extends AnyApi, R> = T extends ApiRx ? Observable<R> : Promise<R>;
 
-export type MaybeCurrency =
-  | number
-  | string
-  | CurrencyId
-  | Token
-  | Codec
-  | [string, string]
-  | AcalaPrimitivesCurrencyCurrencyId;
+export type MaybeCurrency = number | string | Token | Codec | [string, string] | AcalaPrimitivesCurrencyCurrencyId;
 
 export type MaybeAccount = string | AccountId | Codec;
 

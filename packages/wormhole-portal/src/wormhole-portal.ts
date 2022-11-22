@@ -223,18 +223,18 @@ export class WormholePortal implements BaseSDK {
     if (!transaction.to) {
       return provider.api.tx.evm.create(
         transaction.data.toString(),
-        toBN(transaction.value),
-        toBN(gasLimit),
-        toBN(storageLimit.isNegative() ? 0 : storageLimit),
+        toBN(transaction.value).toString(),
+        toBN(gasLimit).toString(),
+        toBN(storageLimit.isNegative() ? 0 : storageLimit).toString(),
         (transaction.accessList || []) as any
       );
     } else {
       return provider.api.tx.evm.call(
         transaction.to,
         transaction.data.toString(),
-        toBN(transaction.value),
-        toBN(gasLimit),
-        toBN(storageLimit.isNegative() ? 0 : storageLimit),
+        toBN(transaction.value).toString(),
+        toBN(gasLimit).toString(),
+        toBN(storageLimit.isNegative() ? 0 : storageLimit).toString(),
         (transaction.accessList || []) as any
       );
     }
