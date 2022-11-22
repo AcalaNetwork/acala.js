@@ -15,6 +15,7 @@ import loans from './loans';
 import nft from './nft';
 import nomineesElection from './nomineesElection';
 import primitives from './primitives';
+export * from './primitives';
 
 // ecosystem
 import renvmBridge from './renvmBridge';
@@ -104,3 +105,4 @@ export const typesBundleForPolkadot = {
 };
 
 export const signedExtensions = acalaSignedExtensions;
+

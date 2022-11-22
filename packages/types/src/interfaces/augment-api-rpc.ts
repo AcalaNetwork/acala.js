@@ -1,17 +1,10 @@
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
-import type { BalanceRequest, BalanceWrapper } from '@acala-network/types/interfaces/dex';
-import type { CallRequest, EstimateResourcesResponse } from '@acala-network/types/interfaces/evm';
-import type { CurrencyId, NumberOrHex } from '@acala-network/types/interfaces/primitives';
-import type { AccountId, BlockNumber, H160, H256, H64, Hash, Header, Index, Justification, KeyValue, OracleKey, SignedBlock, StorageData } from '@acala-network/types/interfaces/runtime';
-import type { BalanceInfo } from '@acala-network/types/interfaces/stakingPool';
-import type { ExchangeRate } from '@acala-network/types/interfaces/support';
-import type { RpcDataProviderId, TimestampedValue } from '@open-web3/orml-types/interfaces/oracle';
 import type { AugmentedRpc } from '@polkadot/rpc-core/types';
 import type { Metadata, StorageKey } from '@polkadot/types';
-import type { Bytes, HashMap, Json, Null, Option, Raw, Text, U256, U64, Vec, bool, u32, u64 } from '@polkadot/types-codec';
-import type { AnyNumber, Codec, ITuple } from '@polkadot/types-codec/types';
+import type { Bytes, HashMap, Json, Null, Option, Text, U256, U64, Vec, bool, u32, u64 } from '@polkadot/types-codec';
+import type { AnyNumber, Codec } from '@polkadot/types-codec/types';
 import type { ExtrinsicOrHash, ExtrinsicStatus } from '@polkadot/types/interfaces/author';
 import type { EpochAuthorship } from '@polkadot/types/interfaces/babe';
 import type { BeefySignedCommitment } from '@polkadot/types/interfaces/beefy';
@@ -24,10 +17,11 @@ import type { CreatedBlock } from '@polkadot/types/interfaces/engine';
 import type { EthAccount, EthCallRequest, EthFilter, EthFilterChanges, EthLog, EthReceipt, EthRichBlock, EthSubKind, EthSubParams, EthSyncStatus, EthTransaction, EthTransactionRequest, EthWork } from '@polkadot/types/interfaces/eth';
 import type { Extrinsic } from '@polkadot/types/interfaces/extrinsics';
 import type { EncodedFinalityProofs, JustificationNotification, ReportedRoundStates } from '@polkadot/types/interfaces/grandpa';
-import type { MmrLeafProof } from '@polkadot/types/interfaces/mmr';
+import type { MmrLeafBatchProof, MmrLeafProof } from '@polkadot/types/interfaces/mmr';
 import type { StorageKind } from '@polkadot/types/interfaces/offchain';
 import type { FeeDetails, RuntimeDispatchInfo } from '@polkadot/types/interfaces/payment';
 import type { RpcMethods } from '@polkadot/types/interfaces/rpc';
+import type { AccountId, BlockNumber, H160, H256, H64, Hash, Header, Index, Justification, KeyValue, SignedBlock, StorageData } from '@polkadot/types/interfaces/runtime';
 import type { MigrationStatusResult, ReadProof, RuntimeVersion, TraceBlockResponse } from '@polkadot/types/interfaces/state';
 import type { ApplyExtrinsicResult, ChainProperties, ChainType, Health, NetworkState, NodeRole, PeerInfo, SyncState } from '@polkadot/types/interfaces/system';
 import type { IExtrinsic, Observable } from '@polkadot/types/types';
@@ -167,16 +161,6 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
        * Reexecute the specified `block_hash` and gather statistics while doing so
        **/
       getBlockStats: AugmentedRpc<(at: Hash | string | Uint8Array) => Observable<Option<BlockStats>>>;
-    };
-    dex: {
-      /**
-       * Get supply amount
-       **/
-      getSupplyAmount: AugmentedRpc<(supplyCurrencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, targetCurrencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, targetCurrencyAmount: BalanceRequest | { amount?: any } | string | Uint8Array) => Observable<BalanceWrapper>>;
-      /**
-       * Get target amount
-       **/
-      getTargetAmount: AugmentedRpc<(supplyCurrencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, targetCurrencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, supplyCurrencyAmount: BalanceRequest | { amount?: any } | string | Uint8Array) => Observable<BalanceWrapper>>;
     };
     engine: {
       /**
@@ -354,16 +338,6 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
        **/
       uninstallFilter: AugmentedRpc<(index: U256 | AnyNumber | Uint8Array) => Observable<bool>>;
     };
-    evm: {
-      /**
-       * eth call
-       **/
-      call: AugmentedRpc<(data: CallRequest | { from?: any; to?: any; gasLimit?: any; storageLimit?: any; value?: any; data?: any } | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Observable<Raw>>;
-      /**
-       * eth estimateResources
-       **/
-      estimateResources: AugmentedRpc<(from: H160 | string | Uint8Array, unsignedExtrinsic: Bytes | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Observable<EstimateResourcesResponse>>;
-    };
     grandpa: {
       /**
        * Prove finality for the given block number, returning the Justification for the last block in the set.
@@ -380,9 +354,13 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
     };
     mmr: {
       /**
+       * Generate MMR proof for the given leaf indices.
+       **/
+      generateBatchProof: AugmentedRpc<(leafIndices: Vec<u64> | (u64 | AnyNumber | Uint8Array)[], at?: BlockHash | string | Uint8Array) => Observable<MmrLeafProof>>;
+      /**
        * Generate MMR proof for given leaf index.
        **/
-      generateProof: AugmentedRpc<(leafIndex: u64 | AnyNumber | Uint8Array, at?: BlockHash | string | Uint8Array) => Observable<MmrLeafProof>>;
+      generateProof: AugmentedRpc<(leafIndex: u64 | AnyNumber | Uint8Array, at?: BlockHash | string | Uint8Array) => Observable<MmrLeafBatchProof>>;
     };
     net: {
       /**
@@ -408,16 +386,6 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
        **/
       localStorageSet: AugmentedRpc<(kind: StorageKind | 'PERSISTENT' | 'LOCAL' | number | Uint8Array, key: Bytes | string | Uint8Array, value: Bytes | string | Uint8Array) => Observable<Null>>;
     };
-    oracle: {
-      /**
-       * Retrieves all oracle values.
-       **/
-      getAllValues: AugmentedRpc<(providerId: RpcDataProviderId | string, at?: BlockHash | string | Uint8Array) => Observable<Vec<ITuple<[OracleKey, Option<TimestampedValue>]>>>>;
-      /**
-       * Retrieves the oracle value for a given key.
-       **/
-      getValue: AugmentedRpc<(providerId: RpcDataProviderId | string, key: OracleKey | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Observable<Option<TimestampedValue>>>;
-    };
     payment: {
       /**
        * Query the detailed fee of a given encoded extrinsic
@@ -433,16 +401,6 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
        * Retrieves the list of RPC methods that are exposed by the node
        **/
       methods: AugmentedRpc<() => Observable<RpcMethods>>;
-    };
-    stakingPool: {
-      /**
-       * Get Available Unbonded
-       **/
-      getAvailableUnbonded: AugmentedRpc<(account: AccountId | string | Uint8Array) => Observable<BalanceInfo>>;
-      /**
-       * get liquid staking exchange rate
-       **/
-      getLiquidStakingExchangeRate: AugmentedRpc<() => Observable<ExchangeRate>>;
     };
     state: {
       /**
@@ -613,12 +571,6 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
        * Retrieves the version of the node
        **/
       version: AugmentedRpc<() => Observable<Text>>;
-    };
-    tokens: {
-      /**
-       * Query Existential Deposit for a given currency.
-       **/
-      queryExistentialDeposit: AugmentedRpc<(currencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Observable<NumberOrHex>>;
     };
     web3: {
       /**
