@@ -5,9 +5,14 @@
 // this is required to allow for ambient/previous definitions
 import '@polkadot/rpc-core/types/jsonrpc';
 
+import type { BalanceRequest, BalanceWrapper } from '@acala-network/types/interfaces/dex';
+import type { CallRequest, EstimateResourcesResponse } from '@acala-network/types/interfaces/evm';
+import type { CurrencyId } from '@acala-network/types/interfaces/primitives';
+import type { BalanceInfo } from '@acala-network/types/interfaces/stakingPool';
+import type { ExchangeRate } from '@acala-network/types/interfaces/support';
 import type { AugmentedRpc } from '@polkadot/rpc-core/types';
 import type { Metadata, StorageKey } from '@polkadot/types';
-import type { Bytes, HashMap, Json, Null, Option, Text, U256, U64, Vec, bool, f64, u32, u64 } from '@polkadot/types-codec';
+import type { Bytes, HashMap, Json, Null, Option, Raw, Text, U256, U64, Vec, bool, f64, u32, u64 } from '@polkadot/types-codec';
 import type { AnyNumber, Codec } from '@polkadot/types-codec/types';
 import type { ExtrinsicOrHash, ExtrinsicStatus } from '@polkadot/types/interfaces/author';
 import type { EpochAuthorship } from '@polkadot/types/interfaces/babe';
@@ -172,6 +177,16 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
        * Reexecute the specified `block_hash` and gather statistics while doing so
        **/
       getBlockStats: AugmentedRpc<(at: Hash | string | Uint8Array) => Observable<Option<BlockStats>>>;
+    };
+    dex: {
+      /**
+       * Get supply amount
+       **/
+      getSupplyAmount: AugmentedRpc<(supplyCurrencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, targetCurrencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, targetCurrencyAmount: BalanceRequest | { amount?: any } | string | Uint8Array) => Observable<BalanceWrapper>>;
+      /**
+       * Get target amount
+       **/
+      getTargetAmount: AugmentedRpc<(supplyCurrencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, targetCurrencyId: CurrencyId | { Token: any } | { DEXShare: any } | { ERC20: any } | { StableAssetPoolToken: any } | { LiquidCrowdloan: any } | { ForeignAsset: any } | string | Uint8Array, supplyCurrencyAmount: BalanceRequest | { amount?: any } | string | Uint8Array) => Observable<BalanceWrapper>>;
     };
     engine: {
       /**
@@ -357,6 +372,16 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
        **/
       uninstallFilter: AugmentedRpc<(index: U256 | AnyNumber | Uint8Array) => Observable<bool>>;
     };
+    evm: {
+      /**
+       * eth call
+       **/
+      call: AugmentedRpc<(data: CallRequest | { from?: any; to?: any; gasLimit?: any; storageLimit?: any; value?: any; data?: any } | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Observable<Raw>>;
+      /**
+       * eth estimateResources
+       **/
+      estimateResources: AugmentedRpc<(from: H160 | string | Uint8Array, unsignedExtrinsic: Bytes | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Observable<EstimateResourcesResponse>>;
+    };
     grandpa: {
       /**
        * Prove finality for the given block number, returning the Justification for the last block in the set.
@@ -422,6 +447,16 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
        * Retrieves the list of RPC methods that are exposed by the node
        **/
       methods: AugmentedRpc<() => Observable<RpcMethods>>;
+    };
+    stakingPool: {
+      /**
+       * Get Available Unbonded
+       **/
+      getAvailableUnbonded: AugmentedRpc<(account: AccountId | string | Uint8Array) => Observable<BalanceInfo>>;
+      /**
+       * get liquid staking exchange rate
+       **/
+      getLiquidStakingExchangeRate: AugmentedRpc<() => Observable<ExchangeRate>>;
     };
     state: {
       /**
