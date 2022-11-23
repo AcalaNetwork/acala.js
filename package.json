@@ -41,6 +41,5 @@
   "dependencies": {
     "dotenv": "^16.0.0"
   },
-  "packageManager": "yarn@3.2.0",
-  "stableVersion": "4.1.7"
+  "packageManager": "yarn@3.2.0"
 }
