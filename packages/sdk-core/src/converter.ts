@@ -1,7 +1,4 @@
-import {
-  AcalaPrimitivesCurrencyCurrencyId,
-  AcalaPrimitivesCurrencyTokenSymbol
-} from '@acala-network/types/interfaces/types-lookup';
+import { AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyTokenSymbol } from '@acala-network/types/lookup';
 import { isArray } from 'lodash';
 import {
   ConvertToCurrencyIdFailed,

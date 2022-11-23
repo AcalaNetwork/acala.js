@@ -4,7 +4,7 @@ import fs from 'fs';
 import { w3cwebsocket as WebSocket } from 'websocket';
 
 const main = (): void => {
-  const endpoint = 'wss://karura-rpc-0.aca-api.network';
+  const endpoint = 'wss://acala-rpc-0.aca-api.network';
   console.log('Connecting to ', endpoint);
   const ws = new WebSocket(endpoint);
   ws.onopen = (): void => {
@@ -13,6 +13,7 @@ const main = (): void => {
   ws.onmessage = (msg: any): void => {
     const metadata = JSON.parse(msg.data).result;
     fs.writeFileSync('packages/types/src/metadata/static-latest.ts', `export default '${metadata}'`);
+    fs.writeFileSync('packages/types/src/metadata/static-latest.json', msg.data);
     console.log('Done');
     process.exit(0);
   };

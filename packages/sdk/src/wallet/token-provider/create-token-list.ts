@@ -8,13 +8,14 @@ import {
   createERC20Name,
   createLiquidCrowdloanName
 } from '@acala-network/sdk-core';
-import { TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
 import { Option, StorageKey, u16 } from '@polkadot/types';
 import {
-  ModuleAssetRegistryModuleAssetIds,
-  ModuleAssetRegistryModuleAssetMetadata,
+  AcalaPrimitivesTradingPair,
+  ModuleDexTradingPairStatus,
+  AcalaPrimitivesCurrencyAssetIds,
+  AcalaPrimitivesCurrencyAssetMetadata,
   XcmV1MultiLocation
-} from '@acala-network/types/interfaces/types-lookup';
+} from '@acala-network/types/lookup';
 import { hexToString } from '@polkadot/util';
 import { TokenRecord } from '../types';
 
@@ -52,8 +53,8 @@ interface Configs {
 }
 
 export function createTokenList(
-  tradingPairs: [StorageKey<[TradingPair]>, TradingPairStatus][],
-  assetMetadata: [StorageKey<[ModuleAssetRegistryModuleAssetIds]>, Option<ModuleAssetRegistryModuleAssetMetadata>][],
+  tradingPairs: [StorageKey<[AcalaPrimitivesTradingPair]>, ModuleDexTradingPairStatus][],
+  assetMetadata: [StorageKey<[AcalaPrimitivesCurrencyAssetIds]>, Option<AcalaPrimitivesCurrencyAssetMetadata>][],
   foreignAssetLocations: [StorageKey<[u16]>, Option<XcmV1MultiLocation>][],
   configs: Configs
 ): TokenRecord {

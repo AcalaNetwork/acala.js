@@ -45,7 +45,5 @@ console.log(data.toHuman())
 
 - [api](./packages/api)
   - Contains necessary options to create a polkadot.js API instance
-- [api-derive](./packages/api-derive)
-  - Additional polkadot.js derives for Acala Network
 - [types](./packages/types)
   - Polkadot.js type definations for Acala Network

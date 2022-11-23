@@ -14,7 +14,7 @@ import { Option } from '@polkadot/types';
 import { ORACLE_FEEDS_TOKEN } from './config';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
-import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/interfaces/types-lookup';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/lookup';
 
 const queryFN = getPromiseOrAtQuery;
 

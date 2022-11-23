@@ -7,7 +7,7 @@ import {
   unzipDexShareName
 } from '@acala-network/sdk-core';
 import { Wallet } from '@acala-network/sdk/wallet';
-import { AcalaPrimitivesTradingPair, ModuleDexTradingPairStatus } from '@acala-network/types/interfaces/types-lookup';
+import { AcalaPrimitivesTradingPair, ModuleDexTradingPairStatus } from '@acala-network/types/lookup';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { StorageKey } from '@polkadot/types';
 import { combineLatest, Observable } from 'rxjs';

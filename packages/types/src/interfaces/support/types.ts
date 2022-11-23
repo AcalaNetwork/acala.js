@@ -6,6 +6,9 @@ import type { FixedU128 } from '@acala-network/types/interfaces/runtime';
 /** @name ExchangeRate */
 export interface ExchangeRate extends FixedU128 {}
 
+/** @name Price */
+export interface Price extends FixedU128 {}
+
 /** @name Rate */
 export interface Rate extends FixedU128 {}
 

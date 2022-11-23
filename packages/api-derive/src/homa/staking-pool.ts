@@ -8,7 +8,7 @@ import { memo } from '@polkadot/api-derive/util';
 import { DerivedStakingPool, DerivedStakingPoolConstants } from '../types/staking-pool';
 import { ExchangeRate } from '@acala-network/types/interfaces';
 import { BlockNumber } from '@open-web3/orml-types/interfaces';
-import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/interfaces/types-lookup';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/lookup';
 
 function getConstants(api: ApiInterfaceRx): DerivedStakingPoolConstants {
   return {

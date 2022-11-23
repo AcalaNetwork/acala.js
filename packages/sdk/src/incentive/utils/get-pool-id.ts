@@ -1,7 +1,7 @@
 import { forceToCurrencyName } from '@acala-network/sdk-core';
-import { ModuleIncentivesPoolId } from '@acala-network/types/interfaces/types-lookup';
+import { ModuleSupportIncentivesPoolId } from '@acala-network/types/lookup';
 
-export function getPoolId(pool: ModuleIncentivesPoolId): string {
+export function getPoolId(pool: ModuleSupportIncentivesPoolId): string {
   if (pool.isDex) {
     return `dex-${forceToCurrencyName(pool.asDex)}`;
   }

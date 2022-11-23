@@ -1,5 +1,5 @@
 import { Balance } from '@acala-network/types/interfaces';
-import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/interfaces/types-lookup';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/lookup';
 
 export interface DerivedBalance {
   currency: AcalaPrimitivesCurrencyCurrencyId;

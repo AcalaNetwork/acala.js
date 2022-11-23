@@ -6,7 +6,7 @@ import {
   MaybeCurrency,
   Token
 } from '@acala-network/sdk-core';
-import { TradingPair, TradingPairStatus } from '@acala-network/types/interfaces';
+import { AcalaPrimitivesTradingPair, ModuleDexTradingPairStatus } from '@acala-network/types/lookup';
 import { StorageKey } from '@polkadot/types';
 import { memoize } from '@polkadot/util';
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of } from 'rxjs';
@@ -62,12 +62,12 @@ export class Liquidity implements BaseSDK {
    */
   public subscribePoolListByStatus = memoize((status: LiquidityPoolStatus = 'enabled'): Observable<PoolInfo[]> => {
     const filterByPoolInfos = (
-      list: [StorageKey<[TradingPair]>, TradingPairStatus, LiquidityPoolStatus][]
-    ): [StorageKey<[TradingPair]>, TradingPairStatus, LiquidityPoolStatus][] => {
+      list: [StorageKey<[AcalaPrimitivesTradingPair]>, ModuleDexTradingPairStatus, LiquidityPoolStatus][]
+    ): [StorageKey<[AcalaPrimitivesTradingPair]>, ModuleDexTradingPairStatus, LiquidityPoolStatus][] => {
       return list.filter((item) => (status === 'all' ? true : item[2] === status));
     };
 
-    const transformStatus = (list: [StorageKey<[TradingPair]>, TradingPairStatus][]) => {
+    const transformStatus = (list: [StorageKey<[AcalaPrimitivesTradingPair]>, ModuleDexTradingPairStatus][]) => {
       return list.map((item) => {
         const rawStatus = item[1];
         const status = rawStatus.isEnabled
@@ -78,7 +78,11 @@ export class Liquidity implements BaseSDK {
           ? 'provision'
           : 'disabled';
 
-        return [...item, status] as [StorageKey<[TradingPair]>, TradingPairStatus, LiquidityPoolStatus];
+        return [...item, status] as [
+          StorageKey<[AcalaPrimitivesTradingPair]>,
+          ModuleDexTradingPairStatus,
+          LiquidityPoolStatus
+        ];
       });
     };
 
