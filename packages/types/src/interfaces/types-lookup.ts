@@ -3,13 +3,15 @@
 
 // import type lookup before we augment - in some environments
 // this is required to allow for ambient/previous definitions
-declare module '@acala-network/types/lookup' {
-  import type { BTreeMap, BTreeSet, Bytes, Compact, Enum, Null, Option, Result, Struct, Text, U8aFixed, Vec, WrapperKeepOpaque, bool, i128, i32, u128, u16, u32, u64, u8 } from '@polkadot/types-codec';
-  import type { ITuple } from '@polkadot/types-codec/types';
-  import type { Vote } from '@polkadot/types/interfaces/elections';
-  import type { AccountId32, Call, H160, H256, MultiAddress, Perbill } from '@polkadot/types/interfaces/runtime';
-  import type { Event } from '@polkadot/types/interfaces/system';
+import '@polkadot/types/lookup';
 
+import type { BTreeMap, BTreeSet, Bytes, Compact, Enum, Null, Option, Result, Struct, Text, U8aFixed, Vec, WrapperKeepOpaque, bool, i128, i32, u128, u16, u32, u64, u8 } from '@polkadot/types-codec';
+import type { ITuple } from '@polkadot/types-codec/types';
+import type { Vote } from '@polkadot/types/interfaces/elections';
+import type { AccountId32, Call, H160, H256, MultiAddress, Perbill, Percent } from '@polkadot/types/interfaces/runtime';
+import type { Event } from '@polkadot/types/interfaces/system';
+
+declare module '@polkadot/types/lookup' {
   /** @name FrameSystemAccountInfo (3) */
   interface FrameSystemAccountInfo extends Struct {
     readonly nonce: u32;
@@ -196,118 +198,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Unknown' | 'BadFormat';
   }
 
-  /** @name PalletUtilityEvent (33) */
-  interface PalletUtilityEvent extends Enum {
-    readonly isBatchInterrupted: boolean;
-    readonly asBatchInterrupted: {
-      readonly index: u32;
-      readonly error: SpRuntimeDispatchError;
-    } & Struct;
-    readonly isBatchCompleted: boolean;
-    readonly isBatchCompletedWithErrors: boolean;
-    readonly isItemCompleted: boolean;
-    readonly isItemFailed: boolean;
-    readonly asItemFailed: {
-      readonly error: SpRuntimeDispatchError;
-    } & Struct;
-    readonly isDispatchedAs: boolean;
-    readonly asDispatchedAs: {
-      readonly result: Result<Null, SpRuntimeDispatchError>;
-    } & Struct;
-    readonly type: 'BatchInterrupted' | 'BatchCompleted' | 'BatchCompletedWithErrors' | 'ItemCompleted' | 'ItemFailed' | 'DispatchedAs';
-  }
-
-  /** @name PalletMultisigEvent (34) */
-  interface PalletMultisigEvent extends Enum {
-    readonly isNewMultisig: boolean;
-    readonly asNewMultisig: {
-      readonly approving: AccountId32;
-      readonly multisig: AccountId32;
-      readonly callHash: U8aFixed;
-    } & Struct;
-    readonly isMultisigApproval: boolean;
-    readonly asMultisigApproval: {
-      readonly approving: AccountId32;
-      readonly timepoint: PalletMultisigTimepoint;
-      readonly multisig: AccountId32;
-      readonly callHash: U8aFixed;
-    } & Struct;
-    readonly isMultisigExecuted: boolean;
-    readonly asMultisigExecuted: {
-      readonly approving: AccountId32;
-      readonly timepoint: PalletMultisigTimepoint;
-      readonly multisig: AccountId32;
-      readonly callHash: U8aFixed;
-      readonly result: Result<Null, SpRuntimeDispatchError>;
-    } & Struct;
-    readonly isMultisigCancelled: boolean;
-    readonly asMultisigCancelled: {
-      readonly cancelling: AccountId32;
-      readonly timepoint: PalletMultisigTimepoint;
-      readonly multisig: AccountId32;
-      readonly callHash: U8aFixed;
-    } & Struct;
-    readonly type: 'NewMultisig' | 'MultisigApproval' | 'MultisigExecuted' | 'MultisigCancelled';
-  }
-
-  /** @name PalletMultisigTimepoint (35) */
-  interface PalletMultisigTimepoint extends Struct {
-    readonly height: u32;
-    readonly index: u32;
-  }
-
-  /** @name PalletProxyEvent (36) */
-  interface PalletProxyEvent extends Enum {
-    readonly isProxyExecuted: boolean;
-    readonly asProxyExecuted: {
-      readonly result: Result<Null, SpRuntimeDispatchError>;
-    } & Struct;
-    readonly isAnonymousCreated: boolean;
-    readonly asAnonymousCreated: {
-      readonly anonymous: AccountId32;
-      readonly who: AccountId32;
-      readonly proxyType: RuntimeCommonProxyType;
-      readonly disambiguationIndex: u16;
-    } & Struct;
-    readonly isAnnounced: boolean;
-    readonly asAnnounced: {
-      readonly real: AccountId32;
-      readonly proxy: AccountId32;
-      readonly callHash: H256;
-    } & Struct;
-    readonly isProxyAdded: boolean;
-    readonly asProxyAdded: {
-      readonly delegator: AccountId32;
-      readonly delegatee: AccountId32;
-      readonly proxyType: RuntimeCommonProxyType;
-      readonly delay: u32;
-    } & Struct;
-    readonly isProxyRemoved: boolean;
-    readonly asProxyRemoved: {
-      readonly delegator: AccountId32;
-      readonly delegatee: AccountId32;
-      readonly proxyType: RuntimeCommonProxyType;
-      readonly delay: u32;
-    } & Struct;
-    readonly type: 'ProxyExecuted' | 'AnonymousCreated' | 'Announced' | 'ProxyAdded' | 'ProxyRemoved';
-  }
-
-  /** @name RuntimeCommonProxyType (37) */
-  interface RuntimeCommonProxyType extends Enum {
-    readonly isAny: boolean;
-    readonly isCancelProxy: boolean;
-    readonly isGovernance: boolean;
-    readonly isAuction: boolean;
-    readonly isSwap: boolean;
-    readonly isLoan: boolean;
-    readonly isDexLiquidity: boolean;
-    readonly isStableAssetSwap: boolean;
-    readonly isStableAssetLiquidity: boolean;
-    readonly isHoma: boolean;
-    readonly type: 'Any' | 'CancelProxy' | 'Governance' | 'Auction' | 'Swap' | 'Loan' | 'DexLiquidity' | 'StableAssetSwap' | 'StableAssetLiquidity' | 'Homa';
-  }
-
-  /** @name ModuleTransactionPauseModuleEvent (39) */
+  /** @name ModuleTransactionPauseModuleEvent (33) */
   interface ModuleTransactionPauseModuleEvent extends Enum {
     readonly isTransactionPaused: boolean;
     readonly asTransactionPaused: {
@@ -319,63 +210,10 @@ declare module '@acala-network/types/lookup' {
       readonly palletNameBytes: Bytes;
       readonly functionNameBytes: Bytes;
     } & Struct;
-    readonly isEvmPrecompilePaused: boolean;
-    readonly asEvmPrecompilePaused: {
-      readonly address: H160;
-    } & Struct;
-    readonly isEvmPrecompileUnpaused: boolean;
-    readonly asEvmPrecompileUnpaused: {
-      readonly address: H160;
-    } & Struct;
-    readonly type: 'TransactionPaused' | 'TransactionUnpaused' | 'EvmPrecompilePaused' | 'EvmPrecompileUnpaused';
+    readonly type: 'TransactionPaused' | 'TransactionUnpaused';
   }
 
-  /** @name ModuleIdleSchedulerModuleEvent (42) */
-  interface ModuleIdleSchedulerModuleEvent extends Enum {
-    readonly isTaskDispatched: boolean;
-    readonly asTaskDispatched: {
-      readonly taskId: u32;
-      readonly result: Result<Null, SpRuntimeDispatchError>;
-    } & Struct;
-    readonly isTaskAdded: boolean;
-    readonly asTaskAdded: {
-      readonly taskId: u32;
-      readonly task: AcalaRuntimeScheduledTasks;
-    } & Struct;
-    readonly type: 'TaskDispatched' | 'TaskAdded';
-  }
-
-  /** @name AcalaRuntimeScheduledTasks (43) */
-  interface AcalaRuntimeScheduledTasks extends Enum {
-    readonly isEvmTask: boolean;
-    readonly asEvmTask: ModuleEvmEvmTask;
-    readonly type: 'EvmTask';
-  }
-
-  /** @name ModuleEvmEvmTask (44) */
-  interface ModuleEvmEvmTask extends Enum {
-    readonly isSchedule: boolean;
-    readonly asSchedule: {
-      readonly from: H160;
-      readonly target: H160;
-      readonly input: Bytes;
-      readonly value: u128;
-      readonly gasLimit: u64;
-      readonly storageLimit: u32;
-    } & Struct;
-    readonly isRemove: boolean;
-    readonly asRemove: {
-      readonly caller: H160;
-      readonly contract: H160;
-      readonly maintainer: H160;
-    } & Struct;
-    readonly type: 'Schedule' | 'Remove';
-  }
-
-  /** @name AcalaRuntimeRuntime (45) */
-  type AcalaRuntimeRuntime = Null;
-
-  /** @name PalletPreimageEvent (46) */
+  /** @name PalletPreimageEvent (34) */
   interface PalletPreimageEvent extends Enum {
     readonly isNoted: boolean;
     readonly asNoted: {
@@ -392,7 +230,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Noted' | 'Requested' | 'Cleared';
   }
 
-  /** @name PalletBalancesEvent (47) */
+  /** @name PalletBalancesEvent (35) */
   interface PalletBalancesEvent extends Enum {
     readonly isEndowed: boolean;
     readonly asEndowed: {
@@ -451,14 +289,14 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Endowed' | 'DustLost' | 'Transfer' | 'BalanceSet' | 'Reserved' | 'Unreserved' | 'ReserveRepatriated' | 'Deposit' | 'Withdraw' | 'Slashed';
   }
 
-  /** @name FrameSupportTokensMiscBalanceStatus (48) */
+  /** @name FrameSupportTokensMiscBalanceStatus (36) */
   interface FrameSupportTokensMiscBalanceStatus extends Enum {
     readonly isFree: boolean;
     readonly isReserved: boolean;
     readonly type: 'Free' | 'Reserved';
   }
 
-  /** @name OrmlTokensModuleEvent (49) */
+  /** @name OrmlTokensModuleEvent (37) */
   interface OrmlTokensModuleEvent extends Enum {
     readonly isEndowed: boolean;
     readonly asEndowed: {
@@ -546,7 +384,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Endowed' | 'DustLost' | 'Transfer' | 'Reserved' | 'Unreserved' | 'ReserveRepatriated' | 'BalanceSet' | 'TotalIssuanceSet' | 'Withdrawn' | 'Slashed' | 'Deposited' | 'LockSet' | 'LockRemoved';
   }
 
-  /** @name AcalaPrimitivesCurrencyCurrencyId (50) */
+  /** @name AcalaPrimitivesCurrencyCurrencyId (38) */
   interface AcalaPrimitivesCurrencyCurrencyId extends Enum {
     readonly isToken: boolean;
     readonly asToken: AcalaPrimitivesCurrencyTokenSymbol;
@@ -563,7 +401,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Token' | 'DexShare' | 'Erc20' | 'StableAssetPoolToken' | 'LiquidCrowdloan' | 'ForeignAsset';
   }
 
-  /** @name AcalaPrimitivesCurrencyTokenSymbol (51) */
+  /** @name AcalaPrimitivesCurrencyTokenSymbol (39) */
   interface AcalaPrimitivesCurrencyTokenSymbol extends Enum {
     readonly isAca: boolean;
     readonly isAusd: boolean;
@@ -585,7 +423,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Aca' | 'Ausd' | 'Dot' | 'Ldot' | 'Tap' | 'Renbtc' | 'Cash' | 'Kar' | 'Kusd' | 'Ksm' | 'Lksm' | 'Tai' | 'Bnc' | 'Vsksm' | 'Pha' | 'Kint' | 'Kbtc';
   }
 
-  /** @name AcalaPrimitivesCurrencyDexShare (52) */
+  /** @name AcalaPrimitivesCurrencyDexShare (40) */
   interface AcalaPrimitivesCurrencyDexShare extends Enum {
     readonly isToken: boolean;
     readonly asToken: AcalaPrimitivesCurrencyTokenSymbol;
@@ -600,7 +438,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Token' | 'Erc20' | 'LiquidCrowdloan' | 'ForeignAsset' | 'StableAssetPoolToken';
   }
 
-  /** @name ModuleCurrenciesModuleEvent (54) */
+  /** @name ModuleCurrenciesModuleEvent (45) */
   interface ModuleCurrenciesModuleEvent extends Enum {
     readonly isTransferred: boolean;
     readonly asTransferred: {
@@ -630,7 +468,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Transferred' | 'Withdrawn' | 'Deposited' | 'DustSwept';
   }
 
-  /** @name OrmlVestingModuleEvent (55) */
+  /** @name OrmlVestingModuleEvent (46) */
   interface OrmlVestingModuleEvent extends Enum {
     readonly isVestingScheduleAdded: boolean;
     readonly asVestingScheduleAdded: {
@@ -650,7 +488,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'VestingScheduleAdded' | 'Claimed' | 'VestingSchedulesUpdated';
   }
 
-  /** @name OrmlVestingVestingSchedule (56) */
+  /** @name OrmlVestingVestingSchedule (47) */
   interface OrmlVestingVestingSchedule extends Struct {
     readonly start: u32;
     readonly period: u32;
@@ -658,7 +496,7 @@ declare module '@acala-network/types/lookup' {
     readonly perPeriod: Compact<u128>;
   }
 
-  /** @name ModuleTransactionPaymentModuleEvent (58) */
+  /** @name ModuleTransactionPaymentModuleEvent (49) */
   interface ModuleTransactionPaymentModuleEvent extends Enum {
     readonly isChargeFeePoolEnabled: boolean;
     readonly asChargeFeePoolEnabled: {
@@ -693,7 +531,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'ChargeFeePoolEnabled' | 'ChargeFeePoolSwapped' | 'ChargeFeePoolDisabled' | 'TransactionFeePaid';
   }
 
-  /** @name PalletTreasuryEvent (60) */
+  /** @name PalletTreasuryEvent (51) */
   interface PalletTreasuryEvent extends Enum {
     readonly isProposed: boolean;
     readonly asProposed: {
@@ -735,7 +573,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Proposed' | 'Spending' | 'Awarded' | 'Rejected' | 'Burnt' | 'Rollover' | 'Deposit' | 'SpendApproved';
   }
 
-  /** @name PalletBountiesEvent (61) */
+  /** @name PalletBountiesEvent (52) */
   interface PalletBountiesEvent extends Enum {
     readonly isBountyProposed: boolean;
     readonly asBountyProposed: {
@@ -772,7 +610,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'BountyProposed' | 'BountyRejected' | 'BountyBecameActive' | 'BountyAwarded' | 'BountyClaimed' | 'BountyCanceled' | 'BountyExtended';
   }
 
-  /** @name PalletTipsEvent (62) */
+  /** @name PalletTipsEvent (53) */
   interface PalletTipsEvent extends Enum {
     readonly isNewTip: boolean;
     readonly asNewTip: {
@@ -801,53 +639,1257 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'NewTip' | 'TipClosing' | 'TipClosed' | 'TipRetracted' | 'TipSlashed';
   }
 
-  /** @name ModuleCollatorSelectionEvent (63) */
-  interface ModuleCollatorSelectionEvent extends Enum {
-    readonly isNewInvulnerables: boolean;
-    readonly asNewInvulnerables: {
-      readonly newInvulnerables: Vec<AccountId32>;
+  /** @name PalletUtilityEvent (54) */
+  interface PalletUtilityEvent extends Enum {
+    readonly isBatchInterrupted: boolean;
+    readonly asBatchInterrupted: {
+      readonly index: u32;
+      readonly error: SpRuntimeDispatchError;
     } & Struct;
-    readonly isNewDesiredCandidates: boolean;
-    readonly asNewDesiredCandidates: {
-      readonly newDesiredCandidates: u32;
+    readonly isBatchCompleted: boolean;
+    readonly isBatchCompletedWithErrors: boolean;
+    readonly isItemCompleted: boolean;
+    readonly isItemFailed: boolean;
+    readonly asItemFailed: {
+      readonly error: SpRuntimeDispatchError;
     } & Struct;
-    readonly isNewCandidacyBond: boolean;
-    readonly asNewCandidacyBond: {
-      readonly newCandidacyBond: u128;
+    readonly isDispatchedAs: boolean;
+    readonly asDispatchedAs: {
+      readonly result: Result<Null, SpRuntimeDispatchError>;
     } & Struct;
-    readonly isCandidateAdded: boolean;
-    readonly asCandidateAdded: {
-      readonly who: AccountId32;
-      readonly bond: u128;
-    } & Struct;
-    readonly isCandidateRemoved: boolean;
-    readonly asCandidateRemoved: {
-      readonly who: AccountId32;
-    } & Struct;
-    readonly type: 'NewInvulnerables' | 'NewDesiredCandidates' | 'NewCandidacyBond' | 'CandidateAdded' | 'CandidateRemoved';
+    readonly type: 'BatchInterrupted' | 'BatchCompleted' | 'BatchCompletedWithErrors' | 'ItemCompleted' | 'ItemFailed' | 'DispatchedAs';
   }
 
-  /** @name PalletSessionEvent (65) */
-  interface PalletSessionEvent extends Enum {
-    readonly isNewSession: boolean;
-    readonly asNewSession: {
-      readonly sessionIndex: u32;
+  /** @name PalletMultisigEvent (55) */
+  interface PalletMultisigEvent extends Enum {
+    readonly isNewMultisig: boolean;
+    readonly asNewMultisig: {
+      readonly approving: AccountId32;
+      readonly multisig: AccountId32;
+      readonly callHash: U8aFixed;
     } & Struct;
-    readonly type: 'NewSession';
+    readonly isMultisigApproval: boolean;
+    readonly asMultisigApproval: {
+      readonly approving: AccountId32;
+      readonly timepoint: PalletMultisigTimepoint;
+      readonly multisig: AccountId32;
+      readonly callHash: U8aFixed;
+    } & Struct;
+    readonly isMultisigExecuted: boolean;
+    readonly asMultisigExecuted: {
+      readonly approving: AccountId32;
+      readonly timepoint: PalletMultisigTimepoint;
+      readonly multisig: AccountId32;
+      readonly callHash: U8aFixed;
+      readonly result: Result<Null, SpRuntimeDispatchError>;
+    } & Struct;
+    readonly isMultisigCancelled: boolean;
+    readonly asMultisigCancelled: {
+      readonly cancelling: AccountId32;
+      readonly timepoint: PalletMultisigTimepoint;
+      readonly multisig: AccountId32;
+      readonly callHash: U8aFixed;
+    } & Struct;
+    readonly type: 'NewMultisig' | 'MultisigApproval' | 'MultisigExecuted' | 'MultisigCancelled';
   }
 
-  /** @name ModuleSessionManagerModuleEvent (66) */
-  interface ModuleSessionManagerModuleEvent extends Enum {
-    readonly isScheduledSessionDuration: boolean;
-    readonly asScheduledSessionDuration: {
+  /** @name PalletMultisigTimepoint (56) */
+  interface PalletMultisigTimepoint extends Struct {
+    readonly height: u32;
+    readonly index: u32;
+  }
+
+  /** @name PalletRecoveryEvent (57) */
+  interface PalletRecoveryEvent extends Enum {
+    readonly isRecoveryCreated: boolean;
+    readonly asRecoveryCreated: {
+      readonly account: AccountId32;
+    } & Struct;
+    readonly isRecoveryInitiated: boolean;
+    readonly asRecoveryInitiated: {
+      readonly lostAccount: AccountId32;
+      readonly rescuerAccount: AccountId32;
+    } & Struct;
+    readonly isRecoveryVouched: boolean;
+    readonly asRecoveryVouched: {
+      readonly lostAccount: AccountId32;
+      readonly rescuerAccount: AccountId32;
+      readonly sender: AccountId32;
+    } & Struct;
+    readonly isRecoveryClosed: boolean;
+    readonly asRecoveryClosed: {
+      readonly lostAccount: AccountId32;
+      readonly rescuerAccount: AccountId32;
+    } & Struct;
+    readonly isAccountRecovered: boolean;
+    readonly asAccountRecovered: {
+      readonly lostAccount: AccountId32;
+      readonly rescuerAccount: AccountId32;
+    } & Struct;
+    readonly isRecoveryRemoved: boolean;
+    readonly asRecoveryRemoved: {
+      readonly lostAccount: AccountId32;
+    } & Struct;
+    readonly type: 'RecoveryCreated' | 'RecoveryInitiated' | 'RecoveryVouched' | 'RecoveryClosed' | 'AccountRecovered' | 'RecoveryRemoved';
+  }
+
+  /** @name PalletProxyEvent (58) */
+  interface PalletProxyEvent extends Enum {
+    readonly isProxyExecuted: boolean;
+    readonly asProxyExecuted: {
+      readonly result: Result<Null, SpRuntimeDispatchError>;
+    } & Struct;
+    readonly isAnonymousCreated: boolean;
+    readonly asAnonymousCreated: {
+      readonly anonymous: AccountId32;
+      readonly who: AccountId32;
+      readonly proxyType: RuntimeCommonProxyType;
+      readonly disambiguationIndex: u16;
+    } & Struct;
+    readonly isAnnounced: boolean;
+    readonly asAnnounced: {
+      readonly real: AccountId32;
+      readonly proxy: AccountId32;
+      readonly callHash: H256;
+    } & Struct;
+    readonly isProxyAdded: boolean;
+    readonly asProxyAdded: {
+      readonly delegator: AccountId32;
+      readonly delegatee: AccountId32;
+      readonly proxyType: RuntimeCommonProxyType;
+      readonly delay: u32;
+    } & Struct;
+    readonly isProxyRemoved: boolean;
+    readonly asProxyRemoved: {
+      readonly delegator: AccountId32;
+      readonly delegatee: AccountId32;
+      readonly proxyType: RuntimeCommonProxyType;
+      readonly delay: u32;
+    } & Struct;
+    readonly type: 'ProxyExecuted' | 'AnonymousCreated' | 'Announced' | 'ProxyAdded' | 'ProxyRemoved';
+  }
+
+  /** @name RuntimeCommonProxyType (59) */
+  interface RuntimeCommonProxyType extends Enum {
+    readonly isAny: boolean;
+    readonly isCancelProxy: boolean;
+    readonly isGovernance: boolean;
+    readonly isAuction: boolean;
+    readonly isSwap: boolean;
+    readonly isLoan: boolean;
+    readonly isDexLiquidity: boolean;
+    readonly isStableAssetSwap: boolean;
+    readonly isStableAssetLiquidity: boolean;
+    readonly isHoma: boolean;
+    readonly type: 'Any' | 'CancelProxy' | 'Governance' | 'Auction' | 'Swap' | 'Loan' | 'DexLiquidity' | 'StableAssetSwap' | 'StableAssetLiquidity' | 'Homa';
+  }
+
+  /** @name ModuleIdleSchedulerModuleEvent (60) */
+  interface ModuleIdleSchedulerModuleEvent extends Enum {
+    readonly isTaskDispatched: boolean;
+    readonly asTaskDispatched: {
+      readonly taskId: u32;
+      readonly result: Result<Null, SpRuntimeDispatchError>;
+    } & Struct;
+    readonly isTaskAdded: boolean;
+    readonly asTaskAdded: {
+      readonly taskId: u32;
+      readonly task: MandalaRuntimeScheduledTasks;
+    } & Struct;
+    readonly type: 'TaskDispatched' | 'TaskAdded';
+  }
+
+  /** @name MandalaRuntimeScheduledTasks (61) */
+  interface MandalaRuntimeScheduledTasks extends Enum {
+    readonly isEvmTask: boolean;
+    readonly asEvmTask: ModuleEvmEvmTask;
+    readonly type: 'EvmTask';
+  }
+
+  /** @name ModuleEvmEvmTask (62) */
+  interface ModuleEvmEvmTask extends Enum {
+    readonly isSchedule: boolean;
+    readonly asSchedule: {
+      readonly from: H160;
+      readonly target: H160;
+      readonly input: Bytes;
+      readonly value: u128;
+      readonly gasLimit: u64;
+      readonly storageLimit: u32;
+    } & Struct;
+    readonly isRemove: boolean;
+    readonly asRemove: {
+      readonly caller: H160;
+      readonly contract: H160;
+      readonly maintainer: H160;
+    } & Struct;
+    readonly type: 'Schedule' | 'Remove';
+  }
+
+  /** @name MandalaRuntimeRuntime (63) */
+  type MandalaRuntimeRuntime = Null;
+
+  /** @name PalletIndicesEvent (64) */
+  interface PalletIndicesEvent extends Enum {
+    readonly isIndexAssigned: boolean;
+    readonly asIndexAssigned: {
+      readonly who: AccountId32;
+      readonly index: u32;
+    } & Struct;
+    readonly isIndexFreed: boolean;
+    readonly asIndexFreed: {
+      readonly index: u32;
+    } & Struct;
+    readonly isIndexFrozen: boolean;
+    readonly asIndexFrozen: {
+      readonly index: u32;
+      readonly who: AccountId32;
+    } & Struct;
+    readonly type: 'IndexAssigned' | 'IndexFreed' | 'IndexFrozen';
+  }
+
+  /** @name PalletCollectiveEvent (65) */
+  interface PalletCollectiveEvent extends Enum {
+    readonly isProposed: boolean;
+    readonly asProposed: {
+      readonly account: AccountId32;
+      readonly proposalIndex: u32;
+      readonly proposalHash: H256;
+      readonly threshold: u32;
+    } & Struct;
+    readonly isVoted: boolean;
+    readonly asVoted: {
+      readonly account: AccountId32;
+      readonly proposalHash: H256;
+      readonly voted: bool;
+      readonly yes: u32;
+      readonly no: u32;
+    } & Struct;
+    readonly isApproved: boolean;
+    readonly asApproved: {
+      readonly proposalHash: H256;
+    } & Struct;
+    readonly isDisapproved: boolean;
+    readonly asDisapproved: {
+      readonly proposalHash: H256;
+    } & Struct;
+    readonly isExecuted: boolean;
+    readonly asExecuted: {
+      readonly proposalHash: H256;
+      readonly result: Result<Null, SpRuntimeDispatchError>;
+    } & Struct;
+    readonly isMemberExecuted: boolean;
+    readonly asMemberExecuted: {
+      readonly proposalHash: H256;
+      readonly result: Result<Null, SpRuntimeDispatchError>;
+    } & Struct;
+    readonly isClosed: boolean;
+    readonly asClosed: {
+      readonly proposalHash: H256;
+      readonly yes: u32;
+      readonly no: u32;
+    } & Struct;
+    readonly type: 'Proposed' | 'Voted' | 'Approved' | 'Disapproved' | 'Executed' | 'MemberExecuted' | 'Closed';
+  }
+
+  /** @name PalletMembershipEvent (67) */
+  interface PalletMembershipEvent extends Enum {
+    readonly isMemberAdded: boolean;
+    readonly isMemberRemoved: boolean;
+    readonly isMembersSwapped: boolean;
+    readonly isMembersReset: boolean;
+    readonly isKeyChanged: boolean;
+    readonly isDummy: boolean;
+    readonly type: 'MemberAdded' | 'MemberRemoved' | 'MembersSwapped' | 'MembersReset' | 'KeyChanged' | 'Dummy';
+  }
+
+  /** @name OrmlAuthorityModuleEvent (74) */
+  interface OrmlAuthorityModuleEvent extends Enum {
+    readonly isDispatched: boolean;
+    readonly asDispatched: {
+      readonly result: Result<Null, SpRuntimeDispatchError>;
+    } & Struct;
+    readonly isScheduled: boolean;
+    readonly asScheduled: {
+      readonly origin: MandalaRuntimeOriginCaller;
+      readonly index: u32;
+    } & Struct;
+    readonly isFastTracked: boolean;
+    readonly asFastTracked: {
+      readonly origin: MandalaRuntimeOriginCaller;
+      readonly index: u32;
+      readonly when: u32;
+    } & Struct;
+    readonly isDelayed: boolean;
+    readonly asDelayed: {
+      readonly origin: MandalaRuntimeOriginCaller;
+      readonly index: u32;
+      readonly when: u32;
+    } & Struct;
+    readonly isCancelled: boolean;
+    readonly asCancelled: {
+      readonly origin: MandalaRuntimeOriginCaller;
+      readonly index: u32;
+    } & Struct;
+    readonly isAuthorizedCall: boolean;
+    readonly asAuthorizedCall: {
+      readonly hash_: H256;
+      readonly caller: Option<AccountId32>;
+    } & Struct;
+    readonly isRemovedAuthorizedCall: boolean;
+    readonly asRemovedAuthorizedCall: {
+      readonly hash_: H256;
+    } & Struct;
+    readonly isTriggeredCallBy: boolean;
+    readonly asTriggeredCallBy: {
+      readonly hash_: H256;
+      readonly caller: AccountId32;
+    } & Struct;
+    readonly type: 'Dispatched' | 'Scheduled' | 'FastTracked' | 'Delayed' | 'Cancelled' | 'AuthorizedCall' | 'RemovedAuthorizedCall' | 'TriggeredCallBy';
+  }
+
+  /** @name MandalaRuntimeOriginCaller (75) */
+  interface MandalaRuntimeOriginCaller extends Enum {
+    readonly isSystem: boolean;
+    readonly asSystem: FrameSupportDispatchRawOrigin;
+    readonly isVoid: boolean;
+    readonly isGeneralCouncil: boolean;
+    readonly asGeneralCouncil: PalletCollectiveRawOrigin;
+    readonly isFinancialCouncil: boolean;
+    readonly asFinancialCouncil: PalletCollectiveRawOrigin;
+    readonly isHomaCouncil: boolean;
+    readonly asHomaCouncil: PalletCollectiveRawOrigin;
+    readonly isTechnicalCommittee: boolean;
+    readonly asTechnicalCommittee: PalletCollectiveRawOrigin;
+    readonly isAuthority: boolean;
+    readonly asAuthority: OrmlAuthorityDelayedOrigin;
+    readonly isPolkadotXcm: boolean;
+    readonly asPolkadotXcm: PalletXcmOrigin;
+    readonly isCumulusXcm: boolean;
+    readonly asCumulusXcm: CumulusPalletXcmOrigin;
+    readonly type: 'System' | 'Void' | 'GeneralCouncil' | 'FinancialCouncil' | 'HomaCouncil' | 'TechnicalCommittee' | 'Authority' | 'PolkadotXcm' | 'CumulusXcm';
+  }
+
+  /** @name FrameSupportDispatchRawOrigin (76) */
+  interface FrameSupportDispatchRawOrigin extends Enum {
+    readonly isRoot: boolean;
+    readonly isSigned: boolean;
+    readonly asSigned: AccountId32;
+    readonly isNone: boolean;
+    readonly type: 'Root' | 'Signed' | 'None';
+  }
+
+  /** @name PalletCollectiveRawOrigin (77) */
+  interface PalletCollectiveRawOrigin extends Enum {
+    readonly isMembers: boolean;
+    readonly asMembers: ITuple<[u32, u32]>;
+    readonly isMember: boolean;
+    readonly asMember: AccountId32;
+    readonly isPhantom: boolean;
+    readonly type: 'Members' | 'Member' | 'Phantom';
+  }
+
+  /** @name OrmlAuthorityDelayedOrigin (81) */
+  interface OrmlAuthorityDelayedOrigin extends Struct {
+    readonly delay: u32;
+    readonly origin: MandalaRuntimeOriginCaller;
+  }
+
+  /** @name PalletXcmOrigin (82) */
+  interface PalletXcmOrigin extends Enum {
+    readonly isXcm: boolean;
+    readonly asXcm: XcmV1MultiLocation;
+    readonly isResponse: boolean;
+    readonly asResponse: XcmV1MultiLocation;
+    readonly type: 'Xcm' | 'Response';
+  }
+
+  /** @name XcmV1MultiLocation (83) */
+  interface XcmV1MultiLocation extends Struct {
+    readonly parents: u8;
+    readonly interior: XcmV1MultilocationJunctions;
+  }
+
+  /** @name XcmV1MultilocationJunctions (84) */
+  interface XcmV1MultilocationJunctions extends Enum {
+    readonly isHere: boolean;
+    readonly isX1: boolean;
+    readonly asX1: XcmV1Junction;
+    readonly isX2: boolean;
+    readonly asX2: ITuple<[XcmV1Junction, XcmV1Junction]>;
+    readonly isX3: boolean;
+    readonly asX3: ITuple<[XcmV1Junction, XcmV1Junction, XcmV1Junction]>;
+    readonly isX4: boolean;
+    readonly asX4: ITuple<[XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction]>;
+    readonly isX5: boolean;
+    readonly asX5: ITuple<[XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction]>;
+    readonly isX6: boolean;
+    readonly asX6: ITuple<[XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction]>;
+    readonly isX7: boolean;
+    readonly asX7: ITuple<[XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction]>;
+    readonly isX8: boolean;
+    readonly asX8: ITuple<[XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction]>;
+    readonly type: 'Here' | 'X1' | 'X2' | 'X3' | 'X4' | 'X5' | 'X6' | 'X7' | 'X8';
+  }
+
+  /** @name XcmV1Junction (85) */
+  interface XcmV1Junction extends Enum {
+    readonly isParachain: boolean;
+    readonly asParachain: Compact<u32>;
+    readonly isAccountId32: boolean;
+    readonly asAccountId32: {
+      readonly network: XcmV0JunctionNetworkId;
+      readonly id: U8aFixed;
+    } & Struct;
+    readonly isAccountIndex64: boolean;
+    readonly asAccountIndex64: {
+      readonly network: XcmV0JunctionNetworkId;
+      readonly index: Compact<u64>;
+    } & Struct;
+    readonly isAccountKey20: boolean;
+    readonly asAccountKey20: {
+      readonly network: XcmV0JunctionNetworkId;
+      readonly key: U8aFixed;
+    } & Struct;
+    readonly isPalletInstance: boolean;
+    readonly asPalletInstance: u8;
+    readonly isGeneralIndex: boolean;
+    readonly asGeneralIndex: Compact<u128>;
+    readonly isGeneralKey: boolean;
+    readonly asGeneralKey: Bytes;
+    readonly isOnlyChild: boolean;
+    readonly isPlurality: boolean;
+    readonly asPlurality: {
+      readonly id: XcmV0JunctionBodyId;
+      readonly part: XcmV0JunctionBodyPart;
+    } & Struct;
+    readonly type: 'Parachain' | 'AccountId32' | 'AccountIndex64' | 'AccountKey20' | 'PalletInstance' | 'GeneralIndex' | 'GeneralKey' | 'OnlyChild' | 'Plurality';
+  }
+
+  /** @name XcmV0JunctionNetworkId (87) */
+  interface XcmV0JunctionNetworkId extends Enum {
+    readonly isAny: boolean;
+    readonly isNamed: boolean;
+    readonly asNamed: Bytes;
+    readonly isPolkadot: boolean;
+    readonly isKusama: boolean;
+    readonly type: 'Any' | 'Named' | 'Polkadot' | 'Kusama';
+  }
+
+  /** @name XcmV0JunctionBodyId (90) */
+  interface XcmV0JunctionBodyId extends Enum {
+    readonly isUnit: boolean;
+    readonly isNamed: boolean;
+    readonly asNamed: Bytes;
+    readonly isIndex: boolean;
+    readonly asIndex: Compact<u32>;
+    readonly isExecutive: boolean;
+    readonly isTechnical: boolean;
+    readonly isLegislative: boolean;
+    readonly isJudicial: boolean;
+    readonly type: 'Unit' | 'Named' | 'Index' | 'Executive' | 'Technical' | 'Legislative' | 'Judicial';
+  }
+
+  /** @name XcmV0JunctionBodyPart (91) */
+  interface XcmV0JunctionBodyPart extends Enum {
+    readonly isVoice: boolean;
+    readonly isMembers: boolean;
+    readonly asMembers: {
+      readonly count: Compact<u32>;
+    } & Struct;
+    readonly isFraction: boolean;
+    readonly asFraction: {
+      readonly nom: Compact<u32>;
+      readonly denom: Compact<u32>;
+    } & Struct;
+    readonly isAtLeastProportion: boolean;
+    readonly asAtLeastProportion: {
+      readonly nom: Compact<u32>;
+      readonly denom: Compact<u32>;
+    } & Struct;
+    readonly isMoreThanProportion: boolean;
+    readonly asMoreThanProportion: {
+      readonly nom: Compact<u32>;
+      readonly denom: Compact<u32>;
+    } & Struct;
+    readonly type: 'Voice' | 'Members' | 'Fraction' | 'AtLeastProportion' | 'MoreThanProportion';
+  }
+
+  /** @name CumulusPalletXcmOrigin (92) */
+  interface CumulusPalletXcmOrigin extends Enum {
+    readonly isRelay: boolean;
+    readonly isSiblingParachain: boolean;
+    readonly asSiblingParachain: u32;
+    readonly type: 'Relay' | 'SiblingParachain';
+  }
+
+  /** @name SpCoreVoid (94) */
+  type SpCoreVoid = Null;
+
+  /** @name PalletElectionsPhragmenEvent (96) */
+  interface PalletElectionsPhragmenEvent extends Enum {
+    readonly isNewTerm: boolean;
+    readonly asNewTerm: {
+      readonly newMembers: Vec<ITuple<[AccountId32, u128]>>;
+    } & Struct;
+    readonly isEmptyTerm: boolean;
+    readonly isElectionError: boolean;
+    readonly isMemberKicked: boolean;
+    readonly asMemberKicked: {
+      readonly member: AccountId32;
+    } & Struct;
+    readonly isRenounced: boolean;
+    readonly asRenounced: {
+      readonly candidate: AccountId32;
+    } & Struct;
+    readonly isCandidateSlashed: boolean;
+    readonly asCandidateSlashed: {
+      readonly candidate: AccountId32;
+      readonly amount: u128;
+    } & Struct;
+    readonly isSeatHolderSlashed: boolean;
+    readonly asSeatHolderSlashed: {
+      readonly seatHolder: AccountId32;
+      readonly amount: u128;
+    } & Struct;
+    readonly type: 'NewTerm' | 'EmptyTerm' | 'ElectionError' | 'MemberKicked' | 'Renounced' | 'CandidateSlashed' | 'SeatHolderSlashed';
+  }
+
+  /** @name PalletDemocracyEvent (99) */
+  interface PalletDemocracyEvent extends Enum {
+    readonly isProposed: boolean;
+    readonly asProposed: {
+      readonly proposalIndex: u32;
+      readonly deposit: u128;
+    } & Struct;
+    readonly isTabled: boolean;
+    readonly asTabled: {
+      readonly proposalIndex: u32;
+      readonly deposit: u128;
+      readonly depositors: Vec<AccountId32>;
+    } & Struct;
+    readonly isExternalTabled: boolean;
+    readonly isStarted: boolean;
+    readonly asStarted: {
+      readonly refIndex: u32;
+      readonly threshold: PalletDemocracyVoteThreshold;
+    } & Struct;
+    readonly isPassed: boolean;
+    readonly asPassed: {
+      readonly refIndex: u32;
+    } & Struct;
+    readonly isNotPassed: boolean;
+    readonly asNotPassed: {
+      readonly refIndex: u32;
+    } & Struct;
+    readonly isCancelled: boolean;
+    readonly asCancelled: {
+      readonly refIndex: u32;
+    } & Struct;
+    readonly isExecuted: boolean;
+    readonly asExecuted: {
+      readonly refIndex: u32;
+      readonly result: Result<Null, SpRuntimeDispatchError>;
+    } & Struct;
+    readonly isDelegated: boolean;
+    readonly asDelegated: {
+      readonly who: AccountId32;
+      readonly target: AccountId32;
+    } & Struct;
+    readonly isUndelegated: boolean;
+    readonly asUndelegated: {
+      readonly account: AccountId32;
+    } & Struct;
+    readonly isVetoed: boolean;
+    readonly asVetoed: {
+      readonly who: AccountId32;
+      readonly proposalHash: H256;
+      readonly until: u32;
+    } & Struct;
+    readonly isPreimageNoted: boolean;
+    readonly asPreimageNoted: {
+      readonly proposalHash: H256;
+      readonly who: AccountId32;
+      readonly deposit: u128;
+    } & Struct;
+    readonly isPreimageUsed: boolean;
+    readonly asPreimageUsed: {
+      readonly proposalHash: H256;
+      readonly provider: AccountId32;
+      readonly deposit: u128;
+    } & Struct;
+    readonly isPreimageInvalid: boolean;
+    readonly asPreimageInvalid: {
+      readonly proposalHash: H256;
+      readonly refIndex: u32;
+    } & Struct;
+    readonly isPreimageMissing: boolean;
+    readonly asPreimageMissing: {
+      readonly proposalHash: H256;
+      readonly refIndex: u32;
+    } & Struct;
+    readonly isPreimageReaped: boolean;
+    readonly asPreimageReaped: {
+      readonly proposalHash: H256;
+      readonly provider: AccountId32;
+      readonly deposit: u128;
+      readonly reaper: AccountId32;
+    } & Struct;
+    readonly isBlacklisted: boolean;
+    readonly asBlacklisted: {
+      readonly proposalHash: H256;
+    } & Struct;
+    readonly isVoted: boolean;
+    readonly asVoted: {
+      readonly voter: AccountId32;
+      readonly refIndex: u32;
+      readonly vote: PalletDemocracyVoteAccountVote;
+    } & Struct;
+    readonly isSeconded: boolean;
+    readonly asSeconded: {
+      readonly seconder: AccountId32;
+      readonly propIndex: u32;
+    } & Struct;
+    readonly isProposalCanceled: boolean;
+    readonly asProposalCanceled: {
+      readonly propIndex: u32;
+    } & Struct;
+    readonly type: 'Proposed' | 'Tabled' | 'ExternalTabled' | 'Started' | 'Passed' | 'NotPassed' | 'Cancelled' | 'Executed' | 'Delegated' | 'Undelegated' | 'Vetoed' | 'PreimageNoted' | 'PreimageUsed' | 'PreimageInvalid' | 'PreimageMissing' | 'PreimageReaped' | 'Blacklisted' | 'Voted' | 'Seconded' | 'ProposalCanceled';
+  }
+
+  /** @name PalletDemocracyVoteThreshold (101) */
+  interface PalletDemocracyVoteThreshold extends Enum {
+    readonly isSuperMajorityApprove: boolean;
+    readonly isSuperMajorityAgainst: boolean;
+    readonly isSimpleMajority: boolean;
+    readonly type: 'SuperMajorityApprove' | 'SuperMajorityAgainst' | 'SimpleMajority';
+  }
+
+  /** @name PalletDemocracyVoteAccountVote (102) */
+  interface PalletDemocracyVoteAccountVote extends Enum {
+    readonly isStandard: boolean;
+    readonly asStandard: {
+      readonly vote: Vote;
+      readonly balance: u128;
+    } & Struct;
+    readonly isSplit: boolean;
+    readonly asSplit: {
+      readonly aye: u128;
+      readonly nay: u128;
+    } & Struct;
+    readonly type: 'Standard' | 'Split';
+  }
+
+  /** @name OrmlOracleModuleEvent (104) */
+  interface OrmlOracleModuleEvent extends Enum {
+    readonly isNewFeedData: boolean;
+    readonly asNewFeedData: {
+      readonly sender: AccountId32;
+      readonly values: Vec<ITuple<[AcalaPrimitivesCurrencyCurrencyId, u128]>>;
+    } & Struct;
+    readonly type: 'NewFeedData';
+  }
+
+  /** @name OrmlAuctionModuleEvent (108) */
+  interface OrmlAuctionModuleEvent extends Enum {
+    readonly isBid: boolean;
+    readonly asBid: {
+      readonly auctionId: u32;
+      readonly bidder: AccountId32;
+      readonly amount: u128;
+    } & Struct;
+    readonly type: 'Bid';
+  }
+
+  /** @name ModulePricesModuleEvent (109) */
+  interface ModulePricesModuleEvent extends Enum {
+    readonly isLockPrice: boolean;
+    readonly asLockPrice: {
+      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
+      readonly lockedPrice: u128;
+    } & Struct;
+    readonly isUnlockPrice: boolean;
+    readonly asUnlockPrice: {
+      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
+    } & Struct;
+    readonly type: 'LockPrice' | 'UnlockPrice';
+  }
+
+  /** @name ModuleDexModuleEvent (110) */
+  interface ModuleDexModuleEvent extends Enum {
+    readonly isAddProvision: boolean;
+    readonly asAddProvision: {
+      readonly who: AccountId32;
+      readonly currency0: AcalaPrimitivesCurrencyCurrencyId;
+      readonly contribution0: u128;
+      readonly currency1: AcalaPrimitivesCurrencyCurrencyId;
+      readonly contribution1: u128;
+    } & Struct;
+    readonly isAddLiquidity: boolean;
+    readonly asAddLiquidity: {
+      readonly who: AccountId32;
+      readonly currency0: AcalaPrimitivesCurrencyCurrencyId;
+      readonly pool0: u128;
+      readonly currency1: AcalaPrimitivesCurrencyCurrencyId;
+      readonly pool1: u128;
+      readonly shareIncrement: u128;
+    } & Struct;
+    readonly isRemoveLiquidity: boolean;
+    readonly asRemoveLiquidity: {
+      readonly who: AccountId32;
+      readonly currency0: AcalaPrimitivesCurrencyCurrencyId;
+      readonly pool0: u128;
+      readonly currency1: AcalaPrimitivesCurrencyCurrencyId;
+      readonly pool1: u128;
+      readonly shareDecrement: u128;
+    } & Struct;
+    readonly isSwap: boolean;
+    readonly asSwap: {
+      readonly trader: AccountId32;
+      readonly path: Vec<AcalaPrimitivesCurrencyCurrencyId>;
+      readonly liquidityChanges: Vec<u128>;
+    } & Struct;
+    readonly isEnableTradingPair: boolean;
+    readonly asEnableTradingPair: {
+      readonly tradingPair: AcalaPrimitivesTradingPair;
+    } & Struct;
+    readonly isListProvisioning: boolean;
+    readonly asListProvisioning: {
+      readonly tradingPair: AcalaPrimitivesTradingPair;
+    } & Struct;
+    readonly isDisableTradingPair: boolean;
+    readonly asDisableTradingPair: {
+      readonly tradingPair: AcalaPrimitivesTradingPair;
+    } & Struct;
+    readonly isProvisioningToEnabled: boolean;
+    readonly asProvisioningToEnabled: {
+      readonly tradingPair: AcalaPrimitivesTradingPair;
+      readonly pool0: u128;
+      readonly pool1: u128;
+      readonly shareAmount: u128;
+    } & Struct;
+    readonly isRefundProvision: boolean;
+    readonly asRefundProvision: {
+      readonly who: AccountId32;
+      readonly currency0: AcalaPrimitivesCurrencyCurrencyId;
+      readonly contribution0: u128;
+      readonly currency1: AcalaPrimitivesCurrencyCurrencyId;
+      readonly contribution1: u128;
+    } & Struct;
+    readonly isProvisioningAborted: boolean;
+    readonly asProvisioningAborted: {
+      readonly tradingPair: AcalaPrimitivesTradingPair;
+      readonly accumulatedProvision0: u128;
+      readonly accumulatedProvision1: u128;
+    } & Struct;
+    readonly type: 'AddProvision' | 'AddLiquidity' | 'RemoveLiquidity' | 'Swap' | 'EnableTradingPair' | 'ListProvisioning' | 'DisableTradingPair' | 'ProvisioningToEnabled' | 'RefundProvision' | 'ProvisioningAborted';
+  }
+
+  /** @name AcalaPrimitivesTradingPair (113) */
+  interface AcalaPrimitivesTradingPair extends ITuple<[AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId]> {}
+
+  /** @name ModuleAuctionManagerModuleEvent (114) */
+  interface ModuleAuctionManagerModuleEvent extends Enum {
+    readonly isNewCollateralAuction: boolean;
+    readonly asNewCollateralAuction: {
+      readonly auctionId: u32;
+      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
+      readonly collateralAmount: u128;
+      readonly targetBidPrice: u128;
+    } & Struct;
+    readonly isCancelAuction: boolean;
+    readonly asCancelAuction: {
+      readonly auctionId: u32;
+    } & Struct;
+    readonly isCollateralAuctionDealt: boolean;
+    readonly asCollateralAuctionDealt: {
+      readonly auctionId: u32;
+      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
+      readonly collateralAmount: u128;
+      readonly winner: AccountId32;
+      readonly paymentAmount: u128;
+    } & Struct;
+    readonly isDexTakeCollateralAuction: boolean;
+    readonly asDexTakeCollateralAuction: {
+      readonly auctionId: u32;
+      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
+      readonly collateralAmount: u128;
+      readonly supplyCollateralAmount: u128;
+      readonly targetStableAmount: u128;
+    } & Struct;
+    readonly isCollateralAuctionAborted: boolean;
+    readonly asCollateralAuctionAborted: {
+      readonly auctionId: u32;
+      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
+      readonly collateralAmount: u128;
+      readonly targetStableAmount: u128;
+      readonly refundRecipient: AccountId32;
+    } & Struct;
+    readonly type: 'NewCollateralAuction' | 'CancelAuction' | 'CollateralAuctionDealt' | 'DexTakeCollateralAuction' | 'CollateralAuctionAborted';
+  }
+
+  /** @name ModuleLoansModuleEvent (115) */
+  interface ModuleLoansModuleEvent extends Enum {
+    readonly isPositionUpdated: boolean;
+    readonly asPositionUpdated: {
+      readonly owner: AccountId32;
+      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
+      readonly collateralAdjustment: i128;
+      readonly debitAdjustment: i128;
+    } & Struct;
+    readonly isConfiscateCollateralAndDebit: boolean;
+    readonly asConfiscateCollateralAndDebit: {
+      readonly owner: AccountId32;
+      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
+      readonly confiscatedCollateralAmount: u128;
+      readonly deductDebitAmount: u128;
+    } & Struct;
+    readonly isTransferLoan: boolean;
+    readonly asTransferLoan: {
+      readonly from: AccountId32;
+      readonly to: AccountId32;
+      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
+    } & Struct;
+    readonly type: 'PositionUpdated' | 'ConfiscateCollateralAndDebit' | 'TransferLoan';
+  }
+
+  /** @name ModuleHonzonModuleEvent (117) */
+  interface ModuleHonzonModuleEvent extends Enum {
+    readonly isAuthorization: boolean;
+    readonly asAuthorization: {
+      readonly authorizer: AccountId32;
+      readonly authorizee: AccountId32;
+      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
+    } & Struct;
+    readonly isUnAuthorization: boolean;
+    readonly asUnAuthorization: {
+      readonly authorizer: AccountId32;
+      readonly authorizee: AccountId32;
+      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
+    } & Struct;
+    readonly isUnAuthorizationAll: boolean;
+    readonly asUnAuthorizationAll: {
+      readonly authorizer: AccountId32;
+    } & Struct;
+    readonly isTransferDebit: boolean;
+    readonly asTransferDebit: {
+      readonly fromCurrency: AcalaPrimitivesCurrencyCurrencyId;
+      readonly toCurrency: AcalaPrimitivesCurrencyCurrencyId;
+      readonly amount: u128;
+    } & Struct;
+    readonly type: 'Authorization' | 'UnAuthorization' | 'UnAuthorizationAll' | 'TransferDebit';
+  }
+
+  /** @name ModuleCdpTreasuryModuleEvent (118) */
+  interface ModuleCdpTreasuryModuleEvent extends Enum {
+    readonly isExpectedCollateralAuctionSizeUpdated: boolean;
+    readonly asExpectedCollateralAuctionSizeUpdated: {
+      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
+      readonly newSize: u128;
+    } & Struct;
+    readonly type: 'ExpectedCollateralAuctionSizeUpdated';
+  }
+
+  /** @name ModuleCdpEngineModuleEvent (119) */
+  interface ModuleCdpEngineModuleEvent extends Enum {
+    readonly isLiquidateUnsafeCDP: boolean;
+    readonly asLiquidateUnsafeCDP: {
+      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
+      readonly owner: AccountId32;
+      readonly collateralAmount: u128;
+      readonly badDebtValue: u128;
+      readonly targetAmount: u128;
+    } & Struct;
+    readonly isSettleCDPInDebit: boolean;
+    readonly asSettleCDPInDebit: {
+      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
+      readonly owner: AccountId32;
+    } & Struct;
+    readonly isCloseCDPInDebitByDEX: boolean;
+    readonly asCloseCDPInDebitByDEX: {
+      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
+      readonly owner: AccountId32;
+      readonly soldCollateralAmount: u128;
+      readonly refundCollateralAmount: u128;
+      readonly debitValue: u128;
+    } & Struct;
+    readonly isInterestRatePerSecUpdated: boolean;
+    readonly asInterestRatePerSecUpdated: {
+      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
+      readonly newInterestRatePerSec: Option<u128>;
+    } & Struct;
+    readonly isLiquidationRatioUpdated: boolean;
+    readonly asLiquidationRatioUpdated: {
+      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
+      readonly newLiquidationRatio: Option<u128>;
+    } & Struct;
+    readonly isLiquidationPenaltyUpdated: boolean;
+    readonly asLiquidationPenaltyUpdated: {
+      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
+      readonly newLiquidationPenalty: Option<u128>;
+    } & Struct;
+    readonly isRequiredCollateralRatioUpdated: boolean;
+    readonly asRequiredCollateralRatioUpdated: {
+      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
+      readonly newRequiredCollateralRatio: Option<u128>;
+    } & Struct;
+    readonly isMaximumTotalDebitValueUpdated: boolean;
+    readonly asMaximumTotalDebitValueUpdated: {
+      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
+      readonly newTotalDebitValue: u128;
+    } & Struct;
+    readonly isLiquidationContractRegistered: boolean;
+    readonly asLiquidationContractRegistered: {
+      readonly address: H160;
+    } & Struct;
+    readonly isLiquidationContractDeregistered: boolean;
+    readonly asLiquidationContractDeregistered: {
+      readonly address: H160;
+    } & Struct;
+    readonly type: 'LiquidateUnsafeCDP' | 'SettleCDPInDebit' | 'CloseCDPInDebitByDEX' | 'InterestRatePerSecUpdated' | 'LiquidationRatioUpdated' | 'LiquidationPenaltyUpdated' | 'RequiredCollateralRatioUpdated' | 'MaximumTotalDebitValueUpdated' | 'LiquidationContractRegistered' | 'LiquidationContractDeregistered';
+  }
+
+  /** @name ModuleEmergencyShutdownModuleEvent (121) */
+  interface ModuleEmergencyShutdownModuleEvent extends Enum {
+    readonly isShutdown: boolean;
+    readonly asShutdown: {
       readonly blockNumber: u32;
-      readonly sessionIndex: u32;
-      readonly sessionDuration: u32;
     } & Struct;
-    readonly type: 'ScheduledSessionDuration';
+    readonly isOpenRefund: boolean;
+    readonly asOpenRefund: {
+      readonly blockNumber: u32;
+    } & Struct;
+    readonly isRefund: boolean;
+    readonly asRefund: {
+      readonly who: AccountId32;
+      readonly stableCoinAmount: u128;
+      readonly refundList: Vec<ITuple<[AcalaPrimitivesCurrencyCurrencyId, u128]>>;
+    } & Struct;
+    readonly type: 'Shutdown' | 'OpenRefund' | 'Refund';
   }
 
-  /** @name CumulusPalletXcmpQueueEvent (67) */
+  /** @name ModuleNomineesElectionModuleEvent (124) */
+  interface ModuleNomineesElectionModuleEvent extends Enum {
+    readonly isRebond: boolean;
+    readonly asRebond: {
+      readonly who: AccountId32;
+      readonly amount: u128;
+    } & Struct;
+    readonly type: 'Rebond';
+  }
+
+  /** @name ModuleHomaModuleEvent (125) */
+  interface ModuleHomaModuleEvent extends Enum {
+    readonly isMinted: boolean;
+    readonly asMinted: {
+      readonly minter: AccountId32;
+      readonly stakingCurrencyAmount: u128;
+      readonly liquidAmountReceived: u128;
+      readonly liquidAmountAddedToVoid: u128;
+    } & Struct;
+    readonly isRequestedRedeem: boolean;
+    readonly asRequestedRedeem: {
+      readonly redeemer: AccountId32;
+      readonly liquidAmount: u128;
+      readonly allowFastMatch: bool;
+    } & Struct;
+    readonly isRedeemRequestCancelled: boolean;
+    readonly asRedeemRequestCancelled: {
+      readonly redeemer: AccountId32;
+      readonly cancelledLiquidAmount: u128;
+    } & Struct;
+    readonly isRedeemedByFastMatch: boolean;
+    readonly asRedeemedByFastMatch: {
+      readonly redeemer: AccountId32;
+      readonly matchedLiquidAmount: u128;
+      readonly feeInLiquid: u128;
+      readonly redeemedStakingAmount: u128;
+    } & Struct;
+    readonly isRedeemedByUnbond: boolean;
+    readonly asRedeemedByUnbond: {
+      readonly redeemer: AccountId32;
+      readonly eraIndexWhenUnbond: u32;
+      readonly liquidAmount: u128;
+      readonly unbondingStakingAmount: u128;
+    } & Struct;
+    readonly isWithdrawRedemption: boolean;
+    readonly asWithdrawRedemption: {
+      readonly redeemer: AccountId32;
+      readonly redemptionAmount: u128;
+    } & Struct;
+    readonly isCurrentEraBumped: boolean;
+    readonly asCurrentEraBumped: {
+      readonly newEraIndex: u32;
+    } & Struct;
+    readonly isCurrentEraReset: boolean;
+    readonly asCurrentEraReset: {
+      readonly newEraIndex: u32;
+    } & Struct;
+    readonly isLedgerBondedReset: boolean;
+    readonly asLedgerBondedReset: {
+      readonly subAccountIndex: u16;
+      readonly newBondedAmount: u128;
+    } & Struct;
+    readonly isLedgerUnlockingReset: boolean;
+    readonly asLedgerUnlockingReset: {
+      readonly subAccountIndex: u16;
+      readonly newUnlocking: Vec<ModuleHomaModuleUnlockChunk>;
+    } & Struct;
+    readonly isSoftBondedCapPerSubAccountUpdated: boolean;
+    readonly asSoftBondedCapPerSubAccountUpdated: {
+      readonly capAmount: u128;
+    } & Struct;
+    readonly isEstimatedRewardRatePerEraUpdated: boolean;
+    readonly asEstimatedRewardRatePerEraUpdated: {
+      readonly rewardRate: u128;
+    } & Struct;
+    readonly isCommissionRateUpdated: boolean;
+    readonly asCommissionRateUpdated: {
+      readonly commissionRate: u128;
+    } & Struct;
+    readonly isFastMatchFeeRateUpdated: boolean;
+    readonly asFastMatchFeeRateUpdated: {
+      readonly fastMatchFeeRate: u128;
+    } & Struct;
+    readonly isLastEraBumpedBlockUpdated: boolean;
+    readonly asLastEraBumpedBlockUpdated: {
+      readonly lastEraBumpedBlock: u32;
+    } & Struct;
+    readonly isBumpEraFrequencyUpdated: boolean;
+    readonly asBumpEraFrequencyUpdated: {
+      readonly frequency: u32;
+    } & Struct;
+    readonly type: 'Minted' | 'RequestedRedeem' | 'RedeemRequestCancelled' | 'RedeemedByFastMatch' | 'RedeemedByUnbond' | 'WithdrawRedemption' | 'CurrentEraBumped' | 'CurrentEraReset' | 'LedgerBondedReset' | 'LedgerUnlockingReset' | 'SoftBondedCapPerSubAccountUpdated' | 'EstimatedRewardRatePerEraUpdated' | 'CommissionRateUpdated' | 'FastMatchFeeRateUpdated' | 'LastEraBumpedBlockUpdated' | 'BumpEraFrequencyUpdated';
+  }
+
+  /** @name ModuleHomaModuleUnlockChunk (127) */
+  interface ModuleHomaModuleUnlockChunk extends Struct {
+    readonly value: Compact<u128>;
+    readonly era: Compact<u32>;
+  }
+
+  /** @name ModuleXcmInterfaceModuleEvent (128) */
+  interface ModuleXcmInterfaceModuleEvent extends Enum {
+    readonly isXcmDestWeightUpdated: boolean;
+    readonly asXcmDestWeightUpdated: {
+      readonly xcmOperation: ModuleXcmInterfaceModuleXcmInterfaceOperation;
+      readonly newXcmDestWeight: u64;
+    } & Struct;
+    readonly isXcmFeeUpdated: boolean;
+    readonly asXcmFeeUpdated: {
+      readonly xcmOperation: ModuleXcmInterfaceModuleXcmInterfaceOperation;
+      readonly newXcmDestWeight: u128;
+    } & Struct;
+    readonly type: 'XcmDestWeightUpdated' | 'XcmFeeUpdated';
+  }
+
+  /** @name ModuleXcmInterfaceModuleXcmInterfaceOperation (129) */
+  interface ModuleXcmInterfaceModuleXcmInterfaceOperation extends Enum {
+    readonly isXtokensTransfer: boolean;
+    readonly isHomaWithdrawUnbonded: boolean;
+    readonly isHomaBondExtra: boolean;
+    readonly isHomaUnbond: boolean;
+    readonly isParachainFee: boolean;
+    readonly asParachainFee: XcmV1MultiLocation;
+    readonly type: 'XtokensTransfer' | 'HomaWithdrawUnbonded' | 'HomaBondExtra' | 'HomaUnbond' | 'ParachainFee';
+  }
+
+  /** @name ModuleIncentivesModuleEvent (130) */
+  interface ModuleIncentivesModuleEvent extends Enum {
+    readonly isDepositDexShare: boolean;
+    readonly asDepositDexShare: {
+      readonly who: AccountId32;
+      readonly dexShareType: AcalaPrimitivesCurrencyCurrencyId;
+      readonly deposit: u128;
+    } & Struct;
+    readonly isWithdrawDexShare: boolean;
+    readonly asWithdrawDexShare: {
+      readonly who: AccountId32;
+      readonly dexShareType: AcalaPrimitivesCurrencyCurrencyId;
+      readonly withdraw: u128;
+    } & Struct;
+    readonly isClaimRewards: boolean;
+    readonly asClaimRewards: {
+      readonly who: AccountId32;
+      readonly pool: ModuleSupportIncentivesPoolId;
+      readonly rewardCurrencyId: AcalaPrimitivesCurrencyCurrencyId;
+      readonly actualAmount: u128;
+      readonly deductionAmount: u128;
+    } & Struct;
+    readonly isIncentiveRewardAmountUpdated: boolean;
+    readonly asIncentiveRewardAmountUpdated: {
+      readonly pool: ModuleSupportIncentivesPoolId;
+      readonly rewardCurrencyId: AcalaPrimitivesCurrencyCurrencyId;
+      readonly rewardAmountPerPeriod: u128;
+    } & Struct;
+    readonly isClaimRewardDeductionRateUpdated: boolean;
+    readonly asClaimRewardDeductionRateUpdated: {
+      readonly pool: ModuleSupportIncentivesPoolId;
+      readonly deductionRate: u128;
+    } & Struct;
+    readonly type: 'DepositDexShare' | 'WithdrawDexShare' | 'ClaimRewards' | 'IncentiveRewardAmountUpdated' | 'ClaimRewardDeductionRateUpdated';
+  }
+
+  /** @name ModuleSupportIncentivesPoolId (131) */
+  interface ModuleSupportIncentivesPoolId extends Enum {
+    readonly isLoans: boolean;
+    readonly asLoans: AcalaPrimitivesCurrencyCurrencyId;
+    readonly isDex: boolean;
+    readonly asDex: AcalaPrimitivesCurrencyCurrencyId;
+    readonly type: 'Loans' | 'Dex';
+  }
+
+  /** @name ModuleNftModuleEvent (132) */
+  interface ModuleNftModuleEvent extends Enum {
+    readonly isCreatedClass: boolean;
+    readonly asCreatedClass: {
+      readonly owner: AccountId32;
+      readonly classId: u32;
+    } & Struct;
+    readonly isMintedToken: boolean;
+    readonly asMintedToken: {
+      readonly from: AccountId32;
+      readonly to: AccountId32;
+      readonly classId: u32;
+      readonly quantity: u32;
+    } & Struct;
+    readonly isTransferredToken: boolean;
+    readonly asTransferredToken: {
+      readonly from: AccountId32;
+      readonly to: AccountId32;
+      readonly classId: u32;
+      readonly tokenId: u64;
+    } & Struct;
+    readonly isBurnedToken: boolean;
+    readonly asBurnedToken: {
+      readonly owner: AccountId32;
+      readonly classId: u32;
+      readonly tokenId: u64;
+    } & Struct;
+    readonly isBurnedTokenWithRemark: boolean;
+    readonly asBurnedTokenWithRemark: {
+      readonly owner: AccountId32;
+      readonly classId: u32;
+      readonly tokenId: u64;
+      readonly remarkHash: H256;
+    } & Struct;
+    readonly isDestroyedClass: boolean;
+    readonly asDestroyedClass: {
+      readonly owner: AccountId32;
+      readonly classId: u32;
+    } & Struct;
+    readonly type: 'CreatedClass' | 'MintedToken' | 'TransferredToken' | 'BurnedToken' | 'BurnedTokenWithRemark' | 'DestroyedClass';
+  }
+
+  /** @name ModuleAssetRegistryModuleEvent (133) */
+  interface ModuleAssetRegistryModuleEvent extends Enum {
+    readonly isForeignAssetRegistered: boolean;
+    readonly asForeignAssetRegistered: {
+      readonly assetId: u16;
+      readonly assetAddress: XcmV1MultiLocation;
+      readonly metadata: AcalaPrimitivesCurrencyAssetMetadata;
+    } & Struct;
+    readonly isForeignAssetUpdated: boolean;
+    readonly asForeignAssetUpdated: {
+      readonly assetId: u16;
+      readonly assetAddress: XcmV1MultiLocation;
+      readonly metadata: AcalaPrimitivesCurrencyAssetMetadata;
+    } & Struct;
+    readonly isAssetRegistered: boolean;
+    readonly asAssetRegistered: {
+      readonly assetId: AcalaPrimitivesCurrencyAssetIds;
+      readonly metadata: AcalaPrimitivesCurrencyAssetMetadata;
+    } & Struct;
+    readonly isAssetUpdated: boolean;
+    readonly asAssetUpdated: {
+      readonly assetId: AcalaPrimitivesCurrencyAssetIds;
+      readonly metadata: AcalaPrimitivesCurrencyAssetMetadata;
+    } & Struct;
+    readonly type: 'ForeignAssetRegistered' | 'ForeignAssetUpdated' | 'AssetRegistered' | 'AssetUpdated';
+  }
+
+  /** @name AcalaPrimitivesCurrencyAssetMetadata (134) */
+  interface AcalaPrimitivesCurrencyAssetMetadata extends Struct {
+    readonly name: Bytes;
+    readonly symbol: Bytes;
+    readonly decimals: u8;
+    readonly minimalBalance: u128;
+  }
+
+  /** @name AcalaPrimitivesCurrencyAssetIds (135) */
+  interface AcalaPrimitivesCurrencyAssetIds extends Enum {
+    readonly isErc20: boolean;
+    readonly asErc20: H160;
+    readonly isStableAssetId: boolean;
+    readonly asStableAssetId: u32;
+    readonly isForeignAssetId: boolean;
+    readonly asForeignAssetId: u16;
+    readonly isNativeAssetId: boolean;
+    readonly asNativeAssetId: AcalaPrimitivesCurrencyCurrencyId;
+    readonly type: 'Erc20' | 'StableAssetId' | 'ForeignAssetId' | 'NativeAssetId';
+  }
+
+  /** @name EcosystemRenvmBridgeModuleEvent (136) */
+  interface EcosystemRenvmBridgeModuleEvent extends Enum {
+    readonly isMinted: boolean;
+    readonly asMinted: {
+      readonly owner: AccountId32;
+      readonly amount: u128;
+    } & Struct;
+    readonly isBurnt: boolean;
+    readonly asBurnt: {
+      readonly owner: AccountId32;
+      readonly dest: Bytes;
+      readonly amount: u128;
+    } & Struct;
+    readonly isRotatedKey: boolean;
+    readonly asRotatedKey: {
+      readonly key: U8aFixed;
+    } & Struct;
+    readonly type: 'Minted' | 'Burnt' | 'RotatedKey';
+  }
+
+  /** @name EcosystemStarportModuleEvent (137) */
+  interface EcosystemStarportModuleEvent extends Enum {
+    readonly isAssetLockedTo: boolean;
+    readonly asAssetLockedTo: {
+      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
+      readonly amount: u128;
+      readonly user: AccountId32;
+    } & Struct;
+    readonly isAssetUnlocked: boolean;
+    readonly asAssetUnlocked: {
+      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
+      readonly amount: u128;
+      readonly user: AccountId32;
+    } & Struct;
+    readonly isGatewayAuthoritiesChanged: boolean;
+    readonly isSupplyCapSet: boolean;
+    readonly asSupplyCapSet: {
+      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
+      readonly newCap: u128;
+    } & Struct;
+    readonly isFutureYieldSet: boolean;
+    readonly asFutureYieldSet: {
+      readonly yieldAmount: u128;
+      readonly index: u128;
+      readonly timestamp: u64;
+    } & Struct;
+    readonly type: 'AssetLockedTo' | 'AssetUnlocked' | 'GatewayAuthoritiesChanged' | 'SupplyCapSet' | 'FutureYieldSet';
+  }
+
+  /** @name EcosystemCompoundCashModuleEvent (138) */
+  interface EcosystemCompoundCashModuleEvent extends Enum {
+    readonly isFutureYieldSet: boolean;
+    readonly asFutureYieldSet: {
+      readonly yieldAmount: u128;
+      readonly index: u128;
+      readonly timestamp: u64;
+    } & Struct;
+    readonly type: 'FutureYieldSet';
+  }
+
+  /** @name CumulusPalletXcmpQueueEvent (139) */
   interface CumulusPalletXcmpQueueEvent extends Enum {
     readonly isSuccess: boolean;
     readonly asSuccess: {
@@ -891,7 +1933,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Success' | 'Fail' | 'BadVersion' | 'BadFormat' | 'UpwardMessageSent' | 'XcmpMessageSent' | 'OverweightEnqueued' | 'OverweightServiced';
   }
 
-  /** @name XcmV2TraitsError (69) */
+  /** @name XcmV2TraitsError (141) */
   interface XcmV2TraitsError extends Enum {
     readonly isOverflow: boolean;
     readonly isUnimplemented: boolean;
@@ -924,7 +1966,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Overflow' | 'Unimplemented' | 'UntrustedReserveLocation' | 'UntrustedTeleportLocation' | 'MultiLocationFull' | 'MultiLocationNotInvertible' | 'BadOrigin' | 'InvalidLocation' | 'AssetNotFound' | 'FailedToTransactAsset' | 'NotWithdrawable' | 'LocationCannotHold' | 'ExceedsMaxMessageSize' | 'DestinationUnsupported' | 'Transport' | 'Unroutable' | 'UnknownClaim' | 'FailedToDecode' | 'MaxWeightInvalid' | 'NotHoldingFees' | 'TooExpensive' | 'Trap' | 'UnhandledXcmVersion' | 'WeightLimitReached' | 'Barrier' | 'WeightNotComputable';
   }
 
-  /** @name PalletXcmEvent (71) */
+  /** @name PalletXcmEvent (142) */
   interface PalletXcmEvent extends Enum {
     readonly isAttempted: boolean;
     readonly asAttempted: XcmV2TraitsOutcome;
@@ -961,7 +2003,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Attempted' | 'Sent' | 'UnexpectedResponse' | 'ResponseReady' | 'Notified' | 'NotifyOverweight' | 'NotifyDispatchError' | 'NotifyDecodeFailed' | 'InvalidResponder' | 'InvalidResponderVersion' | 'ResponseTaken' | 'AssetsTrapped' | 'VersionChangeNotified' | 'SupportedVersionChanged' | 'NotifyTargetSendFail' | 'NotifyTargetMigrationFail';
   }
 
-  /** @name XcmV2TraitsOutcome (72) */
+  /** @name XcmV2TraitsOutcome (143) */
   interface XcmV2TraitsOutcome extends Enum {
     readonly isComplete: boolean;
     readonly asComplete: u64;
@@ -972,121 +2014,10 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Complete' | 'Incomplete' | 'Error';
   }
 
-  /** @name XcmV1MultiLocation (73) */
-  interface XcmV1MultiLocation extends Struct {
-    readonly parents: u8;
-    readonly interior: XcmV1MultilocationJunctions;
-  }
-
-  /** @name XcmV1MultilocationJunctions (74) */
-  interface XcmV1MultilocationJunctions extends Enum {
-    readonly isHere: boolean;
-    readonly isX1: boolean;
-    readonly asX1: XcmV1Junction;
-    readonly isX2: boolean;
-    readonly asX2: ITuple<[XcmV1Junction, XcmV1Junction]>;
-    readonly isX3: boolean;
-    readonly asX3: ITuple<[XcmV1Junction, XcmV1Junction, XcmV1Junction]>;
-    readonly isX4: boolean;
-    readonly asX4: ITuple<[XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction]>;
-    readonly isX5: boolean;
-    readonly asX5: ITuple<[XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction]>;
-    readonly isX6: boolean;
-    readonly asX6: ITuple<[XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction]>;
-    readonly isX7: boolean;
-    readonly asX7: ITuple<[XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction]>;
-    readonly isX8: boolean;
-    readonly asX8: ITuple<[XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction, XcmV1Junction]>;
-    readonly type: 'Here' | 'X1' | 'X2' | 'X3' | 'X4' | 'X5' | 'X6' | 'X7' | 'X8';
-  }
-
-  /** @name XcmV1Junction (75) */
-  interface XcmV1Junction extends Enum {
-    readonly isParachain: boolean;
-    readonly asParachain: Compact<u32>;
-    readonly isAccountId32: boolean;
-    readonly asAccountId32: {
-      readonly network: XcmV0JunctionNetworkId;
-      readonly id: U8aFixed;
-    } & Struct;
-    readonly isAccountIndex64: boolean;
-    readonly asAccountIndex64: {
-      readonly network: XcmV0JunctionNetworkId;
-      readonly index: Compact<u64>;
-    } & Struct;
-    readonly isAccountKey20: boolean;
-    readonly asAccountKey20: {
-      readonly network: XcmV0JunctionNetworkId;
-      readonly key: U8aFixed;
-    } & Struct;
-    readonly isPalletInstance: boolean;
-    readonly asPalletInstance: u8;
-    readonly isGeneralIndex: boolean;
-    readonly asGeneralIndex: Compact<u128>;
-    readonly isGeneralKey: boolean;
-    readonly asGeneralKey: Bytes;
-    readonly isOnlyChild: boolean;
-    readonly isPlurality: boolean;
-    readonly asPlurality: {
-      readonly id: XcmV0JunctionBodyId;
-      readonly part: XcmV0JunctionBodyPart;
-    } & Struct;
-    readonly type: 'Parachain' | 'AccountId32' | 'AccountIndex64' | 'AccountKey20' | 'PalletInstance' | 'GeneralIndex' | 'GeneralKey' | 'OnlyChild' | 'Plurality';
-  }
-
-  /** @name XcmV0JunctionNetworkId (77) */
-  interface XcmV0JunctionNetworkId extends Enum {
-    readonly isAny: boolean;
-    readonly isNamed: boolean;
-    readonly asNamed: Bytes;
-    readonly isPolkadot: boolean;
-    readonly isKusama: boolean;
-    readonly type: 'Any' | 'Named' | 'Polkadot' | 'Kusama';
-  }
-
-  /** @name XcmV0JunctionBodyId (80) */
-  interface XcmV0JunctionBodyId extends Enum {
-    readonly isUnit: boolean;
-    readonly isNamed: boolean;
-    readonly asNamed: Bytes;
-    readonly isIndex: boolean;
-    readonly asIndex: Compact<u32>;
-    readonly isExecutive: boolean;
-    readonly isTechnical: boolean;
-    readonly isLegislative: boolean;
-    readonly isJudicial: boolean;
-    readonly type: 'Unit' | 'Named' | 'Index' | 'Executive' | 'Technical' | 'Legislative' | 'Judicial';
-  }
-
-  /** @name XcmV0JunctionBodyPart (81) */
-  interface XcmV0JunctionBodyPart extends Enum {
-    readonly isVoice: boolean;
-    readonly isMembers: boolean;
-    readonly asMembers: {
-      readonly count: Compact<u32>;
-    } & Struct;
-    readonly isFraction: boolean;
-    readonly asFraction: {
-      readonly nom: Compact<u32>;
-      readonly denom: Compact<u32>;
-    } & Struct;
-    readonly isAtLeastProportion: boolean;
-    readonly asAtLeastProportion: {
-      readonly nom: Compact<u32>;
-      readonly denom: Compact<u32>;
-    } & Struct;
-    readonly isMoreThanProportion: boolean;
-    readonly asMoreThanProportion: {
-      readonly nom: Compact<u32>;
-      readonly denom: Compact<u32>;
-    } & Struct;
-    readonly type: 'Voice' | 'Members' | 'Fraction' | 'AtLeastProportion' | 'MoreThanProportion';
-  }
-
-  /** @name XcmV2Xcm (82) */
+  /** @name XcmV2Xcm (144) */
   interface XcmV2Xcm extends Vec<XcmV2Instruction> {}
 
-  /** @name XcmV2Instruction (84) */
+  /** @name XcmV2Instruction (146) */
   interface XcmV2Instruction extends Enum {
     readonly isWithdrawAsset: boolean;
     readonly asWithdrawAsset: XcmV1MultiassetMultiAssets;
@@ -1206,16 +2137,16 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'WithdrawAsset' | 'ReserveAssetDeposited' | 'ReceiveTeleportedAsset' | 'QueryResponse' | 'TransferAsset' | 'TransferReserveAsset' | 'Transact' | 'HrmpNewChannelOpenRequest' | 'HrmpChannelAccepted' | 'HrmpChannelClosing' | 'ClearOrigin' | 'DescendOrigin' | 'ReportError' | 'DepositAsset' | 'DepositReserveAsset' | 'ExchangeAsset' | 'InitiateReserveWithdraw' | 'InitiateTeleport' | 'QueryHolding' | 'BuyExecution' | 'RefundSurplus' | 'SetErrorHandler' | 'SetAppendix' | 'ClearError' | 'ClaimAsset' | 'Trap' | 'SubscribeVersion' | 'UnsubscribeVersion';
   }
 
-  /** @name XcmV1MultiassetMultiAssets (85) */
+  /** @name XcmV1MultiassetMultiAssets (147) */
   interface XcmV1MultiassetMultiAssets extends Vec<XcmV1MultiAsset> {}
 
-  /** @name XcmV1MultiAsset (87) */
+  /** @name XcmV1MultiAsset (149) */
   interface XcmV1MultiAsset extends Struct {
     readonly id: XcmV1MultiassetAssetId;
     readonly fun: XcmV1MultiassetFungibility;
   }
 
-  /** @name XcmV1MultiassetAssetId (88) */
+  /** @name XcmV1MultiassetAssetId (150) */
   interface XcmV1MultiassetAssetId extends Enum {
     readonly isConcrete: boolean;
     readonly asConcrete: XcmV1MultiLocation;
@@ -1224,7 +2155,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Concrete' | 'Abstract';
   }
 
-  /** @name XcmV1MultiassetFungibility (89) */
+  /** @name XcmV1MultiassetFungibility (151) */
   interface XcmV1MultiassetFungibility extends Enum {
     readonly isFungible: boolean;
     readonly asFungible: Compact<u128>;
@@ -1233,7 +2164,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Fungible' | 'NonFungible';
   }
 
-  /** @name XcmV1MultiassetAssetInstance (90) */
+  /** @name XcmV1MultiassetAssetInstance (152) */
   interface XcmV1MultiassetAssetInstance extends Enum {
     readonly isUndefined: boolean;
     readonly isIndex: boolean;
@@ -1251,7 +2182,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Undefined' | 'Index' | 'Array4' | 'Array8' | 'Array16' | 'Array32' | 'Blob';
   }
 
-  /** @name XcmV2Response (92) */
+  /** @name XcmV2Response (154) */
   interface XcmV2Response extends Enum {
     readonly isNull: boolean;
     readonly isAssets: boolean;
@@ -1263,7 +2194,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Null' | 'Assets' | 'ExecutionResult' | 'Version';
   }
 
-  /** @name XcmV0OriginKind (95) */
+  /** @name XcmV0OriginKind (157) */
   interface XcmV0OriginKind extends Enum {
     readonly isNative: boolean;
     readonly isSovereignAccount: boolean;
@@ -1272,12 +2203,12 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Native' | 'SovereignAccount' | 'Superuser' | 'Xcm';
   }
 
-  /** @name XcmDoubleEncoded (96) */
+  /** @name XcmDoubleEncoded (158) */
   interface XcmDoubleEncoded extends Struct {
     readonly encoded: Bytes;
   }
 
-  /** @name XcmV1MultiassetMultiAssetFilter (97) */
+  /** @name XcmV1MultiassetMultiAssetFilter (159) */
   interface XcmV1MultiassetMultiAssetFilter extends Enum {
     readonly isDefinite: boolean;
     readonly asDefinite: XcmV1MultiassetMultiAssets;
@@ -1286,7 +2217,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Definite' | 'Wild';
   }
 
-  /** @name XcmV1MultiassetWildMultiAsset (98) */
+  /** @name XcmV1MultiassetWildMultiAsset (160) */
   interface XcmV1MultiassetWildMultiAsset extends Enum {
     readonly isAll: boolean;
     readonly isAllOf: boolean;
@@ -1297,14 +2228,14 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'All' | 'AllOf';
   }
 
-  /** @name XcmV1MultiassetWildFungibility (99) */
+  /** @name XcmV1MultiassetWildFungibility (161) */
   interface XcmV1MultiassetWildFungibility extends Enum {
     readonly isFungible: boolean;
     readonly isNonFungible: boolean;
     readonly type: 'Fungible' | 'NonFungible';
   }
 
-  /** @name XcmV2WeightLimit (100) */
+  /** @name XcmV2WeightLimit (162) */
   interface XcmV2WeightLimit extends Enum {
     readonly isUnlimited: boolean;
     readonly isLimited: boolean;
@@ -1312,7 +2243,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Unlimited' | 'Limited';
   }
 
-  /** @name XcmVersionedMultiAssets (102) */
+  /** @name XcmVersionedMultiAssets (164) */
   interface XcmVersionedMultiAssets extends Enum {
     readonly isV0: boolean;
     readonly asV0: Vec<XcmV0MultiAsset>;
@@ -1321,7 +2252,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'V0' | 'V1';
   }
 
-  /** @name XcmV0MultiAsset (104) */
+  /** @name XcmV0MultiAsset (166) */
   interface XcmV0MultiAsset extends Enum {
     readonly isNone: boolean;
     readonly isAll: boolean;
@@ -1366,7 +2297,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'None' | 'All' | 'AllFungible' | 'AllNonFungible' | 'AllAbstractFungible' | 'AllAbstractNonFungible' | 'AllConcreteFungible' | 'AllConcreteNonFungible' | 'AbstractFungible' | 'AbstractNonFungible' | 'ConcreteFungible' | 'ConcreteNonFungible';
   }
 
-  /** @name XcmV0MultiLocation (105) */
+  /** @name XcmV0MultiLocation (167) */
   interface XcmV0MultiLocation extends Enum {
     readonly isNull: boolean;
     readonly isX1: boolean;
@@ -1388,7 +2319,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Null' | 'X1' | 'X2' | 'X3' | 'X4' | 'X5' | 'X6' | 'X7' | 'X8';
   }
 
-  /** @name XcmV0Junction (106) */
+  /** @name XcmV0Junction (168) */
   interface XcmV0Junction extends Enum {
     readonly isParent: boolean;
     readonly isParachain: boolean;
@@ -1423,7 +2354,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Parent' | 'Parachain' | 'AccountId32' | 'AccountIndex64' | 'AccountKey20' | 'PalletInstance' | 'GeneralIndex' | 'GeneralKey' | 'OnlyChild' | 'Plurality';
   }
 
-  /** @name XcmVersionedMultiLocation (107) */
+  /** @name XcmVersionedMultiLocation (169) */
   interface XcmVersionedMultiLocation extends Enum {
     readonly isV0: boolean;
     readonly asV0: XcmV0MultiLocation;
@@ -1432,7 +2363,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'V0' | 'V1';
   }
 
-  /** @name CumulusPalletXcmEvent (108) */
+  /** @name CumulusPalletXcmEvent (170) */
   interface CumulusPalletXcmEvent extends Enum {
     readonly isInvalidFormat: boolean;
     readonly asInvalidFormat: U8aFixed;
@@ -1443,7 +2374,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'InvalidFormat' | 'UnsupportedVersion' | 'ExecutedDownward';
   }
 
-  /** @name CumulusPalletDmpQueueEvent (109) */
+  /** @name CumulusPalletDmpQueueEvent (171) */
   interface CumulusPalletDmpQueueEvent extends Enum {
     readonly isInvalidFormat: boolean;
     readonly asInvalidFormat: {
@@ -1478,7 +2409,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'InvalidFormat' | 'UnsupportedVersion' | 'ExecutedDownward' | 'WeightExhausted' | 'OverweightEnqueued' | 'OverweightServiced';
   }
 
-  /** @name OrmlXtokensModuleEvent (110) */
+  /** @name OrmlXtokensModuleEvent (172) */
   interface OrmlXtokensModuleEvent extends Enum {
     readonly isTransferredMultiAssets: boolean;
     readonly asTransferredMultiAssets: {
@@ -1490,7 +2421,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'TransferredMultiAssets';
   }
 
-  /** @name OrmlUnknownTokensModuleEvent (111) */
+  /** @name OrmlUnknownTokensModuleEvent (173) */
   interface OrmlUnknownTokensModuleEvent extends Enum {
     readonly isDeposited: boolean;
     readonly asDeposited: {
@@ -1505,7 +2436,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Deposited' | 'Withdrawn';
   }
 
-  /** @name OrmlXcmModuleEvent (112) */
+  /** @name OrmlXcmModuleEvent (174) */
   interface OrmlXcmModuleEvent extends Enum {
     readonly isSent: boolean;
     readonly asSent: {
@@ -1515,838 +2446,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Sent';
   }
 
-  /** @name OrmlAuthorityModuleEvent (113) */
-  interface OrmlAuthorityModuleEvent extends Enum {
-    readonly isDispatched: boolean;
-    readonly asDispatched: {
-      readonly result: Result<Null, SpRuntimeDispatchError>;
-    } & Struct;
-    readonly isScheduled: boolean;
-    readonly asScheduled: {
-      readonly origin: AcalaRuntimeOriginCaller;
-      readonly index: u32;
-    } & Struct;
-    readonly isFastTracked: boolean;
-    readonly asFastTracked: {
-      readonly origin: AcalaRuntimeOriginCaller;
-      readonly index: u32;
-      readonly when: u32;
-    } & Struct;
-    readonly isDelayed: boolean;
-    readonly asDelayed: {
-      readonly origin: AcalaRuntimeOriginCaller;
-      readonly index: u32;
-      readonly when: u32;
-    } & Struct;
-    readonly isCancelled: boolean;
-    readonly asCancelled: {
-      readonly origin: AcalaRuntimeOriginCaller;
-      readonly index: u32;
-    } & Struct;
-    readonly isAuthorizedCall: boolean;
-    readonly asAuthorizedCall: {
-      readonly hash_: H256;
-      readonly caller: Option<AccountId32>;
-    } & Struct;
-    readonly isRemovedAuthorizedCall: boolean;
-    readonly asRemovedAuthorizedCall: {
-      readonly hash_: H256;
-    } & Struct;
-    readonly isTriggeredCallBy: boolean;
-    readonly asTriggeredCallBy: {
-      readonly hash_: H256;
-      readonly caller: AccountId32;
-    } & Struct;
-    readonly type: 'Dispatched' | 'Scheduled' | 'FastTracked' | 'Delayed' | 'Cancelled' | 'AuthorizedCall' | 'RemovedAuthorizedCall' | 'TriggeredCallBy';
-  }
-
-  /** @name AcalaRuntimeOriginCaller (114) */
-  interface AcalaRuntimeOriginCaller extends Enum {
-    readonly isSystem: boolean;
-    readonly asSystem: FrameSupportDispatchRawOrigin;
-    readonly isVoid: boolean;
-    readonly isPolkadotXcm: boolean;
-    readonly asPolkadotXcm: PalletXcmOrigin;
-    readonly isCumulusXcm: boolean;
-    readonly asCumulusXcm: CumulusPalletXcmOrigin;
-    readonly isAuthority: boolean;
-    readonly asAuthority: OrmlAuthorityDelayedOrigin;
-    readonly isGeneralCouncil: boolean;
-    readonly asGeneralCouncil: PalletCollectiveRawOrigin;
-    readonly isFinancialCouncil: boolean;
-    readonly asFinancialCouncil: PalletCollectiveRawOrigin;
-    readonly isHomaCouncil: boolean;
-    readonly asHomaCouncil: PalletCollectiveRawOrigin;
-    readonly isTechnicalCommittee: boolean;
-    readonly asTechnicalCommittee: PalletCollectiveRawOrigin;
-    readonly type: 'System' | 'Void' | 'PolkadotXcm' | 'CumulusXcm' | 'Authority' | 'GeneralCouncil' | 'FinancialCouncil' | 'HomaCouncil' | 'TechnicalCommittee';
-  }
-
-  /** @name FrameSupportDispatchRawOrigin (115) */
-  interface FrameSupportDispatchRawOrigin extends Enum {
-    readonly isRoot: boolean;
-    readonly isSigned: boolean;
-    readonly asSigned: AccountId32;
-    readonly isNone: boolean;
-    readonly type: 'Root' | 'Signed' | 'None';
-  }
-
-  /** @name PalletXcmOrigin (116) */
-  interface PalletXcmOrigin extends Enum {
-    readonly isXcm: boolean;
-    readonly asXcm: XcmV1MultiLocation;
-    readonly isResponse: boolean;
-    readonly asResponse: XcmV1MultiLocation;
-    readonly type: 'Xcm' | 'Response';
-  }
-
-  /** @name CumulusPalletXcmOrigin (117) */
-  interface CumulusPalletXcmOrigin extends Enum {
-    readonly isRelay: boolean;
-    readonly isSiblingParachain: boolean;
-    readonly asSiblingParachain: u32;
-    readonly type: 'Relay' | 'SiblingParachain';
-  }
-
-  /** @name OrmlAuthorityDelayedOrigin (118) */
-  interface OrmlAuthorityDelayedOrigin extends Struct {
-    readonly delay: u32;
-    readonly origin: AcalaRuntimeOriginCaller;
-  }
-
-  /** @name PalletCollectiveRawOrigin (119) */
-  interface PalletCollectiveRawOrigin extends Enum {
-    readonly isMembers: boolean;
-    readonly asMembers: ITuple<[u32, u32]>;
-    readonly isMember: boolean;
-    readonly asMember: AccountId32;
-    readonly isPhantom: boolean;
-    readonly type: 'Members' | 'Member' | 'Phantom';
-  }
-
-  /** @name SpCoreVoid (123) */
-  type SpCoreVoid = Null;
-
-  /** @name PalletCollectiveEvent (125) */
-  interface PalletCollectiveEvent extends Enum {
-    readonly isProposed: boolean;
-    readonly asProposed: {
-      readonly account: AccountId32;
-      readonly proposalIndex: u32;
-      readonly proposalHash: H256;
-      readonly threshold: u32;
-    } & Struct;
-    readonly isVoted: boolean;
-    readonly asVoted: {
-      readonly account: AccountId32;
-      readonly proposalHash: H256;
-      readonly voted: bool;
-      readonly yes: u32;
-      readonly no: u32;
-    } & Struct;
-    readonly isApproved: boolean;
-    readonly asApproved: {
-      readonly proposalHash: H256;
-    } & Struct;
-    readonly isDisapproved: boolean;
-    readonly asDisapproved: {
-      readonly proposalHash: H256;
-    } & Struct;
-    readonly isExecuted: boolean;
-    readonly asExecuted: {
-      readonly proposalHash: H256;
-      readonly result: Result<Null, SpRuntimeDispatchError>;
-    } & Struct;
-    readonly isMemberExecuted: boolean;
-    readonly asMemberExecuted: {
-      readonly proposalHash: H256;
-      readonly result: Result<Null, SpRuntimeDispatchError>;
-    } & Struct;
-    readonly isClosed: boolean;
-    readonly asClosed: {
-      readonly proposalHash: H256;
-      readonly yes: u32;
-      readonly no: u32;
-    } & Struct;
-    readonly type: 'Proposed' | 'Voted' | 'Approved' | 'Disapproved' | 'Executed' | 'MemberExecuted' | 'Closed';
-  }
-
-  /** @name PalletMembershipEvent (127) */
-  interface PalletMembershipEvent extends Enum {
-    readonly isMemberAdded: boolean;
-    readonly isMemberRemoved: boolean;
-    readonly isMembersSwapped: boolean;
-    readonly isMembersReset: boolean;
-    readonly isKeyChanged: boolean;
-    readonly isDummy: boolean;
-    readonly type: 'MemberAdded' | 'MemberRemoved' | 'MembersSwapped' | 'MembersReset' | 'KeyChanged' | 'Dummy';
-  }
-
-  /** @name PalletDemocracyEvent (134) */
-  interface PalletDemocracyEvent extends Enum {
-    readonly isProposed: boolean;
-    readonly asProposed: {
-      readonly proposalIndex: u32;
-      readonly deposit: u128;
-    } & Struct;
-    readonly isTabled: boolean;
-    readonly asTabled: {
-      readonly proposalIndex: u32;
-      readonly deposit: u128;
-      readonly depositors: Vec<AccountId32>;
-    } & Struct;
-    readonly isExternalTabled: boolean;
-    readonly isStarted: boolean;
-    readonly asStarted: {
-      readonly refIndex: u32;
-      readonly threshold: PalletDemocracyVoteThreshold;
-    } & Struct;
-    readonly isPassed: boolean;
-    readonly asPassed: {
-      readonly refIndex: u32;
-    } & Struct;
-    readonly isNotPassed: boolean;
-    readonly asNotPassed: {
-      readonly refIndex: u32;
-    } & Struct;
-    readonly isCancelled: boolean;
-    readonly asCancelled: {
-      readonly refIndex: u32;
-    } & Struct;
-    readonly isExecuted: boolean;
-    readonly asExecuted: {
-      readonly refIndex: u32;
-      readonly result: Result<Null, SpRuntimeDispatchError>;
-    } & Struct;
-    readonly isDelegated: boolean;
-    readonly asDelegated: {
-      readonly who: AccountId32;
-      readonly target: AccountId32;
-    } & Struct;
-    readonly isUndelegated: boolean;
-    readonly asUndelegated: {
-      readonly account: AccountId32;
-    } & Struct;
-    readonly isVetoed: boolean;
-    readonly asVetoed: {
-      readonly who: AccountId32;
-      readonly proposalHash: H256;
-      readonly until: u32;
-    } & Struct;
-    readonly isPreimageNoted: boolean;
-    readonly asPreimageNoted: {
-      readonly proposalHash: H256;
-      readonly who: AccountId32;
-      readonly deposit: u128;
-    } & Struct;
-    readonly isPreimageUsed: boolean;
-    readonly asPreimageUsed: {
-      readonly proposalHash: H256;
-      readonly provider: AccountId32;
-      readonly deposit: u128;
-    } & Struct;
-    readonly isPreimageInvalid: boolean;
-    readonly asPreimageInvalid: {
-      readonly proposalHash: H256;
-      readonly refIndex: u32;
-    } & Struct;
-    readonly isPreimageMissing: boolean;
-    readonly asPreimageMissing: {
-      readonly proposalHash: H256;
-      readonly refIndex: u32;
-    } & Struct;
-    readonly isPreimageReaped: boolean;
-    readonly asPreimageReaped: {
-      readonly proposalHash: H256;
-      readonly provider: AccountId32;
-      readonly deposit: u128;
-      readonly reaper: AccountId32;
-    } & Struct;
-    readonly isBlacklisted: boolean;
-    readonly asBlacklisted: {
-      readonly proposalHash: H256;
-    } & Struct;
-    readonly isVoted: boolean;
-    readonly asVoted: {
-      readonly voter: AccountId32;
-      readonly refIndex: u32;
-      readonly vote: PalletDemocracyVoteAccountVote;
-    } & Struct;
-    readonly isSeconded: boolean;
-    readonly asSeconded: {
-      readonly seconder: AccountId32;
-      readonly propIndex: u32;
-    } & Struct;
-    readonly isProposalCanceled: boolean;
-    readonly asProposalCanceled: {
-      readonly propIndex: u32;
-    } & Struct;
-    readonly type: 'Proposed' | 'Tabled' | 'ExternalTabled' | 'Started' | 'Passed' | 'NotPassed' | 'Cancelled' | 'Executed' | 'Delegated' | 'Undelegated' | 'Vetoed' | 'PreimageNoted' | 'PreimageUsed' | 'PreimageInvalid' | 'PreimageMissing' | 'PreimageReaped' | 'Blacklisted' | 'Voted' | 'Seconded' | 'ProposalCanceled';
-  }
-
-  /** @name PalletDemocracyVoteThreshold (135) */
-  interface PalletDemocracyVoteThreshold extends Enum {
-    readonly isSuperMajorityApprove: boolean;
-    readonly isSuperMajorityAgainst: boolean;
-    readonly isSimpleMajority: boolean;
-    readonly type: 'SuperMajorityApprove' | 'SuperMajorityAgainst' | 'SimpleMajority';
-  }
-
-  /** @name PalletDemocracyVoteAccountVote (136) */
-  interface PalletDemocracyVoteAccountVote extends Enum {
-    readonly isStandard: boolean;
-    readonly asStandard: {
-      readonly vote: Vote;
-      readonly balance: u128;
-    } & Struct;
-    readonly isSplit: boolean;
-    readonly asSplit: {
-      readonly aye: u128;
-      readonly nay: u128;
-    } & Struct;
-    readonly type: 'Standard' | 'Split';
-  }
-
-  /** @name OrmlOracleModuleEvent (138) */
-  interface OrmlOracleModuleEvent extends Enum {
-    readonly isNewFeedData: boolean;
-    readonly asNewFeedData: {
-      readonly sender: AccountId32;
-      readonly values: Vec<ITuple<[AcalaPrimitivesCurrencyCurrencyId, u128]>>;
-    } & Struct;
-    readonly type: 'NewFeedData';
-  }
-
-  /** @name OrmlAuctionModuleEvent (142) */
-  interface OrmlAuctionModuleEvent extends Enum {
-    readonly isBid: boolean;
-    readonly asBid: {
-      readonly auctionId: u32;
-      readonly bidder: AccountId32;
-      readonly amount: u128;
-    } & Struct;
-    readonly type: 'Bid';
-  }
-
-  /** @name ModulePricesModuleEvent (143) */
-  interface ModulePricesModuleEvent extends Enum {
-    readonly isLockPrice: boolean;
-    readonly asLockPrice: {
-      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
-      readonly lockedPrice: u128;
-    } & Struct;
-    readonly isUnlockPrice: boolean;
-    readonly asUnlockPrice: {
-      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
-    } & Struct;
-    readonly type: 'LockPrice' | 'UnlockPrice';
-  }
-
-  /** @name ModuleDexModuleEvent (144) */
-  interface ModuleDexModuleEvent extends Enum {
-    readonly isAddProvision: boolean;
-    readonly asAddProvision: {
-      readonly who: AccountId32;
-      readonly currency0: AcalaPrimitivesCurrencyCurrencyId;
-      readonly contribution0: u128;
-      readonly currency1: AcalaPrimitivesCurrencyCurrencyId;
-      readonly contribution1: u128;
-    } & Struct;
-    readonly isAddLiquidity: boolean;
-    readonly asAddLiquidity: {
-      readonly who: AccountId32;
-      readonly currency0: AcalaPrimitivesCurrencyCurrencyId;
-      readonly pool0: u128;
-      readonly currency1: AcalaPrimitivesCurrencyCurrencyId;
-      readonly pool1: u128;
-      readonly shareIncrement: u128;
-    } & Struct;
-    readonly isRemoveLiquidity: boolean;
-    readonly asRemoveLiquidity: {
-      readonly who: AccountId32;
-      readonly currency0: AcalaPrimitivesCurrencyCurrencyId;
-      readonly pool0: u128;
-      readonly currency1: AcalaPrimitivesCurrencyCurrencyId;
-      readonly pool1: u128;
-      readonly shareDecrement: u128;
-    } & Struct;
-    readonly isSwap: boolean;
-    readonly asSwap: {
-      readonly trader: AccountId32;
-      readonly path: Vec<AcalaPrimitivesCurrencyCurrencyId>;
-      readonly liquidityChanges: Vec<u128>;
-    } & Struct;
-    readonly isEnableTradingPair: boolean;
-    readonly asEnableTradingPair: {
-      readonly tradingPair: AcalaPrimitivesTradingPair;
-    } & Struct;
-    readonly isListProvisioning: boolean;
-    readonly asListProvisioning: {
-      readonly tradingPair: AcalaPrimitivesTradingPair;
-    } & Struct;
-    readonly isDisableTradingPair: boolean;
-    readonly asDisableTradingPair: {
-      readonly tradingPair: AcalaPrimitivesTradingPair;
-    } & Struct;
-    readonly isProvisioningToEnabled: boolean;
-    readonly asProvisioningToEnabled: {
-      readonly tradingPair: AcalaPrimitivesTradingPair;
-      readonly pool0: u128;
-      readonly pool1: u128;
-      readonly shareAmount: u128;
-    } & Struct;
-    readonly isRefundProvision: boolean;
-    readonly asRefundProvision: {
-      readonly who: AccountId32;
-      readonly currency0: AcalaPrimitivesCurrencyCurrencyId;
-      readonly contribution0: u128;
-      readonly currency1: AcalaPrimitivesCurrencyCurrencyId;
-      readonly contribution1: u128;
-    } & Struct;
-    readonly isProvisioningAborted: boolean;
-    readonly asProvisioningAborted: {
-      readonly tradingPair: AcalaPrimitivesTradingPair;
-      readonly accumulatedProvision0: u128;
-      readonly accumulatedProvision1: u128;
-    } & Struct;
-    readonly type: 'AddProvision' | 'AddLiquidity' | 'RemoveLiquidity' | 'Swap' | 'EnableTradingPair' | 'ListProvisioning' | 'DisableTradingPair' | 'ProvisioningToEnabled' | 'RefundProvision' | 'ProvisioningAborted';
-  }
-
-  /** @name AcalaPrimitivesTradingPair (147) */
-  interface AcalaPrimitivesTradingPair extends ITuple<[AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyCurrencyId]> {}
-
-  /** @name ModuleAuctionManagerModuleEvent (148) */
-  interface ModuleAuctionManagerModuleEvent extends Enum {
-    readonly isNewCollateralAuction: boolean;
-    readonly asNewCollateralAuction: {
-      readonly auctionId: u32;
-      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
-      readonly collateralAmount: u128;
-      readonly targetBidPrice: u128;
-    } & Struct;
-    readonly isCancelAuction: boolean;
-    readonly asCancelAuction: {
-      readonly auctionId: u32;
-    } & Struct;
-    readonly isCollateralAuctionDealt: boolean;
-    readonly asCollateralAuctionDealt: {
-      readonly auctionId: u32;
-      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
-      readonly collateralAmount: u128;
-      readonly winner: AccountId32;
-      readonly paymentAmount: u128;
-    } & Struct;
-    readonly isDexTakeCollateralAuction: boolean;
-    readonly asDexTakeCollateralAuction: {
-      readonly auctionId: u32;
-      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
-      readonly collateralAmount: u128;
-      readonly supplyCollateralAmount: u128;
-      readonly targetStableAmount: u128;
-    } & Struct;
-    readonly isCollateralAuctionAborted: boolean;
-    readonly asCollateralAuctionAborted: {
-      readonly auctionId: u32;
-      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
-      readonly collateralAmount: u128;
-      readonly targetStableAmount: u128;
-      readonly refundRecipient: AccountId32;
-    } & Struct;
-    readonly type: 'NewCollateralAuction' | 'CancelAuction' | 'CollateralAuctionDealt' | 'DexTakeCollateralAuction' | 'CollateralAuctionAborted';
-  }
-
-  /** @name ModuleLoansModuleEvent (149) */
-  interface ModuleLoansModuleEvent extends Enum {
-    readonly isPositionUpdated: boolean;
-    readonly asPositionUpdated: {
-      readonly owner: AccountId32;
-      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
-      readonly collateralAdjustment: i128;
-      readonly debitAdjustment: i128;
-    } & Struct;
-    readonly isConfiscateCollateralAndDebit: boolean;
-    readonly asConfiscateCollateralAndDebit: {
-      readonly owner: AccountId32;
-      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
-      readonly confiscatedCollateralAmount: u128;
-      readonly deductDebitAmount: u128;
-    } & Struct;
-    readonly isTransferLoan: boolean;
-    readonly asTransferLoan: {
-      readonly from: AccountId32;
-      readonly to: AccountId32;
-      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
-    } & Struct;
-    readonly type: 'PositionUpdated' | 'ConfiscateCollateralAndDebit' | 'TransferLoan';
-  }
-
-  /** @name ModuleHonzonModuleEvent (151) */
-  interface ModuleHonzonModuleEvent extends Enum {
-    readonly isAuthorization: boolean;
-    readonly asAuthorization: {
-      readonly authorizer: AccountId32;
-      readonly authorizee: AccountId32;
-      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
-    } & Struct;
-    readonly isUnAuthorization: boolean;
-    readonly asUnAuthorization: {
-      readonly authorizer: AccountId32;
-      readonly authorizee: AccountId32;
-      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
-    } & Struct;
-    readonly isUnAuthorizationAll: boolean;
-    readonly asUnAuthorizationAll: {
-      readonly authorizer: AccountId32;
-    } & Struct;
-    readonly isTransferDebit: boolean;
-    readonly asTransferDebit: {
-      readonly fromCurrency: AcalaPrimitivesCurrencyCurrencyId;
-      readonly toCurrency: AcalaPrimitivesCurrencyCurrencyId;
-      readonly amount: u128;
-    } & Struct;
-    readonly type: 'Authorization' | 'UnAuthorization' | 'UnAuthorizationAll' | 'TransferDebit';
-  }
-
-  /** @name ModuleCdpTreasuryModuleEvent (152) */
-  interface ModuleCdpTreasuryModuleEvent extends Enum {
-    readonly isExpectedCollateralAuctionSizeUpdated: boolean;
-    readonly asExpectedCollateralAuctionSizeUpdated: {
-      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
-      readonly newSize: u128;
-    } & Struct;
-    readonly type: 'ExpectedCollateralAuctionSizeUpdated';
-  }
-
-  /** @name ModuleCdpEngineModuleEvent (153) */
-  interface ModuleCdpEngineModuleEvent extends Enum {
-    readonly isLiquidateUnsafeCDP: boolean;
-    readonly asLiquidateUnsafeCDP: {
-      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
-      readonly owner: AccountId32;
-      readonly collateralAmount: u128;
-      readonly badDebtValue: u128;
-      readonly targetAmount: u128;
-    } & Struct;
-    readonly isSettleCDPInDebit: boolean;
-    readonly asSettleCDPInDebit: {
-      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
-      readonly owner: AccountId32;
-    } & Struct;
-    readonly isCloseCDPInDebitByDEX: boolean;
-    readonly asCloseCDPInDebitByDEX: {
-      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
-      readonly owner: AccountId32;
-      readonly soldCollateralAmount: u128;
-      readonly refundCollateralAmount: u128;
-      readonly debitValue: u128;
-    } & Struct;
-    readonly isInterestRatePerSecUpdated: boolean;
-    readonly asInterestRatePerSecUpdated: {
-      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
-      readonly newInterestRatePerSec: Option<u128>;
-    } & Struct;
-    readonly isLiquidationRatioUpdated: boolean;
-    readonly asLiquidationRatioUpdated: {
-      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
-      readonly newLiquidationRatio: Option<u128>;
-    } & Struct;
-    readonly isLiquidationPenaltyUpdated: boolean;
-    readonly asLiquidationPenaltyUpdated: {
-      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
-      readonly newLiquidationPenalty: Option<u128>;
-    } & Struct;
-    readonly isRequiredCollateralRatioUpdated: boolean;
-    readonly asRequiredCollateralRatioUpdated: {
-      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
-      readonly newRequiredCollateralRatio: Option<u128>;
-    } & Struct;
-    readonly isMaximumTotalDebitValueUpdated: boolean;
-    readonly asMaximumTotalDebitValueUpdated: {
-      readonly collateralType: AcalaPrimitivesCurrencyCurrencyId;
-      readonly newTotalDebitValue: u128;
-    } & Struct;
-    readonly isLiquidationContractRegistered: boolean;
-    readonly asLiquidationContractRegistered: {
-      readonly address: H160;
-    } & Struct;
-    readonly isLiquidationContractDeregistered: boolean;
-    readonly asLiquidationContractDeregistered: {
-      readonly address: H160;
-    } & Struct;
-    readonly type: 'LiquidateUnsafeCDP' | 'SettleCDPInDebit' | 'CloseCDPInDebitByDEX' | 'InterestRatePerSecUpdated' | 'LiquidationRatioUpdated' | 'LiquidationPenaltyUpdated' | 'RequiredCollateralRatioUpdated' | 'MaximumTotalDebitValueUpdated' | 'LiquidationContractRegistered' | 'LiquidationContractDeregistered';
-  }
-
-  /** @name ModuleEmergencyShutdownModuleEvent (155) */
-  interface ModuleEmergencyShutdownModuleEvent extends Enum {
-    readonly isShutdown: boolean;
-    readonly asShutdown: {
-      readonly blockNumber: u32;
-    } & Struct;
-    readonly isOpenRefund: boolean;
-    readonly asOpenRefund: {
-      readonly blockNumber: u32;
-    } & Struct;
-    readonly isRefund: boolean;
-    readonly asRefund: {
-      readonly who: AccountId32;
-      readonly stableCoinAmount: u128;
-      readonly refundList: Vec<ITuple<[AcalaPrimitivesCurrencyCurrencyId, u128]>>;
-    } & Struct;
-    readonly type: 'Shutdown' | 'OpenRefund' | 'Refund';
-  }
-
-  /** @name ModuleHomaModuleEvent (158) */
-  interface ModuleHomaModuleEvent extends Enum {
-    readonly isMinted: boolean;
-    readonly asMinted: {
-      readonly minter: AccountId32;
-      readonly stakingCurrencyAmount: u128;
-      readonly liquidAmountReceived: u128;
-      readonly liquidAmountAddedToVoid: u128;
-    } & Struct;
-    readonly isRequestedRedeem: boolean;
-    readonly asRequestedRedeem: {
-      readonly redeemer: AccountId32;
-      readonly liquidAmount: u128;
-      readonly allowFastMatch: bool;
-    } & Struct;
-    readonly isRedeemRequestCancelled: boolean;
-    readonly asRedeemRequestCancelled: {
-      readonly redeemer: AccountId32;
-      readonly cancelledLiquidAmount: u128;
-    } & Struct;
-    readonly isRedeemedByFastMatch: boolean;
-    readonly asRedeemedByFastMatch: {
-      readonly redeemer: AccountId32;
-      readonly matchedLiquidAmount: u128;
-      readonly feeInLiquid: u128;
-      readonly redeemedStakingAmount: u128;
-    } & Struct;
-    readonly isRedeemedByUnbond: boolean;
-    readonly asRedeemedByUnbond: {
-      readonly redeemer: AccountId32;
-      readonly eraIndexWhenUnbond: u32;
-      readonly liquidAmount: u128;
-      readonly unbondingStakingAmount: u128;
-    } & Struct;
-    readonly isWithdrawRedemption: boolean;
-    readonly asWithdrawRedemption: {
-      readonly redeemer: AccountId32;
-      readonly redemptionAmount: u128;
-    } & Struct;
-    readonly isCurrentEraBumped: boolean;
-    readonly asCurrentEraBumped: {
-      readonly newEraIndex: u32;
-    } & Struct;
-    readonly isCurrentEraReset: boolean;
-    readonly asCurrentEraReset: {
-      readonly newEraIndex: u32;
-    } & Struct;
-    readonly isLedgerBondedReset: boolean;
-    readonly asLedgerBondedReset: {
-      readonly subAccountIndex: u16;
-      readonly newBondedAmount: u128;
-    } & Struct;
-    readonly isLedgerUnlockingReset: boolean;
-    readonly asLedgerUnlockingReset: {
-      readonly subAccountIndex: u16;
-      readonly newUnlocking: Vec<ModuleHomaModuleUnlockChunk>;
-    } & Struct;
-    readonly isSoftBondedCapPerSubAccountUpdated: boolean;
-    readonly asSoftBondedCapPerSubAccountUpdated: {
-      readonly capAmount: u128;
-    } & Struct;
-    readonly isEstimatedRewardRatePerEraUpdated: boolean;
-    readonly asEstimatedRewardRatePerEraUpdated: {
-      readonly rewardRate: u128;
-    } & Struct;
-    readonly isCommissionRateUpdated: boolean;
-    readonly asCommissionRateUpdated: {
-      readonly commissionRate: u128;
-    } & Struct;
-    readonly isFastMatchFeeRateUpdated: boolean;
-    readonly asFastMatchFeeRateUpdated: {
-      readonly fastMatchFeeRate: u128;
-    } & Struct;
-    readonly isLastEraBumpedBlockUpdated: boolean;
-    readonly asLastEraBumpedBlockUpdated: {
-      readonly lastEraBumpedBlock: u32;
-    } & Struct;
-    readonly isBumpEraFrequencyUpdated: boolean;
-    readonly asBumpEraFrequencyUpdated: {
-      readonly frequency: u32;
-    } & Struct;
-    readonly type: 'Minted' | 'RequestedRedeem' | 'RedeemRequestCancelled' | 'RedeemedByFastMatch' | 'RedeemedByUnbond' | 'WithdrawRedemption' | 'CurrentEraBumped' | 'CurrentEraReset' | 'LedgerBondedReset' | 'LedgerUnlockingReset' | 'SoftBondedCapPerSubAccountUpdated' | 'EstimatedRewardRatePerEraUpdated' | 'CommissionRateUpdated' | 'FastMatchFeeRateUpdated' | 'LastEraBumpedBlockUpdated' | 'BumpEraFrequencyUpdated';
-  }
-
-  /** @name ModuleHomaModuleUnlockChunk (160) */
-  interface ModuleHomaModuleUnlockChunk extends Struct {
-    readonly value: Compact<u128>;
-    readonly era: Compact<u32>;
-  }
-
-  /** @name ModuleXcmInterfaceModuleEvent (161) */
-  interface ModuleXcmInterfaceModuleEvent extends Enum {
-    readonly isXcmDestWeightUpdated: boolean;
-    readonly asXcmDestWeightUpdated: {
-      readonly xcmOperation: ModuleXcmInterfaceModuleXcmInterfaceOperation;
-      readonly newXcmDestWeight: u64;
-    } & Struct;
-    readonly isXcmFeeUpdated: boolean;
-    readonly asXcmFeeUpdated: {
-      readonly xcmOperation: ModuleXcmInterfaceModuleXcmInterfaceOperation;
-      readonly newXcmDestWeight: u128;
-    } & Struct;
-    readonly type: 'XcmDestWeightUpdated' | 'XcmFeeUpdated';
-  }
-
-  /** @name ModuleXcmInterfaceModuleXcmInterfaceOperation (162) */
-  interface ModuleXcmInterfaceModuleXcmInterfaceOperation extends Enum {
-    readonly isXtokensTransfer: boolean;
-    readonly isHomaWithdrawUnbonded: boolean;
-    readonly isHomaBondExtra: boolean;
-    readonly isHomaUnbond: boolean;
-    readonly isParachainFee: boolean;
-    readonly asParachainFee: XcmV1MultiLocation;
-    readonly type: 'XtokensTransfer' | 'HomaWithdrawUnbonded' | 'HomaBondExtra' | 'HomaUnbond' | 'ParachainFee';
-  }
-
-  /** @name ModuleIncentivesModuleEvent (163) */
-  interface ModuleIncentivesModuleEvent extends Enum {
-    readonly isDepositDexShare: boolean;
-    readonly asDepositDexShare: {
-      readonly who: AccountId32;
-      readonly dexShareType: AcalaPrimitivesCurrencyCurrencyId;
-      readonly deposit: u128;
-    } & Struct;
-    readonly isWithdrawDexShare: boolean;
-    readonly asWithdrawDexShare: {
-      readonly who: AccountId32;
-      readonly dexShareType: AcalaPrimitivesCurrencyCurrencyId;
-      readonly withdraw: u128;
-    } & Struct;
-    readonly isClaimRewards: boolean;
-    readonly asClaimRewards: {
-      readonly who: AccountId32;
-      readonly pool: ModuleSupportIncentivesPoolId;
-      readonly rewardCurrencyId: AcalaPrimitivesCurrencyCurrencyId;
-      readonly actualAmount: u128;
-      readonly deductionAmount: u128;
-    } & Struct;
-    readonly isIncentiveRewardAmountUpdated: boolean;
-    readonly asIncentiveRewardAmountUpdated: {
-      readonly pool: ModuleSupportIncentivesPoolId;
-      readonly rewardCurrencyId: AcalaPrimitivesCurrencyCurrencyId;
-      readonly rewardAmountPerPeriod: u128;
-    } & Struct;
-    readonly isClaimRewardDeductionRateUpdated: boolean;
-    readonly asClaimRewardDeductionRateUpdated: {
-      readonly pool: ModuleSupportIncentivesPoolId;
-      readonly deductionRate: u128;
-    } & Struct;
-    readonly type: 'DepositDexShare' | 'WithdrawDexShare' | 'ClaimRewards' | 'IncentiveRewardAmountUpdated' | 'ClaimRewardDeductionRateUpdated';
-  }
-
-  /** @name ModuleSupportIncentivesPoolId (164) */
-  interface ModuleSupportIncentivesPoolId extends Enum {
-    readonly isLoans: boolean;
-    readonly asLoans: AcalaPrimitivesCurrencyCurrencyId;
-    readonly isDex: boolean;
-    readonly asDex: AcalaPrimitivesCurrencyCurrencyId;
-    readonly type: 'Loans' | 'Dex';
-  }
-
-  /** @name ModuleNftModuleEvent (165) */
-  interface ModuleNftModuleEvent extends Enum {
-    readonly isCreatedClass: boolean;
-    readonly asCreatedClass: {
-      readonly owner: AccountId32;
-      readonly classId: u32;
-    } & Struct;
-    readonly isMintedToken: boolean;
-    readonly asMintedToken: {
-      readonly from: AccountId32;
-      readonly to: AccountId32;
-      readonly classId: u32;
-      readonly quantity: u32;
-    } & Struct;
-    readonly isTransferredToken: boolean;
-    readonly asTransferredToken: {
-      readonly from: AccountId32;
-      readonly to: AccountId32;
-      readonly classId: u32;
-      readonly tokenId: u64;
-    } & Struct;
-    readonly isBurnedToken: boolean;
-    readonly asBurnedToken: {
-      readonly owner: AccountId32;
-      readonly classId: u32;
-      readonly tokenId: u64;
-    } & Struct;
-    readonly isBurnedTokenWithRemark: boolean;
-    readonly asBurnedTokenWithRemark: {
-      readonly owner: AccountId32;
-      readonly classId: u32;
-      readonly tokenId: u64;
-      readonly remarkHash: H256;
-    } & Struct;
-    readonly isDestroyedClass: boolean;
-    readonly asDestroyedClass: {
-      readonly owner: AccountId32;
-      readonly classId: u32;
-    } & Struct;
-    readonly type: 'CreatedClass' | 'MintedToken' | 'TransferredToken' | 'BurnedToken' | 'BurnedTokenWithRemark' | 'DestroyedClass';
-  }
-
-  /** @name ModuleAssetRegistryModuleEvent (166) */
-  interface ModuleAssetRegistryModuleEvent extends Enum {
-    readonly isForeignAssetRegistered: boolean;
-    readonly asForeignAssetRegistered: {
-      readonly assetId: u16;
-      readonly assetAddress: XcmV1MultiLocation;
-      readonly metadata: AcalaPrimitivesCurrencyAssetMetadata;
-    } & Struct;
-    readonly isForeignAssetUpdated: boolean;
-    readonly asForeignAssetUpdated: {
-      readonly assetId: u16;
-      readonly assetAddress: XcmV1MultiLocation;
-      readonly metadata: AcalaPrimitivesCurrencyAssetMetadata;
-    } & Struct;
-    readonly isAssetRegistered: boolean;
-    readonly asAssetRegistered: {
-      readonly assetId: AcalaPrimitivesCurrencyAssetIds;
-      readonly metadata: AcalaPrimitivesCurrencyAssetMetadata;
-    } & Struct;
-    readonly isAssetUpdated: boolean;
-    readonly asAssetUpdated: {
-      readonly assetId: AcalaPrimitivesCurrencyAssetIds;
-      readonly metadata: AcalaPrimitivesCurrencyAssetMetadata;
-    } & Struct;
-    readonly type: 'ForeignAssetRegistered' | 'ForeignAssetUpdated' | 'AssetRegistered' | 'AssetUpdated';
-  }
-
-  /** @name AcalaPrimitivesCurrencyAssetMetadata (167) */
-  interface AcalaPrimitivesCurrencyAssetMetadata extends Struct {
-    readonly name: Bytes;
-    readonly symbol: Bytes;
-    readonly decimals: u8;
-    readonly minimalBalance: u128;
-  }
-
-  /** @name AcalaPrimitivesCurrencyAssetIds (168) */
-  interface AcalaPrimitivesCurrencyAssetIds extends Enum {
-    readonly isErc20: boolean;
-    readonly asErc20: H160;
-    readonly isStableAssetId: boolean;
-    readonly asStableAssetId: u32;
-    readonly isForeignAssetId: boolean;
-    readonly asForeignAssetId: u16;
-    readonly isNativeAssetId: boolean;
-    readonly asNativeAssetId: AcalaPrimitivesCurrencyCurrencyId;
-    readonly type: 'Erc20' | 'StableAssetId' | 'ForeignAssetId' | 'NativeAssetId';
-  }
-
-  /** @name ModuleEvmModuleEvent (169) */
+  /** @name ModuleEvmModuleEvent (175) */
   interface ModuleEvmModuleEvent extends Enum {
     readonly isCreated: boolean;
     readonly asCreated: {
@@ -2411,14 +2511,14 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Created' | 'CreatedFailed' | 'Executed' | 'ExecutedFailed' | 'TransferredMaintainer' | 'ContractDevelopmentEnabled' | 'ContractDevelopmentDisabled' | 'ContractPublished' | 'ContractSetCode' | 'ContractSelfdestructed';
   }
 
-  /** @name EthereumLog (171) */
+  /** @name EthereumLog (177) */
   interface EthereumLog extends Struct {
     readonly address: H160;
     readonly topics: Vec<H256>;
     readonly data: Bytes;
   }
 
-  /** @name EvmCoreErrorExitReason (174) */
+  /** @name EvmCoreErrorExitReason (180) */
   interface EvmCoreErrorExitReason extends Enum {
     readonly isSucceed: boolean;
     readonly asSucceed: EvmCoreErrorExitSucceed;
@@ -2431,7 +2531,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Succeed' | 'Error' | 'Revert' | 'Fatal';
   }
 
-  /** @name EvmCoreErrorExitSucceed (175) */
+  /** @name EvmCoreErrorExitSucceed (181) */
   interface EvmCoreErrorExitSucceed extends Enum {
     readonly isStopped: boolean;
     readonly isReturned: boolean;
@@ -2439,7 +2539,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Stopped' | 'Returned' | 'Suicided';
   }
 
-  /** @name EvmCoreErrorExitError (176) */
+  /** @name EvmCoreErrorExitError (182) */
   interface EvmCoreErrorExitError extends Enum {
     readonly isStackUnderflow: boolean;
     readonly isStackOverflow: boolean;
@@ -2460,13 +2560,13 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'StackUnderflow' | 'StackOverflow' | 'InvalidJump' | 'InvalidRange' | 'DesignatedInvalid' | 'CallTooDeep' | 'CreateCollision' | 'CreateContractLimit' | 'OutOfOffset' | 'OutOfGas' | 'OutOfFund' | 'PcUnderflow' | 'CreateEmpty' | 'Other' | 'InvalidCode';
   }
 
-  /** @name EvmCoreErrorExitRevert (179) */
+  /** @name EvmCoreErrorExitRevert (185) */
   interface EvmCoreErrorExitRevert extends Enum {
     readonly isReverted: boolean;
     readonly type: 'Reverted';
   }
 
-  /** @name EvmCoreErrorExitFatal (180) */
+  /** @name EvmCoreErrorExitFatal (186) */
   interface EvmCoreErrorExitFatal extends Enum {
     readonly isNotSupported: boolean;
     readonly isUnhandledInterrupt: boolean;
@@ -2477,7 +2577,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'NotSupported' | 'UnhandledInterrupt' | 'CallErrorAsFatal' | 'Other';
   }
 
-  /** @name ModuleEvmAccountsModuleEvent (181) */
+  /** @name ModuleEvmAccountsModuleEvent (187) */
   interface ModuleEvmAccountsModuleEvent extends Enum {
     readonly isClaimAccount: boolean;
     readonly asClaimAccount: {
@@ -2487,7 +2587,53 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'ClaimAccount';
   }
 
-  /** @name NutsfinanceStableAssetEvent (182) */
+  /** @name ModuleCollatorSelectionEvent (188) */
+  interface ModuleCollatorSelectionEvent extends Enum {
+    readonly isNewInvulnerables: boolean;
+    readonly asNewInvulnerables: {
+      readonly newInvulnerables: Vec<AccountId32>;
+    } & Struct;
+    readonly isNewDesiredCandidates: boolean;
+    readonly asNewDesiredCandidates: {
+      readonly newDesiredCandidates: u32;
+    } & Struct;
+    readonly isNewCandidacyBond: boolean;
+    readonly asNewCandidacyBond: {
+      readonly newCandidacyBond: u128;
+    } & Struct;
+    readonly isCandidateAdded: boolean;
+    readonly asCandidateAdded: {
+      readonly who: AccountId32;
+      readonly bond: u128;
+    } & Struct;
+    readonly isCandidateRemoved: boolean;
+    readonly asCandidateRemoved: {
+      readonly who: AccountId32;
+    } & Struct;
+    readonly type: 'NewInvulnerables' | 'NewDesiredCandidates' | 'NewCandidacyBond' | 'CandidateAdded' | 'CandidateRemoved';
+  }
+
+  /** @name PalletSessionEvent (189) */
+  interface PalletSessionEvent extends Enum {
+    readonly isNewSession: boolean;
+    readonly asNewSession: {
+      readonly sessionIndex: u32;
+    } & Struct;
+    readonly type: 'NewSession';
+  }
+
+  /** @name ModuleSessionManagerModuleEvent (190) */
+  interface ModuleSessionManagerModuleEvent extends Enum {
+    readonly isScheduledSessionDuration: boolean;
+    readonly asScheduledSessionDuration: {
+      readonly blockNumber: u32;
+      readonly sessionIndex: u32;
+      readonly sessionDuration: u32;
+    } & Struct;
+    readonly type: 'ScheduledSessionDuration';
+  }
+
+  /** @name NutsfinanceStableAssetEvent (191) */
   interface NutsfinanceStableAssetEvent extends Enum {
     readonly isCreatePool: boolean;
     readonly asCreatePool: {
@@ -2606,7 +2752,87 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'CreatePool' | 'Minted' | 'TokenSwapped' | 'RedeemedProportion' | 'RedeemedSingle' | 'RedeemedMulti' | 'BalanceUpdated' | 'YieldCollected' | 'FeeCollected' | 'AModified' | 'FeeModified' | 'RecipientModified';
   }
 
-  /** @name CumulusPalletParachainSystemEvent (183) */
+  /** @name OrmlPaymentsEvent (192) */
+  interface OrmlPaymentsEvent extends Enum {
+    readonly isPaymentCreated: boolean;
+    readonly asPaymentCreated: {
+      readonly from: AccountId32;
+      readonly asset: AcalaPrimitivesCurrencyCurrencyId;
+      readonly amount: u128;
+      readonly remark: Option<Bytes>;
+    } & Struct;
+    readonly isPaymentReleased: boolean;
+    readonly asPaymentReleased: {
+      readonly from: AccountId32;
+      readonly to: AccountId32;
+    } & Struct;
+    readonly isPaymentCancelled: boolean;
+    readonly asPaymentCancelled: {
+      readonly from: AccountId32;
+      readonly to: AccountId32;
+    } & Struct;
+    readonly isPaymentResolved: boolean;
+    readonly asPaymentResolved: {
+      readonly from: AccountId32;
+      readonly to: AccountId32;
+      readonly recipientShare: Percent;
+    } & Struct;
+    readonly isPaymentCreatorRequestedRefund: boolean;
+    readonly asPaymentCreatorRequestedRefund: {
+      readonly from: AccountId32;
+      readonly to: AccountId32;
+      readonly expiry: u32;
+    } & Struct;
+    readonly isPaymentRefundDisputed: boolean;
+    readonly asPaymentRefundDisputed: {
+      readonly from: AccountId32;
+      readonly to: AccountId32;
+    } & Struct;
+    readonly isPaymentRequestCreated: boolean;
+    readonly asPaymentRequestCreated: {
+      readonly from: AccountId32;
+      readonly to: AccountId32;
+    } & Struct;
+    readonly isPaymentRequestCompleted: boolean;
+    readonly asPaymentRequestCompleted: {
+      readonly from: AccountId32;
+      readonly to: AccountId32;
+    } & Struct;
+    readonly type: 'PaymentCreated' | 'PaymentReleased' | 'PaymentCancelled' | 'PaymentResolved' | 'PaymentCreatorRequestedRefund' | 'PaymentRefundDisputed' | 'PaymentRequestCreated' | 'PaymentRequestCompleted';
+  }
+
+  /** @name ModuleEarningModuleEvent (196) */
+  interface ModuleEarningModuleEvent extends Enum {
+    readonly isBonded: boolean;
+    readonly asBonded: {
+      readonly who: AccountId32;
+      readonly amount: u128;
+    } & Struct;
+    readonly isUnbonded: boolean;
+    readonly asUnbonded: {
+      readonly who: AccountId32;
+      readonly amount: u128;
+    } & Struct;
+    readonly isInstantUnbonded: boolean;
+    readonly asInstantUnbonded: {
+      readonly who: AccountId32;
+      readonly amount: u128;
+      readonly fee: u128;
+    } & Struct;
+    readonly isRebonded: boolean;
+    readonly asRebonded: {
+      readonly who: AccountId32;
+      readonly amount: u128;
+    } & Struct;
+    readonly isWithdrawn: boolean;
+    readonly asWithdrawn: {
+      readonly who: AccountId32;
+      readonly amount: u128;
+    } & Struct;
+    readonly type: 'Bonded' | 'Unbonded' | 'InstantUnbonded' | 'Rebonded' | 'Withdrawn';
+  }
+
+  /** @name CumulusPalletParachainSystemEvent (197) */
   interface CumulusPalletParachainSystemEvent extends Enum {
     readonly isValidationFunctionStored: boolean;
     readonly isValidationFunctionApplied: boolean;
@@ -2630,7 +2856,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'ValidationFunctionStored' | 'ValidationFunctionApplied' | 'ValidationFunctionDiscarded' | 'UpgradeAuthorized' | 'DownwardMessagesReceived' | 'DownwardMessagesProcessed';
   }
 
-  /** @name PalletSudoEvent (184) */
+  /** @name PalletSudoEvent (198) */
   interface PalletSudoEvent extends Enum {
     readonly isSudid: boolean;
     readonly asSudid: {
@@ -2647,7 +2873,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Sudid' | 'KeyChanged' | 'SudoAsDone';
   }
 
-  /** @name FrameSystemPhase (185) */
+  /** @name FrameSystemPhase (199) */
   interface FrameSystemPhase extends Enum {
     readonly isApplyExtrinsic: boolean;
     readonly asApplyExtrinsic: u32;
@@ -2656,13 +2882,13 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'ApplyExtrinsic' | 'Finalization' | 'Initialization';
   }
 
-  /** @name FrameSystemLastRuntimeUpgradeInfo (187) */
+  /** @name FrameSystemLastRuntimeUpgradeInfo (201) */
   interface FrameSystemLastRuntimeUpgradeInfo extends Struct {
     readonly specVersion: Compact<u32>;
     readonly specName: Text;
   }
 
-  /** @name FrameSystemCall (188) */
+  /** @name FrameSystemCall (202) */
   interface FrameSystemCall extends Enum {
     readonly isFillBlock: boolean;
     readonly asFillBlock: {
@@ -2704,21 +2930,21 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'FillBlock' | 'Remark' | 'SetHeapPages' | 'SetCode' | 'SetCodeWithoutChecks' | 'SetStorage' | 'KillStorage' | 'KillPrefix' | 'RemarkWithEvent';
   }
 
-  /** @name FrameSystemLimitsBlockWeights (193) */
+  /** @name FrameSystemLimitsBlockWeights (207) */
   interface FrameSystemLimitsBlockWeights extends Struct {
     readonly baseBlock: u64;
     readonly maxBlock: u64;
     readonly perClass: FrameSupportWeightsPerDispatchClassWeightsPerClass;
   }
 
-  /** @name FrameSupportWeightsPerDispatchClassWeightsPerClass (194) */
+  /** @name FrameSupportWeightsPerDispatchClassWeightsPerClass (208) */
   interface FrameSupportWeightsPerDispatchClassWeightsPerClass extends Struct {
     readonly normal: FrameSystemLimitsWeightsPerClass;
     readonly operational: FrameSystemLimitsWeightsPerClass;
     readonly mandatory: FrameSystemLimitsWeightsPerClass;
   }
 
-  /** @name FrameSystemLimitsWeightsPerClass (195) */
+  /** @name FrameSystemLimitsWeightsPerClass (209) */
   interface FrameSystemLimitsWeightsPerClass extends Struct {
     readonly baseExtrinsic: u64;
     readonly maxExtrinsic: Option<u64>;
@@ -2726,25 +2952,25 @@ declare module '@acala-network/types/lookup' {
     readonly reserved: Option<u64>;
   }
 
-  /** @name FrameSystemLimitsBlockLength (197) */
+  /** @name FrameSystemLimitsBlockLength (211) */
   interface FrameSystemLimitsBlockLength extends Struct {
     readonly max: FrameSupportWeightsPerDispatchClassU32;
   }
 
-  /** @name FrameSupportWeightsPerDispatchClassU32 (198) */
+  /** @name FrameSupportWeightsPerDispatchClassU32 (212) */
   interface FrameSupportWeightsPerDispatchClassU32 extends Struct {
     readonly normal: u32;
     readonly operational: u32;
     readonly mandatory: u32;
   }
 
-  /** @name FrameSupportWeightsRuntimeDbWeight (199) */
+  /** @name FrameSupportWeightsRuntimeDbWeight (213) */
   interface FrameSupportWeightsRuntimeDbWeight extends Struct {
     readonly read: u64;
     readonly write: u64;
   }
 
-  /** @name SpVersionRuntimeVersion (200) */
+  /** @name SpVersionRuntimeVersion (214) */
   interface SpVersionRuntimeVersion extends Struct {
     readonly specName: Text;
     readonly implName: Text;
@@ -2756,7 +2982,7 @@ declare module '@acala-network/types/lookup' {
     readonly stateVersion: u8;
   }
 
-  /** @name FrameSystemError (204) */
+  /** @name FrameSystemError (218) */
   interface FrameSystemError extends Enum {
     readonly isInvalidSpecName: boolean;
     readonly isSpecVersionNeedsToIncrease: boolean;
@@ -2767,7 +2993,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'InvalidSpecName' | 'SpecVersionNeedsToIncrease' | 'FailedToExtractRuntimeVersion' | 'NonDefaultComposite' | 'NonZeroRefCount' | 'CallFiltered';
   }
 
-  /** @name PalletTimestampCall (205) */
+  /** @name PalletTimestampCall (219) */
   interface PalletTimestampCall extends Enum {
     readonly isSet: boolean;
     readonly asSet: {
@@ -2776,16 +3002,16 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Set';
   }
 
-  /** @name PalletSchedulerScheduledV3 (208) */
+  /** @name PalletSchedulerScheduledV3 (222) */
   interface PalletSchedulerScheduledV3 extends Struct {
     readonly maybeId: Option<Bytes>;
     readonly priority: u8;
     readonly call: FrameSupportScheduleMaybeHashed;
     readonly maybePeriodic: Option<ITuple<[u32, u32]>>;
-    readonly origin: AcalaRuntimeOriginCaller;
+    readonly origin: MandalaRuntimeOriginCaller;
   }
 
-  /** @name FrameSupportScheduleMaybeHashed (209) */
+  /** @name FrameSupportScheduleMaybeHashed (223) */
   interface FrameSupportScheduleMaybeHashed extends Enum {
     readonly isValue: boolean;
     readonly asValue: Call;
@@ -2794,7 +3020,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Value' | 'Hash';
   }
 
-  /** @name PalletSchedulerCall (211) */
+  /** @name PalletSchedulerCall (225) */
   interface PalletSchedulerCall extends Enum {
     readonly isSchedule: boolean;
     readonly asSchedule: {
@@ -2838,7 +3064,315 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Schedule' | 'Cancel' | 'ScheduleNamed' | 'CancelNamed' | 'ScheduleAfter' | 'ScheduleNamedAfter';
   }
 
-  /** @name PalletUtilityCall (213) */
+  /** @name ModuleTransactionPauseModuleCall (227) */
+  interface ModuleTransactionPauseModuleCall extends Enum {
+    readonly isPauseTransaction: boolean;
+    readonly asPauseTransaction: {
+      readonly palletName: Bytes;
+      readonly functionName: Bytes;
+    } & Struct;
+    readonly isUnpauseTransaction: boolean;
+    readonly asUnpauseTransaction: {
+      readonly palletName: Bytes;
+      readonly functionName: Bytes;
+    } & Struct;
+    readonly type: 'PauseTransaction' | 'UnpauseTransaction';
+  }
+
+  /** @name PalletPreimageCall (228) */
+  interface PalletPreimageCall extends Enum {
+    readonly isNotePreimage: boolean;
+    readonly asNotePreimage: {
+      readonly bytes: Bytes;
+    } & Struct;
+    readonly isUnnotePreimage: boolean;
+    readonly asUnnotePreimage: {
+      readonly hash_: H256;
+    } & Struct;
+    readonly isRequestPreimage: boolean;
+    readonly asRequestPreimage: {
+      readonly hash_: H256;
+    } & Struct;
+    readonly isUnrequestPreimage: boolean;
+    readonly asUnrequestPreimage: {
+      readonly hash_: H256;
+    } & Struct;
+    readonly type: 'NotePreimage' | 'UnnotePreimage' | 'RequestPreimage' | 'UnrequestPreimage';
+  }
+
+  /** @name PalletBalancesCall (229) */
+  interface PalletBalancesCall extends Enum {
+    readonly isTransfer: boolean;
+    readonly asTransfer: {
+      readonly dest: MultiAddress;
+      readonly value: Compact<u128>;
+    } & Struct;
+    readonly isSetBalance: boolean;
+    readonly asSetBalance: {
+      readonly who: MultiAddress;
+      readonly newFree: Compact<u128>;
+      readonly newReserved: Compact<u128>;
+    } & Struct;
+    readonly isForceTransfer: boolean;
+    readonly asForceTransfer: {
+      readonly source: MultiAddress;
+      readonly dest: MultiAddress;
+      readonly value: Compact<u128>;
+    } & Struct;
+    readonly isTransferKeepAlive: boolean;
+    readonly asTransferKeepAlive: {
+      readonly dest: MultiAddress;
+      readonly value: Compact<u128>;
+    } & Struct;
+    readonly isTransferAll: boolean;
+    readonly asTransferAll: {
+      readonly dest: MultiAddress;
+      readonly keepAlive: bool;
+    } & Struct;
+    readonly isForceUnreserve: boolean;
+    readonly asForceUnreserve: {
+      readonly who: MultiAddress;
+      readonly amount: u128;
+    } & Struct;
+    readonly type: 'Transfer' | 'SetBalance' | 'ForceTransfer' | 'TransferKeepAlive' | 'TransferAll' | 'ForceUnreserve';
+  }
+
+  /** @name ModuleCurrenciesModuleCall (231) */
+  interface ModuleCurrenciesModuleCall extends Enum {
+    readonly isTransfer: boolean;
+    readonly asTransfer: {
+      readonly dest: MultiAddress;
+      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
+      readonly amount: Compact<u128>;
+    } & Struct;
+    readonly isTransferNativeCurrency: boolean;
+    readonly asTransferNativeCurrency: {
+      readonly dest: MultiAddress;
+      readonly amount: Compact<u128>;
+    } & Struct;
+    readonly isUpdateBalance: boolean;
+    readonly asUpdateBalance: {
+      readonly who: MultiAddress;
+      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
+      readonly amount: i128;
+    } & Struct;
+    readonly isSweepDust: boolean;
+    readonly asSweepDust: {
+      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
+      readonly accounts: Vec<AccountId32>;
+    } & Struct;
+    readonly isForceSetLock: boolean;
+    readonly asForceSetLock: {
+      readonly who: MultiAddress;
+      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
+      readonly amount: Compact<u128>;
+      readonly lockId: U8aFixed;
+    } & Struct;
+    readonly isForceRemoveLock: boolean;
+    readonly asForceRemoveLock: {
+      readonly who: MultiAddress;
+      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
+      readonly lockId: U8aFixed;
+    } & Struct;
+    readonly type: 'Transfer' | 'TransferNativeCurrency' | 'UpdateBalance' | 'SweepDust' | 'ForceSetLock' | 'ForceRemoveLock';
+  }
+
+  /** @name OrmlVestingModuleCall (232) */
+  interface OrmlVestingModuleCall extends Enum {
+    readonly isClaim: boolean;
+    readonly isVestedTransfer: boolean;
+    readonly asVestedTransfer: {
+      readonly dest: MultiAddress;
+      readonly schedule: OrmlVestingVestingSchedule;
+    } & Struct;
+    readonly isUpdateVestingSchedules: boolean;
+    readonly asUpdateVestingSchedules: {
+      readonly who: MultiAddress;
+      readonly vestingSchedules: Vec<OrmlVestingVestingSchedule>;
+    } & Struct;
+    readonly isClaimFor: boolean;
+    readonly asClaimFor: {
+      readonly dest: MultiAddress;
+    } & Struct;
+    readonly type: 'Claim' | 'VestedTransfer' | 'UpdateVestingSchedules' | 'ClaimFor';
+  }
+
+  /** @name ModuleTransactionPaymentModuleCall (234) */
+  interface ModuleTransactionPaymentModuleCall extends Enum {
+    readonly isSetAlternativeFeeSwapPath: boolean;
+    readonly asSetAlternativeFeeSwapPath: {
+      readonly feeSwapPath: Option<Vec<AcalaPrimitivesCurrencyCurrencyId>>;
+    } & Struct;
+    readonly isEnableChargeFeePool: boolean;
+    readonly asEnableChargeFeePool: {
+      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
+      readonly poolSize: u128;
+      readonly swapThreshold: u128;
+    } & Struct;
+    readonly isDisableChargeFeePool: boolean;
+    readonly asDisableChargeFeePool: {
+      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
+    } & Struct;
+    readonly isWithFeePath: boolean;
+    readonly asWithFeePath: {
+      readonly feeSwapPath: Vec<AcalaPrimitivesCurrencyCurrencyId>;
+      readonly call: Call;
+    } & Struct;
+    readonly isWithFeeCurrency: boolean;
+    readonly asWithFeeCurrency: {
+      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
+      readonly call: Call;
+    } & Struct;
+    readonly isWithFeePaidBy: boolean;
+    readonly asWithFeePaidBy: {
+      readonly call: Call;
+      readonly payerAddr: AccountId32;
+      readonly payerSig: SpRuntimeMultiSignature;
+    } & Struct;
+    readonly isWithFeeAggregatedPath: boolean;
+    readonly asWithFeeAggregatedPath: {
+      readonly feeAggregatedPath: Vec<ModuleSupportDexAggregatedSwapPath>;
+      readonly call: Call;
+    } & Struct;
+    readonly type: 'SetAlternativeFeeSwapPath' | 'EnableChargeFeePool' | 'DisableChargeFeePool' | 'WithFeePath' | 'WithFeeCurrency' | 'WithFeePaidBy' | 'WithFeeAggregatedPath';
+  }
+
+  /** @name SpRuntimeMultiSignature (236) */
+  interface SpRuntimeMultiSignature extends Enum {
+    readonly isEd25519: boolean;
+    readonly asEd25519: SpCoreEd25519Signature;
+    readonly isSr25519: boolean;
+    readonly asSr25519: SpCoreSr25519Signature;
+    readonly isEcdsa: boolean;
+    readonly asEcdsa: SpCoreEcdsaSignature;
+    readonly type: 'Ed25519' | 'Sr25519' | 'Ecdsa';
+  }
+
+  /** @name SpCoreEd25519Signature (237) */
+  interface SpCoreEd25519Signature extends U8aFixed {}
+
+  /** @name SpCoreSr25519Signature (239) */
+  interface SpCoreSr25519Signature extends U8aFixed {}
+
+  /** @name SpCoreEcdsaSignature (240) */
+  interface SpCoreEcdsaSignature extends U8aFixed {}
+
+  /** @name ModuleSupportDexAggregatedSwapPath (243) */
+  interface ModuleSupportDexAggregatedSwapPath extends Enum {
+    readonly isDex: boolean;
+    readonly asDex: Vec<AcalaPrimitivesCurrencyCurrencyId>;
+    readonly isTaiga: boolean;
+    readonly asTaiga: ITuple<[u32, u32, u32]>;
+    readonly type: 'Dex' | 'Taiga';
+  }
+
+  /** @name PalletTreasuryCall (244) */
+  interface PalletTreasuryCall extends Enum {
+    readonly isProposeSpend: boolean;
+    readonly asProposeSpend: {
+      readonly value: Compact<u128>;
+      readonly beneficiary: MultiAddress;
+    } & Struct;
+    readonly isRejectProposal: boolean;
+    readonly asRejectProposal: {
+      readonly proposalId: Compact<u32>;
+    } & Struct;
+    readonly isApproveProposal: boolean;
+    readonly asApproveProposal: {
+      readonly proposalId: Compact<u32>;
+    } & Struct;
+    readonly isSpend: boolean;
+    readonly asSpend: {
+      readonly amount: Compact<u128>;
+      readonly beneficiary: MultiAddress;
+    } & Struct;
+    readonly isRemoveApproval: boolean;
+    readonly asRemoveApproval: {
+      readonly proposalId: Compact<u32>;
+    } & Struct;
+    readonly type: 'ProposeSpend' | 'RejectProposal' | 'ApproveProposal' | 'Spend' | 'RemoveApproval';
+  }
+
+  /** @name PalletBountiesCall (245) */
+  interface PalletBountiesCall extends Enum {
+    readonly isProposeBounty: boolean;
+    readonly asProposeBounty: {
+      readonly value: Compact<u128>;
+      readonly description: Bytes;
+    } & Struct;
+    readonly isApproveBounty: boolean;
+    readonly asApproveBounty: {
+      readonly bountyId: Compact<u32>;
+    } & Struct;
+    readonly isProposeCurator: boolean;
+    readonly asProposeCurator: {
+      readonly bountyId: Compact<u32>;
+      readonly curator: MultiAddress;
+      readonly fee: Compact<u128>;
+    } & Struct;
+    readonly isUnassignCurator: boolean;
+    readonly asUnassignCurator: {
+      readonly bountyId: Compact<u32>;
+    } & Struct;
+    readonly isAcceptCurator: boolean;
+    readonly asAcceptCurator: {
+      readonly bountyId: Compact<u32>;
+    } & Struct;
+    readonly isAwardBounty: boolean;
+    readonly asAwardBounty: {
+      readonly bountyId: Compact<u32>;
+      readonly beneficiary: MultiAddress;
+    } & Struct;
+    readonly isClaimBounty: boolean;
+    readonly asClaimBounty: {
+      readonly bountyId: Compact<u32>;
+    } & Struct;
+    readonly isCloseBounty: boolean;
+    readonly asCloseBounty: {
+      readonly bountyId: Compact<u32>;
+    } & Struct;
+    readonly isExtendBountyExpiry: boolean;
+    readonly asExtendBountyExpiry: {
+      readonly bountyId: Compact<u32>;
+      readonly remark: Bytes;
+    } & Struct;
+    readonly type: 'ProposeBounty' | 'ApproveBounty' | 'ProposeCurator' | 'UnassignCurator' | 'AcceptCurator' | 'AwardBounty' | 'ClaimBounty' | 'CloseBounty' | 'ExtendBountyExpiry';
+  }
+
+  /** @name PalletTipsCall (246) */
+  interface PalletTipsCall extends Enum {
+    readonly isReportAwesome: boolean;
+    readonly asReportAwesome: {
+      readonly reason: Bytes;
+      readonly who: AccountId32;
+    } & Struct;
+    readonly isRetractTip: boolean;
+    readonly asRetractTip: {
+      readonly hash_: H256;
+    } & Struct;
+    readonly isTipNew: boolean;
+    readonly asTipNew: {
+      readonly reason: Bytes;
+      readonly who: AccountId32;
+      readonly tipValue: Compact<u128>;
+    } & Struct;
+    readonly isTip: boolean;
+    readonly asTip: {
+      readonly hash_: H256;
+      readonly tipValue: Compact<u128>;
+    } & Struct;
+    readonly isCloseTip: boolean;
+    readonly asCloseTip: {
+      readonly hash_: H256;
+    } & Struct;
+    readonly isSlashTip: boolean;
+    readonly asSlashTip: {
+      readonly hash_: H256;
+    } & Struct;
+    readonly type: 'ReportAwesome' | 'RetractTip' | 'TipNew' | 'Tip' | 'CloseTip' | 'SlashTip';
+  }
+
+  /** @name PalletUtilityCall (247) */
   interface PalletUtilityCall extends Enum {
     readonly isBatch: boolean;
     readonly asBatch: {
@@ -2855,7 +3389,7 @@ declare module '@acala-network/types/lookup' {
     } & Struct;
     readonly isDispatchAs: boolean;
     readonly asDispatchAs: {
-      readonly asOrigin: AcalaRuntimeOriginCaller;
+      readonly asOrigin: MandalaRuntimeOriginCaller;
       readonly call: Call;
     } & Struct;
     readonly isForceBatch: boolean;
@@ -2865,7 +3399,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Batch' | 'AsDerivative' | 'BatchAll' | 'DispatchAs' | 'ForceBatch';
   }
 
-  /** @name PalletMultisigCall (215) */
+  /** @name PalletMultisigCall (249) */
   interface PalletMultisigCall extends Enum {
     readonly isAsMultiThreshold1: boolean;
     readonly asAsMultiThreshold1: {
@@ -2899,7 +3433,50 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'AsMultiThreshold1' | 'AsMulti' | 'ApproveAsMulti' | 'CancelAsMulti';
   }
 
-  /** @name PalletProxyCall (218) */
+  /** @name PalletRecoveryCall (252) */
+  interface PalletRecoveryCall extends Enum {
+    readonly isAsRecovered: boolean;
+    readonly asAsRecovered: {
+      readonly account: AccountId32;
+      readonly call: Call;
+    } & Struct;
+    readonly isSetRecovered: boolean;
+    readonly asSetRecovered: {
+      readonly lost: AccountId32;
+      readonly rescuer: AccountId32;
+    } & Struct;
+    readonly isCreateRecovery: boolean;
+    readonly asCreateRecovery: {
+      readonly friends: Vec<AccountId32>;
+      readonly threshold: u16;
+      readonly delayPeriod: u32;
+    } & Struct;
+    readonly isInitiateRecovery: boolean;
+    readonly asInitiateRecovery: {
+      readonly account: AccountId32;
+    } & Struct;
+    readonly isVouchRecovery: boolean;
+    readonly asVouchRecovery: {
+      readonly lost: AccountId32;
+      readonly rescuer: AccountId32;
+    } & Struct;
+    readonly isClaimRecovery: boolean;
+    readonly asClaimRecovery: {
+      readonly account: AccountId32;
+    } & Struct;
+    readonly isCloseRecovery: boolean;
+    readonly asCloseRecovery: {
+      readonly rescuer: AccountId32;
+    } & Struct;
+    readonly isRemoveRecovery: boolean;
+    readonly isCancelRecovered: boolean;
+    readonly asCancelRecovered: {
+      readonly account: AccountId32;
+    } & Struct;
+    readonly type: 'AsRecovered' | 'SetRecovered' | 'CreateRecovery' | 'InitiateRecovery' | 'VouchRecovery' | 'ClaimRecovery' | 'CloseRecovery' | 'RemoveRecovery' | 'CancelRecovered';
+  }
+
+  /** @name PalletProxyCall (253) */
   interface PalletProxyCall extends Enum {
     readonly isProxy: boolean;
     readonly asProxy: {
@@ -2959,907 +3536,44 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Proxy' | 'AddProxy' | 'RemoveProxy' | 'RemoveProxies' | 'Anonymous' | 'KillAnonymous' | 'Announce' | 'RemoveAnnouncement' | 'RejectAnnouncement' | 'ProxyAnnounced';
   }
 
-  /** @name ModuleTransactionPauseModuleCall (220) */
-  interface ModuleTransactionPauseModuleCall extends Enum {
-    readonly isPauseTransaction: boolean;
-    readonly asPauseTransaction: {
-      readonly palletName: Bytes;
-      readonly functionName: Bytes;
-    } & Struct;
-    readonly isUnpauseTransaction: boolean;
-    readonly asUnpauseTransaction: {
-      readonly palletName: Bytes;
-      readonly functionName: Bytes;
-    } & Struct;
-    readonly isPauseEvmPrecompile: boolean;
-    readonly asPauseEvmPrecompile: {
-      readonly address: H160;
-    } & Struct;
-    readonly isUnpauseEvmPrecompile: boolean;
-    readonly asUnpauseEvmPrecompile: {
-      readonly address: H160;
-    } & Struct;
-    readonly type: 'PauseTransaction' | 'UnpauseTransaction' | 'PauseEvmPrecompile' | 'UnpauseEvmPrecompile';
-  }
-
-  /** @name ModuleIdleSchedulerModuleCall (221) */
+  /** @name ModuleIdleSchedulerModuleCall (255) */
   interface ModuleIdleSchedulerModuleCall extends Enum {
     readonly isScheduleTask: boolean;
     readonly asScheduleTask: {
-      readonly task: AcalaRuntimeScheduledTasks;
+      readonly task: MandalaRuntimeScheduledTasks;
     } & Struct;
     readonly type: 'ScheduleTask';
   }
 
-  /** @name PalletPreimageCall (222) */
-  interface PalletPreimageCall extends Enum {
-    readonly isNotePreimage: boolean;
-    readonly asNotePreimage: {
-      readonly bytes: Bytes;
+  /** @name PalletIndicesCall (256) */
+  interface PalletIndicesCall extends Enum {
+    readonly isClaim: boolean;
+    readonly asClaim: {
+      readonly index: u32;
     } & Struct;
-    readonly isUnnotePreimage: boolean;
-    readonly asUnnotePreimage: {
-      readonly hash_: H256;
-    } & Struct;
-    readonly isRequestPreimage: boolean;
-    readonly asRequestPreimage: {
-      readonly hash_: H256;
-    } & Struct;
-    readonly isUnrequestPreimage: boolean;
-    readonly asUnrequestPreimage: {
-      readonly hash_: H256;
-    } & Struct;
-    readonly type: 'NotePreimage' | 'UnnotePreimage' | 'RequestPreimage' | 'UnrequestPreimage';
-  }
-
-  /** @name PalletBalancesCall (223) */
-  interface PalletBalancesCall extends Enum {
     readonly isTransfer: boolean;
     readonly asTransfer: {
-      readonly dest: MultiAddress;
-      readonly value: Compact<u128>;
+      readonly new_: AccountId32;
+      readonly index: u32;
     } & Struct;
-    readonly isSetBalance: boolean;
-    readonly asSetBalance: {
-      readonly who: MultiAddress;
-      readonly newFree: Compact<u128>;
-      readonly newReserved: Compact<u128>;
+    readonly isFree: boolean;
+    readonly asFree: {
+      readonly index: u32;
     } & Struct;
     readonly isForceTransfer: boolean;
     readonly asForceTransfer: {
-      readonly source: MultiAddress;
-      readonly dest: MultiAddress;
-      readonly value: Compact<u128>;
+      readonly new_: AccountId32;
+      readonly index: u32;
+      readonly freeze: bool;
     } & Struct;
-    readonly isTransferKeepAlive: boolean;
-    readonly asTransferKeepAlive: {
-      readonly dest: MultiAddress;
-      readonly value: Compact<u128>;
+    readonly isFreeze: boolean;
+    readonly asFreeze: {
+      readonly index: u32;
     } & Struct;
-    readonly isTransferAll: boolean;
-    readonly asTransferAll: {
-      readonly dest: MultiAddress;
-      readonly keepAlive: bool;
-    } & Struct;
-    readonly isForceUnreserve: boolean;
-    readonly asForceUnreserve: {
-      readonly who: MultiAddress;
-      readonly amount: u128;
-    } & Struct;
-    readonly type: 'Transfer' | 'SetBalance' | 'ForceTransfer' | 'TransferKeepAlive' | 'TransferAll' | 'ForceUnreserve';
+    readonly type: 'Claim' | 'Transfer' | 'Free' | 'ForceTransfer' | 'Freeze';
   }
 
-  /** @name ModuleCurrenciesModuleCall (225) */
-  interface ModuleCurrenciesModuleCall extends Enum {
-    readonly isTransfer: boolean;
-    readonly asTransfer: {
-      readonly dest: MultiAddress;
-      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
-      readonly amount: Compact<u128>;
-    } & Struct;
-    readonly isTransferNativeCurrency: boolean;
-    readonly asTransferNativeCurrency: {
-      readonly dest: MultiAddress;
-      readonly amount: Compact<u128>;
-    } & Struct;
-    readonly isUpdateBalance: boolean;
-    readonly asUpdateBalance: {
-      readonly who: MultiAddress;
-      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
-      readonly amount: i128;
-    } & Struct;
-    readonly isSweepDust: boolean;
-    readonly asSweepDust: {
-      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
-      readonly accounts: Vec<AccountId32>;
-    } & Struct;
-    readonly isForceSetLock: boolean;
-    readonly asForceSetLock: {
-      readonly who: MultiAddress;
-      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
-      readonly amount: Compact<u128>;
-      readonly lockId: U8aFixed;
-    } & Struct;
-    readonly isForceRemoveLock: boolean;
-    readonly asForceRemoveLock: {
-      readonly who: MultiAddress;
-      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
-      readonly lockId: U8aFixed;
-    } & Struct;
-    readonly type: 'Transfer' | 'TransferNativeCurrency' | 'UpdateBalance' | 'SweepDust' | 'ForceSetLock' | 'ForceRemoveLock';
-  }
-
-  /** @name OrmlVestingModuleCall (226) */
-  interface OrmlVestingModuleCall extends Enum {
-    readonly isClaim: boolean;
-    readonly isVestedTransfer: boolean;
-    readonly asVestedTransfer: {
-      readonly dest: MultiAddress;
-      readonly schedule: OrmlVestingVestingSchedule;
-    } & Struct;
-    readonly isUpdateVestingSchedules: boolean;
-    readonly asUpdateVestingSchedules: {
-      readonly who: MultiAddress;
-      readonly vestingSchedules: Vec<OrmlVestingVestingSchedule>;
-    } & Struct;
-    readonly isClaimFor: boolean;
-    readonly asClaimFor: {
-      readonly dest: MultiAddress;
-    } & Struct;
-    readonly type: 'Claim' | 'VestedTransfer' | 'UpdateVestingSchedules' | 'ClaimFor';
-  }
-
-  /** @name ModuleTransactionPaymentModuleCall (228) */
-  interface ModuleTransactionPaymentModuleCall extends Enum {
-    readonly isSetAlternativeFeeSwapPath: boolean;
-    readonly asSetAlternativeFeeSwapPath: {
-      readonly feeSwapPath: Option<Vec<AcalaPrimitivesCurrencyCurrencyId>>;
-    } & Struct;
-    readonly isEnableChargeFeePool: boolean;
-    readonly asEnableChargeFeePool: {
-      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
-      readonly poolSize: u128;
-      readonly swapThreshold: u128;
-    } & Struct;
-    readonly isDisableChargeFeePool: boolean;
-    readonly asDisableChargeFeePool: {
-      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
-    } & Struct;
-    readonly isWithFeePath: boolean;
-    readonly asWithFeePath: {
-      readonly feeSwapPath: Vec<AcalaPrimitivesCurrencyCurrencyId>;
-      readonly call: Call;
-    } & Struct;
-    readonly isWithFeeCurrency: boolean;
-    readonly asWithFeeCurrency: {
-      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
-      readonly call: Call;
-    } & Struct;
-    readonly isWithFeePaidBy: boolean;
-    readonly asWithFeePaidBy: {
-      readonly call: Call;
-      readonly payerAddr: AccountId32;
-      readonly payerSig: SpRuntimeMultiSignature;
-    } & Struct;
-    readonly isWithFeeAggregatedPath: boolean;
-    readonly asWithFeeAggregatedPath: {
-      readonly feeAggregatedPath: Vec<ModuleSupportDexAggregatedSwapPath>;
-      readonly call: Call;
-    } & Struct;
-    readonly type: 'SetAlternativeFeeSwapPath' | 'EnableChargeFeePool' | 'DisableChargeFeePool' | 'WithFeePath' | 'WithFeeCurrency' | 'WithFeePaidBy' | 'WithFeeAggregatedPath';
-  }
-
-  /** @name SpRuntimeMultiSignature (230) */
-  interface SpRuntimeMultiSignature extends Enum {
-    readonly isEd25519: boolean;
-    readonly asEd25519: SpCoreEd25519Signature;
-    readonly isSr25519: boolean;
-    readonly asSr25519: SpCoreSr25519Signature;
-    readonly isEcdsa: boolean;
-    readonly asEcdsa: SpCoreEcdsaSignature;
-    readonly type: 'Ed25519' | 'Sr25519' | 'Ecdsa';
-  }
-
-  /** @name SpCoreEd25519Signature (231) */
-  interface SpCoreEd25519Signature extends U8aFixed {}
-
-  /** @name SpCoreSr25519Signature (233) */
-  interface SpCoreSr25519Signature extends U8aFixed {}
-
-  /** @name SpCoreEcdsaSignature (234) */
-  interface SpCoreEcdsaSignature extends U8aFixed {}
-
-  /** @name ModuleSupportDexAggregatedSwapPath (237) */
-  interface ModuleSupportDexAggregatedSwapPath extends Enum {
-    readonly isDex: boolean;
-    readonly asDex: Vec<AcalaPrimitivesCurrencyCurrencyId>;
-    readonly isTaiga: boolean;
-    readonly asTaiga: ITuple<[u32, u32, u32]>;
-    readonly type: 'Dex' | 'Taiga';
-  }
-
-  /** @name PalletTreasuryCall (238) */
-  interface PalletTreasuryCall extends Enum {
-    readonly isProposeSpend: boolean;
-    readonly asProposeSpend: {
-      readonly value: Compact<u128>;
-      readonly beneficiary: MultiAddress;
-    } & Struct;
-    readonly isRejectProposal: boolean;
-    readonly asRejectProposal: {
-      readonly proposalId: Compact<u32>;
-    } & Struct;
-    readonly isApproveProposal: boolean;
-    readonly asApproveProposal: {
-      readonly proposalId: Compact<u32>;
-    } & Struct;
-    readonly isSpend: boolean;
-    readonly asSpend: {
-      readonly amount: Compact<u128>;
-      readonly beneficiary: MultiAddress;
-    } & Struct;
-    readonly isRemoveApproval: boolean;
-    readonly asRemoveApproval: {
-      readonly proposalId: Compact<u32>;
-    } & Struct;
-    readonly type: 'ProposeSpend' | 'RejectProposal' | 'ApproveProposal' | 'Spend' | 'RemoveApproval';
-  }
-
-  /** @name PalletBountiesCall (239) */
-  interface PalletBountiesCall extends Enum {
-    readonly isProposeBounty: boolean;
-    readonly asProposeBounty: {
-      readonly value: Compact<u128>;
-      readonly description: Bytes;
-    } & Struct;
-    readonly isApproveBounty: boolean;
-    readonly asApproveBounty: {
-      readonly bountyId: Compact<u32>;
-    } & Struct;
-    readonly isProposeCurator: boolean;
-    readonly asProposeCurator: {
-      readonly bountyId: Compact<u32>;
-      readonly curator: MultiAddress;
-      readonly fee: Compact<u128>;
-    } & Struct;
-    readonly isUnassignCurator: boolean;
-    readonly asUnassignCurator: {
-      readonly bountyId: Compact<u32>;
-    } & Struct;
-    readonly isAcceptCurator: boolean;
-    readonly asAcceptCurator: {
-      readonly bountyId: Compact<u32>;
-    } & Struct;
-    readonly isAwardBounty: boolean;
-    readonly asAwardBounty: {
-      readonly bountyId: Compact<u32>;
-      readonly beneficiary: MultiAddress;
-    } & Struct;
-    readonly isClaimBounty: boolean;
-    readonly asClaimBounty: {
-      readonly bountyId: Compact<u32>;
-    } & Struct;
-    readonly isCloseBounty: boolean;
-    readonly asCloseBounty: {
-      readonly bountyId: Compact<u32>;
-    } & Struct;
-    readonly isExtendBountyExpiry: boolean;
-    readonly asExtendBountyExpiry: {
-      readonly bountyId: Compact<u32>;
-      readonly remark: Bytes;
-    } & Struct;
-    readonly type: 'ProposeBounty' | 'ApproveBounty' | 'ProposeCurator' | 'UnassignCurator' | 'AcceptCurator' | 'AwardBounty' | 'ClaimBounty' | 'CloseBounty' | 'ExtendBountyExpiry';
-  }
-
-  /** @name PalletTipsCall (240) */
-  interface PalletTipsCall extends Enum {
-    readonly isReportAwesome: boolean;
-    readonly asReportAwesome: {
-      readonly reason: Bytes;
-      readonly who: AccountId32;
-    } & Struct;
-    readonly isRetractTip: boolean;
-    readonly asRetractTip: {
-      readonly hash_: H256;
-    } & Struct;
-    readonly isTipNew: boolean;
-    readonly asTipNew: {
-      readonly reason: Bytes;
-      readonly who: AccountId32;
-      readonly tipValue: Compact<u128>;
-    } & Struct;
-    readonly isTip: boolean;
-    readonly asTip: {
-      readonly hash_: H256;
-      readonly tipValue: Compact<u128>;
-    } & Struct;
-    readonly isCloseTip: boolean;
-    readonly asCloseTip: {
-      readonly hash_: H256;
-    } & Struct;
-    readonly isSlashTip: boolean;
-    readonly asSlashTip: {
-      readonly hash_: H256;
-    } & Struct;
-    readonly type: 'ReportAwesome' | 'RetractTip' | 'TipNew' | 'Tip' | 'CloseTip' | 'SlashTip';
-  }
-
-  /** @name PalletAuthorshipCall (241) */
-  interface PalletAuthorshipCall extends Enum {
-    readonly isSetUncles: boolean;
-    readonly asSetUncles: {
-      readonly newUncles: Vec<SpRuntimeHeader>;
-    } & Struct;
-    readonly type: 'SetUncles';
-  }
-
-  /** @name SpRuntimeHeader (243) */
-  interface SpRuntimeHeader extends Struct {
-    readonly parentHash: H256;
-    readonly number: Compact<u32>;
-    readonly stateRoot: H256;
-    readonly extrinsicsRoot: H256;
-    readonly digest: SpRuntimeDigest;
-  }
-
-  /** @name SpRuntimeBlakeTwo256 (244) */
-  type SpRuntimeBlakeTwo256 = Null;
-
-  /** @name ModuleCollatorSelectionCall (245) */
-  interface ModuleCollatorSelectionCall extends Enum {
-    readonly isSetInvulnerables: boolean;
-    readonly asSetInvulnerables: {
-      readonly new_: Vec<AccountId32>;
-    } & Struct;
-    readonly isSetDesiredCandidates: boolean;
-    readonly asSetDesiredCandidates: {
-      readonly max: Compact<u32>;
-    } & Struct;
-    readonly isSetCandidacyBond: boolean;
-    readonly asSetCandidacyBond: {
-      readonly bond: Compact<u128>;
-    } & Struct;
-    readonly isRegisterAsCandidate: boolean;
-    readonly isRegisterCandidate: boolean;
-    readonly asRegisterCandidate: {
-      readonly newCandidate: AccountId32;
-    } & Struct;
-    readonly isLeaveIntent: boolean;
-    readonly isWithdrawBond: boolean;
-    readonly type: 'SetInvulnerables' | 'SetDesiredCandidates' | 'SetCandidacyBond' | 'RegisterAsCandidate' | 'RegisterCandidate' | 'LeaveIntent' | 'WithdrawBond';
-  }
-
-  /** @name PalletSessionCall (246) */
-  interface PalletSessionCall extends Enum {
-    readonly isSetKeys: boolean;
-    readonly asSetKeys: {
-      readonly keys_: AcalaRuntimeSessionKeys;
-      readonly proof: Bytes;
-    } & Struct;
-    readonly isPurgeKeys: boolean;
-    readonly type: 'SetKeys' | 'PurgeKeys';
-  }
-
-  /** @name AcalaRuntimeSessionKeys (247) */
-  interface AcalaRuntimeSessionKeys extends Struct {
-    readonly aura: SpConsensusAuraSr25519AppSr25519Public;
-  }
-
-  /** @name SpConsensusAuraSr25519AppSr25519Public (248) */
-  interface SpConsensusAuraSr25519AppSr25519Public extends SpCoreSr25519Public {}
-
-  /** @name SpCoreSr25519Public (249) */
-  interface SpCoreSr25519Public extends U8aFixed {}
-
-  /** @name ModuleSessionManagerModuleCall (250) */
-  interface ModuleSessionManagerModuleCall extends Enum {
-    readonly isScheduleSessionDuration: boolean;
-    readonly asScheduleSessionDuration: {
-      readonly startSession: Compact<u32>;
-      readonly duration: Compact<u32>;
-    } & Struct;
-    readonly type: 'ScheduleSessionDuration';
-  }
-
-  /** @name CumulusPalletXcmpQueueCall (251) */
-  interface CumulusPalletXcmpQueueCall extends Enum {
-    readonly isServiceOverweight: boolean;
-    readonly asServiceOverweight: {
-      readonly index: u64;
-      readonly weightLimit: u64;
-    } & Struct;
-    readonly isSuspendXcmExecution: boolean;
-    readonly isResumeXcmExecution: boolean;
-    readonly isUpdateSuspendThreshold: boolean;
-    readonly asUpdateSuspendThreshold: {
-      readonly new_: u32;
-    } & Struct;
-    readonly isUpdateDropThreshold: boolean;
-    readonly asUpdateDropThreshold: {
-      readonly new_: u32;
-    } & Struct;
-    readonly isUpdateResumeThreshold: boolean;
-    readonly asUpdateResumeThreshold: {
-      readonly new_: u32;
-    } & Struct;
-    readonly isUpdateThresholdWeight: boolean;
-    readonly asUpdateThresholdWeight: {
-      readonly new_: u64;
-    } & Struct;
-    readonly isUpdateWeightRestrictDecay: boolean;
-    readonly asUpdateWeightRestrictDecay: {
-      readonly new_: u64;
-    } & Struct;
-    readonly isUpdateXcmpMaxIndividualWeight: boolean;
-    readonly asUpdateXcmpMaxIndividualWeight: {
-      readonly new_: u64;
-    } & Struct;
-    readonly type: 'ServiceOverweight' | 'SuspendXcmExecution' | 'ResumeXcmExecution' | 'UpdateSuspendThreshold' | 'UpdateDropThreshold' | 'UpdateResumeThreshold' | 'UpdateThresholdWeight' | 'UpdateWeightRestrictDecay' | 'UpdateXcmpMaxIndividualWeight';
-  }
-
-  /** @name PalletXcmCall (252) */
-  interface PalletXcmCall extends Enum {
-    readonly isSend: boolean;
-    readonly asSend: {
-      readonly dest: XcmVersionedMultiLocation;
-      readonly message: XcmVersionedXcm;
-    } & Struct;
-    readonly isTeleportAssets: boolean;
-    readonly asTeleportAssets: {
-      readonly dest: XcmVersionedMultiLocation;
-      readonly beneficiary: XcmVersionedMultiLocation;
-      readonly assets: XcmVersionedMultiAssets;
-      readonly feeAssetItem: u32;
-    } & Struct;
-    readonly isReserveTransferAssets: boolean;
-    readonly asReserveTransferAssets: {
-      readonly dest: XcmVersionedMultiLocation;
-      readonly beneficiary: XcmVersionedMultiLocation;
-      readonly assets: XcmVersionedMultiAssets;
-      readonly feeAssetItem: u32;
-    } & Struct;
-    readonly isExecute: boolean;
-    readonly asExecute: {
-      readonly message: XcmVersionedXcm;
-      readonly maxWeight: u64;
-    } & Struct;
-    readonly isForceXcmVersion: boolean;
-    readonly asForceXcmVersion: {
-      readonly location: XcmV1MultiLocation;
-      readonly xcmVersion: u32;
-    } & Struct;
-    readonly isForceDefaultXcmVersion: boolean;
-    readonly asForceDefaultXcmVersion: {
-      readonly maybeXcmVersion: Option<u32>;
-    } & Struct;
-    readonly isForceSubscribeVersionNotify: boolean;
-    readonly asForceSubscribeVersionNotify: {
-      readonly location: XcmVersionedMultiLocation;
-    } & Struct;
-    readonly isForceUnsubscribeVersionNotify: boolean;
-    readonly asForceUnsubscribeVersionNotify: {
-      readonly location: XcmVersionedMultiLocation;
-    } & Struct;
-    readonly isLimitedReserveTransferAssets: boolean;
-    readonly asLimitedReserveTransferAssets: {
-      readonly dest: XcmVersionedMultiLocation;
-      readonly beneficiary: XcmVersionedMultiLocation;
-      readonly assets: XcmVersionedMultiAssets;
-      readonly feeAssetItem: u32;
-      readonly weightLimit: XcmV2WeightLimit;
-    } & Struct;
-    readonly isLimitedTeleportAssets: boolean;
-    readonly asLimitedTeleportAssets: {
-      readonly dest: XcmVersionedMultiLocation;
-      readonly beneficiary: XcmVersionedMultiLocation;
-      readonly assets: XcmVersionedMultiAssets;
-      readonly feeAssetItem: u32;
-      readonly weightLimit: XcmV2WeightLimit;
-    } & Struct;
-    readonly type: 'Send' | 'TeleportAssets' | 'ReserveTransferAssets' | 'Execute' | 'ForceXcmVersion' | 'ForceDefaultXcmVersion' | 'ForceSubscribeVersionNotify' | 'ForceUnsubscribeVersionNotify' | 'LimitedReserveTransferAssets' | 'LimitedTeleportAssets';
-  }
-
-  /** @name XcmVersionedXcm (253) */
-  interface XcmVersionedXcm extends Enum {
-    readonly isV0: boolean;
-    readonly asV0: XcmV0Xcm;
-    readonly isV1: boolean;
-    readonly asV1: XcmV1Xcm;
-    readonly isV2: boolean;
-    readonly asV2: XcmV2Xcm;
-    readonly type: 'V0' | 'V1' | 'V2';
-  }
-
-  /** @name XcmV0Xcm (254) */
-  interface XcmV0Xcm extends Enum {
-    readonly isWithdrawAsset: boolean;
-    readonly asWithdrawAsset: {
-      readonly assets: Vec<XcmV0MultiAsset>;
-      readonly effects: Vec<XcmV0Order>;
-    } & Struct;
-    readonly isReserveAssetDeposit: boolean;
-    readonly asReserveAssetDeposit: {
-      readonly assets: Vec<XcmV0MultiAsset>;
-      readonly effects: Vec<XcmV0Order>;
-    } & Struct;
-    readonly isTeleportAsset: boolean;
-    readonly asTeleportAsset: {
-      readonly assets: Vec<XcmV0MultiAsset>;
-      readonly effects: Vec<XcmV0Order>;
-    } & Struct;
-    readonly isQueryResponse: boolean;
-    readonly asQueryResponse: {
-      readonly queryId: Compact<u64>;
-      readonly response: XcmV0Response;
-    } & Struct;
-    readonly isTransferAsset: boolean;
-    readonly asTransferAsset: {
-      readonly assets: Vec<XcmV0MultiAsset>;
-      readonly dest: XcmV0MultiLocation;
-    } & Struct;
-    readonly isTransferReserveAsset: boolean;
-    readonly asTransferReserveAsset: {
-      readonly assets: Vec<XcmV0MultiAsset>;
-      readonly dest: XcmV0MultiLocation;
-      readonly effects: Vec<XcmV0Order>;
-    } & Struct;
-    readonly isTransact: boolean;
-    readonly asTransact: {
-      readonly originType: XcmV0OriginKind;
-      readonly requireWeightAtMost: u64;
-      readonly call: XcmDoubleEncoded;
-    } & Struct;
-    readonly isHrmpNewChannelOpenRequest: boolean;
-    readonly asHrmpNewChannelOpenRequest: {
-      readonly sender: Compact<u32>;
-      readonly maxMessageSize: Compact<u32>;
-      readonly maxCapacity: Compact<u32>;
-    } & Struct;
-    readonly isHrmpChannelAccepted: boolean;
-    readonly asHrmpChannelAccepted: {
-      readonly recipient: Compact<u32>;
-    } & Struct;
-    readonly isHrmpChannelClosing: boolean;
-    readonly asHrmpChannelClosing: {
-      readonly initiator: Compact<u32>;
-      readonly sender: Compact<u32>;
-      readonly recipient: Compact<u32>;
-    } & Struct;
-    readonly isRelayedFrom: boolean;
-    readonly asRelayedFrom: {
-      readonly who: XcmV0MultiLocation;
-      readonly message: XcmV0Xcm;
-    } & Struct;
-    readonly type: 'WithdrawAsset' | 'ReserveAssetDeposit' | 'TeleportAsset' | 'QueryResponse' | 'TransferAsset' | 'TransferReserveAsset' | 'Transact' | 'HrmpNewChannelOpenRequest' | 'HrmpChannelAccepted' | 'HrmpChannelClosing' | 'RelayedFrom';
-  }
-
-  /** @name XcmV0Order (256) */
-  interface XcmV0Order extends Enum {
-    readonly isNull: boolean;
-    readonly isDepositAsset: boolean;
-    readonly asDepositAsset: {
-      readonly assets: Vec<XcmV0MultiAsset>;
-      readonly dest: XcmV0MultiLocation;
-    } & Struct;
-    readonly isDepositReserveAsset: boolean;
-    readonly asDepositReserveAsset: {
-      readonly assets: Vec<XcmV0MultiAsset>;
-      readonly dest: XcmV0MultiLocation;
-      readonly effects: Vec<XcmV0Order>;
-    } & Struct;
-    readonly isExchangeAsset: boolean;
-    readonly asExchangeAsset: {
-      readonly give: Vec<XcmV0MultiAsset>;
-      readonly receive: Vec<XcmV0MultiAsset>;
-    } & Struct;
-    readonly isInitiateReserveWithdraw: boolean;
-    readonly asInitiateReserveWithdraw: {
-      readonly assets: Vec<XcmV0MultiAsset>;
-      readonly reserve: XcmV0MultiLocation;
-      readonly effects: Vec<XcmV0Order>;
-    } & Struct;
-    readonly isInitiateTeleport: boolean;
-    readonly asInitiateTeleport: {
-      readonly assets: Vec<XcmV0MultiAsset>;
-      readonly dest: XcmV0MultiLocation;
-      readonly effects: Vec<XcmV0Order>;
-    } & Struct;
-    readonly isQueryHolding: boolean;
-    readonly asQueryHolding: {
-      readonly queryId: Compact<u64>;
-      readonly dest: XcmV0MultiLocation;
-      readonly assets: Vec<XcmV0MultiAsset>;
-    } & Struct;
-    readonly isBuyExecution: boolean;
-    readonly asBuyExecution: {
-      readonly fees: XcmV0MultiAsset;
-      readonly weight: u64;
-      readonly debt: u64;
-      readonly haltOnError: bool;
-      readonly xcm: Vec<XcmV0Xcm>;
-    } & Struct;
-    readonly type: 'Null' | 'DepositAsset' | 'DepositReserveAsset' | 'ExchangeAsset' | 'InitiateReserveWithdraw' | 'InitiateTeleport' | 'QueryHolding' | 'BuyExecution';
-  }
-
-  /** @name XcmV0Response (258) */
-  interface XcmV0Response extends Enum {
-    readonly isAssets: boolean;
-    readonly asAssets: Vec<XcmV0MultiAsset>;
-    readonly type: 'Assets';
-  }
-
-  /** @name XcmV1Xcm (259) */
-  interface XcmV1Xcm extends Enum {
-    readonly isWithdrawAsset: boolean;
-    readonly asWithdrawAsset: {
-      readonly assets: XcmV1MultiassetMultiAssets;
-      readonly effects: Vec<XcmV1Order>;
-    } & Struct;
-    readonly isReserveAssetDeposited: boolean;
-    readonly asReserveAssetDeposited: {
-      readonly assets: XcmV1MultiassetMultiAssets;
-      readonly effects: Vec<XcmV1Order>;
-    } & Struct;
-    readonly isReceiveTeleportedAsset: boolean;
-    readonly asReceiveTeleportedAsset: {
-      readonly assets: XcmV1MultiassetMultiAssets;
-      readonly effects: Vec<XcmV1Order>;
-    } & Struct;
-    readonly isQueryResponse: boolean;
-    readonly asQueryResponse: {
-      readonly queryId: Compact<u64>;
-      readonly response: XcmV1Response;
-    } & Struct;
-    readonly isTransferAsset: boolean;
-    readonly asTransferAsset: {
-      readonly assets: XcmV1MultiassetMultiAssets;
-      readonly beneficiary: XcmV1MultiLocation;
-    } & Struct;
-    readonly isTransferReserveAsset: boolean;
-    readonly asTransferReserveAsset: {
-      readonly assets: XcmV1MultiassetMultiAssets;
-      readonly dest: XcmV1MultiLocation;
-      readonly effects: Vec<XcmV1Order>;
-    } & Struct;
-    readonly isTransact: boolean;
-    readonly asTransact: {
-      readonly originType: XcmV0OriginKind;
-      readonly requireWeightAtMost: u64;
-      readonly call: XcmDoubleEncoded;
-    } & Struct;
-    readonly isHrmpNewChannelOpenRequest: boolean;
-    readonly asHrmpNewChannelOpenRequest: {
-      readonly sender: Compact<u32>;
-      readonly maxMessageSize: Compact<u32>;
-      readonly maxCapacity: Compact<u32>;
-    } & Struct;
-    readonly isHrmpChannelAccepted: boolean;
-    readonly asHrmpChannelAccepted: {
-      readonly recipient: Compact<u32>;
-    } & Struct;
-    readonly isHrmpChannelClosing: boolean;
-    readonly asHrmpChannelClosing: {
-      readonly initiator: Compact<u32>;
-      readonly sender: Compact<u32>;
-      readonly recipient: Compact<u32>;
-    } & Struct;
-    readonly isRelayedFrom: boolean;
-    readonly asRelayedFrom: {
-      readonly who: XcmV1MultilocationJunctions;
-      readonly message: XcmV1Xcm;
-    } & Struct;
-    readonly isSubscribeVersion: boolean;
-    readonly asSubscribeVersion: {
-      readonly queryId: Compact<u64>;
-      readonly maxResponseWeight: Compact<u64>;
-    } & Struct;
-    readonly isUnsubscribeVersion: boolean;
-    readonly type: 'WithdrawAsset' | 'ReserveAssetDeposited' | 'ReceiveTeleportedAsset' | 'QueryResponse' | 'TransferAsset' | 'TransferReserveAsset' | 'Transact' | 'HrmpNewChannelOpenRequest' | 'HrmpChannelAccepted' | 'HrmpChannelClosing' | 'RelayedFrom' | 'SubscribeVersion' | 'UnsubscribeVersion';
-  }
-
-  /** @name XcmV1Order (261) */
-  interface XcmV1Order extends Enum {
-    readonly isNoop: boolean;
-    readonly isDepositAsset: boolean;
-    readonly asDepositAsset: {
-      readonly assets: XcmV1MultiassetMultiAssetFilter;
-      readonly maxAssets: u32;
-      readonly beneficiary: XcmV1MultiLocation;
-    } & Struct;
-    readonly isDepositReserveAsset: boolean;
-    readonly asDepositReserveAsset: {
-      readonly assets: XcmV1MultiassetMultiAssetFilter;
-      readonly maxAssets: u32;
-      readonly dest: XcmV1MultiLocation;
-      readonly effects: Vec<XcmV1Order>;
-    } & Struct;
-    readonly isExchangeAsset: boolean;
-    readonly asExchangeAsset: {
-      readonly give: XcmV1MultiassetMultiAssetFilter;
-      readonly receive: XcmV1MultiassetMultiAssets;
-    } & Struct;
-    readonly isInitiateReserveWithdraw: boolean;
-    readonly asInitiateReserveWithdraw: {
-      readonly assets: XcmV1MultiassetMultiAssetFilter;
-      readonly reserve: XcmV1MultiLocation;
-      readonly effects: Vec<XcmV1Order>;
-    } & Struct;
-    readonly isInitiateTeleport: boolean;
-    readonly asInitiateTeleport: {
-      readonly assets: XcmV1MultiassetMultiAssetFilter;
-      readonly dest: XcmV1MultiLocation;
-      readonly effects: Vec<XcmV1Order>;
-    } & Struct;
-    readonly isQueryHolding: boolean;
-    readonly asQueryHolding: {
-      readonly queryId: Compact<u64>;
-      readonly dest: XcmV1MultiLocation;
-      readonly assets: XcmV1MultiassetMultiAssetFilter;
-    } & Struct;
-    readonly isBuyExecution: boolean;
-    readonly asBuyExecution: {
-      readonly fees: XcmV1MultiAsset;
-      readonly weight: u64;
-      readonly debt: u64;
-      readonly haltOnError: bool;
-      readonly instructions: Vec<XcmV1Xcm>;
-    } & Struct;
-    readonly type: 'Noop' | 'DepositAsset' | 'DepositReserveAsset' | 'ExchangeAsset' | 'InitiateReserveWithdraw' | 'InitiateTeleport' | 'QueryHolding' | 'BuyExecution';
-  }
-
-  /** @name XcmV1Response (263) */
-  interface XcmV1Response extends Enum {
-    readonly isAssets: boolean;
-    readonly asAssets: XcmV1MultiassetMultiAssets;
-    readonly isVersion: boolean;
-    readonly asVersion: u32;
-    readonly type: 'Assets' | 'Version';
-  }
-
-  /** @name CumulusPalletDmpQueueCall (278) */
-  interface CumulusPalletDmpQueueCall extends Enum {
-    readonly isServiceOverweight: boolean;
-    readonly asServiceOverweight: {
-      readonly index: u64;
-      readonly weightLimit: u64;
-    } & Struct;
-    readonly type: 'ServiceOverweight';
-  }
-
-  /** @name OrmlXtokensModuleCall (279) */
-  interface OrmlXtokensModuleCall extends Enum {
-    readonly isTransfer: boolean;
-    readonly asTransfer: {
-      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
-      readonly amount: u128;
-      readonly dest: XcmVersionedMultiLocation;
-      readonly destWeight: u64;
-    } & Struct;
-    readonly isTransferMultiasset: boolean;
-    readonly asTransferMultiasset: {
-      readonly asset: XcmVersionedMultiAsset;
-      readonly dest: XcmVersionedMultiLocation;
-      readonly destWeight: u64;
-    } & Struct;
-    readonly isTransferWithFee: boolean;
-    readonly asTransferWithFee: {
-      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
-      readonly amount: u128;
-      readonly fee: u128;
-      readonly dest: XcmVersionedMultiLocation;
-      readonly destWeight: u64;
-    } & Struct;
-    readonly isTransferMultiassetWithFee: boolean;
-    readonly asTransferMultiassetWithFee: {
-      readonly asset: XcmVersionedMultiAsset;
-      readonly fee: XcmVersionedMultiAsset;
-      readonly dest: XcmVersionedMultiLocation;
-      readonly destWeight: u64;
-    } & Struct;
-    readonly isTransferMulticurrencies: boolean;
-    readonly asTransferMulticurrencies: {
-      readonly currencies: Vec<ITuple<[AcalaPrimitivesCurrencyCurrencyId, u128]>>;
-      readonly feeItem: u32;
-      readonly dest: XcmVersionedMultiLocation;
-      readonly destWeight: u64;
-    } & Struct;
-    readonly isTransferMultiassets: boolean;
-    readonly asTransferMultiassets: {
-      readonly assets: XcmVersionedMultiAssets;
-      readonly feeItem: u32;
-      readonly dest: XcmVersionedMultiLocation;
-      readonly destWeight: u64;
-    } & Struct;
-    readonly type: 'Transfer' | 'TransferMultiasset' | 'TransferWithFee' | 'TransferMultiassetWithFee' | 'TransferMulticurrencies' | 'TransferMultiassets';
-  }
-
-  /** @name XcmVersionedMultiAsset (280) */
-  interface XcmVersionedMultiAsset extends Enum {
-    readonly isV0: boolean;
-    readonly asV0: XcmV0MultiAsset;
-    readonly isV1: boolean;
-    readonly asV1: XcmV1MultiAsset;
-    readonly type: 'V0' | 'V1';
-  }
-
-  /** @name OrmlXcmModuleCall (281) */
-  interface OrmlXcmModuleCall extends Enum {
-    readonly isSendAsSovereign: boolean;
-    readonly asSendAsSovereign: {
-      readonly dest: XcmVersionedMultiLocation;
-      readonly message: XcmVersionedXcm;
-    } & Struct;
-    readonly type: 'SendAsSovereign';
-  }
-
-  /** @name OrmlAuthorityModuleCall (282) */
-  interface OrmlAuthorityModuleCall extends Enum {
-    readonly isDispatchAs: boolean;
-    readonly asDispatchAs: {
-      readonly asOrigin: AcalaPrimitivesAuthoritysOriginId;
-      readonly call: Call;
-    } & Struct;
-    readonly isScheduleDispatch: boolean;
-    readonly asScheduleDispatch: {
-      readonly when: FrameSupportScheduleDispatchTime;
-      readonly priority: u8;
-      readonly withDelayedOrigin: bool;
-      readonly call: Call;
-    } & Struct;
-    readonly isFastTrackScheduledDispatch: boolean;
-    readonly asFastTrackScheduledDispatch: {
-      readonly initialOrigin: AcalaRuntimeOriginCaller;
-      readonly taskId: u32;
-      readonly when: FrameSupportScheduleDispatchTime;
-    } & Struct;
-    readonly isDelayScheduledDispatch: boolean;
-    readonly asDelayScheduledDispatch: {
-      readonly initialOrigin: AcalaRuntimeOriginCaller;
-      readonly taskId: u32;
-      readonly additionalDelay: u32;
-    } & Struct;
-    readonly isCancelScheduledDispatch: boolean;
-    readonly asCancelScheduledDispatch: {
-      readonly initialOrigin: AcalaRuntimeOriginCaller;
-      readonly taskId: u32;
-    } & Struct;
-    readonly isAuthorizeCall: boolean;
-    readonly asAuthorizeCall: {
-      readonly call: Call;
-      readonly caller: Option<AccountId32>;
-    } & Struct;
-    readonly isRemoveAuthorizedCall: boolean;
-    readonly asRemoveAuthorizedCall: {
-      readonly hash_: H256;
-    } & Struct;
-    readonly isTriggerCall: boolean;
-    readonly asTriggerCall: {
-      readonly hash_: H256;
-      readonly callWeightBound: Compact<u64>;
-    } & Struct;
-    readonly type: 'DispatchAs' | 'ScheduleDispatch' | 'FastTrackScheduledDispatch' | 'DelayScheduledDispatch' | 'CancelScheduledDispatch' | 'AuthorizeCall' | 'RemoveAuthorizedCall' | 'TriggerCall';
-  }
-
-  /** @name AcalaPrimitivesAuthoritysOriginId (283) */
-  interface AcalaPrimitivesAuthoritysOriginId extends Enum {
-    readonly isRoot: boolean;
-    readonly isTreasury: boolean;
-    readonly isHonzonTreasury: boolean;
-    readonly isHomaTreasury: boolean;
-    readonly isTreasuryReserve: boolean;
-    readonly type: 'Root' | 'Treasury' | 'HonzonTreasury' | 'HomaTreasury' | 'TreasuryReserve';
-  }
-
-  /** @name FrameSupportScheduleDispatchTime (284) */
-  interface FrameSupportScheduleDispatchTime extends Enum {
-    readonly isAt: boolean;
-    readonly asAt: u32;
-    readonly isAfter: boolean;
-    readonly asAfter: u32;
-    readonly type: 'At' | 'After';
-  }
-
-  /** @name PalletCollectiveCall (285) */
+  /** @name PalletCollectiveCall (257) */
   interface PalletCollectiveCall extends Enum {
     readonly isSetMembers: boolean;
     readonly asSetMembers: {
@@ -3898,7 +3612,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'SetMembers' | 'Execute' | 'Propose' | 'Vote' | 'Close' | 'DisapproveProposal';
   }
 
-  /** @name PalletMembershipCall (286) */
+  /** @name PalletMembershipCall (258) */
   interface PalletMembershipCall extends Enum {
     readonly isAddMember: boolean;
     readonly asAddMember: {
@@ -3929,7 +3643,112 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'AddMember' | 'RemoveMember' | 'SwapMember' | 'ResetMembers' | 'ChangeKey' | 'SetPrime' | 'ClearPrime';
   }
 
-  /** @name PalletDemocracyCall (293) */
+  /** @name OrmlAuthorityModuleCall (265) */
+  interface OrmlAuthorityModuleCall extends Enum {
+    readonly isDispatchAs: boolean;
+    readonly asDispatchAs: {
+      readonly asOrigin: AcalaPrimitivesAuthoritysOriginId;
+      readonly call: Call;
+    } & Struct;
+    readonly isScheduleDispatch: boolean;
+    readonly asScheduleDispatch: {
+      readonly when: FrameSupportScheduleDispatchTime;
+      readonly priority: u8;
+      readonly withDelayedOrigin: bool;
+      readonly call: Call;
+    } & Struct;
+    readonly isFastTrackScheduledDispatch: boolean;
+    readonly asFastTrackScheduledDispatch: {
+      readonly initialOrigin: MandalaRuntimeOriginCaller;
+      readonly taskId: u32;
+      readonly when: FrameSupportScheduleDispatchTime;
+    } & Struct;
+    readonly isDelayScheduledDispatch: boolean;
+    readonly asDelayScheduledDispatch: {
+      readonly initialOrigin: MandalaRuntimeOriginCaller;
+      readonly taskId: u32;
+      readonly additionalDelay: u32;
+    } & Struct;
+    readonly isCancelScheduledDispatch: boolean;
+    readonly asCancelScheduledDispatch: {
+      readonly initialOrigin: MandalaRuntimeOriginCaller;
+      readonly taskId: u32;
+    } & Struct;
+    readonly isAuthorizeCall: boolean;
+    readonly asAuthorizeCall: {
+      readonly call: Call;
+      readonly caller: Option<AccountId32>;
+    } & Struct;
+    readonly isRemoveAuthorizedCall: boolean;
+    readonly asRemoveAuthorizedCall: {
+      readonly hash_: H256;
+    } & Struct;
+    readonly isTriggerCall: boolean;
+    readonly asTriggerCall: {
+      readonly hash_: H256;
+      readonly callWeightBound: Compact<u64>;
+    } & Struct;
+    readonly type: 'DispatchAs' | 'ScheduleDispatch' | 'FastTrackScheduledDispatch' | 'DelayScheduledDispatch' | 'CancelScheduledDispatch' | 'AuthorizeCall' | 'RemoveAuthorizedCall' | 'TriggerCall';
+  }
+
+  /** @name AcalaPrimitivesAuthoritysOriginId (266) */
+  interface AcalaPrimitivesAuthoritysOriginId extends Enum {
+    readonly isRoot: boolean;
+    readonly isTreasury: boolean;
+    readonly isHonzonTreasury: boolean;
+    readonly isHomaTreasury: boolean;
+    readonly isTreasuryReserve: boolean;
+    readonly type: 'Root' | 'Treasury' | 'HonzonTreasury' | 'HomaTreasury' | 'TreasuryReserve';
+  }
+
+  /** @name FrameSupportScheduleDispatchTime (267) */
+  interface FrameSupportScheduleDispatchTime extends Enum {
+    readonly isAt: boolean;
+    readonly asAt: u32;
+    readonly isAfter: boolean;
+    readonly asAfter: u32;
+    readonly type: 'At' | 'After';
+  }
+
+  /** @name PalletElectionsPhragmenCall (268) */
+  interface PalletElectionsPhragmenCall extends Enum {
+    readonly isVote: boolean;
+    readonly asVote: {
+      readonly votes: Vec<AccountId32>;
+      readonly value: Compact<u128>;
+    } & Struct;
+    readonly isRemoveVoter: boolean;
+    readonly isSubmitCandidacy: boolean;
+    readonly asSubmitCandidacy: {
+      readonly candidateCount: Compact<u32>;
+    } & Struct;
+    readonly isRenounceCandidacy: boolean;
+    readonly asRenounceCandidacy: {
+      readonly renouncing: PalletElectionsPhragmenRenouncing;
+    } & Struct;
+    readonly isRemoveMember: boolean;
+    readonly asRemoveMember: {
+      readonly who: MultiAddress;
+      readonly hasReplacement: bool;
+    } & Struct;
+    readonly isCleanDefunctVoters: boolean;
+    readonly asCleanDefunctVoters: {
+      readonly numVoters: u32;
+      readonly numDefunct: u32;
+    } & Struct;
+    readonly type: 'Vote' | 'RemoveVoter' | 'SubmitCandidacy' | 'RenounceCandidacy' | 'RemoveMember' | 'CleanDefunctVoters';
+  }
+
+  /** @name PalletElectionsPhragmenRenouncing (269) */
+  interface PalletElectionsPhragmenRenouncing extends Enum {
+    readonly isMember: boolean;
+    readonly isRunnerUp: boolean;
+    readonly isCandidate: boolean;
+    readonly asCandidate: Compact<u32>;
+    readonly type: 'Member' | 'RunnerUp' | 'Candidate';
+  }
+
+  /** @name PalletDemocracyCall (270) */
   interface PalletDemocracyCall extends Enum {
     readonly isPropose: boolean;
     readonly asPropose: {
@@ -4039,7 +3858,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Propose' | 'Second' | 'Vote' | 'EmergencyCancel' | 'ExternalPropose' | 'ExternalProposeMajority' | 'ExternalProposeDefault' | 'FastTrack' | 'VetoExternal' | 'CancelReferendum' | 'CancelQueued' | 'Delegate' | 'Undelegate' | 'ClearPublicProposals' | 'NotePreimage' | 'NotePreimageOperational' | 'NoteImminentPreimage' | 'NoteImminentPreimageOperational' | 'ReapPreimage' | 'Unlock' | 'RemoveVote' | 'RemoveOtherVote' | 'EnactProposal' | 'Blacklist' | 'CancelProposal';
   }
 
-  /** @name PalletDemocracyConviction (294) */
+  /** @name PalletDemocracyConviction (271) */
   interface PalletDemocracyConviction extends Enum {
     readonly isNone: boolean;
     readonly isLocked1x: boolean;
@@ -4051,7 +3870,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'None' | 'Locked1x' | 'Locked2x' | 'Locked3x' | 'Locked4x' | 'Locked5x' | 'Locked6x';
   }
 
-  /** @name OrmlOracleModuleCall (295) */
+  /** @name OrmlOracleModuleCall (273) */
   interface OrmlOracleModuleCall extends Enum {
     readonly isFeedValues: boolean;
     readonly asFeedValues: {
@@ -4060,7 +3879,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'FeedValues';
   }
 
-  /** @name OrmlAuctionModuleCall (297) */
+  /** @name OrmlAuctionModuleCall (275) */
   interface OrmlAuctionModuleCall extends Enum {
     readonly isBid: boolean;
     readonly asBid: {
@@ -4070,10 +3889,10 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Bid';
   }
 
-  /** @name OrmlRewardsModuleCall (298) */
+  /** @name OrmlRewardsModuleCall (276) */
   type OrmlRewardsModuleCall = Null;
 
-  /** @name ModulePricesModuleCall (299) */
+  /** @name ModulePricesModuleCall (277) */
   interface ModulePricesModuleCall extends Enum {
     readonly isLockPrice: boolean;
     readonly asLockPrice: {
@@ -4086,7 +3905,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'LockPrice' | 'UnlockPrice';
   }
 
-  /** @name ModuleDexModuleCall (300) */
+  /** @name ModuleDexModuleCall (278) */
   interface ModuleDexModuleCall extends Enum {
     readonly isSwapWithExactSupply: boolean;
     readonly asSwapWithExactSupply: {
@@ -4180,7 +3999,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'SwapWithExactSupply' | 'SwapWithExactTarget' | 'AddLiquidity' | 'AddProvision' | 'ClaimDexShare' | 'RemoveLiquidity' | 'ListProvisioning' | 'UpdateProvisioningParameters' | 'EndProvisioning' | 'EnableTradingPair' | 'DisableTradingPair' | 'RefundProvision' | 'AbortProvisioning';
   }
 
-  /** @name ModuleDexOracleModuleCall (301) */
+  /** @name ModuleDexOracleModuleCall (279) */
   interface ModuleDexOracleModuleCall extends Enum {
     readonly isEnableAveragePrice: boolean;
     readonly asEnableAveragePrice: {
@@ -4202,7 +4021,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'EnableAveragePrice' | 'DisableAveragePrice' | 'UpdateAveragePriceInterval';
   }
 
-  /** @name ModuleAggregatedDexModuleCall (302) */
+  /** @name ModuleAggregatedDexModuleCall (280) */
   interface ModuleAggregatedDexModuleCall extends Enum {
     readonly isSwapWithExactSupply: boolean;
     readonly asSwapWithExactSupply: {
@@ -4223,7 +4042,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'SwapWithExactSupply' | 'SwapWithExactTarget' | 'UpdateAggregatedSwapPaths';
   }
 
-  /** @name ModuleAuctionManagerModuleCall (307) */
+  /** @name ModuleAuctionManagerModuleCall (285) */
   interface ModuleAuctionManagerModuleCall extends Enum {
     readonly isCancel: boolean;
     readonly asCancel: {
@@ -4232,10 +4051,10 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Cancel';
   }
 
-  /** @name ModuleLoansModuleCall (308) */
+  /** @name ModuleLoansModuleCall (286) */
   type ModuleLoansModuleCall = Null;
 
-  /** @name ModuleHonzonModuleCall (309) */
+  /** @name ModuleHonzonModuleCall (287) */
   interface ModuleHonzonModuleCall extends Enum {
     readonly isAdjustLoan: boolean;
     readonly asAdjustLoan: {
@@ -4291,7 +4110,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'AdjustLoan' | 'CloseLoanHasDebitByDex' | 'TransferLoanFrom' | 'Authorize' | 'Unauthorize' | 'UnauthorizeAll' | 'ExpandPositionCollateral' | 'ShrinkPositionDebit' | 'AdjustLoanByDebitValue' | 'TransferDebit';
   }
 
-  /** @name ModuleCdpTreasuryModuleCall (310) */
+  /** @name ModuleCdpTreasuryModuleCall (288) */
   interface ModuleCdpTreasuryModuleCall extends Enum {
     readonly isExtractSurplusToTreasury: boolean;
     readonly asExtractSurplusToTreasury: {
@@ -4317,7 +4136,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'ExtractSurplusToTreasury' | 'AuctionCollateral' | 'ExchangeCollateralToStable' | 'SetExpectedCollateralAuctionSize';
   }
 
-  /** @name ModuleSupportDexSwapLimit (311) */
+  /** @name ModuleSupportDexSwapLimit (289) */
   interface ModuleSupportDexSwapLimit extends Enum {
     readonly isExactSupply: boolean;
     readonly asExactSupply: ITuple<[u128, u128]>;
@@ -4326,7 +4145,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'ExactSupply' | 'ExactTarget';
   }
 
-  /** @name ModuleCdpEngineModuleCall (312) */
+  /** @name ModuleCdpEngineModuleCall (290) */
   interface ModuleCdpEngineModuleCall extends Enum {
     readonly isLiquidate: boolean;
     readonly asLiquidate: {
@@ -4358,7 +4177,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Liquidate' | 'Settle' | 'SetCollateralParams' | 'RegisterLiquidationContract' | 'DeregisterLiquidationContract';
   }
 
-  /** @name OrmlTraitsChangeOption (313) */
+  /** @name OrmlTraitsChangeOption (291) */
   interface OrmlTraitsChangeOption extends Enum {
     readonly isNoChange: boolean;
     readonly isNewValue: boolean;
@@ -4366,7 +4185,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'NoChange' | 'NewValue';
   }
 
-  /** @name OrmlTraitsChangeU128 (314) */
+  /** @name OrmlTraitsChangeU128 (292) */
   interface OrmlTraitsChangeU128 extends Enum {
     readonly isNoChange: boolean;
     readonly isNewValue: boolean;
@@ -4374,7 +4193,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'NoChange' | 'NewValue';
   }
 
-  /** @name ModuleEmergencyShutdownModuleCall (315) */
+  /** @name ModuleEmergencyShutdownModuleCall (293) */
   interface ModuleEmergencyShutdownModuleCall extends Enum {
     readonly isEmergencyShutdown: boolean;
     readonly isOpenCollateralRefund: boolean;
@@ -4385,7 +4204,30 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'EmergencyShutdown' | 'OpenCollateralRefund' | 'RefundCollaterals';
   }
 
-  /** @name ModuleHomaModuleCall (316) */
+  /** @name ModuleNomineesElectionModuleCall (294) */
+  interface ModuleNomineesElectionModuleCall extends Enum {
+    readonly isBond: boolean;
+    readonly asBond: {
+      readonly amount: Compact<u128>;
+    } & Struct;
+    readonly isUnbond: boolean;
+    readonly asUnbond: {
+      readonly amount: Compact<u128>;
+    } & Struct;
+    readonly isRebond: boolean;
+    readonly asRebond: {
+      readonly amount: Compact<u128>;
+    } & Struct;
+    readonly isWithdrawUnbonded: boolean;
+    readonly isNominate: boolean;
+    readonly asNominate: {
+      readonly targets: Vec<AccountId32>;
+    } & Struct;
+    readonly isChill: boolean;
+    readonly type: 'Bond' | 'Unbond' | 'Rebond' | 'WithdrawUnbonded' | 'Nominate' | 'Chill';
+  }
+
+  /** @name ModuleHomaModuleCall (295) */
   interface ModuleHomaModuleCall extends Enum {
     readonly isMint: boolean;
     readonly asMint: {
@@ -4435,7 +4277,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Mint' | 'RequestRedeem' | 'FastMatchRedeems' | 'ClaimRedemption' | 'UpdateHomaParams' | 'UpdateBumpEraParams' | 'ResetLedgers' | 'ResetCurrentEra' | 'ForceBumpCurrentEra' | 'FastMatchRedeemsCompletely';
   }
 
-  /** @name ModuleXcmInterfaceModuleCall (321) */
+  /** @name ModuleXcmInterfaceModuleCall (300) */
   interface ModuleXcmInterfaceModuleCall extends Enum {
     readonly isUpdateXcmDestWeightAndFee: boolean;
     readonly asUpdateXcmDestWeightAndFee: {
@@ -4444,7 +4286,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'UpdateXcmDestWeightAndFee';
   }
 
-  /** @name ModuleIncentivesModuleCall (324) */
+  /** @name ModuleIncentivesModuleCall (303) */
   interface ModuleIncentivesModuleCall extends Enum {
     readonly isDepositDexShare: boolean;
     readonly asDepositDexShare: {
@@ -4471,7 +4313,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'DepositDexShare' | 'WithdrawDexShare' | 'ClaimRewards' | 'UpdateIncentiveRewards' | 'UpdateClaimRewardDeductionRates';
   }
 
-  /** @name ModuleNftModuleCall (329) */
+  /** @name ModuleNftModuleCall (308) */
   interface ModuleNftModuleCall extends Enum {
     readonly isCreateClass: boolean;
     readonly asCreateClass: {
@@ -4514,7 +4356,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'CreateClass' | 'Mint' | 'Transfer' | 'Burn' | 'BurnWithRemark' | 'DestroyClass' | 'UpdateClassProperties';
   }
 
-  /** @name AcalaPrimitivesNftClassProperty (331) */
+  /** @name AcalaPrimitivesNftClassProperty (310) */
   interface AcalaPrimitivesNftClassProperty extends Enum {
     readonly isTransferable: boolean;
     readonly isBurnable: boolean;
@@ -4523,7 +4365,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Transferable' | 'Burnable' | 'Mintable' | 'ClassPropertiesMutable';
   }
 
-  /** @name ModuleAssetRegistryModuleCall (334) */
+  /** @name ModuleAssetRegistryModuleCall (313) */
   interface ModuleAssetRegistryModuleCall extends Enum {
     readonly isRegisterForeignAsset: boolean;
     readonly asRegisterForeignAsset: {
@@ -4568,7 +4410,509 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'RegisterForeignAsset' | 'UpdateForeignAsset' | 'RegisterStableAsset' | 'UpdateStableAsset' | 'RegisterErc20Asset' | 'UpdateErc20Asset' | 'RegisterNativeAsset' | 'UpdateNativeAsset';
   }
 
-  /** @name ModuleEvmModuleCall (335) */
+  /** @name EcosystemRenvmBridgeModuleCall (314) */
+  interface EcosystemRenvmBridgeModuleCall extends Enum {
+    readonly isMint: boolean;
+    readonly asMint: {
+      readonly who: AccountId32;
+      readonly pHash: U8aFixed;
+      readonly amount: Compact<u128>;
+      readonly nHash: U8aFixed;
+      readonly sig: SpCoreEcdsaSignature;
+    } & Struct;
+    readonly isBurn: boolean;
+    readonly asBurn: {
+      readonly to: Bytes;
+      readonly amount: Compact<u128>;
+    } & Struct;
+    readonly isRotateKey: boolean;
+    readonly asRotateKey: {
+      readonly newKey: U8aFixed;
+      readonly sig: SpCoreEcdsaSignature;
+    } & Struct;
+    readonly type: 'Mint' | 'Burn' | 'RotateKey';
+  }
+
+  /** @name EcosystemStarportModuleCall (315) */
+  interface EcosystemStarportModuleCall extends Enum {
+    readonly isLock: boolean;
+    readonly asLock: {
+      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
+      readonly lockedAmount: u128;
+    } & Struct;
+    readonly isLockTo: boolean;
+    readonly asLockTo: {
+      readonly to: AccountId32;
+      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
+      readonly lockedAmount: u128;
+    } & Struct;
+    readonly isInvoke: boolean;
+    readonly asInvoke: {
+      readonly notice: EcosystemStarportModuleGatewayNotice;
+      readonly signatures: Vec<AccountId32>;
+    } & Struct;
+    readonly type: 'Lock' | 'LockTo' | 'Invoke';
+  }
+
+  /** @name EcosystemStarportModuleGatewayNotice (316) */
+  interface EcosystemStarportModuleGatewayNotice extends Struct {
+    readonly id: u64;
+    readonly payload: EcosystemStarportModuleGatewayNoticePayload;
+  }
+
+  /** @name EcosystemStarportModuleGatewayNoticePayload (317) */
+  interface EcosystemStarportModuleGatewayNoticePayload extends Enum {
+    readonly isSetSupplyCap: boolean;
+    readonly asSetSupplyCap: ITuple<[AcalaPrimitivesCurrencyCurrencyId, u128]>;
+    readonly isChangeAuthorities: boolean;
+    readonly asChangeAuthorities: Vec<AccountId32>;
+    readonly isUnlock: boolean;
+    readonly asUnlock: {
+      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
+      readonly amount: u128;
+      readonly who: AccountId32;
+    } & Struct;
+    readonly isSetFutureYield: boolean;
+    readonly asSetFutureYield: {
+      readonly nextCashYield: u128;
+      readonly nextCashYieldIndex: u128;
+      readonly nextCashYieldStart: u64;
+    } & Struct;
+    readonly type: 'SetSupplyCap' | 'ChangeAuthorities' | 'Unlock' | 'SetFutureYield';
+  }
+
+  /** @name CumulusPalletXcmpQueueCall (318) */
+  interface CumulusPalletXcmpQueueCall extends Enum {
+    readonly isServiceOverweight: boolean;
+    readonly asServiceOverweight: {
+      readonly index: u64;
+      readonly weightLimit: u64;
+    } & Struct;
+    readonly isSuspendXcmExecution: boolean;
+    readonly isResumeXcmExecution: boolean;
+    readonly isUpdateSuspendThreshold: boolean;
+    readonly asUpdateSuspendThreshold: {
+      readonly new_: u32;
+    } & Struct;
+    readonly isUpdateDropThreshold: boolean;
+    readonly asUpdateDropThreshold: {
+      readonly new_: u32;
+    } & Struct;
+    readonly isUpdateResumeThreshold: boolean;
+    readonly asUpdateResumeThreshold: {
+      readonly new_: u32;
+    } & Struct;
+    readonly isUpdateThresholdWeight: boolean;
+    readonly asUpdateThresholdWeight: {
+      readonly new_: u64;
+    } & Struct;
+    readonly isUpdateWeightRestrictDecay: boolean;
+    readonly asUpdateWeightRestrictDecay: {
+      readonly new_: u64;
+    } & Struct;
+    readonly isUpdateXcmpMaxIndividualWeight: boolean;
+    readonly asUpdateXcmpMaxIndividualWeight: {
+      readonly new_: u64;
+    } & Struct;
+    readonly type: 'ServiceOverweight' | 'SuspendXcmExecution' | 'ResumeXcmExecution' | 'UpdateSuspendThreshold' | 'UpdateDropThreshold' | 'UpdateResumeThreshold' | 'UpdateThresholdWeight' | 'UpdateWeightRestrictDecay' | 'UpdateXcmpMaxIndividualWeight';
+  }
+
+  /** @name PalletXcmCall (319) */
+  interface PalletXcmCall extends Enum {
+    readonly isSend: boolean;
+    readonly asSend: {
+      readonly dest: XcmVersionedMultiLocation;
+      readonly message: XcmVersionedXcm;
+    } & Struct;
+    readonly isTeleportAssets: boolean;
+    readonly asTeleportAssets: {
+      readonly dest: XcmVersionedMultiLocation;
+      readonly beneficiary: XcmVersionedMultiLocation;
+      readonly assets: XcmVersionedMultiAssets;
+      readonly feeAssetItem: u32;
+    } & Struct;
+    readonly isReserveTransferAssets: boolean;
+    readonly asReserveTransferAssets: {
+      readonly dest: XcmVersionedMultiLocation;
+      readonly beneficiary: XcmVersionedMultiLocation;
+      readonly assets: XcmVersionedMultiAssets;
+      readonly feeAssetItem: u32;
+    } & Struct;
+    readonly isExecute: boolean;
+    readonly asExecute: {
+      readonly message: XcmVersionedXcm;
+      readonly maxWeight: u64;
+    } & Struct;
+    readonly isForceXcmVersion: boolean;
+    readonly asForceXcmVersion: {
+      readonly location: XcmV1MultiLocation;
+      readonly xcmVersion: u32;
+    } & Struct;
+    readonly isForceDefaultXcmVersion: boolean;
+    readonly asForceDefaultXcmVersion: {
+      readonly maybeXcmVersion: Option<u32>;
+    } & Struct;
+    readonly isForceSubscribeVersionNotify: boolean;
+    readonly asForceSubscribeVersionNotify: {
+      readonly location: XcmVersionedMultiLocation;
+    } & Struct;
+    readonly isForceUnsubscribeVersionNotify: boolean;
+    readonly asForceUnsubscribeVersionNotify: {
+      readonly location: XcmVersionedMultiLocation;
+    } & Struct;
+    readonly isLimitedReserveTransferAssets: boolean;
+    readonly asLimitedReserveTransferAssets: {
+      readonly dest: XcmVersionedMultiLocation;
+      readonly beneficiary: XcmVersionedMultiLocation;
+      readonly assets: XcmVersionedMultiAssets;
+      readonly feeAssetItem: u32;
+      readonly weightLimit: XcmV2WeightLimit;
+    } & Struct;
+    readonly isLimitedTeleportAssets: boolean;
+    readonly asLimitedTeleportAssets: {
+      readonly dest: XcmVersionedMultiLocation;
+      readonly beneficiary: XcmVersionedMultiLocation;
+      readonly assets: XcmVersionedMultiAssets;
+      readonly feeAssetItem: u32;
+      readonly weightLimit: XcmV2WeightLimit;
+    } & Struct;
+    readonly type: 'Send' | 'TeleportAssets' | 'ReserveTransferAssets' | 'Execute' | 'ForceXcmVersion' | 'ForceDefaultXcmVersion' | 'ForceSubscribeVersionNotify' | 'ForceUnsubscribeVersionNotify' | 'LimitedReserveTransferAssets' | 'LimitedTeleportAssets';
+  }
+
+  /** @name XcmVersionedXcm (320) */
+  interface XcmVersionedXcm extends Enum {
+    readonly isV0: boolean;
+    readonly asV0: XcmV0Xcm;
+    readonly isV1: boolean;
+    readonly asV1: XcmV1Xcm;
+    readonly isV2: boolean;
+    readonly asV2: XcmV2Xcm;
+    readonly type: 'V0' | 'V1' | 'V2';
+  }
+
+  /** @name XcmV0Xcm (321) */
+  interface XcmV0Xcm extends Enum {
+    readonly isWithdrawAsset: boolean;
+    readonly asWithdrawAsset: {
+      readonly assets: Vec<XcmV0MultiAsset>;
+      readonly effects: Vec<XcmV0Order>;
+    } & Struct;
+    readonly isReserveAssetDeposit: boolean;
+    readonly asReserveAssetDeposit: {
+      readonly assets: Vec<XcmV0MultiAsset>;
+      readonly effects: Vec<XcmV0Order>;
+    } & Struct;
+    readonly isTeleportAsset: boolean;
+    readonly asTeleportAsset: {
+      readonly assets: Vec<XcmV0MultiAsset>;
+      readonly effects: Vec<XcmV0Order>;
+    } & Struct;
+    readonly isQueryResponse: boolean;
+    readonly asQueryResponse: {
+      readonly queryId: Compact<u64>;
+      readonly response: XcmV0Response;
+    } & Struct;
+    readonly isTransferAsset: boolean;
+    readonly asTransferAsset: {
+      readonly assets: Vec<XcmV0MultiAsset>;
+      readonly dest: XcmV0MultiLocation;
+    } & Struct;
+    readonly isTransferReserveAsset: boolean;
+    readonly asTransferReserveAsset: {
+      readonly assets: Vec<XcmV0MultiAsset>;
+      readonly dest: XcmV0MultiLocation;
+      readonly effects: Vec<XcmV0Order>;
+    } & Struct;
+    readonly isTransact: boolean;
+    readonly asTransact: {
+      readonly originType: XcmV0OriginKind;
+      readonly requireWeightAtMost: u64;
+      readonly call: XcmDoubleEncoded;
+    } & Struct;
+    readonly isHrmpNewChannelOpenRequest: boolean;
+    readonly asHrmpNewChannelOpenRequest: {
+      readonly sender: Compact<u32>;
+      readonly maxMessageSize: Compact<u32>;
+      readonly maxCapacity: Compact<u32>;
+    } & Struct;
+    readonly isHrmpChannelAccepted: boolean;
+    readonly asHrmpChannelAccepted: {
+      readonly recipient: Compact<u32>;
+    } & Struct;
+    readonly isHrmpChannelClosing: boolean;
+    readonly asHrmpChannelClosing: {
+      readonly initiator: Compact<u32>;
+      readonly sender: Compact<u32>;
+      readonly recipient: Compact<u32>;
+    } & Struct;
+    readonly isRelayedFrom: boolean;
+    readonly asRelayedFrom: {
+      readonly who: XcmV0MultiLocation;
+      readonly message: XcmV0Xcm;
+    } & Struct;
+    readonly type: 'WithdrawAsset' | 'ReserveAssetDeposit' | 'TeleportAsset' | 'QueryResponse' | 'TransferAsset' | 'TransferReserveAsset' | 'Transact' | 'HrmpNewChannelOpenRequest' | 'HrmpChannelAccepted' | 'HrmpChannelClosing' | 'RelayedFrom';
+  }
+
+  /** @name XcmV0Order (323) */
+  interface XcmV0Order extends Enum {
+    readonly isNull: boolean;
+    readonly isDepositAsset: boolean;
+    readonly asDepositAsset: {
+      readonly assets: Vec<XcmV0MultiAsset>;
+      readonly dest: XcmV0MultiLocation;
+    } & Struct;
+    readonly isDepositReserveAsset: boolean;
+    readonly asDepositReserveAsset: {
+      readonly assets: Vec<XcmV0MultiAsset>;
+      readonly dest: XcmV0MultiLocation;
+      readonly effects: Vec<XcmV0Order>;
+    } & Struct;
+    readonly isExchangeAsset: boolean;
+    readonly asExchangeAsset: {
+      readonly give: Vec<XcmV0MultiAsset>;
+      readonly receive: Vec<XcmV0MultiAsset>;
+    } & Struct;
+    readonly isInitiateReserveWithdraw: boolean;
+    readonly asInitiateReserveWithdraw: {
+      readonly assets: Vec<XcmV0MultiAsset>;
+      readonly reserve: XcmV0MultiLocation;
+      readonly effects: Vec<XcmV0Order>;
+    } & Struct;
+    readonly isInitiateTeleport: boolean;
+    readonly asInitiateTeleport: {
+      readonly assets: Vec<XcmV0MultiAsset>;
+      readonly dest: XcmV0MultiLocation;
+      readonly effects: Vec<XcmV0Order>;
+    } & Struct;
+    readonly isQueryHolding: boolean;
+    readonly asQueryHolding: {
+      readonly queryId: Compact<u64>;
+      readonly dest: XcmV0MultiLocation;
+      readonly assets: Vec<XcmV0MultiAsset>;
+    } & Struct;
+    readonly isBuyExecution: boolean;
+    readonly asBuyExecution: {
+      readonly fees: XcmV0MultiAsset;
+      readonly weight: u64;
+      readonly debt: u64;
+      readonly haltOnError: bool;
+      readonly xcm: Vec<XcmV0Xcm>;
+    } & Struct;
+    readonly type: 'Null' | 'DepositAsset' | 'DepositReserveAsset' | 'ExchangeAsset' | 'InitiateReserveWithdraw' | 'InitiateTeleport' | 'QueryHolding' | 'BuyExecution';
+  }
+
+  /** @name XcmV0Response (325) */
+  interface XcmV0Response extends Enum {
+    readonly isAssets: boolean;
+    readonly asAssets: Vec<XcmV0MultiAsset>;
+    readonly type: 'Assets';
+  }
+
+  /** @name XcmV1Xcm (326) */
+  interface XcmV1Xcm extends Enum {
+    readonly isWithdrawAsset: boolean;
+    readonly asWithdrawAsset: {
+      readonly assets: XcmV1MultiassetMultiAssets;
+      readonly effects: Vec<XcmV1Order>;
+    } & Struct;
+    readonly isReserveAssetDeposited: boolean;
+    readonly asReserveAssetDeposited: {
+      readonly assets: XcmV1MultiassetMultiAssets;
+      readonly effects: Vec<XcmV1Order>;
+    } & Struct;
+    readonly isReceiveTeleportedAsset: boolean;
+    readonly asReceiveTeleportedAsset: {
+      readonly assets: XcmV1MultiassetMultiAssets;
+      readonly effects: Vec<XcmV1Order>;
+    } & Struct;
+    readonly isQueryResponse: boolean;
+    readonly asQueryResponse: {
+      readonly queryId: Compact<u64>;
+      readonly response: XcmV1Response;
+    } & Struct;
+    readonly isTransferAsset: boolean;
+    readonly asTransferAsset: {
+      readonly assets: XcmV1MultiassetMultiAssets;
+      readonly beneficiary: XcmV1MultiLocation;
+    } & Struct;
+    readonly isTransferReserveAsset: boolean;
+    readonly asTransferReserveAsset: {
+      readonly assets: XcmV1MultiassetMultiAssets;
+      readonly dest: XcmV1MultiLocation;
+      readonly effects: Vec<XcmV1Order>;
+    } & Struct;
+    readonly isTransact: boolean;
+    readonly asTransact: {
+      readonly originType: XcmV0OriginKind;
+      readonly requireWeightAtMost: u64;
+      readonly call: XcmDoubleEncoded;
+    } & Struct;
+    readonly isHrmpNewChannelOpenRequest: boolean;
+    readonly asHrmpNewChannelOpenRequest: {
+      readonly sender: Compact<u32>;
+      readonly maxMessageSize: Compact<u32>;
+      readonly maxCapacity: Compact<u32>;
+    } & Struct;
+    readonly isHrmpChannelAccepted: boolean;
+    readonly asHrmpChannelAccepted: {
+      readonly recipient: Compact<u32>;
+    } & Struct;
+    readonly isHrmpChannelClosing: boolean;
+    readonly asHrmpChannelClosing: {
+      readonly initiator: Compact<u32>;
+      readonly sender: Compact<u32>;
+      readonly recipient: Compact<u32>;
+    } & Struct;
+    readonly isRelayedFrom: boolean;
+    readonly asRelayedFrom: {
+      readonly who: XcmV1MultilocationJunctions;
+      readonly message: XcmV1Xcm;
+    } & Struct;
+    readonly isSubscribeVersion: boolean;
+    readonly asSubscribeVersion: {
+      readonly queryId: Compact<u64>;
+      readonly maxResponseWeight: Compact<u64>;
+    } & Struct;
+    readonly isUnsubscribeVersion: boolean;
+    readonly type: 'WithdrawAsset' | 'ReserveAssetDeposited' | 'ReceiveTeleportedAsset' | 'QueryResponse' | 'TransferAsset' | 'TransferReserveAsset' | 'Transact' | 'HrmpNewChannelOpenRequest' | 'HrmpChannelAccepted' | 'HrmpChannelClosing' | 'RelayedFrom' | 'SubscribeVersion' | 'UnsubscribeVersion';
+  }
+
+  /** @name XcmV1Order (328) */
+  interface XcmV1Order extends Enum {
+    readonly isNoop: boolean;
+    readonly isDepositAsset: boolean;
+    readonly asDepositAsset: {
+      readonly assets: XcmV1MultiassetMultiAssetFilter;
+      readonly maxAssets: u32;
+      readonly beneficiary: XcmV1MultiLocation;
+    } & Struct;
+    readonly isDepositReserveAsset: boolean;
+    readonly asDepositReserveAsset: {
+      readonly assets: XcmV1MultiassetMultiAssetFilter;
+      readonly maxAssets: u32;
+      readonly dest: XcmV1MultiLocation;
+      readonly effects: Vec<XcmV1Order>;
+    } & Struct;
+    readonly isExchangeAsset: boolean;
+    readonly asExchangeAsset: {
+      readonly give: XcmV1MultiassetMultiAssetFilter;
+      readonly receive: XcmV1MultiassetMultiAssets;
+    } & Struct;
+    readonly isInitiateReserveWithdraw: boolean;
+    readonly asInitiateReserveWithdraw: {
+      readonly assets: XcmV1MultiassetMultiAssetFilter;
+      readonly reserve: XcmV1MultiLocation;
+      readonly effects: Vec<XcmV1Order>;
+    } & Struct;
+    readonly isInitiateTeleport: boolean;
+    readonly asInitiateTeleport: {
+      readonly assets: XcmV1MultiassetMultiAssetFilter;
+      readonly dest: XcmV1MultiLocation;
+      readonly effects: Vec<XcmV1Order>;
+    } & Struct;
+    readonly isQueryHolding: boolean;
+    readonly asQueryHolding: {
+      readonly queryId: Compact<u64>;
+      readonly dest: XcmV1MultiLocation;
+      readonly assets: XcmV1MultiassetMultiAssetFilter;
+    } & Struct;
+    readonly isBuyExecution: boolean;
+    readonly asBuyExecution: {
+      readonly fees: XcmV1MultiAsset;
+      readonly weight: u64;
+      readonly debt: u64;
+      readonly haltOnError: bool;
+      readonly instructions: Vec<XcmV1Xcm>;
+    } & Struct;
+    readonly type: 'Noop' | 'DepositAsset' | 'DepositReserveAsset' | 'ExchangeAsset' | 'InitiateReserveWithdraw' | 'InitiateTeleport' | 'QueryHolding' | 'BuyExecution';
+  }
+
+  /** @name XcmV1Response (330) */
+  interface XcmV1Response extends Enum {
+    readonly isAssets: boolean;
+    readonly asAssets: XcmV1MultiassetMultiAssets;
+    readonly isVersion: boolean;
+    readonly asVersion: u32;
+    readonly type: 'Assets' | 'Version';
+  }
+
+  /** @name CumulusPalletDmpQueueCall (344) */
+  interface CumulusPalletDmpQueueCall extends Enum {
+    readonly isServiceOverweight: boolean;
+    readonly asServiceOverweight: {
+      readonly index: u64;
+      readonly weightLimit: u64;
+    } & Struct;
+    readonly type: 'ServiceOverweight';
+  }
+
+  /** @name OrmlXtokensModuleCall (345) */
+  interface OrmlXtokensModuleCall extends Enum {
+    readonly isTransfer: boolean;
+    readonly asTransfer: {
+      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
+      readonly amount: u128;
+      readonly dest: XcmVersionedMultiLocation;
+      readonly destWeight: u64;
+    } & Struct;
+    readonly isTransferMultiasset: boolean;
+    readonly asTransferMultiasset: {
+      readonly asset: XcmVersionedMultiAsset;
+      readonly dest: XcmVersionedMultiLocation;
+      readonly destWeight: u64;
+    } & Struct;
+    readonly isTransferWithFee: boolean;
+    readonly asTransferWithFee: {
+      readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
+      readonly amount: u128;
+      readonly fee: u128;
+      readonly dest: XcmVersionedMultiLocation;
+      readonly destWeight: u64;
+    } & Struct;
+    readonly isTransferMultiassetWithFee: boolean;
+    readonly asTransferMultiassetWithFee: {
+      readonly asset: XcmVersionedMultiAsset;
+      readonly fee: XcmVersionedMultiAsset;
+      readonly dest: XcmVersionedMultiLocation;
+      readonly destWeight: u64;
+    } & Struct;
+    readonly isTransferMulticurrencies: boolean;
+    readonly asTransferMulticurrencies: {
+      readonly currencies: Vec<ITuple<[AcalaPrimitivesCurrencyCurrencyId, u128]>>;
+      readonly feeItem: u32;
+      readonly dest: XcmVersionedMultiLocation;
+      readonly destWeight: u64;
+    } & Struct;
+    readonly isTransferMultiassets: boolean;
+    readonly asTransferMultiassets: {
+      readonly assets: XcmVersionedMultiAssets;
+      readonly feeItem: u32;
+      readonly dest: XcmVersionedMultiLocation;
+      readonly destWeight: u64;
+    } & Struct;
+    readonly type: 'Transfer' | 'TransferMultiasset' | 'TransferWithFee' | 'TransferMultiassetWithFee' | 'TransferMulticurrencies' | 'TransferMultiassets';
+  }
+
+  /** @name XcmVersionedMultiAsset (346) */
+  interface XcmVersionedMultiAsset extends Enum {
+    readonly isV0: boolean;
+    readonly asV0: XcmV0MultiAsset;
+    readonly isV1: boolean;
+    readonly asV1: XcmV1MultiAsset;
+    readonly type: 'V0' | 'V1';
+  }
+
+  /** @name OrmlXcmModuleCall (347) */
+  interface OrmlXcmModuleCall extends Enum {
+    readonly isSendAsSovereign: boolean;
+    readonly asSendAsSovereign: {
+      readonly dest: XcmVersionedMultiLocation;
+      readonly message: XcmVersionedXcm;
+    } & Struct;
+    readonly type: 'SendAsSovereign';
+  }
+
+  /** @name ModuleEvmModuleCall (348) */
   interface ModuleEvmModuleCall extends Enum {
     readonly isEthCall: boolean;
     readonly asEthCall: {
@@ -4669,7 +5013,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'EthCall' | 'Call' | 'ScheduledCall' | 'Create' | 'Create2' | 'CreateNftContract' | 'CreatePredeployContract' | 'TransferMaintainer' | 'PublishContract' | 'PublishFree' | 'EnableContractDevelopment' | 'DisableContractDevelopment' | 'SetCode' | 'Selfdestruct' | 'StrictCall';
   }
 
-  /** @name EthereumTransactionTransactionAction (336) */
+  /** @name EthereumTransactionTransactionAction (349) */
   interface EthereumTransactionTransactionAction extends Enum {
     readonly isCall: boolean;
     readonly asCall: H160;
@@ -4677,13 +5021,13 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Call' | 'Create';
   }
 
-  /** @name EthereumTransactionAccessListItem (338) */
+  /** @name EthereumTransactionAccessListItem (351) */
   interface EthereumTransactionAccessListItem extends Struct {
     readonly address: H160;
     readonly storageKeys: Vec<H256>;
   }
 
-  /** @name ModuleEvmAccountsModuleCall (339) */
+  /** @name ModuleEvmAccountsModuleCall (352) */
   interface ModuleEvmAccountsModuleCall extends Enum {
     readonly isClaimAccount: boolean;
     readonly asClaimAccount: {
@@ -4694,7 +5038,84 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'ClaimAccount' | 'ClaimDefaultAccount';
   }
 
-  /** @name NutsfinanceStableAssetCall (340) */
+  /** @name PalletAuthorshipCall (353) */
+  interface PalletAuthorshipCall extends Enum {
+    readonly isSetUncles: boolean;
+    readonly asSetUncles: {
+      readonly newUncles: Vec<SpRuntimeHeader>;
+    } & Struct;
+    readonly type: 'SetUncles';
+  }
+
+  /** @name SpRuntimeHeader (355) */
+  interface SpRuntimeHeader extends Struct {
+    readonly parentHash: H256;
+    readonly number: Compact<u32>;
+    readonly stateRoot: H256;
+    readonly extrinsicsRoot: H256;
+    readonly digest: SpRuntimeDigest;
+  }
+
+  /** @name SpRuntimeBlakeTwo256 (356) */
+  type SpRuntimeBlakeTwo256 = Null;
+
+  /** @name ModuleCollatorSelectionCall (357) */
+  interface ModuleCollatorSelectionCall extends Enum {
+    readonly isSetInvulnerables: boolean;
+    readonly asSetInvulnerables: {
+      readonly new_: Vec<AccountId32>;
+    } & Struct;
+    readonly isSetDesiredCandidates: boolean;
+    readonly asSetDesiredCandidates: {
+      readonly max: Compact<u32>;
+    } & Struct;
+    readonly isSetCandidacyBond: boolean;
+    readonly asSetCandidacyBond: {
+      readonly bond: Compact<u128>;
+    } & Struct;
+    readonly isRegisterAsCandidate: boolean;
+    readonly isRegisterCandidate: boolean;
+    readonly asRegisterCandidate: {
+      readonly newCandidate: AccountId32;
+    } & Struct;
+    readonly isLeaveIntent: boolean;
+    readonly isWithdrawBond: boolean;
+    readonly type: 'SetInvulnerables' | 'SetDesiredCandidates' | 'SetCandidacyBond' | 'RegisterAsCandidate' | 'RegisterCandidate' | 'LeaveIntent' | 'WithdrawBond';
+  }
+
+  /** @name PalletSessionCall (358) */
+  interface PalletSessionCall extends Enum {
+    readonly isSetKeys: boolean;
+    readonly asSetKeys: {
+      readonly keys_: MandalaRuntimeSessionKeys;
+      readonly proof: Bytes;
+    } & Struct;
+    readonly isPurgeKeys: boolean;
+    readonly type: 'SetKeys' | 'PurgeKeys';
+  }
+
+  /** @name MandalaRuntimeSessionKeys (359) */
+  interface MandalaRuntimeSessionKeys extends Struct {
+    readonly aura: SpConsensusAuraSr25519AppSr25519Public;
+  }
+
+  /** @name SpConsensusAuraSr25519AppSr25519Public (360) */
+  interface SpConsensusAuraSr25519AppSr25519Public extends SpCoreSr25519Public {}
+
+  /** @name SpCoreSr25519Public (361) */
+  interface SpCoreSr25519Public extends U8aFixed {}
+
+  /** @name ModuleSessionManagerModuleCall (362) */
+  interface ModuleSessionManagerModuleCall extends Enum {
+    readonly isScheduleSessionDuration: boolean;
+    readonly asScheduleSessionDuration: {
+      readonly startSession: Compact<u32>;
+      readonly duration: Compact<u32>;
+    } & Struct;
+    readonly type: 'ScheduleSessionDuration';
+  }
+
+  /** @name NutsfinanceStableAssetCall (363) */
   interface NutsfinanceStableAssetCall extends Enum {
     readonly isCreatePool: boolean;
     readonly asCreatePool: {
@@ -4766,7 +5187,73 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'CreatePool' | 'Mint' | 'Swap' | 'RedeemProportion' | 'RedeemSingle' | 'RedeemMulti' | 'ModifyA' | 'ModifyFees' | 'ModifyRecipients';
   }
 
-  /** @name CumulusPalletParachainSystemCall (341) */
+  /** @name OrmlPaymentsCall (364) */
+  interface OrmlPaymentsCall extends Enum {
+    readonly isPay: boolean;
+    readonly asPay: {
+      readonly recipient: AccountId32;
+      readonly asset: AcalaPrimitivesCurrencyCurrencyId;
+      readonly amount: Compact<u128>;
+      readonly remark: Option<Bytes>;
+    } & Struct;
+    readonly isRelease: boolean;
+    readonly asRelease: {
+      readonly to: AccountId32;
+    } & Struct;
+    readonly isCancel: boolean;
+    readonly asCancel: {
+      readonly creator: AccountId32;
+    } & Struct;
+    readonly isResolvePayment: boolean;
+    readonly asResolvePayment: {
+      readonly from: AccountId32;
+      readonly recipient: AccountId32;
+      readonly recipientShare: Percent;
+    } & Struct;
+    readonly isRequestRefund: boolean;
+    readonly asRequestRefund: {
+      readonly recipient: AccountId32;
+    } & Struct;
+    readonly isDisputeRefund: boolean;
+    readonly asDisputeRefund: {
+      readonly creator: AccountId32;
+    } & Struct;
+    readonly isRequestPayment: boolean;
+    readonly asRequestPayment: {
+      readonly from: AccountId32;
+      readonly asset: AcalaPrimitivesCurrencyCurrencyId;
+      readonly amount: Compact<u128>;
+    } & Struct;
+    readonly isAcceptAndPay: boolean;
+    readonly asAcceptAndPay: {
+      readonly to: AccountId32;
+    } & Struct;
+    readonly type: 'Pay' | 'Release' | 'Cancel' | 'ResolvePayment' | 'RequestRefund' | 'DisputeRefund' | 'RequestPayment' | 'AcceptAndPay';
+  }
+
+  /** @name ModuleEarningModuleCall (365) */
+  interface ModuleEarningModuleCall extends Enum {
+    readonly isBond: boolean;
+    readonly asBond: {
+      readonly amount: Compact<u128>;
+    } & Struct;
+    readonly isUnbond: boolean;
+    readonly asUnbond: {
+      readonly amount: Compact<u128>;
+    } & Struct;
+    readonly isUnbondInstant: boolean;
+    readonly asUnbondInstant: {
+      readonly amount: Compact<u128>;
+    } & Struct;
+    readonly isRebond: boolean;
+    readonly asRebond: {
+      readonly amount: Compact<u128>;
+    } & Struct;
+    readonly isWithdrawUnbonded: boolean;
+    readonly type: 'Bond' | 'Unbond' | 'UnbondInstant' | 'Rebond' | 'WithdrawUnbonded';
+  }
+
+  /** @name CumulusPalletParachainSystemCall (366) */
   interface CumulusPalletParachainSystemCall extends Enum {
     readonly isSetValidationData: boolean;
     readonly asSetValidationData: {
@@ -4787,7 +5274,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'SetValidationData' | 'SudoSendUpwardMessage' | 'AuthorizeUpgrade' | 'EnactAuthorizedUpgrade';
   }
 
-  /** @name CumulusPrimitivesParachainInherentParachainInherentData (342) */
+  /** @name CumulusPrimitivesParachainInherentParachainInherentData (367) */
   interface CumulusPrimitivesParachainInherentParachainInherentData extends Struct {
     readonly validationData: PolkadotPrimitivesV2PersistedValidationData;
     readonly relayChainState: SpTrieStorageProof;
@@ -4795,7 +5282,7 @@ declare module '@acala-network/types/lookup' {
     readonly horizontalMessages: BTreeMap<u32, Vec<PolkadotCorePrimitivesInboundHrmpMessage>>;
   }
 
-  /** @name PolkadotPrimitivesV2PersistedValidationData (343) */
+  /** @name PolkadotPrimitivesV2PersistedValidationData (368) */
   interface PolkadotPrimitivesV2PersistedValidationData extends Struct {
     readonly parentHead: Bytes;
     readonly relayParentNumber: u32;
@@ -4803,24 +5290,24 @@ declare module '@acala-network/types/lookup' {
     readonly maxPovSize: u32;
   }
 
-  /** @name SpTrieStorageProof (345) */
+  /** @name SpTrieStorageProof (370) */
   interface SpTrieStorageProof extends Struct {
     readonly trieNodes: BTreeSet<Bytes>;
   }
 
-  /** @name PolkadotCorePrimitivesInboundDownwardMessage (348) */
+  /** @name PolkadotCorePrimitivesInboundDownwardMessage (373) */
   interface PolkadotCorePrimitivesInboundDownwardMessage extends Struct {
     readonly sentAt: u32;
     readonly msg: Bytes;
   }
 
-  /** @name PolkadotCorePrimitivesInboundHrmpMessage (351) */
+  /** @name PolkadotCorePrimitivesInboundHrmpMessage (376) */
   interface PolkadotCorePrimitivesInboundHrmpMessage extends Struct {
     readonly sentAt: u32;
     readonly data: Bytes;
   }
 
-  /** @name PalletSudoCall (354) */
+  /** @name PalletSudoCall (379) */
   interface PalletSudoCall extends Enum {
     readonly isSudo: boolean;
     readonly asSudo: {
@@ -4843,7 +5330,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Sudo' | 'SudoUncheckedWeight' | 'SetKey' | 'SudoAs';
   }
 
-  /** @name PalletSchedulerError (355) */
+  /** @name PalletSchedulerError (380) */
   interface PalletSchedulerError extends Enum {
     readonly isFailedToSchedule: boolean;
     readonly isNotFound: boolean;
@@ -4852,74 +5339,14 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'FailedToSchedule' | 'NotFound' | 'TargetBlockNumberInPast' | 'RescheduleNoChange';
   }
 
-  /** @name PalletUtilityError (356) */
-  interface PalletUtilityError extends Enum {
-    readonly isTooManyCalls: boolean;
-    readonly type: 'TooManyCalls';
-  }
-
-  /** @name PalletMultisigMultisig (358) */
-  interface PalletMultisigMultisig extends Struct {
-    readonly when: PalletMultisigTimepoint;
-    readonly deposit: u128;
-    readonly depositor: AccountId32;
-    readonly approvals: Vec<AccountId32>;
-  }
-
-  /** @name PalletMultisigError (360) */
-  interface PalletMultisigError extends Enum {
-    readonly isMinimumThreshold: boolean;
-    readonly isAlreadyApproved: boolean;
-    readonly isNoApprovalsNeeded: boolean;
-    readonly isTooFewSignatories: boolean;
-    readonly isTooManySignatories: boolean;
-    readonly isSignatoriesOutOfOrder: boolean;
-    readonly isSenderInSignatories: boolean;
-    readonly isNotFound: boolean;
-    readonly isNotOwner: boolean;
-    readonly isNoTimepoint: boolean;
-    readonly isWrongTimepoint: boolean;
-    readonly isUnexpectedTimepoint: boolean;
-    readonly isMaxWeightTooLow: boolean;
-    readonly isAlreadyStored: boolean;
-    readonly type: 'MinimumThreshold' | 'AlreadyApproved' | 'NoApprovalsNeeded' | 'TooFewSignatories' | 'TooManySignatories' | 'SignatoriesOutOfOrder' | 'SenderInSignatories' | 'NotFound' | 'NotOwner' | 'NoTimepoint' | 'WrongTimepoint' | 'UnexpectedTimepoint' | 'MaxWeightTooLow' | 'AlreadyStored';
-  }
-
-  /** @name PalletProxyProxyDefinition (363) */
-  interface PalletProxyProxyDefinition extends Struct {
-    readonly delegate: AccountId32;
-    readonly proxyType: RuntimeCommonProxyType;
-    readonly delay: u32;
-  }
-
-  /** @name PalletProxyAnnouncement (367) */
-  interface PalletProxyAnnouncement extends Struct {
-    readonly real: AccountId32;
-    readonly callHash: H256;
-    readonly height: u32;
-  }
-
-  /** @name PalletProxyError (369) */
-  interface PalletProxyError extends Enum {
-    readonly isTooMany: boolean;
-    readonly isNotFound: boolean;
-    readonly isNotProxy: boolean;
-    readonly isUnproxyable: boolean;
-    readonly isDuplicate: boolean;
-    readonly isNoPermission: boolean;
-    readonly isUnannounced: boolean;
-    readonly isNoSelfProxy: boolean;
-    readonly type: 'TooMany' | 'NotFound' | 'NotProxy' | 'Unproxyable' | 'Duplicate' | 'NoPermission' | 'Unannounced' | 'NoSelfProxy';
-  }
-
-  /** @name ModuleTransactionPauseModuleError (370) */
+  /** @name ModuleTransactionPauseModuleError (381) */
   interface ModuleTransactionPauseModuleError extends Enum {
     readonly isCannotPause: boolean;
     readonly isInvalidCharacter: boolean;
     readonly type: 'CannotPause' | 'InvalidCharacter';
   }
 
-  /** @name PalletPreimageRequestStatus (371) */
+  /** @name PalletPreimageRequestStatus (382) */
   interface PalletPreimageRequestStatus extends Enum {
     readonly isUnrequested: boolean;
     readonly asUnrequested: Option<ITuple<[AccountId32, u128]>>;
@@ -4928,7 +5355,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Unrequested' | 'Requested';
   }
 
-  /** @name PalletPreimageError (375) */
+  /** @name PalletPreimageError (385) */
   interface PalletPreimageError extends Enum {
     readonly isTooLarge: boolean;
     readonly isAlreadyNoted: boolean;
@@ -4939,14 +5366,14 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'TooLarge' | 'AlreadyNoted' | 'NotAuthorized' | 'NotNoted' | 'Requested' | 'NotRequested';
   }
 
-  /** @name PalletBalancesBalanceLock (377) */
+  /** @name PalletBalancesBalanceLock (387) */
   interface PalletBalancesBalanceLock extends Struct {
     readonly id: U8aFixed;
     readonly amount: u128;
     readonly reasons: PalletBalancesReasons;
   }
 
-  /** @name PalletBalancesReasons (378) */
+  /** @name PalletBalancesReasons (388) */
   interface PalletBalancesReasons extends Enum {
     readonly isFee: boolean;
     readonly isMisc: boolean;
@@ -4954,13 +5381,13 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Fee' | 'Misc' | 'All';
   }
 
-  /** @name PalletBalancesReserveData (381) */
+  /** @name PalletBalancesReserveData (391) */
   interface PalletBalancesReserveData extends Struct {
     readonly id: AcalaPrimitivesReserveIdentifier;
     readonly amount: u128;
   }
 
-  /** @name AcalaPrimitivesReserveIdentifier (382) */
+  /** @name AcalaPrimitivesReserveIdentifier (392) */
   interface AcalaPrimitivesReserveIdentifier extends Enum {
     readonly isCollatorSelection: boolean;
     readonly isEvmStorageDeposit: boolean;
@@ -4973,14 +5400,14 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'CollatorSelection' | 'EvmStorageDeposit' | 'EvmDeveloperDeposit' | 'Honzon' | 'Nft' | 'TransactionPayment' | 'TransactionPaymentDeposit' | 'Count';
   }
 
-  /** @name PalletBalancesReleases (384) */
+  /** @name PalletBalancesReleases (394) */
   interface PalletBalancesReleases extends Enum {
     readonly isV100: boolean;
     readonly isV200: boolean;
     readonly type: 'V100' | 'V200';
   }
 
-  /** @name PalletBalancesError (385) */
+  /** @name PalletBalancesError (395) */
   interface PalletBalancesError extends Enum {
     readonly isVestingBalance: boolean;
     readonly isLiquidityRestrictions: boolean;
@@ -4993,26 +5420,26 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'VestingBalance' | 'LiquidityRestrictions' | 'InsufficientBalance' | 'ExistentialDeposit' | 'KeepAlive' | 'ExistingVestingSchedule' | 'DeadAccount' | 'TooManyReserves';
   }
 
-  /** @name OrmlTokensBalanceLock (388) */
+  /** @name OrmlTokensBalanceLock (398) */
   interface OrmlTokensBalanceLock extends Struct {
     readonly id: U8aFixed;
     readonly amount: u128;
   }
 
-  /** @name OrmlTokensAccountData (390) */
+  /** @name OrmlTokensAccountData (400) */
   interface OrmlTokensAccountData extends Struct {
     readonly free: u128;
     readonly reserved: u128;
     readonly frozen: u128;
   }
 
-  /** @name OrmlTokensReserveData (392) */
+  /** @name OrmlTokensReserveData (402) */
   interface OrmlTokensReserveData extends Struct {
     readonly id: AcalaPrimitivesReserveIdentifier;
     readonly amount: u128;
   }
 
-  /** @name OrmlTokensModuleError (394) */
+  /** @name OrmlTokensModuleError (404) */
   interface OrmlTokensModuleError extends Enum {
     readonly isBalanceTooLow: boolean;
     readonly isAmountIntoBalanceFailed: boolean;
@@ -5025,7 +5452,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'BalanceTooLow' | 'AmountIntoBalanceFailed' | 'LiquidityRestrictions' | 'MaxLocksExceeded' | 'KeepAlive' | 'ExistentialDeposit' | 'DeadAccount' | 'TooManyReserves';
   }
 
-  /** @name ModuleCurrenciesModuleError (395) */
+  /** @name ModuleCurrenciesModuleError (405) */
   interface ModuleCurrenciesModuleError extends Enum {
     readonly isAmountIntoBalanceFailed: boolean;
     readonly isBalanceTooLow: boolean;
@@ -5036,7 +5463,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'AmountIntoBalanceFailed' | 'BalanceTooLow' | 'Erc20InvalidOperation' | 'EvmAccountNotFound' | 'RealOriginNotFound' | 'DepositFailed';
   }
 
-  /** @name OrmlVestingModuleError (397) */
+  /** @name OrmlVestingModuleError (407) */
   interface OrmlVestingModuleError extends Enum {
     readonly isZeroVestingPeriod: boolean;
     readonly isZeroVestingPeriodCount: boolean;
@@ -5047,10 +5474,10 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'ZeroVestingPeriod' | 'ZeroVestingPeriodCount' | 'InsufficientBalanceToLock' | 'TooManyVestingSchedules' | 'AmountLow' | 'MaxVestingSchedulesExceeded';
   }
 
-  /** @name FrameSupportPalletId (399) */
+  /** @name FrameSupportPalletId (409) */
   interface FrameSupportPalletId extends U8aFixed {}
 
-  /** @name ModuleTransactionPaymentModuleError (401) */
+  /** @name ModuleTransactionPaymentModuleError (410) */
   interface ModuleTransactionPaymentModuleError extends Enum {
     readonly isInvalidSwapPath: boolean;
     readonly isInvalidBalance: boolean;
@@ -5061,7 +5488,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'InvalidSwapPath' | 'InvalidBalance' | 'InvalidRate' | 'InvalidToken' | 'DexNotAvailable' | 'ChargeFeePoolAlreadyExisted';
   }
 
-  /** @name PalletTreasuryProposal (402) */
+  /** @name PalletTreasuryProposal (411) */
   interface PalletTreasuryProposal extends Struct {
     readonly proposer: AccountId32;
     readonly value: u128;
@@ -5069,7 +5496,7 @@ declare module '@acala-network/types/lookup' {
     readonly bond: u128;
   }
 
-  /** @name PalletTreasuryError (406) */
+  /** @name PalletTreasuryError (415) */
   interface PalletTreasuryError extends Enum {
     readonly isInsufficientProposersBalance: boolean;
     readonly isInvalidIndex: boolean;
@@ -5079,7 +5506,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'InsufficientProposersBalance' | 'InvalidIndex' | 'TooManyApprovals' | 'InsufficientPermission' | 'ProposalNotApproved';
   }
 
-  /** @name PalletBountiesBounty (407) */
+  /** @name PalletBountiesBounty (416) */
   interface PalletBountiesBounty extends Struct {
     readonly proposer: AccountId32;
     readonly value: u128;
@@ -5089,7 +5516,7 @@ declare module '@acala-network/types/lookup' {
     readonly status: PalletBountiesBountyStatus;
   }
 
-  /** @name PalletBountiesBountyStatus (408) */
+  /** @name PalletBountiesBountyStatus (417) */
   interface PalletBountiesBountyStatus extends Enum {
     readonly isProposed: boolean;
     readonly isApproved: boolean;
@@ -5112,7 +5539,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Proposed' | 'Approved' | 'Funded' | 'CuratorProposed' | 'Active' | 'PendingPayout';
   }
 
-  /** @name PalletBountiesError (410) */
+  /** @name PalletBountiesError (419) */
   interface PalletBountiesError extends Enum {
     readonly isInsufficientProposersBalance: boolean;
     readonly isInvalidIndex: boolean;
@@ -5128,7 +5555,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'InsufficientProposersBalance' | 'InvalidIndex' | 'ReasonTooBig' | 'UnexpectedStatus' | 'RequireCurator' | 'InvalidValue' | 'InvalidFee' | 'PendingPayout' | 'Premature' | 'HasActiveChildBounty' | 'TooManyQueued';
   }
 
-  /** @name PalletTipsOpenTip (411) */
+  /** @name PalletTipsOpenTip (420) */
   interface PalletTipsOpenTip extends Struct {
     readonly reason: H256;
     readonly who: AccountId32;
@@ -5139,7 +5566,7 @@ declare module '@acala-network/types/lookup' {
     readonly findersFee: bool;
   }
 
-  /** @name PalletTipsError (413) */
+  /** @name PalletTipsError (421) */
   interface PalletTipsError extends Enum {
     readonly isReasonTooBig: boolean;
     readonly isAlreadyKnown: boolean;
@@ -5150,259 +5577,113 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'ReasonTooBig' | 'AlreadyKnown' | 'UnknownTip' | 'NotFinder' | 'StillOpen' | 'Premature';
   }
 
-  /** @name PalletAuthorshipUncleEntryItem (415) */
-  interface PalletAuthorshipUncleEntryItem extends Enum {
-    readonly isInclusionHeight: boolean;
-    readonly asInclusionHeight: u32;
-    readonly isUncle: boolean;
-    readonly asUncle: ITuple<[H256, Option<AccountId32>]>;
-    readonly type: 'InclusionHeight' | 'Uncle';
+  /** @name PalletUtilityError (422) */
+  interface PalletUtilityError extends Enum {
+    readonly isTooManyCalls: boolean;
+    readonly type: 'TooManyCalls';
   }
 
-  /** @name PalletAuthorshipError (417) */
-  interface PalletAuthorshipError extends Enum {
-    readonly isInvalidUncleParent: boolean;
-    readonly isUnclesAlreadySet: boolean;
-    readonly isTooManyUncles: boolean;
-    readonly isGenesisUncle: boolean;
-    readonly isTooHighUncle: boolean;
-    readonly isUncleAlreadyIncluded: boolean;
-    readonly isOldUncle: boolean;
-    readonly type: 'InvalidUncleParent' | 'UnclesAlreadySet' | 'TooManyUncles' | 'GenesisUncle' | 'TooHighUncle' | 'UncleAlreadyIncluded' | 'OldUncle';
+  /** @name PalletMultisigMultisig (424) */
+  interface PalletMultisigMultisig extends Struct {
+    readonly when: PalletMultisigTimepoint;
+    readonly deposit: u128;
+    readonly depositor: AccountId32;
+    readonly approvals: Vec<AccountId32>;
   }
 
-  /** @name ModuleCollatorSelectionError (421) */
-  interface ModuleCollatorSelectionError extends Enum {
-    readonly isMaxCandidatesExceeded: boolean;
-    readonly isBelowCandidatesMin: boolean;
-    readonly isStillLocked: boolean;
-    readonly isUnknown: boolean;
-    readonly isPermission: boolean;
-    readonly isAlreadyCandidate: boolean;
-    readonly isNotCandidate: boolean;
-    readonly isNotNonCandidate: boolean;
-    readonly isNothingToWithdraw: boolean;
-    readonly isRequireSessionKey: boolean;
-    readonly isAlreadyInvulnerable: boolean;
-    readonly isInvalidProof: boolean;
-    readonly isMaxInvulnerablesExceeded: boolean;
-    readonly type: 'MaxCandidatesExceeded' | 'BelowCandidatesMin' | 'StillLocked' | 'Unknown' | 'Permission' | 'AlreadyCandidate' | 'NotCandidate' | 'NotNonCandidate' | 'NothingToWithdraw' | 'RequireSessionKey' | 'AlreadyInvulnerable' | 'InvalidProof' | 'MaxInvulnerablesExceeded';
+  /** @name PalletMultisigError (426) */
+  interface PalletMultisigError extends Enum {
+    readonly isMinimumThreshold: boolean;
+    readonly isAlreadyApproved: boolean;
+    readonly isNoApprovalsNeeded: boolean;
+    readonly isTooFewSignatories: boolean;
+    readonly isTooManySignatories: boolean;
+    readonly isSignatoriesOutOfOrder: boolean;
+    readonly isSenderInSignatories: boolean;
+    readonly isNotFound: boolean;
+    readonly isNotOwner: boolean;
+    readonly isNoTimepoint: boolean;
+    readonly isWrongTimepoint: boolean;
+    readonly isUnexpectedTimepoint: boolean;
+    readonly isMaxWeightTooLow: boolean;
+    readonly isAlreadyStored: boolean;
+    readonly type: 'MinimumThreshold' | 'AlreadyApproved' | 'NoApprovalsNeeded' | 'TooFewSignatories' | 'TooManySignatories' | 'SignatoriesOutOfOrder' | 'SenderInSignatories' | 'NotFound' | 'NotOwner' | 'NoTimepoint' | 'WrongTimepoint' | 'UnexpectedTimepoint' | 'MaxWeightTooLow' | 'AlreadyStored';
   }
 
-  /** @name SpCoreCryptoKeyTypeId (425) */
-  interface SpCoreCryptoKeyTypeId extends U8aFixed {}
-
-  /** @name PalletSessionError (426) */
-  interface PalletSessionError extends Enum {
-    readonly isInvalidProof: boolean;
-    readonly isNoAssociatedValidatorId: boolean;
-    readonly isDuplicatedKey: boolean;
-    readonly isNoKeys: boolean;
-    readonly isNoAccount: boolean;
-    readonly type: 'InvalidProof' | 'NoAssociatedValidatorId' | 'DuplicatedKey' | 'NoKeys' | 'NoAccount';
+  /** @name PalletRecoveryRecoveryConfig (427) */
+  interface PalletRecoveryRecoveryConfig extends Struct {
+    readonly delayPeriod: u32;
+    readonly deposit: u128;
+    readonly friends: Vec<AccountId32>;
+    readonly threshold: u16;
   }
 
-  /** @name ModuleSessionManagerModuleError (430) */
-  interface ModuleSessionManagerModuleError extends Enum {
-    readonly isInvalidSession: boolean;
-    readonly isInvalidDuration: boolean;
-    readonly isEstimateNextSessionFailed: boolean;
-    readonly type: 'InvalidSession' | 'InvalidDuration' | 'EstimateNextSessionFailed';
+  /** @name PalletRecoveryActiveRecovery (430) */
+  interface PalletRecoveryActiveRecovery extends Struct {
+    readonly created: u32;
+    readonly deposit: u128;
+    readonly friends: Vec<AccountId32>;
   }
 
-  /** @name CumulusPalletXcmpQueueInboundChannelDetails (432) */
-  interface CumulusPalletXcmpQueueInboundChannelDetails extends Struct {
-    readonly sender: u32;
-    readonly state: CumulusPalletXcmpQueueInboundState;
-    readonly messageMetadata: Vec<ITuple<[u32, PolkadotParachainPrimitivesXcmpMessageFormat]>>;
+  /** @name PalletRecoveryError (431) */
+  interface PalletRecoveryError extends Enum {
+    readonly isNotAllowed: boolean;
+    readonly isZeroThreshold: boolean;
+    readonly isNotEnoughFriends: boolean;
+    readonly isMaxFriends: boolean;
+    readonly isNotSorted: boolean;
+    readonly isNotRecoverable: boolean;
+    readonly isAlreadyRecoverable: boolean;
+    readonly isAlreadyStarted: boolean;
+    readonly isNotStarted: boolean;
+    readonly isNotFriend: boolean;
+    readonly isDelayPeriod: boolean;
+    readonly isAlreadyVouched: boolean;
+    readonly isThreshold: boolean;
+    readonly isStillActive: boolean;
+    readonly isAlreadyProxy: boolean;
+    readonly isBadState: boolean;
+    readonly type: 'NotAllowed' | 'ZeroThreshold' | 'NotEnoughFriends' | 'MaxFriends' | 'NotSorted' | 'NotRecoverable' | 'AlreadyRecoverable' | 'AlreadyStarted' | 'NotStarted' | 'NotFriend' | 'DelayPeriod' | 'AlreadyVouched' | 'Threshold' | 'StillActive' | 'AlreadyProxy' | 'BadState';
   }
 
-  /** @name CumulusPalletXcmpQueueInboundState (433) */
-  interface CumulusPalletXcmpQueueInboundState extends Enum {
-    readonly isOk: boolean;
-    readonly isSuspended: boolean;
-    readonly type: 'Ok' | 'Suspended';
+  /** @name PalletProxyProxyDefinition (434) */
+  interface PalletProxyProxyDefinition extends Struct {
+    readonly delegate: AccountId32;
+    readonly proxyType: RuntimeCommonProxyType;
+    readonly delay: u32;
   }
 
-  /** @name PolkadotParachainPrimitivesXcmpMessageFormat (436) */
-  interface PolkadotParachainPrimitivesXcmpMessageFormat extends Enum {
-    readonly isConcatenatedVersionedXcm: boolean;
-    readonly isConcatenatedEncodedBlob: boolean;
-    readonly isSignals: boolean;
-    readonly type: 'ConcatenatedVersionedXcm' | 'ConcatenatedEncodedBlob' | 'Signals';
+  /** @name PalletProxyAnnouncement (438) */
+  interface PalletProxyAnnouncement extends Struct {
+    readonly real: AccountId32;
+    readonly callHash: H256;
+    readonly height: u32;
   }
 
-  /** @name CumulusPalletXcmpQueueOutboundChannelDetails (439) */
-  interface CumulusPalletXcmpQueueOutboundChannelDetails extends Struct {
-    readonly recipient: u32;
-    readonly state: CumulusPalletXcmpQueueOutboundState;
-    readonly signalsExist: bool;
-    readonly firstIndex: u16;
-    readonly lastIndex: u16;
+  /** @name PalletProxyError (440) */
+  interface PalletProxyError extends Enum {
+    readonly isTooMany: boolean;
+    readonly isNotFound: boolean;
+    readonly isNotProxy: boolean;
+    readonly isUnproxyable: boolean;
+    readonly isDuplicate: boolean;
+    readonly isNoPermission: boolean;
+    readonly isUnannounced: boolean;
+    readonly isNoSelfProxy: boolean;
+    readonly type: 'TooMany' | 'NotFound' | 'NotProxy' | 'Unproxyable' | 'Duplicate' | 'NoPermission' | 'Unannounced' | 'NoSelfProxy';
   }
 
-  /** @name CumulusPalletXcmpQueueOutboundState (440) */
-  interface CumulusPalletXcmpQueueOutboundState extends Enum {
-    readonly isOk: boolean;
-    readonly isSuspended: boolean;
-    readonly type: 'Ok' | 'Suspended';
+  /** @name PalletIndicesError (442) */
+  interface PalletIndicesError extends Enum {
+    readonly isNotAssigned: boolean;
+    readonly isNotOwner: boolean;
+    readonly isInUse: boolean;
+    readonly isNotTransfer: boolean;
+    readonly isPermanent: boolean;
+    readonly type: 'NotAssigned' | 'NotOwner' | 'InUse' | 'NotTransfer' | 'Permanent';
   }
 
-  /** @name CumulusPalletXcmpQueueQueueConfigData (442) */
-  interface CumulusPalletXcmpQueueQueueConfigData extends Struct {
-    readonly suspendThreshold: u32;
-    readonly dropThreshold: u32;
-    readonly resumeThreshold: u32;
-    readonly thresholdWeight: u64;
-    readonly weightRestrictDecay: u64;
-    readonly xcmpMaxIndividualWeight: u64;
-  }
-
-  /** @name CumulusPalletXcmpQueueError (444) */
-  interface CumulusPalletXcmpQueueError extends Enum {
-    readonly isFailedToSend: boolean;
-    readonly isBadXcmOrigin: boolean;
-    readonly isBadXcm: boolean;
-    readonly isBadOverweightIndex: boolean;
-    readonly isWeightOverLimit: boolean;
-    readonly type: 'FailedToSend' | 'BadXcmOrigin' | 'BadXcm' | 'BadOverweightIndex' | 'WeightOverLimit';
-  }
-
-  /** @name PalletXcmQueryStatus (445) */
-  interface PalletXcmQueryStatus extends Enum {
-    readonly isPending: boolean;
-    readonly asPending: {
-      readonly responder: XcmVersionedMultiLocation;
-      readonly maybeNotify: Option<ITuple<[u8, u8]>>;
-      readonly timeout: u32;
-    } & Struct;
-    readonly isVersionNotifier: boolean;
-    readonly asVersionNotifier: {
-      readonly origin: XcmVersionedMultiLocation;
-      readonly isActive: bool;
-    } & Struct;
-    readonly isReady: boolean;
-    readonly asReady: {
-      readonly response: XcmVersionedResponse;
-      readonly at: u32;
-    } & Struct;
-    readonly type: 'Pending' | 'VersionNotifier' | 'Ready';
-  }
-
-  /** @name XcmVersionedResponse (448) */
-  interface XcmVersionedResponse extends Enum {
-    readonly isV0: boolean;
-    readonly asV0: XcmV0Response;
-    readonly isV1: boolean;
-    readonly asV1: XcmV1Response;
-    readonly isV2: boolean;
-    readonly asV2: XcmV2Response;
-    readonly type: 'V0' | 'V1' | 'V2';
-  }
-
-  /** @name PalletXcmVersionMigrationStage (454) */
-  interface PalletXcmVersionMigrationStage extends Enum {
-    readonly isMigrateSupportedVersion: boolean;
-    readonly isMigrateVersionNotifiers: boolean;
-    readonly isNotifyCurrentTargets: boolean;
-    readonly asNotifyCurrentTargets: Option<Bytes>;
-    readonly isMigrateAndNotifyOldTargets: boolean;
-    readonly type: 'MigrateSupportedVersion' | 'MigrateVersionNotifiers' | 'NotifyCurrentTargets' | 'MigrateAndNotifyOldTargets';
-  }
-
-  /** @name PalletXcmError (455) */
-  interface PalletXcmError extends Enum {
-    readonly isUnreachable: boolean;
-    readonly isSendFailure: boolean;
-    readonly isFiltered: boolean;
-    readonly isUnweighableMessage: boolean;
-    readonly isDestinationNotInvertible: boolean;
-    readonly isEmpty: boolean;
-    readonly isCannotReanchor: boolean;
-    readonly isTooManyAssets: boolean;
-    readonly isInvalidOrigin: boolean;
-    readonly isBadVersion: boolean;
-    readonly isBadLocation: boolean;
-    readonly isNoSubscription: boolean;
-    readonly isAlreadySubscribed: boolean;
-    readonly type: 'Unreachable' | 'SendFailure' | 'Filtered' | 'UnweighableMessage' | 'DestinationNotInvertible' | 'Empty' | 'CannotReanchor' | 'TooManyAssets' | 'InvalidOrigin' | 'BadVersion' | 'BadLocation' | 'NoSubscription' | 'AlreadySubscribed';
-  }
-
-  /** @name CumulusPalletXcmError (456) */
-  type CumulusPalletXcmError = Null;
-
-  /** @name CumulusPalletDmpQueueConfigData (457) */
-  interface CumulusPalletDmpQueueConfigData extends Struct {
-    readonly maxIndividual: u64;
-  }
-
-  /** @name CumulusPalletDmpQueuePageIndexData (458) */
-  interface CumulusPalletDmpQueuePageIndexData extends Struct {
-    readonly beginUsed: u32;
-    readonly endUsed: u32;
-    readonly overweightCount: u64;
-  }
-
-  /** @name CumulusPalletDmpQueueError (461) */
-  interface CumulusPalletDmpQueueError extends Enum {
-    readonly isUnknown: boolean;
-    readonly isOverLimit: boolean;
-    readonly type: 'Unknown' | 'OverLimit';
-  }
-
-  /** @name OrmlXtokensModuleError (462) */
-  interface OrmlXtokensModuleError extends Enum {
-    readonly isAssetHasNoReserve: boolean;
-    readonly isNotCrossChainTransfer: boolean;
-    readonly isInvalidDest: boolean;
-    readonly isNotCrossChainTransferableCurrency: boolean;
-    readonly isUnweighableMessage: boolean;
-    readonly isXcmExecutionFailed: boolean;
-    readonly isCannotReanchor: boolean;
-    readonly isInvalidAncestry: boolean;
-    readonly isInvalidAsset: boolean;
-    readonly isDestinationNotInvertible: boolean;
-    readonly isBadVersion: boolean;
-    readonly isDistinctReserveForAssetAndFee: boolean;
-    readonly isZeroFee: boolean;
-    readonly isZeroAmount: boolean;
-    readonly isTooManyAssetsBeingSent: boolean;
-    readonly isAssetIndexNonExistent: boolean;
-    readonly isFeeNotEnough: boolean;
-    readonly isNotSupportedMultiLocation: boolean;
-    readonly isMinXcmFeeNotDefined: boolean;
-    readonly type: 'AssetHasNoReserve' | 'NotCrossChainTransfer' | 'InvalidDest' | 'NotCrossChainTransferableCurrency' | 'UnweighableMessage' | 'XcmExecutionFailed' | 'CannotReanchor' | 'InvalidAncestry' | 'InvalidAsset' | 'DestinationNotInvertible' | 'BadVersion' | 'DistinctReserveForAssetAndFee' | 'ZeroFee' | 'ZeroAmount' | 'TooManyAssetsBeingSent' | 'AssetIndexNonExistent' | 'FeeNotEnough' | 'NotSupportedMultiLocation' | 'MinXcmFeeNotDefined';
-  }
-
-  /** @name OrmlUnknownTokensModuleError (465) */
-  interface OrmlUnknownTokensModuleError extends Enum {
-    readonly isBalanceTooLow: boolean;
-    readonly isBalanceOverflow: boolean;
-    readonly isUnhandledAsset: boolean;
-    readonly type: 'BalanceTooLow' | 'BalanceOverflow' | 'UnhandledAsset';
-  }
-
-  /** @name OrmlXcmModuleError (466) */
-  interface OrmlXcmModuleError extends Enum {
-    readonly isUnreachable: boolean;
-    readonly isSendFailure: boolean;
-    readonly isBadVersion: boolean;
-    readonly type: 'Unreachable' | 'SendFailure' | 'BadVersion';
-  }
-
-  /** @name OrmlAuthorityModuleError (468) */
-  interface OrmlAuthorityModuleError extends Enum {
-    readonly isFailedToSchedule: boolean;
-    readonly isFailedToCancel: boolean;
-    readonly isFailedToFastTrack: boolean;
-    readonly isFailedToDelay: boolean;
-    readonly isCallNotAuthorized: boolean;
-    readonly isTriggerCallNotPermitted: boolean;
-    readonly isWrongCallWeightBound: boolean;
-    readonly type: 'FailedToSchedule' | 'FailedToCancel' | 'FailedToFastTrack' | 'FailedToDelay' | 'CallNotAuthorized' | 'TriggerCallNotPermitted' | 'WrongCallWeightBound';
-  }
-
-  /** @name PalletCollectiveVotes (470) */
+  /** @name PalletCollectiveVotes (444) */
   interface PalletCollectiveVotes extends Struct {
     readonly index: u32;
     readonly threshold: u32;
@@ -5411,7 +5692,7 @@ declare module '@acala-network/types/lookup' {
     readonly end: u32;
   }
 
-  /** @name PalletCollectiveError (471) */
+  /** @name PalletCollectiveError (445) */
   interface PalletCollectiveError extends Enum {
     readonly isNotMember: boolean;
     readonly isDuplicateProposal: boolean;
@@ -5426,7 +5707,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'NotMember' | 'DuplicateProposal' | 'ProposalMissing' | 'WrongIndex' | 'DuplicateVote' | 'AlreadyInitialized' | 'TooEarly' | 'TooManyProposals' | 'WrongProposalWeight' | 'WrongProposalLength';
   }
 
-  /** @name PalletMembershipError (473) */
+  /** @name PalletMembershipError (447) */
   interface PalletMembershipError extends Enum {
     readonly isAlreadyMember: boolean;
     readonly isNotMember: boolean;
@@ -5434,7 +5715,55 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'AlreadyMember' | 'NotMember' | 'TooManyMembers';
   }
 
-  /** @name PalletDemocracyPreimageStatus (483) */
+  /** @name OrmlAuthorityModuleError (455) */
+  interface OrmlAuthorityModuleError extends Enum {
+    readonly isFailedToSchedule: boolean;
+    readonly isFailedToCancel: boolean;
+    readonly isFailedToFastTrack: boolean;
+    readonly isFailedToDelay: boolean;
+    readonly isCallNotAuthorized: boolean;
+    readonly isTriggerCallNotPermitted: boolean;
+    readonly isWrongCallWeightBound: boolean;
+    readonly type: 'FailedToSchedule' | 'FailedToCancel' | 'FailedToFastTrack' | 'FailedToDelay' | 'CallNotAuthorized' | 'TriggerCallNotPermitted' | 'WrongCallWeightBound';
+  }
+
+  /** @name PalletElectionsPhragmenSeatHolder (457) */
+  interface PalletElectionsPhragmenSeatHolder extends Struct {
+    readonly who: AccountId32;
+    readonly stake: u128;
+    readonly deposit: u128;
+  }
+
+  /** @name PalletElectionsPhragmenVoter (458) */
+  interface PalletElectionsPhragmenVoter extends Struct {
+    readonly votes: Vec<AccountId32>;
+    readonly stake: u128;
+    readonly deposit: u128;
+  }
+
+  /** @name PalletElectionsPhragmenError (459) */
+  interface PalletElectionsPhragmenError extends Enum {
+    readonly isUnableToVote: boolean;
+    readonly isNoVotes: boolean;
+    readonly isTooManyVotes: boolean;
+    readonly isMaximumVotesExceeded: boolean;
+    readonly isLowBalance: boolean;
+    readonly isUnableToPayBond: boolean;
+    readonly isMustBeVoter: boolean;
+    readonly isReportSelf: boolean;
+    readonly isDuplicatedCandidate: boolean;
+    readonly isMemberSubmit: boolean;
+    readonly isRunnerUpSubmit: boolean;
+    readonly isInsufficientCandidateFunds: boolean;
+    readonly isNotMember: boolean;
+    readonly isInvalidWitnessData: boolean;
+    readonly isInvalidVoteCount: boolean;
+    readonly isInvalidRenouncing: boolean;
+    readonly isInvalidReplacement: boolean;
+    readonly type: 'UnableToVote' | 'NoVotes' | 'TooManyVotes' | 'MaximumVotesExceeded' | 'LowBalance' | 'UnableToPayBond' | 'MustBeVoter' | 'ReportSelf' | 'DuplicatedCandidate' | 'MemberSubmit' | 'RunnerUpSubmit' | 'InsufficientCandidateFunds' | 'NotMember' | 'InvalidWitnessData' | 'InvalidVoteCount' | 'InvalidRenouncing' | 'InvalidReplacement';
+  }
+
+  /** @name PalletDemocracyPreimageStatus (463) */
   interface PalletDemocracyPreimageStatus extends Enum {
     readonly isMissing: boolean;
     readonly asMissing: u32;
@@ -5449,7 +5778,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Missing' | 'Available';
   }
 
-  /** @name PalletDemocracyReferendumInfo (484) */
+  /** @name PalletDemocracyReferendumInfo (464) */
   interface PalletDemocracyReferendumInfo extends Enum {
     readonly isOngoing: boolean;
     readonly asOngoing: PalletDemocracyReferendumStatus;
@@ -5461,7 +5790,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Ongoing' | 'Finished';
   }
 
-  /** @name PalletDemocracyReferendumStatus (485) */
+  /** @name PalletDemocracyReferendumStatus (465) */
   interface PalletDemocracyReferendumStatus extends Struct {
     readonly end: u32;
     readonly proposalHash: H256;
@@ -5470,14 +5799,14 @@ declare module '@acala-network/types/lookup' {
     readonly tally: PalletDemocracyTally;
   }
 
-  /** @name PalletDemocracyTally (486) */
+  /** @name PalletDemocracyTally (466) */
   interface PalletDemocracyTally extends Struct {
     readonly ayes: u128;
     readonly nays: u128;
     readonly turnout: u128;
   }
 
-  /** @name PalletDemocracyVoteVoting (487) */
+  /** @name PalletDemocracyVoteVoting (467) */
   interface PalletDemocracyVoteVoting extends Enum {
     readonly isDirect: boolean;
     readonly asDirect: {
@@ -5496,22 +5825,22 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Direct' | 'Delegating';
   }
 
-  /** @name PalletDemocracyDelegations (490) */
+  /** @name PalletDemocracyDelegations (470) */
   interface PalletDemocracyDelegations extends Struct {
     readonly votes: u128;
     readonly capital: u128;
   }
 
-  /** @name PalletDemocracyVotePriorLock (491) */
+  /** @name PalletDemocracyVotePriorLock (471) */
   interface PalletDemocracyVotePriorLock extends ITuple<[u32, u128]> {}
 
-  /** @name PalletDemocracyReleases (494) */
+  /** @name PalletDemocracyReleases (474) */
   interface PalletDemocracyReleases extends Enum {
     readonly isV1: boolean;
     readonly type: 'V1';
   }
 
-  /** @name PalletDemocracyError (495) */
+  /** @name PalletDemocracyError (475) */
   interface PalletDemocracyError extends Enum {
     readonly isValueLow: boolean;
     readonly isProposalMissing: boolean;
@@ -5545,30 +5874,30 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'ValueLow' | 'ProposalMissing' | 'AlreadyCanceled' | 'DuplicateProposal' | 'ProposalBlacklisted' | 'NotSimpleMajority' | 'InvalidHash' | 'NoProposal' | 'AlreadyVetoed' | 'DuplicatePreimage' | 'NotImminent' | 'TooEarly' | 'Imminent' | 'PreimageMissing' | 'ReferendumInvalid' | 'PreimageInvalid' | 'NoneWaiting' | 'NotVoter' | 'NoPermission' | 'AlreadyDelegating' | 'InsufficientFunds' | 'NotDelegating' | 'VotesExist' | 'InstantNotAllowed' | 'Nonsense' | 'WrongUpperBound' | 'MaxVotesReached' | 'TooManyProposals' | 'VotingPeriodLow';
   }
 
-  /** @name OrmlOracleModuleTimestampedValue (496) */
+  /** @name OrmlOracleModuleTimestampedValue (476) */
   interface OrmlOracleModuleTimestampedValue extends Struct {
     readonly value: u128;
     readonly timestamp: u64;
   }
 
-  /** @name OrmlUtilitiesOrderedSet (497) */
+  /** @name OrmlUtilitiesOrderedSet (477) */
   interface OrmlUtilitiesOrderedSet extends Vec<AccountId32> {}
 
-  /** @name OrmlOracleModuleError (499) */
+  /** @name OrmlOracleModuleError (479) */
   interface OrmlOracleModuleError extends Enum {
     readonly isNoPermission: boolean;
     readonly isAlreadyFeeded: boolean;
     readonly type: 'NoPermission' | 'AlreadyFeeded';
   }
 
-  /** @name OrmlTraitsAuctionAuctionInfo (502) */
+  /** @name OrmlTraitsAuctionAuctionInfo (482) */
   interface OrmlTraitsAuctionAuctionInfo extends Struct {
     readonly bid: Option<ITuple<[AccountId32, u128]>>;
     readonly start: u32;
     readonly end: Option<u32>;
   }
 
-  /** @name OrmlAuctionModuleError (503) */
+  /** @name OrmlAuctionModuleError (483) */
   interface OrmlAuctionModuleError extends Enum {
     readonly isAuctionNotExist: boolean;
     readonly isAuctionNotStarted: boolean;
@@ -5578,13 +5907,13 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'AuctionNotExist' | 'AuctionNotStarted' | 'BidNotAccepted' | 'InvalidBidPrice' | 'NoAvailableAuctionId';
   }
 
-  /** @name OrmlRewardsPoolInfo (504) */
+  /** @name OrmlRewardsPoolInfo (484) */
   interface OrmlRewardsPoolInfo extends Struct {
     readonly totalShares: u128;
     readonly rewards: BTreeMap<AcalaPrimitivesCurrencyCurrencyId, ITuple<[u128, u128]>>;
   }
 
-  /** @name OrmlRewardsModuleError (512) */
+  /** @name OrmlRewardsModuleError (492) */
   interface OrmlRewardsModuleError extends Enum {
     readonly isPoolDoesNotExist: boolean;
     readonly isShareDoesNotExist: boolean;
@@ -5592,7 +5921,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'PoolDoesNotExist' | 'ShareDoesNotExist' | 'CanSplitOnlyLessThanShare';
   }
 
-  /** @name OrmlNftClassInfo (513) */
+  /** @name OrmlNftClassInfo (493) */
   interface OrmlNftClassInfo extends Struct {
     readonly metadata: Bytes;
     readonly totalIssuance: u64;
@@ -5600,27 +5929,27 @@ declare module '@acala-network/types/lookup' {
     readonly data: ModuleNftClassData;
   }
 
-  /** @name ModuleNftClassData (514) */
+  /** @name ModuleNftClassData (494) */
   interface ModuleNftClassData extends Struct {
     readonly deposit: u128;
     readonly properties: u8;
     readonly attributes: BTreeMap<Bytes, Bytes>;
   }
 
-  /** @name OrmlNftTokenInfo (516) */
+  /** @name OrmlNftTokenInfo (496) */
   interface OrmlNftTokenInfo extends Struct {
     readonly metadata: Bytes;
     readonly owner: AccountId32;
     readonly data: ModuleNftTokenData;
   }
 
-  /** @name ModuleNftTokenData (517) */
+  /** @name ModuleNftTokenData (497) */
   interface ModuleNftTokenData extends Struct {
     readonly deposit: u128;
     readonly attributes: BTreeMap<Bytes, Bytes>;
   }
 
-  /** @name OrmlNftModuleError (519) */
+  /** @name OrmlNftModuleError (499) */
   interface OrmlNftModuleError extends Enum {
     readonly isNoAvailableClassId: boolean;
     readonly isNoAvailableTokenId: boolean;
@@ -5632,14 +5961,14 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'NoAvailableClassId' | 'NoAvailableTokenId' | 'TokenNotFound' | 'ClassNotFound' | 'NoPermission' | 'CannotDestroyClass' | 'MaxMetadataExceeded';
   }
 
-  /** @name ModulePricesModuleError (520) */
+  /** @name ModulePricesModuleError (500) */
   interface ModulePricesModuleError extends Enum {
     readonly isAccessPriceFailed: boolean;
     readonly isNoLockedPrice: boolean;
     readonly type: 'AccessPriceFailed' | 'NoLockedPrice';
   }
 
-  /** @name ModuleDexTradingPairStatus (521) */
+  /** @name ModuleDexTradingPairStatus (501) */
   interface ModuleDexTradingPairStatus extends Enum {
     readonly isDisabled: boolean;
     readonly isProvisioning: boolean;
@@ -5648,7 +5977,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'Disabled' | 'Provisioning' | 'Enabled';
   }
 
-  /** @name ModuleDexProvisioningParameters (522) */
+  /** @name ModuleDexProvisioningParameters (502) */
   interface ModuleDexProvisioningParameters extends Struct {
     readonly minContribution: ITuple<[u128, u128]>;
     readonly targetProvision: ITuple<[u128, u128]>;
@@ -5656,7 +5985,7 @@ declare module '@acala-network/types/lookup' {
     readonly notBefore: u32;
   }
 
-  /** @name ModuleDexModuleError (525) */
+  /** @name ModuleDexModuleError (505) */
   interface ModuleDexModuleError extends Enum {
     readonly isAlreadyEnabled: boolean;
     readonly isMustBeEnabled: boolean;
@@ -5684,7 +6013,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'AlreadyEnabled' | 'MustBeEnabled' | 'MustBeProvisioning' | 'MustBeDisabled' | 'NotAllowedList' | 'InvalidContributionIncrement' | 'InvalidLiquidityIncrement' | 'InvalidCurrencyId' | 'InvalidTradingPathLength' | 'InsufficientTargetAmount' | 'ExcessiveSupplyAmount' | 'InsufficientLiquidity' | 'ZeroSupplyAmount' | 'ZeroTargetAmount' | 'UnacceptableShareIncrement' | 'UnacceptableLiquidityWithdrawn' | 'InvariantCheckFailed' | 'UnqualifiedProvision' | 'StillProvisioning' | 'AssetUnregistered' | 'InvalidTradingPath' | 'NotAllowedRefund' | 'CannotSwap';
   }
 
-  /** @name ModuleDexOracleModuleError (530) */
+  /** @name ModuleDexOracleModuleError (510) */
   interface ModuleDexOracleModuleError extends Enum {
     readonly isAveragePriceAlreadyEnabled: boolean;
     readonly isAveragePriceMustBeEnabled: boolean;
@@ -5694,7 +6023,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'AveragePriceAlreadyEnabled' | 'AveragePriceMustBeEnabled' | 'InvalidPool' | 'InvalidCurrencyId' | 'IntervalIsZero';
   }
 
-  /** @name ModuleAggregatedDexModuleError (533) */
+  /** @name ModuleAggregatedDexModuleError (513) */
   interface ModuleAggregatedDexModuleError extends Enum {
     readonly isCannotSwap: boolean;
     readonly isInvalidPoolId: boolean;
@@ -5703,7 +6032,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'CannotSwap' | 'InvalidPoolId' | 'InvalidTokenIndex' | 'InvalidSwapPath';
   }
 
-  /** @name ModuleAuctionManagerCollateralAuctionItem (534) */
+  /** @name ModuleAuctionManagerCollateralAuctionItem (514) */
   interface ModuleAuctionManagerCollateralAuctionItem extends Struct {
     readonly refundRecipient: AccountId32;
     readonly currencyId: AcalaPrimitivesCurrencyCurrencyId;
@@ -5713,7 +6042,7 @@ declare module '@acala-network/types/lookup' {
     readonly startTime: u32;
   }
 
-  /** @name ModuleAuctionManagerModuleError (535) */
+  /** @name ModuleAuctionManagerModuleError (515) */
   interface ModuleAuctionManagerModuleError extends Enum {
     readonly isAuctionNotExists: boolean;
     readonly isInReverseStage: boolean;
@@ -5724,19 +6053,19 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'AuctionNotExists' | 'InReverseStage' | 'InvalidFeedPrice' | 'MustAfterShutdown' | 'InvalidBidPrice' | 'InvalidAmount';
   }
 
-  /** @name AcalaPrimitivesPosition (537) */
+  /** @name AcalaPrimitivesPosition (517) */
   interface AcalaPrimitivesPosition extends Struct {
     readonly collateral: u128;
     readonly debit: u128;
   }
 
-  /** @name ModuleLoansModuleError (538) */
+  /** @name ModuleLoansModuleError (518) */
   interface ModuleLoansModuleError extends Enum {
     readonly isAmountConvertFailed: boolean;
     readonly type: 'AmountConvertFailed';
   }
 
-  /** @name ModuleHonzonModuleError (540) */
+  /** @name ModuleHonzonModuleError (520) */
   interface ModuleHonzonModuleError extends Enum {
     readonly isNoPermission: boolean;
     readonly isAlreadyShutdown: boolean;
@@ -5745,7 +6074,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'NoPermission' | 'AlreadyShutdown' | 'AuthorizationNotExists' | 'AlreadyAuthorized';
   }
 
-  /** @name ModuleCdpTreasuryModuleError (541) */
+  /** @name ModuleCdpTreasuryModuleError (521) */
   interface ModuleCdpTreasuryModuleError extends Enum {
     readonly isCollateralNotEnough: boolean;
     readonly isSurplusPoolNotEnough: boolean;
@@ -5755,7 +6084,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'CollateralNotEnough' | 'SurplusPoolNotEnough' | 'DebitPoolNotEnough' | 'CannotSwap' | 'NotDexShare';
   }
 
-  /** @name ModuleCdpEngineRiskManagementParams (542) */
+  /** @name ModuleCdpEngineRiskManagementParams (522) */
   interface ModuleCdpEngineRiskManagementParams extends Struct {
     readonly maximumTotalDebitValue: u128;
     readonly interestRatePerSec: Option<u128>;
@@ -5764,7 +6093,7 @@ declare module '@acala-network/types/lookup' {
     readonly requiredCollateralRatio: Option<u128>;
   }
 
-  /** @name ModuleCdpEngineModuleError (545) */
+  /** @name ModuleCdpEngineModuleError (525) */
   interface ModuleCdpEngineModuleError extends Enum {
     readonly isExceedDebitValueHardCap: boolean;
     readonly isBelowRequiredCollateralRatio: boolean;
@@ -5787,7 +6116,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'ExceedDebitValueHardCap' | 'BelowRequiredCollateralRatio' | 'BelowLiquidationRatio' | 'MustBeUnsafe' | 'MustBeSafe' | 'InvalidCollateralType' | 'RemainDebitValueTooSmall' | 'CollateralAmountBelowMinimum' | 'InvalidFeedPrice' | 'NoDebitValue' | 'AlreadyShutdown' | 'MustAfterShutdown' | 'CollateralNotEnough' | 'NotEnoughDebitDecrement' | 'ConvertDebitBalanceFailed' | 'LiquidationFailed' | 'TooManyLiquidationContracts' | 'CollateralContractNotFound';
   }
 
-  /** @name ModuleEmergencyShutdownModuleError (546) */
+  /** @name ModuleEmergencyShutdownModuleError (526) */
   interface ModuleEmergencyShutdownModuleError extends Enum {
     readonly isAlreadyShutdown: boolean;
     readonly isMustAfterShutdown: boolean;
@@ -5797,13 +6126,37 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'AlreadyShutdown' | 'MustAfterShutdown' | 'CanNotRefund' | 'ExistPotentialSurplus' | 'ExistUnhandledDebit';
   }
 
-  /** @name ModuleHomaModuleStakingLedger (547) */
+  /** @name AcalaPrimitivesBondingLedgerBondingLedger (528) */
+  interface AcalaPrimitivesBondingLedgerBondingLedger extends Struct {
+    readonly total: u128;
+    readonly active: u128;
+    readonly unlocking: Vec<AcalaPrimitivesBondingLedgerUnlockChunk>;
+  }
+
+  /** @name AcalaPrimitivesBondingLedgerUnlockChunk (530) */
+  interface AcalaPrimitivesBondingLedgerUnlockChunk extends Struct {
+    readonly value: u128;
+    readonly unlockAt: u32;
+  }
+
+  /** @name ModuleNomineesElectionModuleError (532) */
+  interface ModuleNomineesElectionModuleError extends Enum {
+    readonly isBelowMinBondThreshold: boolean;
+    readonly isInvalidTargetsLength: boolean;
+    readonly isMaxUnlockChunksExceeded: boolean;
+    readonly isInvalidNominee: boolean;
+    readonly isNominateesCountExceeded: boolean;
+    readonly isNotBonded: boolean;
+    readonly type: 'BelowMinBondThreshold' | 'InvalidTargetsLength' | 'MaxUnlockChunksExceeded' | 'InvalidNominee' | 'NominateesCountExceeded' | 'NotBonded';
+  }
+
+  /** @name ModuleHomaModuleStakingLedger (533) */
   interface ModuleHomaModuleStakingLedger extends Struct {
     readonly bonded: Compact<u128>;
     readonly unlocking: Vec<ModuleHomaModuleUnlockChunk>;
   }
 
-  /** @name ModuleHomaModuleError (551) */
+  /** @name ModuleHomaModuleError (537) */
   interface ModuleHomaModuleError extends Enum {
     readonly isBelowMintThreshold: boolean;
     readonly isBelowRedeemThreshold: boolean;
@@ -5812,17 +6165,16 @@ declare module '@acala-network/types/lookup' {
     readonly isOutdatedEraIndex: boolean;
     readonly isFastMatchIsNotAllowed: boolean;
     readonly isCannotCompletelyFastMatch: boolean;
-    readonly isInvalidLastEraBumpedBlock: boolean;
-    readonly type: 'BelowMintThreshold' | 'BelowRedeemThreshold' | 'ExceededStakingCurrencySoftCap' | 'InsufficientUnclaimedRedemption' | 'OutdatedEraIndex' | 'FastMatchIsNotAllowed' | 'CannotCompletelyFastMatch' | 'InvalidLastEraBumpedBlock';
+    readonly type: 'BelowMintThreshold' | 'BelowRedeemThreshold' | 'ExceededStakingCurrencySoftCap' | 'InsufficientUnclaimedRedemption' | 'OutdatedEraIndex' | 'FastMatchIsNotAllowed' | 'CannotCompletelyFastMatch';
   }
 
-  /** @name ModuleXcmInterfaceModuleError (553) */
+  /** @name ModuleXcmInterfaceModuleError (539) */
   interface ModuleXcmInterfaceModuleError extends Enum {
     readonly isXcmFailed: boolean;
     readonly type: 'XcmFailed';
   }
 
-  /** @name ModuleIncentivesModuleError (555) */
+  /** @name ModuleIncentivesModuleError (541) */
   interface ModuleIncentivesModuleError extends Enum {
     readonly isNotEnough: boolean;
     readonly isInvalidCurrencyId: boolean;
@@ -5831,7 +6183,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'NotEnough' | 'InvalidCurrencyId' | 'InvalidPoolId' | 'InvalidRate';
   }
 
-  /** @name ModuleNftModuleError (556) */
+  /** @name ModuleNftModuleError (542) */
   interface ModuleNftModuleError extends Enum {
     readonly isClassIdNotFound: boolean;
     readonly isTokenIdNotFound: boolean;
@@ -5847,7 +6199,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'ClassIdNotFound' | 'TokenIdNotFound' | 'NoPermission' | 'InvalidQuantity' | 'NonTransferable' | 'NonBurnable' | 'NonMintable' | 'CannotDestroyClass' | 'Immutable' | 'AttributesTooLarge' | 'IncorrectTokenId';
   }
 
-  /** @name ModuleAssetRegistryModuleError (557) */
+  /** @name ModuleAssetRegistryModuleError (543) */
   interface ModuleAssetRegistryModuleError extends Enum {
     readonly isBadLocation: boolean;
     readonly isMultiLocationExisted: boolean;
@@ -5856,26 +6208,232 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'BadLocation' | 'MultiLocationExisted' | 'AssetIdNotExists' | 'AssetIdExisted';
   }
 
-  /** @name ModuleEvmModuleAccountInfo (558) */
+  /** @name EcosystemRenvmBridgeModuleError (545) */
+  interface EcosystemRenvmBridgeModuleError extends Enum {
+    readonly isInvalidRenVmPublicKey: boolean;
+    readonly isInvalidMintSignature: boolean;
+    readonly isSignatureAlreadyUsed: boolean;
+    readonly type: 'InvalidRenVmPublicKey' | 'InvalidMintSignature' | 'SignatureAlreadyUsed';
+  }
+
+  /** @name EcosystemStarportModuleError (547) */
+  interface EcosystemStarportModuleError extends Enum {
+    readonly isInsufficientAssetSupplyCap: boolean;
+    readonly isNoticeAlreadyInvoked: boolean;
+    readonly isInvalidNoticeInvoker: boolean;
+    readonly isInsufficientAssetToUnlock: boolean;
+    readonly isInsufficientValidNoticeSignatures: boolean;
+    readonly isExceededMaxNumberOfAuthorities: boolean;
+    readonly isAuthoritiesListCannotBeEmpty: boolean;
+    readonly type: 'InsufficientAssetSupplyCap' | 'NoticeAlreadyInvoked' | 'InvalidNoticeInvoker' | 'InsufficientAssetToUnlock' | 'InsufficientValidNoticeSignatures' | 'ExceededMaxNumberOfAuthorities' | 'AuthoritiesListCannotBeEmpty';
+  }
+
+  /** @name EcosystemCompoundCashModuleError (550) */
+  interface EcosystemCompoundCashModuleError extends Enum {
+    readonly isYieldIsOlderThanCurrent: boolean;
+    readonly type: 'YieldIsOlderThanCurrent';
+  }
+
+  /** @name CumulusPalletXcmpQueueInboundChannelDetails (552) */
+  interface CumulusPalletXcmpQueueInboundChannelDetails extends Struct {
+    readonly sender: u32;
+    readonly state: CumulusPalletXcmpQueueInboundState;
+    readonly messageMetadata: Vec<ITuple<[u32, PolkadotParachainPrimitivesXcmpMessageFormat]>>;
+  }
+
+  /** @name CumulusPalletXcmpQueueInboundState (553) */
+  interface CumulusPalletXcmpQueueInboundState extends Enum {
+    readonly isOk: boolean;
+    readonly isSuspended: boolean;
+    readonly type: 'Ok' | 'Suspended';
+  }
+
+  /** @name PolkadotParachainPrimitivesXcmpMessageFormat (556) */
+  interface PolkadotParachainPrimitivesXcmpMessageFormat extends Enum {
+    readonly isConcatenatedVersionedXcm: boolean;
+    readonly isConcatenatedEncodedBlob: boolean;
+    readonly isSignals: boolean;
+    readonly type: 'ConcatenatedVersionedXcm' | 'ConcatenatedEncodedBlob' | 'Signals';
+  }
+
+  /** @name CumulusPalletXcmpQueueOutboundChannelDetails (559) */
+  interface CumulusPalletXcmpQueueOutboundChannelDetails extends Struct {
+    readonly recipient: u32;
+    readonly state: CumulusPalletXcmpQueueOutboundState;
+    readonly signalsExist: bool;
+    readonly firstIndex: u16;
+    readonly lastIndex: u16;
+  }
+
+  /** @name CumulusPalletXcmpQueueOutboundState (560) */
+  interface CumulusPalletXcmpQueueOutboundState extends Enum {
+    readonly isOk: boolean;
+    readonly isSuspended: boolean;
+    readonly type: 'Ok' | 'Suspended';
+  }
+
+  /** @name CumulusPalletXcmpQueueQueueConfigData (562) */
+  interface CumulusPalletXcmpQueueQueueConfigData extends Struct {
+    readonly suspendThreshold: u32;
+    readonly dropThreshold: u32;
+    readonly resumeThreshold: u32;
+    readonly thresholdWeight: u64;
+    readonly weightRestrictDecay: u64;
+    readonly xcmpMaxIndividualWeight: u64;
+  }
+
+  /** @name CumulusPalletXcmpQueueError (564) */
+  interface CumulusPalletXcmpQueueError extends Enum {
+    readonly isFailedToSend: boolean;
+    readonly isBadXcmOrigin: boolean;
+    readonly isBadXcm: boolean;
+    readonly isBadOverweightIndex: boolean;
+    readonly isWeightOverLimit: boolean;
+    readonly type: 'FailedToSend' | 'BadXcmOrigin' | 'BadXcm' | 'BadOverweightIndex' | 'WeightOverLimit';
+  }
+
+  /** @name PalletXcmQueryStatus (565) */
+  interface PalletXcmQueryStatus extends Enum {
+    readonly isPending: boolean;
+    readonly asPending: {
+      readonly responder: XcmVersionedMultiLocation;
+      readonly maybeNotify: Option<ITuple<[u8, u8]>>;
+      readonly timeout: u32;
+    } & Struct;
+    readonly isVersionNotifier: boolean;
+    readonly asVersionNotifier: {
+      readonly origin: XcmVersionedMultiLocation;
+      readonly isActive: bool;
+    } & Struct;
+    readonly isReady: boolean;
+    readonly asReady: {
+      readonly response: XcmVersionedResponse;
+      readonly at: u32;
+    } & Struct;
+    readonly type: 'Pending' | 'VersionNotifier' | 'Ready';
+  }
+
+  /** @name XcmVersionedResponse (568) */
+  interface XcmVersionedResponse extends Enum {
+    readonly isV0: boolean;
+    readonly asV0: XcmV0Response;
+    readonly isV1: boolean;
+    readonly asV1: XcmV1Response;
+    readonly isV2: boolean;
+    readonly asV2: XcmV2Response;
+    readonly type: 'V0' | 'V1' | 'V2';
+  }
+
+  /** @name PalletXcmVersionMigrationStage (574) */
+  interface PalletXcmVersionMigrationStage extends Enum {
+    readonly isMigrateSupportedVersion: boolean;
+    readonly isMigrateVersionNotifiers: boolean;
+    readonly isNotifyCurrentTargets: boolean;
+    readonly asNotifyCurrentTargets: Option<Bytes>;
+    readonly isMigrateAndNotifyOldTargets: boolean;
+    readonly type: 'MigrateSupportedVersion' | 'MigrateVersionNotifiers' | 'NotifyCurrentTargets' | 'MigrateAndNotifyOldTargets';
+  }
+
+  /** @name PalletXcmError (575) */
+  interface PalletXcmError extends Enum {
+    readonly isUnreachable: boolean;
+    readonly isSendFailure: boolean;
+    readonly isFiltered: boolean;
+    readonly isUnweighableMessage: boolean;
+    readonly isDestinationNotInvertible: boolean;
+    readonly isEmpty: boolean;
+    readonly isCannotReanchor: boolean;
+    readonly isTooManyAssets: boolean;
+    readonly isInvalidOrigin: boolean;
+    readonly isBadVersion: boolean;
+    readonly isBadLocation: boolean;
+    readonly isNoSubscription: boolean;
+    readonly isAlreadySubscribed: boolean;
+    readonly type: 'Unreachable' | 'SendFailure' | 'Filtered' | 'UnweighableMessage' | 'DestinationNotInvertible' | 'Empty' | 'CannotReanchor' | 'TooManyAssets' | 'InvalidOrigin' | 'BadVersion' | 'BadLocation' | 'NoSubscription' | 'AlreadySubscribed';
+  }
+
+  /** @name CumulusPalletXcmError (576) */
+  type CumulusPalletXcmError = Null;
+
+  /** @name CumulusPalletDmpQueueConfigData (577) */
+  interface CumulusPalletDmpQueueConfigData extends Struct {
+    readonly maxIndividual: u64;
+  }
+
+  /** @name CumulusPalletDmpQueuePageIndexData (578) */
+  interface CumulusPalletDmpQueuePageIndexData extends Struct {
+    readonly beginUsed: u32;
+    readonly endUsed: u32;
+    readonly overweightCount: u64;
+  }
+
+  /** @name CumulusPalletDmpQueueError (581) */
+  interface CumulusPalletDmpQueueError extends Enum {
+    readonly isUnknown: boolean;
+    readonly isOverLimit: boolean;
+    readonly type: 'Unknown' | 'OverLimit';
+  }
+
+  /** @name OrmlXtokensModuleError (582) */
+  interface OrmlXtokensModuleError extends Enum {
+    readonly isAssetHasNoReserve: boolean;
+    readonly isNotCrossChainTransfer: boolean;
+    readonly isInvalidDest: boolean;
+    readonly isNotCrossChainTransferableCurrency: boolean;
+    readonly isUnweighableMessage: boolean;
+    readonly isXcmExecutionFailed: boolean;
+    readonly isCannotReanchor: boolean;
+    readonly isInvalidAncestry: boolean;
+    readonly isInvalidAsset: boolean;
+    readonly isDestinationNotInvertible: boolean;
+    readonly isBadVersion: boolean;
+    readonly isDistinctReserveForAssetAndFee: boolean;
+    readonly isZeroFee: boolean;
+    readonly isZeroAmount: boolean;
+    readonly isTooManyAssetsBeingSent: boolean;
+    readonly isAssetIndexNonExistent: boolean;
+    readonly isFeeNotEnough: boolean;
+    readonly isNotSupportedMultiLocation: boolean;
+    readonly isMinXcmFeeNotDefined: boolean;
+    readonly type: 'AssetHasNoReserve' | 'NotCrossChainTransfer' | 'InvalidDest' | 'NotCrossChainTransferableCurrency' | 'UnweighableMessage' | 'XcmExecutionFailed' | 'CannotReanchor' | 'InvalidAncestry' | 'InvalidAsset' | 'DestinationNotInvertible' | 'BadVersion' | 'DistinctReserveForAssetAndFee' | 'ZeroFee' | 'ZeroAmount' | 'TooManyAssetsBeingSent' | 'AssetIndexNonExistent' | 'FeeNotEnough' | 'NotSupportedMultiLocation' | 'MinXcmFeeNotDefined';
+  }
+
+  /** @name OrmlUnknownTokensModuleError (585) */
+  interface OrmlUnknownTokensModuleError extends Enum {
+    readonly isBalanceTooLow: boolean;
+    readonly isBalanceOverflow: boolean;
+    readonly isUnhandledAsset: boolean;
+    readonly type: 'BalanceTooLow' | 'BalanceOverflow' | 'UnhandledAsset';
+  }
+
+  /** @name OrmlXcmModuleError (586) */
+  interface OrmlXcmModuleError extends Enum {
+    readonly isUnreachable: boolean;
+    readonly isSendFailure: boolean;
+    readonly isBadVersion: boolean;
+    readonly type: 'Unreachable' | 'SendFailure' | 'BadVersion';
+  }
+
+  /** @name ModuleEvmModuleAccountInfo (587) */
   interface ModuleEvmModuleAccountInfo extends Struct {
     readonly nonce: u32;
     readonly contractInfo: Option<ModuleEvmModuleContractInfo>;
   }
 
-  /** @name ModuleEvmModuleContractInfo (560) */
+  /** @name ModuleEvmModuleContractInfo (589) */
   interface ModuleEvmModuleContractInfo extends Struct {
     readonly codeHash: H256;
     readonly maintainer: H160;
     readonly published: bool;
   }
 
-  /** @name ModuleEvmModuleCodeInfo (563) */
+  /** @name ModuleEvmModuleCodeInfo (592) */
   interface ModuleEvmModuleCodeInfo extends Struct {
     readonly codeSize: u32;
     readonly refCount: u32;
   }
 
-  /** @name ModuleEvmModuleError (564) */
+  /** @name ModuleEvmModuleError (593) */
   interface ModuleEvmModuleError extends Enum {
     readonly isAddressNotMapped: boolean;
     readonly isContractNotFound: boolean;
@@ -5896,7 +6454,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'AddressNotMapped' | 'ContractNotFound' | 'NoPermission' | 'ContractDevelopmentNotEnabled' | 'ContractDevelopmentAlreadyEnabled' | 'ContractAlreadyPublished' | 'ContractExceedsMaxCodeSize' | 'ContractAlreadyExisted' | 'OutOfStorage' | 'ChargeFeeFailed' | 'CannotKillContract' | 'ReserveStorageFailed' | 'UnreserveStorageFailed' | 'ChargeStorageFailed' | 'InvalidDecimals' | 'StrictCallFailed';
   }
 
-  /** @name ModuleEvmBridgeModuleError (565) */
+  /** @name ModuleEvmBridgeModuleError (594) */
   interface ModuleEvmBridgeModuleError extends Enum {
     readonly isExecutionFail: boolean;
     readonly isExecutionRevert: boolean;
@@ -5906,7 +6464,7 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'ExecutionFail' | 'ExecutionRevert' | 'ExecutionFatal' | 'ExecutionError' | 'InvalidReturnValue';
   }
 
-  /** @name ModuleEvmAccountsModuleError (566) */
+  /** @name ModuleEvmAccountsModuleError (595) */
   interface ModuleEvmAccountsModuleError extends Enum {
     readonly isAccountIdHasMapped: boolean;
     readonly isEthAddressHasMapped: boolean;
@@ -5916,7 +6474,67 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'AccountIdHasMapped' | 'EthAddressHasMapped' | 'BadSignature' | 'InvalidSignature' | 'NonZeroRefCount';
   }
 
-  /** @name NutsfinanceStableAssetStableAssetPoolInfo (567) */
+  /** @name PalletAuthorshipUncleEntryItem (597) */
+  interface PalletAuthorshipUncleEntryItem extends Enum {
+    readonly isInclusionHeight: boolean;
+    readonly asInclusionHeight: u32;
+    readonly isUncle: boolean;
+    readonly asUncle: ITuple<[H256, Option<AccountId32>]>;
+    readonly type: 'InclusionHeight' | 'Uncle';
+  }
+
+  /** @name PalletAuthorshipError (599) */
+  interface PalletAuthorshipError extends Enum {
+    readonly isInvalidUncleParent: boolean;
+    readonly isUnclesAlreadySet: boolean;
+    readonly isTooManyUncles: boolean;
+    readonly isGenesisUncle: boolean;
+    readonly isTooHighUncle: boolean;
+    readonly isUncleAlreadyIncluded: boolean;
+    readonly isOldUncle: boolean;
+    readonly type: 'InvalidUncleParent' | 'UnclesAlreadySet' | 'TooManyUncles' | 'GenesisUncle' | 'TooHighUncle' | 'UncleAlreadyIncluded' | 'OldUncle';
+  }
+
+  /** @name ModuleCollatorSelectionError (602) */
+  interface ModuleCollatorSelectionError extends Enum {
+    readonly isMaxCandidatesExceeded: boolean;
+    readonly isBelowCandidatesMin: boolean;
+    readonly isStillLocked: boolean;
+    readonly isUnknown: boolean;
+    readonly isPermission: boolean;
+    readonly isAlreadyCandidate: boolean;
+    readonly isNotCandidate: boolean;
+    readonly isNotNonCandidate: boolean;
+    readonly isNothingToWithdraw: boolean;
+    readonly isRequireSessionKey: boolean;
+    readonly isAlreadyInvulnerable: boolean;
+    readonly isInvalidProof: boolean;
+    readonly isMaxInvulnerablesExceeded: boolean;
+    readonly type: 'MaxCandidatesExceeded' | 'BelowCandidatesMin' | 'StillLocked' | 'Unknown' | 'Permission' | 'AlreadyCandidate' | 'NotCandidate' | 'NotNonCandidate' | 'NothingToWithdraw' | 'RequireSessionKey' | 'AlreadyInvulnerable' | 'InvalidProof' | 'MaxInvulnerablesExceeded';
+  }
+
+  /** @name SpCoreCryptoKeyTypeId (606) */
+  interface SpCoreCryptoKeyTypeId extends U8aFixed {}
+
+  /** @name PalletSessionError (607) */
+  interface PalletSessionError extends Enum {
+    readonly isInvalidProof: boolean;
+    readonly isNoAssociatedValidatorId: boolean;
+    readonly isDuplicatedKey: boolean;
+    readonly isNoKeys: boolean;
+    readonly isNoAccount: boolean;
+    readonly type: 'InvalidProof' | 'NoAssociatedValidatorId' | 'DuplicatedKey' | 'NoKeys' | 'NoAccount';
+  }
+
+  /** @name ModuleSessionManagerModuleError (611) */
+  interface ModuleSessionManagerModuleError extends Enum {
+    readonly isInvalidSession: boolean;
+    readonly isInvalidDuration: boolean;
+    readonly isEstimateNextSessionFailed: boolean;
+    readonly type: 'InvalidSession' | 'InvalidDuration' | 'EstimateNextSessionFailed';
+  }
+
+  /** @name NutsfinanceStableAssetStableAssetPoolInfo (612) */
   interface NutsfinanceStableAssetStableAssetPoolInfo extends Struct {
     readonly poolAsset: AcalaPrimitivesCurrencyCurrencyId;
     readonly assets: Vec<AcalaPrimitivesCurrencyCurrencyId>;
@@ -5936,7 +6554,7 @@ declare module '@acala-network/types/lookup' {
     readonly precision: u128;
   }
 
-  /** @name NutsfinanceStableAssetError (568) */
+  /** @name NutsfinanceStableAssetError (613) */
   interface NutsfinanceStableAssetError extends Enum {
     readonly isInconsistentStorage: boolean;
     readonly isInvalidPoolAsset: boolean;
@@ -5952,13 +6570,69 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'InconsistentStorage' | 'InvalidPoolAsset' | 'ArgumentsMismatch' | 'ArgumentsError' | 'PoolNotFound' | 'Math' | 'InvalidPoolValue' | 'MintUnderMin' | 'SwapUnderMin' | 'RedeemUnderMin' | 'RedeemOverMax';
   }
 
-  /** @name PolkadotPrimitivesV2UpgradeRestriction (570) */
+  /** @name OrmlPaymentsPaymentDetail (614) */
+  interface OrmlPaymentsPaymentDetail extends Struct {
+    readonly asset: AcalaPrimitivesCurrencyCurrencyId;
+    readonly amount: Compact<u128>;
+    readonly incentiveAmount: Compact<u128>;
+    readonly state: OrmlPaymentsPaymentState;
+    readonly resolverAccount: AccountId32;
+    readonly feeDetail: Option<ITuple<[AccountId32, u128]>>;
+  }
+
+  /** @name OrmlPaymentsPaymentState (615) */
+  interface OrmlPaymentsPaymentState extends Enum {
+    readonly isCreated: boolean;
+    readonly isNeedsReview: boolean;
+    readonly isRefundRequested: boolean;
+    readonly asRefundRequested: {
+      readonly cancelBlock: u32;
+    } & Struct;
+    readonly isPaymentRequested: boolean;
+    readonly type: 'Created' | 'NeedsReview' | 'RefundRequested' | 'PaymentRequested';
+  }
+
+  /** @name OrmlPaymentsScheduledTask (617) */
+  interface OrmlPaymentsScheduledTask extends Struct {
+    readonly task: OrmlPaymentsTask;
+    readonly when: u32;
+  }
+
+  /** @name OrmlPaymentsTask (618) */
+  interface OrmlPaymentsTask extends Enum {
+    readonly isCancel: boolean;
+    readonly type: 'Cancel';
+  }
+
+  /** @name OrmlPaymentsError (622) */
+  interface OrmlPaymentsError extends Enum {
+    readonly isInvalidPayment: boolean;
+    readonly isPaymentAlreadyReleased: boolean;
+    readonly isPaymentAlreadyInProcess: boolean;
+    readonly isInvalidAction: boolean;
+    readonly isPaymentNeedsReview: boolean;
+    readonly isMathError: boolean;
+    readonly isRefundNotRequested: boolean;
+    readonly isDisputePeriodNotPassed: boolean;
+    readonly isRefundQueueFull: boolean;
+    readonly type: 'InvalidPayment' | 'PaymentAlreadyReleased' | 'PaymentAlreadyInProcess' | 'InvalidAction' | 'PaymentNeedsReview' | 'MathError' | 'RefundNotRequested' | 'DisputePeriodNotPassed' | 'RefundQueueFull';
+  }
+
+  /** @name ModuleEarningModuleError (625) */
+  interface ModuleEarningModuleError extends Enum {
+    readonly isBelowMinBondThreshold: boolean;
+    readonly isMaxUnlockChunksExceeded: boolean;
+    readonly isNotBonded: boolean;
+    readonly type: 'BelowMinBondThreshold' | 'MaxUnlockChunksExceeded' | 'NotBonded';
+  }
+
+  /** @name PolkadotPrimitivesV2UpgradeRestriction (627) */
   interface PolkadotPrimitivesV2UpgradeRestriction extends Enum {
     readonly isPresent: boolean;
     readonly type: 'Present';
   }
 
-  /** @name CumulusPalletParachainSystemRelayStateSnapshotMessagingStateSnapshot (571) */
+  /** @name CumulusPalletParachainSystemRelayStateSnapshotMessagingStateSnapshot (628) */
   interface CumulusPalletParachainSystemRelayStateSnapshotMessagingStateSnapshot extends Struct {
     readonly dmqMqcHead: H256;
     readonly relayDispatchQueueSize: ITuple<[u32, u32]>;
@@ -5966,7 +6640,7 @@ declare module '@acala-network/types/lookup' {
     readonly egressChannels: Vec<ITuple<[u32, PolkadotPrimitivesV2AbridgedHrmpChannel]>>;
   }
 
-  /** @name PolkadotPrimitivesV2AbridgedHrmpChannel (574) */
+  /** @name PolkadotPrimitivesV2AbridgedHrmpChannel (631) */
   interface PolkadotPrimitivesV2AbridgedHrmpChannel extends Struct {
     readonly maxCapacity: u32;
     readonly maxTotalSize: u32;
@@ -5976,7 +6650,7 @@ declare module '@acala-network/types/lookup' {
     readonly mqcHead: Option<H256>;
   }
 
-  /** @name PolkadotPrimitivesV2AbridgedHostConfiguration (575) */
+  /** @name PolkadotPrimitivesV2AbridgedHostConfiguration (632) */
   interface PolkadotPrimitivesV2AbridgedHostConfiguration extends Struct {
     readonly maxCodeSize: u32;
     readonly maxHeadDataSize: u32;
@@ -5989,13 +6663,13 @@ declare module '@acala-network/types/lookup' {
     readonly validationUpgradeDelay: u32;
   }
 
-  /** @name PolkadotCorePrimitivesOutboundHrmpMessage (581) */
+  /** @name PolkadotCorePrimitivesOutboundHrmpMessage (638) */
   interface PolkadotCorePrimitivesOutboundHrmpMessage extends Struct {
     readonly recipient: u32;
     readonly data: Bytes;
   }
 
-  /** @name CumulusPalletParachainSystemError (582) */
+  /** @name CumulusPalletParachainSystemError (639) */
   interface CumulusPalletParachainSystemError extends Enum {
     readonly isOverlappingUpgrades: boolean;
     readonly isProhibitedByPolkadot: boolean;
@@ -6008,45 +6682,45 @@ declare module '@acala-network/types/lookup' {
     readonly type: 'OverlappingUpgrades' | 'ProhibitedByPolkadot' | 'TooBig' | 'ValidationDataNotAvailable' | 'HostConfigurationNotAvailable' | 'NotScheduled' | 'NothingAuthorized' | 'Unauthorized';
   }
 
-  /** @name PalletSudoError (583) */
+  /** @name PalletSudoError (640) */
   interface PalletSudoError extends Enum {
     readonly isRequireSudo: boolean;
     readonly type: 'RequireSudo';
   }
 
-  /** @name FrameSystemExtensionsCheckNonZeroSender (586) */
+  /** @name FrameSystemExtensionsCheckNonZeroSender (643) */
   type FrameSystemExtensionsCheckNonZeroSender = Null;
 
-  /** @name FrameSystemExtensionsCheckSpecVersion (587) */
+  /** @name FrameSystemExtensionsCheckSpecVersion (644) */
   type FrameSystemExtensionsCheckSpecVersion = Null;
 
-  /** @name FrameSystemExtensionsCheckTxVersion (588) */
+  /** @name FrameSystemExtensionsCheckTxVersion (645) */
   type FrameSystemExtensionsCheckTxVersion = Null;
 
-  /** @name FrameSystemExtensionsCheckGenesis (589) */
+  /** @name FrameSystemExtensionsCheckGenesis (646) */
   type FrameSystemExtensionsCheckGenesis = Null;
 
-  /** @name RuntimeCommonCheckNonce (592) */
+  /** @name RuntimeCommonCheckNonce (649) */
   interface RuntimeCommonCheckNonce extends Struct {
     readonly nonce: Compact<u32>;
   }
 
-  /** @name FrameSystemExtensionsCheckWeight (593) */
+  /** @name FrameSystemExtensionsCheckWeight (650) */
   type FrameSystemExtensionsCheckWeight = Null;
 
-  /** @name ModuleEvmSetEvmOrigin (594) */
+  /** @name ModuleEvmSetEvmOrigin (651) */
   type ModuleEvmSetEvmOrigin = Null;
 
-  /** @name ModuleTransactionPaymentChargeTransactionPayment (595) */
+  /** @name ModuleTransactionPaymentChargeTransactionPayment (652) */
   interface ModuleTransactionPaymentChargeTransactionPayment extends Compact<u128> {}
 
-  /** @name AcalaRuntimeStorageDepositPerByte (596) */
-  type AcalaRuntimeStorageDepositPerByte = Null;
+  /** @name MandalaRuntimeStorageDepositPerByte (653) */
+  type MandalaRuntimeStorageDepositPerByte = Null;
 
-  /** @name AcalaRuntimeTxFeePerGas (597) */
-  type AcalaRuntimeTxFeePerGas = Null;
+  /** @name MandalaRuntimeTxFeePerGas (654) */
+  type MandalaRuntimeTxFeePerGas = Null;
 
-  /** @name AcalaPrimitivesSignatureAcalaMultiSignature (599) */
+  /** @name AcalaPrimitivesSignatureAcalaMultiSignature (656) */
   interface AcalaPrimitivesSignatureAcalaMultiSignature extends Enum {
     readonly isEd25519: boolean;
     readonly asEd25519: SpCoreEd25519Signature;

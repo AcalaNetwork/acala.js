@@ -4,7 +4,7 @@ import fs from 'fs';
 import { w3cwebsocket as WebSocket } from 'websocket';
 
 const main = (): void => {
-  const endpoint = 'wss://acala-rpc-0.aca-api.network';
+  const endpoint = 'wss://mandala-rpc.aca-staging.network/ws';
   console.log('Connecting to ', endpoint);
   const ws = new WebSocket(endpoint);
   ws.onopen = (): void => {
