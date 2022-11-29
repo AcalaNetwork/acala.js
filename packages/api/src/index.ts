@@ -4,9 +4,12 @@ import {
   types as acalaTypes,
   typesAlias as acalaTypesAlias,
   typesBundle as acalaTypesBundle,
-  signedExtensions as acalaSignedExtensions
+  signedExtensions as acalaSignedExtensions,
+  lookupType as acalaLookupTypes,
 } from '@acala-network/types';
 import { ApiOptions } from '@polkadot/api/types';
+import { RegistryTypes } from '@polkadot/types/types';
+import { runtime } from './runtime';
 
 export const defaultOptions: ApiOptions = {
   types: acalaTypes,
@@ -22,6 +25,8 @@ export const options = ({
   ...otherOptions
 }: ApiOptions = {}): ApiOptions => ({
   types: {
+    ...acalaTypes,
+    ...(acalaLookupTypes as unknown as RegistryTypes),  // TODO: RegistryTypes's own issue?
     ...types
   },
   rpc: {
@@ -58,5 +63,6 @@ export const options = ({
     ...acalaSignedExtensions,
     ...signedExtensions
   },
+  runtime,
   ...otherOptions
 });
