@@ -66,7 +66,7 @@ export const options = ({
   },
   runtime: {
     ...acalaRuntime,
-    ...runtime,
+    ...runtime
   },
   ...otherOptions
 });
