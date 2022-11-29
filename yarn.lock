@@ -33,7 +33,7 @@ __metadata:
   resolution: "@acala-network/api@workspace:packages/api"
   dependencies:
     "@acala-network/api-derive": 4.1.8-1
-    "@acala-network/types": 4.1.8-1
+    "@acala-network/types": 4.1.8-2.2
     "@babel/runtime": ^7.10.2
     "@open-web3/orml-api-derive": ^1.1.4
     "@polkadot/api": ^9.9.1
@@ -391,6 +391,20 @@ __metadata:
   peerDependencies:
     "@polkadot/api": ">8.5.1"
   checksum: dcf662bf8bff7c9c0e77155ebec8b251494befe8a09d4a0cd48272d3e912d40884429b3dd1af8fc75ecf42bea0655433986999fd6a60c1372c34d706ec4e9404
+  languageName: node
+  linkType: hard
+
+"@acala-network/types@npm:4.1.8-2.2":
+  version: 4.1.8-2.2
+  resolution: "@acala-network/types@npm:4.1.8-2.2"
+  dependencies:
+    "@acala-network/type-definitions": 4.1.8-1
+    "@babel/runtime": ^7.10.2
+    "@open-web3/api-mobx": ^1.1.4
+    "@open-web3/orml-types": ^1.1.4
+  peerDependencies:
+    "@polkadot/api": ">=8"
+  checksum: 17bd732473df44a16202c1c10afc31f647764a10d21f118e19444ee084deb5b47e585cae11af17847b9894ee3cb5762e7626b897a0ddaa1e0bdd45eb507bcf11
   languageName: node
   linkType: hard
 
