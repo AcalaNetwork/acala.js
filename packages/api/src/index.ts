@@ -9,7 +9,7 @@ import {
 } from '@acala-network/types';
 import { ApiOptions } from '@polkadot/api/types';
 import { RegistryTypes } from '@polkadot/types/types';
-import { runtime } from './runtime';
+import { runtime as acalaRuntime } from './runtime';
 
 export const defaultOptions: ApiOptions = {
   types: acalaTypes,
@@ -21,6 +21,7 @@ export const options = ({
   rpc = {},
   typesAlias = {},
   typesBundle = {},
+  runtime = {},
   signedExtensions,
   ...otherOptions
 }: ApiOptions = {}): ApiOptions => ({
@@ -63,6 +64,9 @@ export const options = ({
     ...acalaSignedExtensions,
     ...signedExtensions
   },
-  runtime,
+  runtime: {
+    ...acalaRuntime,
+    ...runtime,
+  },
   ...otherOptions
 });
