@@ -13,9 +13,9 @@ import {
   DefinitionRpcSub
 } from '@polkadot/types/types';
 
-export * as lookupType from './interfaces/lookup';
-
 import './interfaces/augment-api';
+
+export * as lookupTypes from './interfaces/lookup';
 
 // export * from './interfaces/augment-api-mobx';
 

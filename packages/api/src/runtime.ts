@@ -1,4 +1,4 @@
-import { ApiOptions } from "@polkadot/api/types";
+import { ApiOptions } from '@polkadot/api/types';
 
 export const runtime: ApiOptions['runtime'] = {
   EVMRuntimeRPCApi: [
