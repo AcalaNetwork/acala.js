@@ -3594,29 +3594,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/types-codec@npm:8.14.1":
-  version: 8.14.1
-  resolution: "@polkadot/types-codec@npm:8.14.1"
-  dependencies:
-    "@babel/runtime": ^7.18.9
-    "@polkadot/util": ^10.1.1
-    "@polkadot/x-bigint": ^10.1.1
-  checksum: 372587006c950732c9501b706cb41fb7af938a2c997118b692c4d1261d7f285eccf0ad76ee5e7ad8bd799a7b932837d033cdbc3255f256c299d3775e76ba9ae1
-  languageName: node
-  linkType: hard
-
-"@polkadot/types-codec@npm:9.9.1":
-  version: 9.9.1
-  resolution: "@polkadot/types-codec@npm:9.9.1"
-  dependencies:
-    "@babel/runtime": ^7.20.1
-    "@polkadot/util": ^10.1.13
-    "@polkadot/x-bigint": ^10.1.13
-  checksum: 2c84d7c8fa76627dbca8e98707417e1fc4e8169a1668eabf353ec6af7ed991288889e9cc6f1a6ed1fc02dad2f5842ef9d09161caaf1c757f780844d5de76b811
-  languageName: node
-  linkType: hard
-
-"@polkadot/types-codec@npm:9.9.4":
+"@polkadot/types-codec@npm:^9.9.1":
   version: 9.9.4
   resolution: "@polkadot/types-codec@npm:9.9.4"
   dependencies:
@@ -3794,7 +3772,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/util@npm:^10.1.14":
+"@polkadot/util@npm:10.1.14, @polkadot/util@npm:^10.1.1, @polkadot/util@npm:^10.1.13, @polkadot/util@npm:^10.1.14":
   version: 10.1.14
   resolution: "@polkadot/util@npm:10.1.14"
   dependencies:
@@ -3806,6 +3784,22 @@ __metadata:
     "@types/bn.js": ^5.1.1
     bn.js: ^5.2.1
   checksum: 285bd33ecba279c1a492bfa25af97d568a580fe74d635d5b38133ea049c799746f159fc2a843a3ae90614292649778363a3e3ecd0e8eae5eb88bb46d4b730da4
+  languageName: node
+  linkType: hard
+
+"@polkadot/util@npm:9.7.2":
+  version: 9.7.2
+  resolution: "@polkadot/util@npm:9.7.2"
+  dependencies:
+    "@babel/runtime": ^7.18.6
+    "@polkadot/x-bigint": 9.7.2
+    "@polkadot/x-global": 9.7.2
+    "@polkadot/x-textdecoder": 9.7.2
+    "@polkadot/x-textencoder": 9.7.2
+    "@types/bn.js": ^5.1.0
+    bn.js: ^5.2.1
+    ip-regex: ^4.3.0
+  checksum: ccb7270148a0479c141dc138546a30f31fbe39d6d182c72bfc027ae1f01163702b1d2a568b7b2ae5dd2d1b787ec70243f8bebe55a7209ee3f0321708ada293ba
   languageName: node
   linkType: hard
 
@@ -3887,7 +3881,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/x-bigint@npm:10.1.14, @polkadot/x-bigint@npm:^10.1.1, @polkadot/x-bigint@npm:^10.1.13, @polkadot/x-bigint@npm:^10.1.14":
+"@polkadot/x-bigint@npm:10.1.14, @polkadot/x-bigint@npm:^10.1.14":
   version: 10.1.14
   resolution: "@polkadot/x-bigint@npm:10.1.14"
   dependencies:
@@ -3967,6 +3961,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@polkadot/x-textdecoder@npm:9.7.2":
+  version: 9.7.2
+  resolution: "@polkadot/x-textdecoder@npm:9.7.2"
+  dependencies:
+    "@babel/runtime": ^7.18.6
+    "@polkadot/x-global": 9.7.2
+  checksum: e2cb044723a7130fb8ad7f3799ede94f49777e94ab6806318f7fc5a0cfdba91fd06730da3292453c9a4d901b60b07b78efbbd44f917b99ea1490a79f8dfec39d
+  languageName: node
+  linkType: hard
+
 "@polkadot/x-textencoder@npm:10.1.14":
   version: 10.1.14
   resolution: "@polkadot/x-textencoder@npm:10.1.14"
@@ -3974,6 +3978,16 @@ __metadata:
     "@babel/runtime": ^7.20.1
     "@polkadot/x-global": 10.1.14
   checksum: fa4213ab619f39e8eb834c7aa4b9eddf16db2a8be9d1b8777dd91d64390cef03ce9944cb6abd4e04bd661220c7536e0272f477de075eb7da0736491b3b1d316e
+  languageName: node
+  linkType: hard
+
+"@polkadot/x-textencoder@npm:9.7.2":
+  version: 9.7.2
+  resolution: "@polkadot/x-textencoder@npm:9.7.2"
+  dependencies:
+    "@babel/runtime": ^7.18.6
+    "@polkadot/x-global": 9.7.2
+  checksum: 619bf4eafc086e777abfae67e1027136fb1e4d9761e20583da12c55c5b6cc852f227029b8b3241cda23b157e11d450d273b3526b792a95eaa294f0f785d9fe3c
   languageName: node
   linkType: hard
 
@@ -8738,6 +8752,13 @@ __metadata:
   version: 1.4.0
   resolution: "interpret@npm:1.4.0"
   checksum: 2e5f51268b5941e4a17e4ef0575bc91ed0ab5f8515e3cf77486f7c14d13f3010df9c0959f37063dcc96e78d12dc6b0bb1b9e111cdfe69771f4656d2993d36155
+  languageName: node
+  linkType: hard
+
+"ip-regex@npm:^4.3.0":
+  version: 4.3.0
+  resolution: "ip-regex@npm:4.3.0"
+  checksum: 7ff904b891221b1847f3fdf3dbb3e6a8660dc39bc283f79eb7ed88f5338e1a3d1104b779bc83759159be266249c59c2160e779ee39446d79d4ed0890dfd06f08
   languageName: node
   linkType: hard
 

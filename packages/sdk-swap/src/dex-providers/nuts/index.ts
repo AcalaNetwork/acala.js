@@ -15,7 +15,7 @@ import { NutsDexOnlySupportApiRx } from './errors';
 import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { AmountTooSmall, NoTradingPathError, ParamsNotAcceptableForDexProvider } from '../../errors';
-import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { SubmittableExtrinsic } from '@polkadot/api/types/submittable';
 import { ISubmittableResult } from '@polkadot/types/types';
 
 interface NutsDexConfigs {
