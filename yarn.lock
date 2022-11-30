@@ -5,11 +5,11 @@ __metadata:
   version: 6
   cacheKey: 8
 
-"@acala-network/api-derive@4.1.8-1, @acala-network/api-derive@workspace:packages/api-derive":
+"@acala-network/api-derive@4.1.8-3, @acala-network/api-derive@workspace:packages/api-derive":
   version: 0.0.0-use.local
   resolution: "@acala-network/api-derive@workspace:packages/api-derive"
   dependencies:
-    "@acala-network/types": 4.1.8-1
+    "@acala-network/types": 4.1.8-3
     "@babel/runtime": ^7.10.2
     "@open-web3/orml-types": ^1.1.4
     "@polkadot/api-derive": ^8.5.1
@@ -28,12 +28,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@acala-network/api@4.1.8-1, @acala-network/api@workspace:packages/api":
+"@acala-network/api@4.1.8-3, @acala-network/api@workspace:packages/api, @acala-network/api@~4.1.8-2.2":
   version: 0.0.0-use.local
   resolution: "@acala-network/api@workspace:packages/api"
   dependencies:
-    "@acala-network/api-derive": 4.1.8-1
-    "@acala-network/types": 4.1.8-2.2
+    "@acala-network/api-derive": 4.1.8-3
+    "@acala-network/types": 4.1.8-3
     "@babel/runtime": ^7.10.2
     "@open-web3/orml-api-derive": ^1.1.4
     "@polkadot/api": ^9.9.1
@@ -58,23 +58,6 @@ __metadata:
     "@polkadot/api": ^8.5.1
     "@polkadot/types": ^8.5.1
   checksum: 9a6c4cbda43ca111273dea266461b0e3723bdc975c7316e523cbeaeec93f7cae564580bc9a0a94fe2e00738c2f4adde3f363feb22bd7ebc34651fb084c5722d1
-  languageName: node
-  linkType: hard
-
-"@acala-network/api@npm:~4.1.8-2.2":
-  version: 4.1.8-2.3
-  resolution: "@acala-network/api@npm:4.1.8-2.3"
-  dependencies:
-    "@acala-network/api-derive": 4.1.8-1
-    "@acala-network/types": 4.1.8-2.3
-    "@babel/runtime": ^7.10.2
-    "@open-web3/orml-api-derive": ^1.1.4
-    "@polkadot/api": ^9.9.1
-    "@polkadot/rpc-core": ^9.9.1
-  peerDependencies:
-    "@polkadot/api": ">=9"
-    "@polkadot/types": ">=9"
-  checksum: 718ce029b28cdad8e5ccf889ca4c2d80cbcd75f91e8b16607f01746aae48bf9cd641ce762475f80de5f9ea396d144df1b12a75c06ad585617baf1985e5f3fff9
   languageName: node
   linkType: hard
 
@@ -172,7 +155,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@acala-network/sdk-core@4.1.8-1, @acala-network/sdk-core@workspace:packages/sdk-core":
+"@acala-network/sdk-core@4.1.8-3, @acala-network/sdk-core@workspace:packages/sdk-core":
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk-core@workspace:packages/sdk-core"
   dependencies:
@@ -204,7 +187,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk-homa@workspace:packages/sdk-homa"
   dependencies:
-    "@acala-network/sdk-core": 4.1.8-1
+    "@acala-network/sdk-core": 4.1.8-3
     "@types/lodash": ^4.14.161
     lodash: ^4.17.20
     rxjs: ^7.5.7
@@ -227,7 +210,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk-swap@workspace:packages/sdk-swap"
   dependencies:
-    "@acala-network/sdk": ^4.1.8-1
+    "@acala-network/sdk": ^4.1.8-3
     "@nuts-finance/sdk-stable-asset": ^1.2.0
     "@types/lodash": ^4.14.161
   languageName: unknown
@@ -245,13 +228,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@acala-network/sdk@^4.1.8-1, @acala-network/sdk@workspace:packages/sdk":
+"@acala-network/sdk@^4.1.8-3, @acala-network/sdk@workspace:packages/sdk":
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk@workspace:packages/sdk"
   dependencies:
-    "@acala-network/api": 4.1.8-1
+    "@acala-network/api": 4.1.8-3
     "@acala-network/eth-providers": ^2.5.4
-    "@acala-network/type-definitions": 4.1.8-1
+    "@acala-network/type-definitions": 4.1.8-3
     "@ethersproject/bignumber": ^5.7.0
     "@polkadot/api": ^9.9.1
     "@polkadot/types": ^9.9.1
@@ -296,7 +279,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@acala-network/type-definitions@4.1.8-1, @acala-network/type-definitions@workspace:packages/type-definitions":
+"@acala-network/type-definitions@4.1.8-3, @acala-network/type-definitions@workspace:packages/type-definitions":
   version: 0.0.0-use.local
   resolution: "@acala-network/type-definitions@workspace:packages/type-definitions"
   dependencies:
@@ -313,11 +296,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@acala-network/types@4.1.8-1, @acala-network/types@workspace:packages/types":
+"@acala-network/types@4.1.8-3, @acala-network/types@workspace:packages/types, @acala-network/types@~4.1.8-2.2":
   version: 0.0.0-use.local
   resolution: "@acala-network/types@workspace:packages/types"
   dependencies:
-    "@acala-network/type-definitions": 4.1.8-1
+    "@acala-network/type-definitions": 4.1.8-3
     "@babel/runtime": ^7.10.2
     "@open-web3/api-mobx": ^1.1.4
     "@open-web3/orml-types": ^1.1.4
@@ -345,39 +328,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@acala-network/types@npm:4.1.8-2.2":
-  version: 4.1.8-2.2
-  resolution: "@acala-network/types@npm:4.1.8-2.2"
-  dependencies:
-    "@acala-network/type-definitions": 4.1.8-1
-    "@babel/runtime": ^7.10.2
-    "@open-web3/api-mobx": ^1.1.4
-    "@open-web3/orml-types": ^1.1.4
-  peerDependencies:
-    "@polkadot/api": ">=8"
-  checksum: 17bd732473df44a16202c1c10afc31f647764a10d21f118e19444ee084deb5b47e585cae11af17847b9894ee3cb5762e7626b897a0ddaa1e0bdd45eb507bcf11
-  languageName: node
-  linkType: hard
-
-"@acala-network/types@npm:4.1.8-2.3, @acala-network/types@npm:~4.1.8-2.2":
-  version: 4.1.8-2.3
-  resolution: "@acala-network/types@npm:4.1.8-2.3"
-  dependencies:
-    "@acala-network/type-definitions": 4.1.8-1
-    "@babel/runtime": ^7.10.2
-    "@open-web3/api-mobx": ^1.1.4
-    "@open-web3/orml-types": ^1.1.4
-  peerDependencies:
-    "@polkadot/api": ">=8"
-  checksum: b51d755314304421603ac293d9511e97a54ac0b5e7fe0bfc89d65623360603021fed33b5185fcf14ee1d9cba3f6d293c2e8522958f00465ea22d2312391f3de8
-  languageName: node
-  linkType: hard
-
 "@acala-network/wormhole-portal@workspace:packages/wormhole-portal":
   version: 0.0.0-use.local
   resolution: "@acala-network/wormhole-portal@workspace:packages/wormhole-portal"
   dependencies:
-    "@acala-network/sdk": ^4.1.8-1
+    "@acala-network/sdk": ^4.1.8-3
     "@certusone/wormhole-sdk": ^0.5.0
     "@ethersproject/bignumber": ^5.7.0
     "@grpc/grpc-js": ^1.6.8

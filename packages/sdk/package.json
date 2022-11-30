@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk",
-  "version": "4.1.8-1",
+  "version": "4.1.8-3",
   "description": "acala network sdk",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
@@ -18,9 +18,9 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
-    "@acala-network/api": "4.1.8-1",
+    "@acala-network/api": "4.1.8-3",
     "@acala-network/eth-providers": "^2.5.4",
-    "@acala-network/type-definitions": "4.1.8-1",
+    "@acala-network/type-definitions": "4.1.8-3",
     "@ethersproject/bignumber": "^5.7.0",
     "@polkadot/api": "^9.9.1",
     "@polkadot/types": "^9.9.1",
