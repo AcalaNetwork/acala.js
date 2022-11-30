@@ -7,7 +7,7 @@ import { memo } from '@polkadot/api-derive/util';
 
 import { DerivedUserLoan } from '../types/loan';
 import { getAllCollateralCurrencyIds } from '../utils';
-import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/lookup';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
 
 /**
  * @name loan

@@ -1,7 +1,7 @@
 import { AnyApi } from '@acala-network/sdk-core';
 import { GenericExtrinsic } from '@polkadot/types';
 import { SignedBlock } from '@polkadot/types/interfaces';
-import { FrameSystemEventRecord } from '@acala-network/types/lookup';
+import { FrameSystemEventRecord } from '@polkadot/types/lookup';
 
 export interface Extrinsic {
   raw: GenericExtrinsic;

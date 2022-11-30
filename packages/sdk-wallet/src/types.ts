@@ -1,5 +1,5 @@
 import { FixedPointNumber, Token, TokenBalance } from '@acala-network/sdk-core';
-import { BlockNumber } from '@acala-network/types/interfaces';
+import { BlockNumber } from '@polkadot/types/interfaces/types';
 
 export interface PriceData {
   token: Token;

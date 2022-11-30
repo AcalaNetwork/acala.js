@@ -1,5 +1,5 @@
 import { forceToCurrencyName } from '@acala-network/sdk-core';
-import { ModuleSupportIncentivesPoolId } from '@acala-network/types/lookup';
+import { ModuleSupportIncentivesPoolId } from '@polkadot/types/lookup';
 
 export function getPoolId(pool: ModuleSupportIncentivesPoolId): string {
   if (pool.isDex) {

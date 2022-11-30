@@ -6,7 +6,7 @@ import {
   MaybeCurrency,
   Token
 } from '@acala-network/sdk-core';
-import { AcalaPrimitivesTradingPair, ModuleDexTradingPairStatus } from '@acala-network/types/lookup';
+import { AcalaPrimitivesTradingPair, ModuleDexTradingPairStatus } from '@polkadot/types/lookup';
 import { StorageKey } from '@polkadot/types';
 import { memoize } from '@polkadot/util';
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of } from 'rxjs';

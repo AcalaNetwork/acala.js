@@ -16,5 +16,4 @@ export * from './nft/types';
 export * from './nomineesElection/types';
 export * from './runtime/types';
 export * from './stakingPool/types';
-export * from './renvmBridge/types';
 export * from './support/types';

@@ -4,7 +4,7 @@ import {
   AcalaPrimitivesPosition,
   ModuleCdpEngineRiskManagementParams,
   AcalaPrimitivesCurrencyCurrencyId
-} from '@acala-network/types/lookup';
+} from '@polkadot/types/lookup';
 import { StorageKey, Option, u128 } from '@polkadot/types';
 
 export const createStorages = (api: AnyApi) => {

@@ -13,10 +13,10 @@ import {
   DefinitionRpcSub
 } from '@polkadot/types/types';
 
-import './interfaces/augment-api';
-import './interfaces/augment-types';
+import './argument/api';
+import './lookup/types';
 
-export * as lookupTypes from './interfaces/lookup';
+export * as lookupTypes from './lookup';
 
 // export * from './interfaces/augment-api-mobx';
 

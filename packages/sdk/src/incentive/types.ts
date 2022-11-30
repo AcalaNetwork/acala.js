@@ -1,5 +1,5 @@
 import { AnyApi, FixedPointNumber, Token } from '@acala-network/sdk-core';
-import { ModuleSupportIncentivesPoolId } from '@acala-network/types/lookup';
+import { ModuleSupportIncentivesPoolId } from '@polkadot/types/lookup';
 import { Wallet } from '../wallet';
 
 export enum IncentiveType {

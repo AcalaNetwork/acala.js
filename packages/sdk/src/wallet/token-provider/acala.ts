@@ -6,7 +6,7 @@ import {
   AcalaPrimitivesCurrencyAssetIds,
   AcalaPrimitivesCurrencyAssetMetadata,
   XcmV1MultiLocation
-} from '@acala-network/types/lookup';
+} from '@polkadot/types/lookup';
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable } from 'rxjs';
 import { filter, map, shareReplay, take } from 'rxjs/operators';
 import { TokenProvider, TokenProviderConfigs } from './type';

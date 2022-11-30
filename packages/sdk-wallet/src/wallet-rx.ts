@@ -15,7 +15,7 @@ import {
   Token,
   TokenBalance
 } from '@acala-network/sdk-core';
-import { AcalaAssetMetadata, Balance, OracleKey } from '@acala-network/types/interfaces';
+import { AcalaAssetMetadata, Balance, BlockNumber, OracleKey } from '@acala-network/types/interfaces';
 import { forceToCurrencyId, forceToCurrencyName, unzipDexShareName } from '@acala-network/sdk-core/converter';
 import { MaybeAccount, MaybeCurrency } from '@acala-network/sdk-core/types';
 import { PriceData, NativeAllBalance, BalanceData } from './types';
@@ -29,7 +29,7 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 import { Homa } from '@acala-network/sdk';
 import { OraclePriceProvider } from '@acala-network/sdk/wallet/price-provider/oracle-price-provider';
-import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/lookup';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
 
 const queryFN = getSubscribeOrAtQuery;
 export class WalletRx extends WalletBase<ApiRx> {
@@ -396,8 +396,8 @@ export class WalletRx extends WalletBase<ApiRx> {
             vestingStart && vestingPeriod && vestingPeriodCount
               ? vestingStart.toBn().add(vestingPeriod.toBn().mul(vestingPeriodCount))
               : 0
-          ),
-          vestingPeriod: vestingPeriod || this.api.registry.createType('BlockNumber', 0)
+          ) as BlockNumber,
+          vestingPeriod: (vestingPeriod || this.api.registry.createType('BlockNumber', 0)) as BlockNumber
         };
       }),
       shareReplay(1)

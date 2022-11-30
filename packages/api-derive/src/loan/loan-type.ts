@@ -9,7 +9,7 @@ import { Rate, ExchangeRate, Balance, Position, Ratio } from '@acala-network/typ
 
 import { DerivedLoanConstants, DerivedLoanType, DerivedLoanOverView } from '../types/loan';
 import { getAllCollateralCurrencyIds } from '../utils';
-import { AcalaPrimitivesCurrencyCurrencyId, ModuleCdpEngineRiskManagementParams } from '@acala-network/types/lookup';
+import { AcalaPrimitivesCurrencyCurrencyId, ModuleCdpEngineRiskManagementParams } from '@polkadot/types/lookup';
 
 /**
  * @name loanConstants
