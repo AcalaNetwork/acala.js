@@ -14,6 +14,7 @@ import {
 } from '@polkadot/types/types';
 
 import './interfaces/augment-api';
+import './interfaces/augment-types';
 
 export * as lookupTypes from './interfaces/lookup';
 
