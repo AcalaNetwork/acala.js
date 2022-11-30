@@ -9,6 +9,9 @@
   ],
   "resolutions": {
     "@polkadot/api": "^9.9.1",
+    "@polkadot/typegen": "^9.9.1",
+    "@polkadot/api-derive": "^9.9.1",
+    "@polkadot/util": "^10.1.14",
     "typescript": "^4.6.4",
     "rxjs": "^7.5.7",
     "@types/bn.js": "^5.1.0"
@@ -16,11 +19,11 @@
   "scripts": {
     "build": "yarn build:interfaces && polkadot-dev-build-ts",
     "build:release": "polkadot-ci-ghact-build",
-    "build:interfaces": "node -r ts-node/register -r tsconfig-paths/register packages/types/scripts/generate.ts && node -r ts-node/register -r tsconfig-paths/register packages/type-definitions/scripts/generate.ts",
+    "build:interfaces": "node -r ts-node/register -r tsconfig-paths/register packages/types/scripts/generateTypes.ts && node -r ts-node/register -r tsconfig-paths/register packages/type-definitions/scripts/generate.ts",
     "lint": "polkadot-dev-run-lint",
     "clean": "polkadot-dev-clean-build",
     "postinstall": "polkadot-dev-yarn-only",
-    "test": "polkadot-dev-run-test --coverage --forceExit",
+    "test": "polkadot-dev-run-test --coverage --forceExit --detectOpenHandles",
     "check-deps": "./node_modules/@open-web3/util/scripts/check-deps.js yarn.lock @polkadot/ @open-web3/",
     "update-metadata": "ts-node --project ./tsconfig.json packages/types/scripts/updateMetadata.ts",
     "generate:defs": "ts-node -r tsconfig-paths/register node_modules/.bin/polkadot-types-from-defs --package @acala-network/types/interfaces --input packages/types/src/interfaces --endpoint packages/types/src/metadata/static-latest.json",
@@ -28,12 +31,13 @@
     "update-types": "yarn update-metadata && yarn generate:defs && yarn generate:meta"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.3",
+    "@babel/core": "^7.20.5",
     "@babel/register": "^7.13.6",
     "@babel/runtime": "^7.14.0",
     "@open-web3/dev-config": "^0.2.3",
     "@open-web3/util": "^1.1.4",
     "@types/jest": "^25.2.3",
+    "jest-config": "^29.3.1",
     "ts-node": "^8.6.1",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^4.3.5"

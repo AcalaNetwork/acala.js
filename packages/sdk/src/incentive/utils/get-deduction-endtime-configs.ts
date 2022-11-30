@@ -1,6 +1,6 @@
 import { Rate } from '@acala-network/types/interfaces';
 import { StorageKey, u32, Vec, Option } from '@polkadot/types';
-import { ModuleSupportIncentivesPoolId, PalletSchedulerScheduledV3 } from '@acala-network/types/lookup';
+import { ModuleSupportIncentivesPoolId, PalletSchedulerScheduledV3 } from '@polkadot/types/lookup';
 import { ITuple } from '@polkadot/types/types';
 import { getPoolId } from './get-pool-id';
 

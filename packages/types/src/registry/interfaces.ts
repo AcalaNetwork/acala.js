@@ -18,7 +18,6 @@ import type { Position } from '@acala-network/types/interfaces/loans';
 import type { Attributes, CID, ClassData, ClassIdOf, ClassInfoOf, NFTBalance, NFTBalanceOf, NFTClassId, Properties, TokenData, TokenId, TokenIdOf, TokenInfoOf } from '@acala-network/types/interfaces/nft';
 import type { BondingLedger, HomaUnlockChunk, NomineeId } from '@acala-network/types/interfaces/nomineesElection';
 import type { AcalaAssetMetadata, AcalaDataProviderId, AirDropCurrencyId, Amount, AmountOf, AuctionId, AuctionIdOf, AuthoritysOriginId, ChainBridgeChainId, CurrencyId, CurrencyIdOf, DexShare, NumberOrHex, OrmlCurrencyId, TokenSymbol, TradingPair } from '@acala-network/types/interfaces/primitives';
-import type { DestAddress, PublicKey } from '@acala-network/types/interfaces/renvmBridge';
 import type { AccountId, AccountId20, AccountId32, AccountId33, AccountIdOf, AccountIndex, Address, AsOriginId, AssetId, AtLeast64BitUnsigned, Balance, BalanceOf, Block, BlockNumber, BlockNumberFor, BlockNumberOf, Call, CallHash, CallHashOf, ChangesTrieConfiguration, ChangesTrieSignal, CodecHash, Consensus, ConsensusEngineId, CrateVersion, Digest, DigestItem, EncodedJustification, ExtrinsicsWeight, Fixed128, Fixed64, FixedI128, FixedI64, FixedU128, FixedU64, H1024, H128, H160, H2048, H256, H32, H512, H64, Hash, Header, HeaderPartial, I32F32, Index, IndicesLookupSource, Justification, Justifications, KeyTypeId, KeyValue, LockIdentifier, LookupSource, LookupTarget, ModuleId, Moment, MultiAddress, MultiSigner, OpaqueCall, OracleKey, OracleValue, Origin, OriginCaller, PalletId, PalletVersion, PalletsOrigin, Pays, PerU16, Perbill, Percent, Permill, Perquintill, Phantom, PhantomData, PreRuntime, RelayChainBlockNumberOf, Releases, RuntimeDbWeight, Seal, SealV0, SignedBlock, SignedBlockWithJustification, SignedBlockWithJustifications, Slot, SlotDuration, StableAssetPoolId, StorageData, StorageInfo, StorageProof, TransactionInfo, TransactionLongevity, TransactionPriority, TransactionStorageProof, TransactionTag, U32F32, ValidatorId, ValidatorIdOf, Weight, WeightMultiplier, WeightV1, WeightV2 } from '@acala-network/types/interfaces/runtime';
 import type { BalanceInfo, ChangeRate, ChangeRatio, Ledger, Params, PolkadotAccountId, PolkadotAccountIdOf, StakingPoolPhase, SubAccountStatus } from '@acala-network/types/interfaces/stakingPool';
 import type { ExchangeRate, Price, Rate, Ratio } from '@acala-network/types/interfaces/support';
@@ -375,7 +374,6 @@ declare module '@polkadot/types/types/registry' {
     DeliveredMessages: DeliveredMessages;
     DepositBalance: DepositBalance;
     DepositBalanceOf: DepositBalanceOf;
-    DestAddress: DestAddress;
     DestroyWitness: DestroyWitness;
     DexShare: DexShare;
     Digest: Digest;
@@ -878,7 +876,6 @@ declare module '@polkadot/types/types/registry' {
     ProxyDefinition: ProxyDefinition;
     ProxyState: ProxyState;
     ProxyType: ProxyType;
-    PublicKey: PublicKey;
     PvfCheckStatement: PvfCheckStatement;
     QueryId: QueryId;
     QueryStatus: QueryStatus;

@@ -1,12 +1,11 @@
 import { ApiPromise, ApiRx } from '@polkadot/api';
 import { Vec } from '@polkadot/types';
-import { EventRecord } from '@polkadot/types/interfaces';
-import { FrameSystemEventRecord } from '@acala-network/types/lookup';
+import { FrameSystemEventRecord } from '@polkadot/types/lookup';
 import { from, Observable } from 'rxjs';
 import { startWith, filter, switchMap, shareReplay } from 'rxjs/operators';
 
 export const eventMethodsFilter = (methods: string[]) => {
-  return (event: EventRecord): boolean => {
+  return (event: FrameSystemEventRecord): boolean => {
     const method = event?.event?.method;
 
     return !!methods.find((item) => item === method);
@@ -14,7 +13,7 @@ export const eventMethodsFilter = (methods: string[]) => {
 };
 
 export const eventSectionsFilter = (sections: string[]) => {
-  return (event: EventRecord): boolean => {
+  return (event: FrameSystemEventRecord): boolean => {
     const section = event?.event?.section;
 
     return !!sections.find((item) => item === section);
@@ -35,8 +34,8 @@ export const eventsFilter = (data: { section: string; method: string }[]) => {
   };
 };
 
-export const mockEventRecord = (section?: string, method?: string): Vec<EventRecord> => {
-  return [{ event: { section, method } }] as any as Vec<EventRecord>;
+export const mockEventRecord = (section?: string, method?: string): Vec<FrameSystemEventRecord> => {
+  return [{ event: { section, method } }] as any as Vec<FrameSystemEventRecord>;
 };
 
 export const eventsFilterRx = (

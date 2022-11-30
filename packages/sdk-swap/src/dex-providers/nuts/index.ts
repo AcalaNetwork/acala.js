@@ -66,7 +66,10 @@ export class NutsDex implements BaseSwap {
 
           for (let i = 0; i < assets.length; i++) {
             for (let j = i + 1; j < assets.length; j++) {
-              tradingPairs.push([this.wallet.getToken(assets[i]), this.wallet.getToken(assets[j])] as TradingPair);
+              tradingPairs.push([
+                this.wallet.getToken(assets[i] as any),
+                this.wallet.getToken(assets[j] as any)
+              ] as TradingPair);
             }
           }
         });
@@ -86,14 +89,14 @@ export class NutsDex implements BaseSwap {
 
   private getPoolInfo(data: PoolInfo[], token0: Token, token1: Token) {
     const pool = data.find((item) => {
-      const assets = item.assets.map((i) => forceToCurrencyName(i));
+      const assets = item.assets.map((i) => forceToCurrencyName(i as any));
 
       return assets.indexOf(token0.name) !== -1 && assets.indexOf(token1.name) !== -1;
     });
 
     if (!pool) throw new NoTradingPathError();
 
-    const assets = pool.assets.map((i) => forceToCurrencyName(i));
+    const assets = pool.assets.map((i) => forceToCurrencyName(i as any));
 
     return {
       poolId: Number(pool.poolAsset.asStableAssetPoolToken.toString()),

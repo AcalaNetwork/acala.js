@@ -2,7 +2,7 @@ import { AnyApi, forceToCurrencyName, Token } from '@acala-network/sdk-core';
 import { Storage } from '../utils/storage';
 import { StorageKey, U128 } from '@polkadot/types';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
-import { AcalaPrimitivesTradingPair, ModuleDexTradingPairStatus } from '@acala-network/types/lookup';
+import { AcalaPrimitivesTradingPair, ModuleDexTradingPairStatus } from '@polkadot/types/lookup';
 import { getNativeTokenName } from '../utils/get-native-token-name';
 import { ITuple } from '@polkadot/types/types';
 import { Balance } from '@acala-network/types/interfaces';

@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { memo } from '@polkadot/api-derive/util';
 
 import { DerivedDexPool } from '../types/dex';
-import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/lookup';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
 
 const TOKEN_SORT: Record<string, number> = primitivesConfig.types.TokenSymbol._enum;
 

@@ -29,7 +29,7 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 import { Homa } from '@acala-network/sdk';
 import { OraclePriceProvider } from '@acala-network/sdk/wallet/price-provider/oracle-price-provider';
-import { AcalaPrimitivesCurrencyCurrencyId } from '@acala-network/types/lookup';
+import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
 
 const queryFN = getSubscribeOrAtQuery;
 export class WalletRx extends WalletBase<ApiRx> {
