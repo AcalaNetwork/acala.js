@@ -79,7 +79,9 @@ export class Loan implements BaseSDK {
   public subscribeExchangeRate = memoize((token: Token) => {
     return this.storages
       .exchangeRate(token)
-      .observable.pipe(map((result) => FixedPointNumber.fromInner(result.toString())));
+      .observable.pipe(
+        map((result) => (result.isSome ? FixedPointNumber.fromInner(result.toString()) : FixedPointNumber.ZERO))
+      );
   });
 
   /** get `token` exchange rate */
