@@ -11,7 +11,7 @@ import { StorageConfig } from './types';
  * a tool to create same query interfaces for apiPromise and apiRx
  */
 export class SubStorage<T = unknown> {
-  private configs: StorageConfig;
+  readonly configs: StorageConfig;
   private subject: ReplaySubject<T>;
   private chainListener: ChainListener;
 
@@ -157,11 +157,19 @@ function getSubStorageKey(configs: StorageConfig) {
   const { api, path, query, params } = configs;
 
   if (query) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    return [api.type, (query as any).section, (query as any).method, JSON.stringify(params)].join(',');
+    return [
+      api.runtimeChain.toString(),
+      api.type,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      (query as any).section,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      (query as any).method,
+      JSON.stringify(params)
+    ].join(',');
   }
 
   return [
+    api.runtimeChain.toString(),
     api.type,
     path,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -175,8 +183,12 @@ export class Storage {
   static create<T = unknown>(configs: StorageConfig) {
     const key = getSubStorageKey(configs);
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    if (this.subStorages.has(key)) return this.subStorages.get(key)! as SubStorage<T>;
+    if (this.subStorages.has(key)) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const cached = this.subStorages.get(key)! as SubStorage<T>;
+
+      if (cached.configs.api.isConnected) return cached;
+    }
 
     const subStorage = new SubStorage<T>(configs);
 
