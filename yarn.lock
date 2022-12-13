@@ -3192,13 +3192,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@open-web3/util@npm:^1.1.4":
-  version: 1.1.4
-  resolution: "@open-web3/util@npm:1.1.4"
+"@open-web3/util@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@open-web3/util@npm:2.0.1"
   dependencies:
-    "@yarnpkg/lockfile": ^1.1.0
-    big.js: ^6.1.1
-  checksum: c077e030a1ff912f469c4d8e955037a819e781b9319308668703a01ceea748606613f71139c4b18951baa31856532b0e398a9c94589322ef824a76e85a78dac8
+    big.js: ^6.2.1
+    js-yaml: ^4.1.0
+  checksum: 4d8af2f25b147c0b695ad58e6289cfa6d4297fb2906de00e05b858242140b2cd270cb6414d0c916f5a4c3d88a7f2bd69db2e72dcba75befb607940ea61a33ce8
   languageName: node
   linkType: hard
 
@@ -4723,13 +4723,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/lockfile@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@yarnpkg/lockfile@npm:1.1.0"
-  checksum: 05b881b4866a3546861fee756e6d3812776ea47fa6eb7098f983d6d0eefa02e12b66c3fff931574120f196286a7ad4879ce02743c8bb2be36c6a576c7852083a
-  languageName: node
-  linkType: hard
-
 "JSONStream@npm:^1.3.5":
   version: 1.3.5
   resolution: "JSONStream@npm:1.3.5"
@@ -5421,7 +5414,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"big.js@npm:^6.1.1":
+"big.js@npm:^6.2.1":
   version: 6.2.1
   resolution: "big.js@npm:6.2.1"
   checksum: 0b234a2fd56c52bed2798ed2020bcab6fef5e9523b99a05406ad071d1aed6ee97ada9fb8de9576092da74c68825c276e19015743b8d1baea269b60a5c666b0cd
@@ -12403,7 +12396,7 @@ __metadata:
     "@babel/register": ^7.13.6
     "@babel/runtime": ^7.14.0
     "@open-web3/dev-config": ^0.2.3
-    "@open-web3/util": ^1.1.4
+    "@open-web3/util": ^2.0.1
     "@types/jest": ^25.2.3
     dotenv: ^16.0.0
     jest-config: ^29.3.1
