@@ -18,7 +18,7 @@
     "@polkadot/api": "^9.9.1",
     "@polkadot/types": "^9.9.1",
     "@types/events": "^3.0.0",
-    "bignumber.js": "^9.0.0",
+    "bignumber.js": "^9.1.1",
     "events": "^3.2.0",
     "lodash": "^4.17.20"
   },
