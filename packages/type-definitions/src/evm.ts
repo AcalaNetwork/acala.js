@@ -93,6 +93,6 @@ export default {
       used_gas: 'U256',
       used_storage: 'i32',
       logs: 'Vec<EthereumLog>'
-    },
+    }
   }
 };
