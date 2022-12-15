@@ -79,6 +79,20 @@ export default {
       storageLimit: 'Option<u32>',
       value: 'Option<U128>',
       data: 'Option<Bytes>'
-    }
+    },
+    CallInfo: {
+      exit_reason: 'EvmCoreErrorExitReason',
+      value: 'Vec<u8>',
+      used_gas: 'U256',
+      used_storage: 'i32',
+      logs: 'Vec<EthereumLog>'
+    },
+    CreateInfo: {
+      exit_reason: 'EvmCoreErrorExitReason',
+      value: 'H160',
+      used_gas: 'U256',
+      used_storage: 'i32',
+      logs: 'Vec<EthereumLog>'
+    },
   }
 };
