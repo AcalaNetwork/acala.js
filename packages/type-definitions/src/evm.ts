@@ -93,6 +93,70 @@ export default {
       used_gas: 'U256',
       used_storage: 'i32',
       logs: 'Vec<EthereumLog>'
+    },
+    /**
+     * Lookup171: ethereum::log::Log
+     **/
+    EthereumLog: {
+      address: 'H160',
+      topics: 'Vec<H256>',
+      data: 'Bytes'
+    },
+    /**
+     * Lookup174: evm_core::error::ExitReason
+     **/
+    EvmCoreErrorExitReason: {
+      _enum: {
+        Succeed: 'EvmCoreErrorExitSucceed',
+        Error: 'EvmCoreErrorExitError',
+        Revert: 'EvmCoreErrorExitRevert',
+        Fatal: 'EvmCoreErrorExitFatal'
+      }
+    },
+    /**
+     * Lookup175: evm_core::error::ExitSucceed
+     **/
+    EvmCoreErrorExitSucceed: {
+      _enum: ['Stopped', 'Returned', 'Suicided']
+    },
+    /**
+     * Lookup176: evm_core::error::ExitError
+     **/
+    EvmCoreErrorExitError: {
+      _enum: {
+        StackUnderflow: 'Null',
+        StackOverflow: 'Null',
+        InvalidJump: 'Null',
+        InvalidRange: 'Null',
+        DesignatedInvalid: 'Null',
+        CallTooDeep: 'Null',
+        CreateCollision: 'Null',
+        CreateContractLimit: 'Null',
+        OutOfOffset: 'Null',
+        OutOfGas: 'Null',
+        OutOfFund: 'Null',
+        PCUnderflow: 'Null',
+        CreateEmpty: 'Null',
+        Other: 'Text',
+        InvalidCode: 'Null'
+      }
+    },
+    /**
+     * Lookup179: evm_core::error::ExitRevert
+     **/
+    EvmCoreErrorExitRevert: {
+      _enum: ['Reverted']
+    },
+    /**
+     * Lookup180: evm_core::error::ExitFatal
+     **/
+    EvmCoreErrorExitFatal: {
+      _enum: {
+        NotSupported: 'Null',
+        UnhandledInterrupt: 'Null',
+        CallErrorAsFatal: 'EvmCoreErrorExitError',
+        Other: 'Text'
+      }
     }
   }
 };

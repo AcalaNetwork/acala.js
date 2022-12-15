@@ -246,6 +246,72 @@
         "value": "Option<U128>",
         "data": "Option<Bytes>"
     },
+    "CallInfo": {
+        "exit_reason": "EvmCoreErrorExitReason",
+        "value": "Vec<u8>",
+        "used_gas": "U256",
+        "used_storage": "i32",
+        "logs": "Vec<EthereumLog>"
+    },
+    "CreateInfo": {
+        "exit_reason": "EvmCoreErrorExitReason",
+        "value": "H160",
+        "used_gas": "U256",
+        "used_storage": "i32",
+        "logs": "Vec<EthereumLog>"
+    },
+    "EthereumLog": {
+        "address": "H160",
+        "topics": "Vec<H256>",
+        "data": "Bytes"
+    },
+    "EvmCoreErrorExitReason": {
+        "_enum": {
+            "Succeed": "EvmCoreErrorExitSucceed",
+            "Error": "EvmCoreErrorExitError",
+            "Revert": "EvmCoreErrorExitRevert",
+            "Fatal": "EvmCoreErrorExitFatal"
+        }
+    },
+    "EvmCoreErrorExitSucceed": {
+        "_enum": [
+            "Stopped",
+            "Returned",
+            "Suicided"
+        ]
+    },
+    "EvmCoreErrorExitError": {
+        "_enum": {
+            "StackUnderflow": "Null",
+            "StackOverflow": "Null",
+            "InvalidJump": "Null",
+            "InvalidRange": "Null",
+            "DesignatedInvalid": "Null",
+            "CallTooDeep": "Null",
+            "CreateCollision": "Null",
+            "CreateContractLimit": "Null",
+            "OutOfOffset": "Null",
+            "OutOfGas": "Null",
+            "OutOfFund": "Null",
+            "PCUnderflow": "Null",
+            "CreateEmpty": "Null",
+            "Other": "Text",
+            "InvalidCode": "Null"
+        }
+    },
+    "EvmCoreErrorExitRevert": {
+        "_enum": [
+            "Reverted"
+        ]
+    },
+    "EvmCoreErrorExitFatal": {
+        "_enum": {
+            "NotSupported": "Null",
+            "UnhandledInterrupt": "Null",
+            "CallErrorAsFatal": "EvmCoreErrorExitError",
+            "Other": "Text"
+        }
+    },
     "AcalaStakingLedge": {
         "bonded": "Compact<Balance>",
         "unlocking": "Vec<UnlockChunk>"
