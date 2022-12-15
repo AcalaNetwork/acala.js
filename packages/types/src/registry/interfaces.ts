@@ -10,7 +10,7 @@ import type { CollateralAuctionItem, DebitAuctionItem, SurplusAuctionItem } from
 import type { ChangeBalance, ChangeOptionRate, ChangeOptionRatio, LiquidationStrategy, OptionRate, OptionRatio, RiskManagementParams } from '@acala-network/types/interfaces/cdpEngine';
 import type { CandidateInfoOf } from '@acala-network/types/interfaces/collatorSelection';
 import type { BalanceRequest, BalanceWrapper, TradingPairProvisionParameters, TradingPairStatus } from '@acala-network/types/interfaces/dex';
-import type { CallRequest, CodeInfo, Erc20Info, EstimateResourcesResponse, EvmAccountInfo, EvmAddress, EvmContractInfo } from '@acala-network/types/interfaces/evm';
+import type { CallInfo, CallRequest, CodeInfo, CreateInfo, Erc20Info, EstimateResourcesResponse, EthereumLog, EvmAccountInfo, EvmAddress, EvmContractInfo, EvmCoreErrorExitError, EvmCoreErrorExitFatal, EvmCoreErrorExitReason, EvmCoreErrorExitRevert, EvmCoreErrorExitSucceed } from '@acala-network/types/interfaces/evm';
 import type { AcalaStakingLedge, AcalaUnlockChunk } from '@acala-network/types/interfaces/homa';
 import type { Guarantee, RelaychainAccountId, SlashInfo, ValidatorBacking } from '@acala-network/types/interfaces/homaValidatorList';
 import type { PoolId, PoolIdV0 } from '@acala-network/types/interfaces/incentives';
@@ -232,6 +232,7 @@ declare module '@polkadot/types/types/registry' {
     CallHash: CallHash;
     CallHashOf: CallHashOf;
     CallIndex: CallIndex;
+    CallInfo: CallInfo;
     CallOrigin: CallOrigin;
     CallRequest: CallRequest;
     CandidateCommitments: CandidateCommitments;
@@ -361,6 +362,7 @@ declare module '@polkadot/types/types/registry' {
     CoreState: CoreState;
     CrateVersion: CrateVersion;
     CreatedBlock: CreatedBlock;
+    CreateInfo: CreateInfo;
     CurrencyId: CurrencyId;
     CurrencyIdOf: CurrencyIdOf;
     Data: Data;
@@ -442,6 +444,7 @@ declare module '@polkadot/types/types/registry' {
     EthCallRequest: EthCallRequest;
     EthereumAccountId: EthereumAccountId;
     EthereumAddress: EthereumAddress;
+    EthereumLog: EthereumLog;
     EthereumLookupSource: EthereumLookupSource;
     EthereumSignature: EthereumSignature;
     EthFeeHistory: EthFeeHistory;
@@ -485,6 +488,11 @@ declare module '@polkadot/types/types/registry' {
     EvmAccountInfo: EvmAccountInfo;
     EvmAddress: EvmAddress;
     EvmContractInfo: EvmContractInfo;
+    EvmCoreErrorExitError: EvmCoreErrorExitError;
+    EvmCoreErrorExitFatal: EvmCoreErrorExitFatal;
+    EvmCoreErrorExitReason: EvmCoreErrorExitReason;
+    EvmCoreErrorExitRevert: EvmCoreErrorExitRevert;
+    EvmCoreErrorExitSucceed: EvmCoreErrorExitSucceed;
     ExchangeRate: ExchangeRate;
     ExecReturnValue: ExecReturnValue;
     ExplicitDisputeStatement: ExplicitDisputeStatement;
