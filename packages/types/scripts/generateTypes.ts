@@ -61,7 +61,9 @@ export function main () {
 
     const allDefs: Record<string, any> = {
       '@polkadot/types/interfaces': filteredBase,
-      [pkg]: userDefs
+      // The order of the keys will affect the generated file.
+      [pkg]: userDefs,
+      '@open-web3/orml-types/interfaces': ormlModulesDefinations,
     }
 
   const customLookupDefinitions = {
