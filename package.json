@@ -28,7 +28,7 @@
     "update-metadata": "ts-node --project ./tsconfig.json packages/types/scripts/updateMetadata.ts",
     "generate:defs": "ts-node -r tsconfig-paths/register node_modules/.bin/polkadot-types-from-defs --package @acala-network/types/interfaces --input packages/types/src/interfaces --endpoint packages/types/src/metadata/static-latest.json",
     "generate:meta": "ts-node -r tsconfig-paths/register node_modules/.bin/polkadot-types-from-chain --package @acala-network/types/interfaces --output packages/types/src/interfaces --endpoint packages/types/src/metadata/static-latest.json",
-    "update-types": "yarn update-metadata && yarn generate:defs && yarn generate:meta"
+    "update-types": "yarn update-metadaa && yarn generate:defs && yarn generate:meta"
   },
   "devDependencies": {
     "@babel/core": "^7.20.5",
@@ -45,6 +45,5 @@
   "dependencies": {
     "dotenv": "^16.0.0"
   },
-  "packageManager": "yarn@3.2.0",
-  "stableVersion": "4.1.8-7"
+  "packageManager": "yarn@3.2.0"
 }
