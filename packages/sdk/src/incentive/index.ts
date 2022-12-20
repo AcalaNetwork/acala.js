@@ -60,24 +60,8 @@ export class Incentive implements BaseSDK {
     );
   };
 
-  // subscribe all dex saving rewards config
-  private dexSavingRewardRates$ = memoize((): Observable<Record<string, FixedPointNumber> | undefined> => {
-    const dexSavingRewardRatesStorage = this.storages.dexSavingRewardRates();
 
-    if(!dexSavingRewardRatesStorage) return of(undefined);
 
-    return dexSavingRewardRatesStorage.observable.pipe(
-      map((data) => {
-        return Object.fromEntries(
-          data.map((item) => {
-            const pool = item[0].args[0];
-
-            return [getPoolId(pool), FixedPointNumber.fromInner(item[1].toString())];
-          })
-        );
-      })
-    );
-  });
 
   // subscribe all deduction rates config
   private deductionRates$ = memoize((): Observable<Record<string, FixedPointNumber>> => {
@@ -293,14 +277,12 @@ export class Incentive implements BaseSDK {
       endTimes: this.endTimes$(),
       deductionRates: this.deductionRates$(),
       poolInfos: this.poolInfos$(),
-      rewardTokensConfigs: this.rewardTokensConfigs$(),
-      savingRewardRates: this.dexSavingRewardRates$()
+      rewardTokensConfigs: this.rewardTokensConfigs$()
     }).pipe(
-      map(({ endTimes, deductionRates, poolInfos, rewardTokensConfigs, savingRewardRates }) => {
+      map(({ endTimes, deductionRates, poolInfos, rewardTokensConfigs }) => {
         return poolInfos.map((item) => {
           const deductionRate = deductionRates[item.id] || FixedPointNumber.ZERO;
           const rewardTokensConfig = rewardTokensConfigs[item.id] || [];
-          const savingRewardRate = savingRewardRates?.[item.id] || undefined;
           const endBlockNumber = endTimes[item.id] || -1;
 
           const result: IncentivePool = {
@@ -310,10 +292,6 @@ export class Incentive implements BaseSDK {
             deductionRate,
             endBlockNumber
           };
-
-          if (item.type === IncentiveType.DEX) {
-            result.savingRate = savingRewardRate;
-          }
 
           return result;
         });

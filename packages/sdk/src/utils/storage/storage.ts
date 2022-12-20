@@ -50,10 +50,10 @@ export class SubStorage<T = unknown> {
       return queryPath.reduce((acc, i) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         const result = (acc as any)[i];
-        if(!result) {
+        if (!result) {
           throw new NoQueryPath(path);
         }
-        return result
+        return result;
       }, api) as any as QueryableStorageEntry<ApiTypes, AnyTuple>;
     }
 

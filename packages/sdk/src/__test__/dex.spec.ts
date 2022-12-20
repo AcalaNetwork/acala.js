@@ -11,12 +11,12 @@ describe('getAllIncentivePools', () => {
     const wallet = new Wallet(api);
     await wallet.isReady;
 
-    let ict = new Incentive({ api, wallet });
-    let ips = await ict.getAllIncentivePools();
+    const ict = new Incentive({ api, wallet });
+    const ips = await ict.getAllIncentivePools();
 
-    ips.map(item => {
+    ips.map((item) => {
       expect(item.rewardTokensConfig).toBeDefined();
       expect(item.savingRate).not.toBeDefined();
-    })
+    });
   });
 });
