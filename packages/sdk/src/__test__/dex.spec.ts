@@ -1,5 +1,5 @@
 import { options } from '@acala-network/api';
-import { Incentive, Liquidity, Wallet } from '../index';
+import { Incentive, Wallet } from '../index';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 jest.setTimeout(50000);
 
