@@ -20,6 +20,9 @@ export const createStorages = (api: AnyApi) => {
       });
     },
     dexSavingRewardRates: () => {
+      //  dexSavingRewardRates has been removed. 
+      if(!api.query.incentives.dexSavingRewardRates) return undefined;
+      
       return Storage.create<[StorageKey<[ModuleSupportIncentivesPoolId]>, u128][]>({
         api: api,
         path: 'query.incentives.dexSavingRewardRates.entries',

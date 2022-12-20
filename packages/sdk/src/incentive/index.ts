@@ -61,8 +61,12 @@ export class Incentive implements BaseSDK {
   };
 
   // subscribe all dex saving rewards config
-  private dexSavingRewardRates$ = memoize((): Observable<Record<string, FixedPointNumber>> => {
-    return this.storages.dexSavingRewardRates().observable.pipe(
+  private dexSavingRewardRates$ = memoize((): Observable<Record<string, FixedPointNumber> | undefined> => {
+    const dexSavingRewardRatesStorage = this.storages.dexSavingRewardRates();
+
+    if(!dexSavingRewardRatesStorage) return of(undefined);
+
+    return dexSavingRewardRatesStorage.observable.pipe(
       map((data) => {
         return Object.fromEntries(
           data.map((item) => {
@@ -296,7 +300,7 @@ export class Incentive implements BaseSDK {
         return poolInfos.map((item) => {
           const deductionRate = deductionRates[item.id] || FixedPointNumber.ZERO;
           const rewardTokensConfig = rewardTokensConfigs[item.id] || [];
-          const savingRewardRate = savingRewardRates[item.id] || FixedPointNumber.ZERO;
+          const savingRewardRate = savingRewardRates?.[item.id] || undefined;
           const endBlockNumber = endTimes[item.id] || -1;
 
           const result: IncentivePool = {
