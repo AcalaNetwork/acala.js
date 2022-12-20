@@ -14,6 +14,7 @@ describe('getAllIncentivePools', () => {
     const ict = new Incentive({ api, wallet });
     const ips = await ict.getAllIncentivePools();
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     ips.map((item) => {
       expect(item.rewardTokensConfig).toBeDefined();
