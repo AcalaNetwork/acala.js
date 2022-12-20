@@ -14,6 +14,7 @@ describe('getAllIncentivePools', () => {
     const ict = new Incentive({ api, wallet });
     const ips = await ict.getAllIncentivePools();
 
+    // @ts-ignore
     ips.map((item) => {
       expect(item.rewardTokensConfig).toBeDefined();
       expect(item.savingRate).not.toBeDefined();

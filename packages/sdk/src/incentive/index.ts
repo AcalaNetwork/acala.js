@@ -60,9 +60,6 @@ export class Incentive implements BaseSDK {
     );
   };
 
-
-
-
   // subscribe all deduction rates config
   private deductionRates$ = memoize((): Observable<Record<string, FixedPointNumber>> => {
     return this.storages.claimRewardDeductionRates().observable.pipe(
