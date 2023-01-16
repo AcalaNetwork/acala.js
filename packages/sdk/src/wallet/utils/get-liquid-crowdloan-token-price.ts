@@ -1,12 +1,9 @@
-import { AnyApi, createLiquidCrowdloanName, FixedPointNumber } from '@acala-network/sdk-core';
+import { AnyApi, FixedPointNumber } from '@acala-network/sdk-core';
 import { u128 } from '@polkadot/types-codec';
 import { Extrinsic, SignedBlock } from '@polkadot/types/interfaces';
 import { CumulusPrimitivesParachainInherentParachainInherentData } from '@polkadot/types/lookup';
 import { Storage } from '../../utils/storage';
 import { map } from 'rxjs/operators';
-
-// current crowdloan token lease
-const CROWDLOAN_TOKEN_LEASE: number[] = [13];
 
 const LEASE_BLOCK_NUMBERS: Record<number, number> = {
   13: 17_856_000
@@ -32,36 +29,6 @@ const getLiquidCrowdloanPrice = (
   );
 
   return stakingCurrencyPrice.mul(discount);
-};
-
-export const getAllLiquidCrowdloanTokenPrice = (
-  api: AnyApi,
-  block: SignedBlock,
-  stakingTokenPrice: FixedPointNumber
-): Record<string, FixedPointNumber> | undefined => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const extrinsic = block.block.extrinsics.find((item) => {
-    return item.method.section === 'parachainSystem' && item.method.method === 'setValidationData';
-  }) as Extrinsic | undefined;
-
-  if (extrinsic) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const args = extrinsic.method.args[0] as any as CumulusPrimitivesParachainInherentParachainInherentData;
-    const relayChainBlockNumber = args?.validationData?.relayParentNumber?.toNumber();
-
-    const prices = Object.fromEntries(
-      CROWDLOAN_TOKEN_LEASE.map((lease) => {
-        return [
-          createLiquidCrowdloanName(lease),
-          getLiquidCrowdloanPrice(api, lease, relayChainBlockNumber, stakingTokenPrice)
-        ];
-      })
-    );
-
-    return prices;
-  }
-
-  return undefined;
 };
 
 export const subscribeLiquidCrowdloanTokenPrice = (api: AnyApi, stakingTokenPrice: FixedPointNumber, lease: number) => {

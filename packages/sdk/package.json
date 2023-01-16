@@ -19,7 +19,7 @@
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "dependencies": {
     "@acala-network/api": "4.1.8-9",
-    "@acala-network/eth-providers": "^2.5.4",
+    "@acala-network/eth-providers": "^2.5.9",
     "@acala-network/type-definitions": "4.1.8-9",
     "@ethersproject/bignumber": "^5.7.0",
     "@polkadot/api": "^9.9.1",

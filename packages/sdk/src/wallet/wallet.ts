@@ -85,7 +85,10 @@ export class Wallet implements BaseSDK {
         const market = new MarketPriceProvider();
         const dex = new DexPriceProvider(this.liquidity);
         const aggregate = new AggregateProvider({ market, dex });
-        const oracle = new OraclePriceProvider(this.api);
+        const oracle = new OraclePriceProvider(this.api, {
+          stakingToken: this.getPresetTokens(true).stableToken,
+          tokenPrivoder: this.tokenProvider
+        });
 
         this.priceProviders = {
           // default price provider
@@ -254,8 +257,8 @@ export class Wallet implements BaseSDK {
     return firstValueFrom(this.subscribeSuggestInput(token, address, isAllowDeath, fee));
   }
 
-  public getPresetTokens(): PresetTokens {
-    if (this.isReady$.value === false) throw new SDKNotReady('wallet');
+  public getPresetTokens(ignoreCheck = false): PresetTokens {
+    if (!ignoreCheck && this.isReady$.value === false) throw new SDKNotReady('wallet');
 
     const tokens = this.tokenProvider.getAllTokens();
 
