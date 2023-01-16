@@ -12,6 +12,7 @@
     "@polkadot/typegen": "^9.9.1",
     "@polkadot/types-codec": "^9.9.1",
     "@polkadot/api-derive": "^9.9.1",
+    "@polkadot/rpc-augment": "^9.9.4",
     "typescript": "^4.6.4",
     "rxjs": "^7.5.7",
     "@types/bn.js": "^5.1.0"
