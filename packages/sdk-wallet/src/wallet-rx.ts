@@ -24,22 +24,17 @@ import type { Option } from '@polkadot/types';
 import { WalletBase } from './wallet-base';
 import { AccountData, AccountInfo, BalanceLock, BlockHash } from '@polkadot/types/interfaces';
 import { BelowExistentialDeposit } from './errors';
-import { ORACLE_FEEDS_TOKEN } from './config';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
-import { Homa } from '@acala-network/sdk';
-import { OraclePriceProvider } from '@acala-network/sdk/wallet/price-provider/oracle-price-provider';
 import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
 
 const queryFN = getSubscribeOrAtQuery;
 export class WalletRx extends WalletBase<ApiRx> {
-  private readonly oraclePriceProvider: OraclePriceProvider;
   public readonly assetMetadatas$: BehaviorSubject<Map<string, Token>>;
 
   constructor(api: ApiRx) {
     super(api);
 
-    this.oraclePriceProvider = new OraclePriceProvider(api);
     this.assetMetadatas$ = new BehaviorSubject<Map<string, Token>>(new Map());
 
     // subscribe oracle feed
@@ -86,12 +81,6 @@ export class WalletRx extends WalletBase<ApiRx> {
   // query price info
   public queryPrice = memoize((currency: MaybeCurrency, at?: number): Observable<PriceData> => {
     const tokenName = forceToCurrencyName(currency);
-    const liquidCurrencyId = this.api.consts?.homa?.liquidCurrencyId || this.api.consts?.homaLite?.liquidCurrencyId;
-
-    // get liquid currency price from staking pool exchange rate
-    if (liquidCurrencyId && forceToCurrencyName(currency) === forceToCurrencyName(liquidCurrencyId)) {
-      return this.queryLiquidPriceFromHoma(at);
-    }
 
     // get dex share price
     if (isDexShareName(tokenName)) {
@@ -106,16 +95,6 @@ export class WalletRx extends WalletBase<ApiRx> {
         token: usd,
         price: new FN(1, usd.decimals)
       });
-    }
-
-    // get price of ORACLE_FEEDS_TOKEN
-    if (ORACLE_FEEDS_TOKEN.includes(tokenName)) {
-      return this.queryPriceFromOracle(currency, at).pipe(
-        map((price) => ({
-          token: this.getToken(tokenName),
-          price
-        }))
-      );
     }
 
     // get price from dex default
@@ -154,38 +133,8 @@ export class WalletRx extends WalletBase<ApiRx> {
     );
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public queryPriceFromOracle = memoize((token: MaybeCurrency, _at?: number) => {
-    return this.oraclePriceProvider.subscribe(token);
-  });
-
   public subscribeToken = memoize((token: MaybeCurrency) => {
     return of(this.getToken(token));
-  });
-
-  public queryLiquidPriceFromHoma = memoize((at?: number) => {
-    // FIXME: need remove homaLite
-    const liquidCurrencyId = this.api.consts.homa?.liquidCurrencyId;
-    const stakingCurrencyId = this.api.consts.homa?.stakingCurrencyId;
-
-    const liquidToken = this.getToken(liquidCurrencyId);
-    const stakingToken = this.getToken(stakingCurrencyId);
-
-    return this.getBlockHash(at).pipe(
-      switchMap(() => {
-        return combineLatest({
-          stakingTokenPrice: this.queryPriceFromOracle(stakingToken, at),
-          env: new Homa(this.api, this as any).env$
-        });
-      }),
-      map(({ stakingTokenPrice, env }) => {
-        return {
-          token: liquidToken,
-          price: stakingTokenPrice.times(env.exchangeRate)
-        };
-      }),
-      shareReplay(1)
-    );
   });
 
   public queryDexPool = memoize((token1: MaybeCurrency, token2: MaybeCurrency, at?: number) => {

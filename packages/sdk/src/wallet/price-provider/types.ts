@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
 import { FixedPointNumber as FN, Token } from '@acala-network/sdk-core';
+import { TokenProvider } from '../token-provider/type';
 
 export interface PriceProvider {
   subscribe(currency: Token): Observable<FN>;
@@ -8,7 +9,15 @@ export interface PriceProvider {
 
 export enum PriceProviderType {
   'AGGREGATE',
-  'MARKET', // query price form market
+  'MARKET', // query prices form market
   'ORACLE', // query oracle feed prices
   'DEX' // query price form dex
+}
+
+export type OracleStrategy = 'AS' | 'STORAGE' | 'LIQUID_CROWDLOAN';
+
+export interface OracleConfig {
+  stakingToken: Token;
+  tokenPrivoder: TokenProvider;
+  strategies?: Record<string, [OracleStrategy, any]>;
 }
