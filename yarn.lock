@@ -5,11 +5,11 @@ __metadata:
   version: 6
   cacheKey: 8
 
-"@acala-network/api-derive@4.1.8-10, @acala-network/api-derive@workspace:packages/api-derive":
+"@acala-network/api-derive@4.1.8-11, @acala-network/api-derive@workspace:packages/api-derive":
   version: 0.0.0-use.local
   resolution: "@acala-network/api-derive@workspace:packages/api-derive"
   dependencies:
-    "@acala-network/types": 4.1.8-10
+    "@acala-network/types": 4.1.8-11
     "@babel/runtime": ^7.10.2
     "@open-web3/orml-types": ^1.1.4
     "@polkadot/api-derive": ^8.5.1
@@ -28,12 +28,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@acala-network/api@4.1.8-10, @acala-network/api@workspace:packages/api, @acala-network/api@~4.1.8-2.2, @acala-network/api@~4.1.8-9":
+"@acala-network/api@4.1.8-11, @acala-network/api@workspace:packages/api, @acala-network/api@~4.1.8-2.2, @acala-network/api@~4.1.8-9":
   version: 0.0.0-use.local
   resolution: "@acala-network/api@workspace:packages/api"
   dependencies:
-    "@acala-network/api-derive": 4.1.8-10
-    "@acala-network/types": 4.1.8-10
+    "@acala-network/api-derive": 4.1.8-11
+    "@acala-network/types": 4.1.8-11
     "@babel/runtime": ^7.10.2
     "@open-web3/orml-api-derive": ^1.1.4
     "@polkadot/api": ^9.9.1
@@ -209,7 +209,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@acala-network/sdk-core@4.1.8-10, @acala-network/sdk-core@workspace:packages/sdk-core":
+"@acala-network/sdk-core@4.1.8-11, @acala-network/sdk-core@workspace:packages/sdk-core":
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk-core@workspace:packages/sdk-core"
   dependencies:
@@ -241,7 +241,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk-homa@workspace:packages/sdk-homa"
   dependencies:
-    "@acala-network/sdk-core": 4.1.8-10
+    "@acala-network/sdk-core": 4.1.8-11
     "@types/lodash": ^4.14.161
     lodash: ^4.17.20
     rxjs: ^7.5.7
@@ -264,7 +264,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk-swap@workspace:packages/sdk-swap"
   dependencies:
-    "@acala-network/sdk": ^4.1.8-10
+    "@acala-network/sdk": ^4.1.8-11
     "@nuts-finance/sdk-stable-asset": ^1.2.0
     "@types/lodash": ^4.14.161
   languageName: unknown
@@ -282,13 +282,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@acala-network/sdk@^4.1.8-10, @acala-network/sdk@workspace:packages/sdk":
+"@acala-network/sdk@^4.1.8-11, @acala-network/sdk@workspace:packages/sdk":
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk@workspace:packages/sdk"
   dependencies:
-    "@acala-network/api": 4.1.8-10
+    "@acala-network/api": 4.1.8-11
     "@acala-network/eth-providers": ^2.5.9
-    "@acala-network/type-definitions": 4.1.8-10
+    "@acala-network/type-definitions": 4.1.8-11
     "@ethersproject/bignumber": ^5.7.0
     "@polkadot/api": ^9.9.1
     "@polkadot/types": ^9.9.1
@@ -333,7 +333,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@acala-network/type-definitions@4.1.8-10, @acala-network/type-definitions@workspace:packages/type-definitions":
+"@acala-network/type-definitions@4.1.8-11, @acala-network/type-definitions@workspace:packages/type-definitions":
   version: 0.0.0-use.local
   resolution: "@acala-network/type-definitions@workspace:packages/type-definitions"
   dependencies:
@@ -350,11 +350,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@acala-network/types@4.1.8-10, @acala-network/types@workspace:packages/types, @acala-network/types@~4.1.8-2.2, @acala-network/types@~4.1.8-9":
+"@acala-network/types@4.1.8-11, @acala-network/types@workspace:packages/types, @acala-network/types@~4.1.8-2.2, @acala-network/types@~4.1.8-9":
   version: 0.0.0-use.local
   resolution: "@acala-network/types@workspace:packages/types"
   dependencies:
-    "@acala-network/type-definitions": 4.1.8-10
+    "@acala-network/type-definitions": 4.1.8-11
     "@babel/runtime": ^7.10.2
     "@open-web3/api-mobx": ^1.1.4
     "@open-web3/orml-types": ^1.1.4
@@ -386,7 +386,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@acala-network/wormhole-portal@workspace:packages/wormhole-portal"
   dependencies:
-    "@acala-network/sdk": ^4.1.8-10
+    "@acala-network/sdk": ^4.1.8-11
     "@certusone/wormhole-sdk": ^0.5.0
     "@ethersproject/bignumber": ^5.7.0
     "@grpc/grpc-js": ^1.6.8

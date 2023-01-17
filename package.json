@@ -1,5 +1,5 @@
 {
-  "version": "4.1.8-10",
+  "version": "4.1.8-11",
   "private": true,
   "engines": {
     "yarn": "^1.10.1"
@@ -46,5 +46,6 @@
   "dependencies": {
     "dotenv": "^16.0.0"
   },
-  "packageManager": "yarn@3.2.0"
+  "packageManager": "yarn@3.2.0",
+  "stableVersion": "4.1.8-10"
 }
