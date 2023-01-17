@@ -43,7 +43,7 @@ export class Wallet implements BaseSDK {
 
   private balanceAdapter!: AcalaExpandBalanceAdapter;
   private tokenProvider!: TokenProvider;
-  private priceProviders!: PriceProviders;
+  public priceProviders!: PriceProviders;
 
   // inject liquidity, homa sdk by default for easy using
   public liquidity!: Liquidity;

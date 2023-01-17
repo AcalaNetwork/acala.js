@@ -4,9 +4,10 @@ import { map, switchMap } from 'rxjs/operators';
 import { OracleConfig, PriceProvider } from './types';
 import { AnyApi, FixedPointNumber, FixedPointNumber as FN, Token } from '@acala-network/sdk-core';
 import { Storage } from '../../utils/storage';
-import { OrmlOracleModuleTimestampedValue } from '@polkadot/types/lookup';
+import { AcalaPrimitivesCurrencyCurrencyId, OrmlOracleModuleTimestampedValue } from '@polkadot/types/lookup';
 import { subscribeLiquidCrowdloanTokenPrice } from '../utils/get-liquid-crowdloan-token-price';
 import { TokenProvider } from '../token-provider/type';
+import { StorageKey } from '@polkadot/types';
 
 const DEFAULT_ORACLE_STRATEGIES: OracleConfig['strategies'] = {
   taiKSM: ['AS', 'KSM'],
@@ -71,5 +72,35 @@ export class OraclePriceProvider implements PriceProvider {
 
   public async query(currency: Token): Promise<FN> {
     return firstValueFrom(this.subscribe(currency));
+  }
+
+  public queryFeedTokens() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    return (this.api.query.acalaOracle.values.keys as any)().pipe(
+      map((data: StorageKey<[AcalaPrimitivesCurrencyCurrencyId]>[]) => {
+        return data.map((i) => i.args[0]);
+      })
+    ) as Observable<[AcalaPrimitivesCurrencyCurrencyId]>;
+  }
+
+  public queryRawData(token: Token) {
+    const storage$ = Storage.create<Option<OrmlOracleModuleTimestampedValue>>({
+      api: this.api,
+      path: 'query.acalaOracle.values',
+      params: [token.toChainData()]
+    }).observable;
+
+    return storage$.pipe(
+      map((value) => {
+        const price = value.isEmpty ? '0' : value.value.value.toString();
+        const timestamp = value.isEmpty ? '0' : value.value.timestamp.toString();
+
+        return {
+          token,
+          timestamp,
+          price: FixedPointNumber.fromInner(price, 18)
+        };
+      })
+    );
   }
 }
