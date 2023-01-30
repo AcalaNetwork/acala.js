@@ -178,4 +178,10 @@ export class AcalaTokenProvider implements TokenProvider {
 
     return this.tokens$.getValue();
   }
+
+  public getNativeToken() {
+    const nativeCurrency = this.api.registry.chainTokens[0];
+
+    return this.getToken(nativeCurrency);
+  }
 }

@@ -34,6 +34,7 @@ import { TokenProvider } from './token-provider/type';
 import { AcalaTokenProvider } from './token-provider/acala';
 import { DIDWeb3Name } from './web3name/did';
 import { subscribeLiquidCrowdloanTokenPrice } from './utils/get-liquid-crowdloan-token-price';
+import { Vesting } from './vesting';
 
 export class Wallet implements BaseSDK {
   private api: AnyApi;
@@ -52,6 +53,7 @@ export class Wallet implements BaseSDK {
 
   public isReady$: BehaviorSubject<boolean>;
   public consts!: WalletConsts;
+  public vesting!: Vesting;
 
   public constructor(api: AnyApi, configs?: WalletConfigs) {
     this.api = api;
@@ -98,6 +100,7 @@ export class Wallet implements BaseSDK {
           [PriceProviderType.DEX]: dex,
           ...this.configs?.priceProviders
         };
+        this.vesting = new Vesting({ api: this.api, tokenProvider: this.tokenProvider });
         this.storages = createStorages(this.api);
 
         this.isReady$.next(status);
