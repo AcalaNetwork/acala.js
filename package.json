@@ -8,14 +8,18 @@
     "packages/*"
   ],
   "resolutions": {
+    "@acala-network/sdk-core": "^4.1.8-12",
+    "@acala-network/sdk": "^4.1.8-12",
+    "@acala-network/types": "^4.1.8-12",
+    "@polkadot/api-derive": "^9.9.1",
     "@polkadot/api": "^9.9.1",
+    "@polkadot/rpc-augment": "^9.9.4",
     "@polkadot/typegen": "^9.9.1",
     "@polkadot/types-codec": "^9.9.1",
-    "@polkadot/api-derive": "^9.9.1",
-    "@polkadot/rpc-augment": "^9.9.4",
-    "typescript": "^4.6.4",
+    "@polkadot/types": "^9.9.1",
+    "@types/bn.js": "^5.1.0",
     "rxjs": "^7.5.7",
-    "@types/bn.js": "^5.1.0"
+    "typescript": "^4.6.4"
   },
   "scripts": {
     "build": "yarn build:interfaces && polkadot-dev-build-ts",
