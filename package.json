@@ -8,9 +8,9 @@
     "packages/*"
   ],
   "resolutions": {
-    "@acala-network/sdk-core": "^4.1.8-12",
-    "@acala-network/sdk": "^4.1.8-12",
-    "@acala-network/types": "^4.1.8-12",
+    "@acala-network/sdk-core": "workspace:*",
+    "@acala-network/sdk": "workspace:*",
+    "@acala-network/types": "workspace:*",
     "@polkadot/api-derive": "^9.9.1",
     "@polkadot/api": "^9.9.1",
     "@polkadot/rpc-augment": "^9.9.4",
