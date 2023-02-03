@@ -4,12 +4,7 @@ export interface VestingDetail {
   token: Token;
   // total vesting reward amount
   total: FixedPointNumber;
-  // claimed reward amount
-  claimed: FixedPointNumber;
-  // remaining reward amount
-  remaining: FixedPointNumber;
-  // available claim reward amount
-  available: FixedPointNumber;
+  planToClaim: FixedPointNumber;
   // the reward amount of each period
   prePeriod: FixedPointNumber;
   // current parachain block number
