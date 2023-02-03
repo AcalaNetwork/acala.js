@@ -18,6 +18,6 @@
     "@acala-network/types": "4.1.8-13",
     "@babel/runtime": "^7.10.2",
     "@open-web3/orml-types": "^1.1.4",
-    "@polkadot/api-derive": "^8.5.1"
+    "@polkadot/api-derive": "^9.13.5"
   }
 }
