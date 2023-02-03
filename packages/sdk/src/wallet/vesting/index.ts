@@ -51,27 +51,44 @@ export class Vesting {
     }).pipe(
       map(({ schedules, locks, parachain }) => {
         const locking = locks?.find((i) => i.id.eq('ormlvest'));
-        const schedule = schedules?.[0];
-        const parachainBlock = parachain.isSome ? parachain.value.relayParentNumber.toBigInt() : BigInt(0);
-
         const currentLock = FixedPointNumber.fromInner(locking?.amount.toString() || 0, token.decimals);
-        const startBlock = schedule?.start.toBigInt() || BigInt(0);
-        const period = schedule?.period.toBigInt() || BigInt(0);
-        const prePeriod = FixedPointNumber.fromInner(schedule?.perPeriod.toString() || 0, token.decimals);
-        const periodCount = schedule?.periodCount.toBigInt() || BigInt(0);
 
-        const total = prePeriod.mul(new FixedPointNumber(periodCount.toString()));
-        const remaining = currentLock;
-        const endBlock = startBlock + period * periodCount;
-        const claimed = total.minus(remaining).max(FixedPointNumber.ZERO);
-        const planToClaim =
-          startBlock + period < parachainBlock && period !== BigInt(0)
-            ? prePeriod.mul(
-                new FixedPointNumber(((parachainBlock - startBlock) / period).toString()).min(
-                  new FixedPointNumber(periodCount.toString())
+        const list = schedules.map((schedule) => {
+          const parachainBlock = parachain.isSome ? parachain.value.relayParentNumber.toBigInt() : BigInt(0);
+
+          const startBlock = schedule?.start.toBigInt() || BigInt(0);
+          const period = schedule?.period.toBigInt() || BigInt(0);
+          const prePeriod = FixedPointNumber.fromInner(schedule?.perPeriod.toString() || 0, token.decimals);
+          const periodCount = schedule?.periodCount.toBigInt() || BigInt(0);
+
+          const total = prePeriod.mul(new FixedPointNumber(periodCount.toString()));
+          const endBlock = startBlock + period * periodCount;
+          const planToClaim =
+            startBlock + period < parachainBlock && period !== BigInt(0)
+              ? prePeriod.mul(
+                  new FixedPointNumber(((parachainBlock - startBlock) / period).toString()).min(
+                    new FixedPointNumber(periodCount.toString())
+                  )
                 )
-              )
-            : FixedPointNumber.ZERO;
+              : FixedPointNumber.ZERO;
+
+          return {
+            token,
+            total,
+            planToClaim,
+            prePeriod,
+            parachainBlock,
+            startBlock,
+            endBlock,
+            period,
+            periodCount
+          };
+        });
+
+        const total = list.reduce((i, j) => i.add(j.total), FixedPointNumber.ZERO);
+        const planToClaim = list.reduce((i, j) => i.add(j.planToClaim), FixedPointNumber.ZERO);
+        const remaining = currentLock;
+        const claimed = total.minus(remaining).max(FixedPointNumber.ZERO);
         const available = planToClaim.minus(claimed).max(FixedPointNumber.ZERO);
 
         return {
@@ -80,12 +97,7 @@ export class Vesting {
           claimed,
           remaining,
           available,
-          prePeriod,
-          parachainBlock,
-          startBlock,
-          endBlock,
-          period,
-          periodCount
+          details: list
         };
       })
     );

@@ -1,15 +1,10 @@
 import { FixedPointNumber, Token } from '@acala-network/sdk-core';
 
-export interface VestingData {
+export interface VestingDetail {
   token: Token;
   // total vesting reward amount
   total: FixedPointNumber;
-  // claimed reward amount
-  claimed: FixedPointNumber;
-  // remaining reward amount
-  remaining: FixedPointNumber;
-  // available claim reward amount
-  available: FixedPointNumber;
+  planToClaim: FixedPointNumber;
   // the reward amount of each period
   prePeriod: FixedPointNumber;
   // current parachain block number
@@ -22,4 +17,17 @@ export interface VestingData {
   period: bigint;
   // period count
   periodCount: bigint;
+}
+
+export interface VestingData {
+  token: Token;
+  total: FixedPointNumber;
+  // claimed reward amount
+  claimed: FixedPointNumber;
+  // remaining reward amount
+  remaining: FixedPointNumber;
+  // available claim reward amount
+  available: FixedPointNumber;
+
+  details: VestingDetail[];
 }
