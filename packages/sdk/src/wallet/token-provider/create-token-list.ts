@@ -131,7 +131,10 @@ export function createTokenList(
             // TODO: should support other locations
             locations: extractLocation(key, foreignAssetLocations)
           })
-        ];
+        ] as const;
+      })
+      .filter((i) => {
+        return i[1].symbol !== 'WETH' && i[1].symbol !== 'WBTC';
       })
   );
 
