@@ -93,7 +93,8 @@ export class MarketPriceProvider implements PriceProvider {
     }
 
     // use KSM price as taiKSM price
-    if (name === 'taiKSM') {
+    // taiKSM has renamed to tKSM
+    if (name === 'taiKSM' || name === 'tKSM') {
       return this.subscribe(new Token('KSM'));
     }
 

@@ -10,7 +10,9 @@ import { TokenProvider } from '../token-provider/type';
 import { StorageKey } from '@polkadot/types';
 
 const DEFAULT_ORACLE_STRATEGIES: OracleConfig['strategies'] = {
+  // taiKSM has renamed to tKSM
   taiKSM: ['AS', 'KSM'],
+  tKSM: ['AS', 'KSM'],
   tDOT: ['AS', 'DOT'],
   lcDOT: ['LIQUID_CROWDLOAN', 13]
 };
