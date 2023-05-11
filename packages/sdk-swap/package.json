@@ -14,8 +14,12 @@
     "url": "https://github.com/AcalaNetwork/acala.js/issues"
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
+  "peerDependencies": {
+    "@acala-network/types": "^5.0.2"
+  },
   "dependencies": {
     "@acala-network/sdk": "^4.1.8-14",
+    "@acala-network/sdk-core": "^4.1.8-14",
     "@nuts-finance/sdk-stable-asset": "^1.2.0"
   },
   "devDependencies": {

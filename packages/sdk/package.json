@@ -17,13 +17,14 @@
     "url": "https://github.com/AcalaNetwork/acala.js/issues"
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
+  "peerDependencies": {
+    "@acala-network/api": "^5.0.2",
+    "@acala-network/eth-providers": "~2.5.9",
+    "@polkadot/api": "^9.9.1"
+  },
   "dependencies": {
-    "@acala-network/api": "4.1.8-14",
-    "@acala-network/eth-providers": "^2.5.9",
-    "@acala-network/type-definitions": "4.1.8-14",
+    "@acala-network/sdk-core": "4.1.8-14",
     "@ethersproject/bignumber": "^5.7.0",
-    "@polkadot/api": "^9.9.1",
-    "@polkadot/types": "^9.9.1",
     "@types/events": "^3.0.0",
     "axios": "^0.24.0",
     "bignumber.js": "^9.0.0",
@@ -37,6 +38,7 @@
     "rxjs": "^7.5.7"
   },
   "devDependencies": {
+    "@acala-network/eth-providers": "~2.5.9",
     "@typechain/ethers-v5": "^10.1.0",
     "@types/dotenv": "^8.2.0",
     "@types/lodash": "^4.14.161",

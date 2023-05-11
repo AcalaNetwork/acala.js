@@ -14,9 +14,11 @@
     "url": "https://github.com/AcalaNetwork/acala.js/issues"
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
+  "peerDependencies": {
+    "@acala-network/types": "^5.0.2",
+    "@polkadot/api": "^9.9.1"
+  },
   "dependencies": {
-    "@polkadot/api": "^9.9.1",
-    "@polkadot/types": "^9.9.1",
     "@types/events": "^3.0.0",
     "bignumber.js": "^9.0.0",
     "events": "^3.2.0",
