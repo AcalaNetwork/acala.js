@@ -19,8 +19,6 @@
     "baseUrl": ".",
     "composite": true,
     "paths": {
-      "@acala-network/app-util": ["packages/app-util/src"],
-      "@acala-network/app-util/*": ["packages/app-util/src/*"],
       "@acala-network/sdk": [ "packages/sdk/src"],
       "@acala-network/sdk/*": ["packages/sdk/src/*"],
       "@acala-network/sdk-core": ["packages/sdk-core/src"],
