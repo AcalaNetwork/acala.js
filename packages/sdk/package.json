@@ -21,11 +21,11 @@
     "@acala-network/api": "^5",
     "@acala-network/eth-providers": "~2.7.3",
     "@polkadot/api": "^10",
-    "ethers": "~5.7.0",
-    "rxjs": "^7"
+    "ethers": "~5.7.0"
   },
   "dependencies": {
     "@acala-network/api": "^5.1.1",
+    "@acala-network/eth-providers": "~2.7.3",
     "@acala-network/sdk-core": "4.1.9-0",
     "@polkadot/api": "^10.7.3",
     "axios": "^0.24.0",
@@ -34,7 +34,7 @@
     "graphql-request": "^4.1.0",
     "lodash": "^4.17.20",
     "lru-cache": "^7.14.1",
-    "rxjs": "^7.5.7"
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@typechain/ethers-v5": "^10.1.0",

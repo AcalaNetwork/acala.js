@@ -36,7 +36,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@acala-network/eth-providers@npm:^2.7.3":
+"@acala-network/eth-providers@npm:~2.7.3":
   version: 2.7.3
   resolution: "@acala-network/eth-providers@npm:2.7.3"
   dependencies:
@@ -109,11 +109,10 @@ __metadata:
     "@polkadot/api": ^10.7.3
     "@types/lodash": ^4.14.161
     lodash: ^4.17.20
-    rxjs: ^7.5.7
+    rxjs: ^7.8.1
   peerDependencies:
     "@acala-network/types": ^5
     "@polkadot/api": ^10
-    rxjs: ^7
   languageName: unknown
   linkType: soft
 
@@ -126,7 +125,7 @@ __metadata:
     "@polkadot/api": ^10.7.3
     "@types/lodash": ^4.14.161
     lodash: ^4.17.20
-    rxjs: ^7.5.7
+    rxjs: ^7.8.1
   peerDependencies:
     "@acala-network/types": ^5
     "@polkadot/api": ^10
@@ -142,6 +141,7 @@ __metadata:
     "@acala-network/types": ^5.1.1
     "@polkadot/api": ^10.7.3
     "@types/lodash": ^4.14.161
+    rxjs: ^7.8.1
   peerDependencies:
     "@acala-network/types": ^5
     "@polkadot/api": ^10
@@ -153,6 +153,7 @@ __metadata:
   resolution: "@acala-network/sdk@workspace:packages/sdk"
   dependencies:
     "@acala-network/api": ^5.1.1
+    "@acala-network/eth-providers": ~2.7.3
     "@acala-network/sdk-core": 4.1.9-0
     "@polkadot/api": ^10.7.3
     "@typechain/ethers-v5": ^10.1.0
@@ -165,14 +166,13 @@ __metadata:
     graphql-request: ^4.1.0
     lodash: ^4.17.20
     lru-cache: ^7.14.1
-    rxjs: ^7.5.7
+    rxjs: ^7.8.1
     typechain: ^8.1.0
   peerDependencies:
     "@acala-network/api": ^5
     "@acala-network/eth-providers": ~2.7.3
     "@polkadot/api": ^10
     ethers: ~5.7.0
-    rxjs: ^7
   languageName: unknown
   linkType: soft
 
@@ -202,7 +202,7 @@ __metadata:
   resolution: "@acala-network/wormhole-portal@workspace:packages/wormhole-portal"
   dependencies:
     "@acala-network/api": ^5.1.1
-    "@acala-network/eth-providers": ^2.7.3
+    "@acala-network/eth-providers": ~2.7.3
     "@acala-network/sdk": ^4.1.9-0
     "@certusone/wormhole-sdk": ^0.5.0
     "@ethersproject/bignumber": ^5.7.0
@@ -215,7 +215,7 @@ __metadata:
     ethers: ~5.7.0
   peerDependencies:
     "@acala-network/api": ^5
-    "@acala-network/eth-providers": ^2.7.3
+    "@acala-network/eth-providers": ~2.7.3
     "@polkadot/api": ^10
     ethers: ~5.7.0
   languageName: unknown
@@ -12250,7 +12250,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:^7.5.5, rxjs@npm:^7.5.6, rxjs@npm:^7.5.7, rxjs@npm:^7.8.1":
+"rxjs@npm:^7.5.5, rxjs@npm:^7.5.6, rxjs@npm:^7.8.1":
   version: 7.8.1
   resolution: "rxjs@npm:7.8.1"
   dependencies:
