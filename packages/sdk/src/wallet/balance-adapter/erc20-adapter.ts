@@ -1,5 +1,5 @@
 import { EvmRpcProvider } from '@acala-network/eth-providers';
-import { computeDefaultEvmAddress } from '@acala-network/eth-providers/lib/utils';
+import { computeDefaultEvmAddress } from '@acala-network/eth-providers';
 import { FixedPointNumber, getERC20TokenAddressFromName, Token } from '@acala-network/sdk-core';
 // eslint-disable-next-line camelcase
 import { Erc20__factory } from '../../abis/types/factories/Erc20__factory';

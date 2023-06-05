@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@acala-network/api": "^5.1.1",
+    "@acala-network/eth-providers": "~2.7.3",
     "@acala-network/sdk-core": "4.1.9-0",
     "@polkadot/api": "^10.7.3",
     "axios": "^0.24.0",
