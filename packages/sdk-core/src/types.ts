@@ -8,13 +8,14 @@ export type AnyApi = ApiPromise | ApiRx;
 
 export type ObOrPromiseResult<T extends AnyApi, R> = T extends ApiRx ? Observable<R> : Promise<R>;
 
-export type MaybeCurrency = number
-| string
-| Token
-| Codec
-| [string, string]
-| AcalaPrimitivesCurrencyCurrencyId
-| AcalaPrimitivesCurrencyDexShare;
+export type MaybeCurrency =
+  | number
+  | string
+  | Token
+  | Codec
+  | [string, string]
+  | AcalaPrimitivesCurrencyCurrencyId
+  | AcalaPrimitivesCurrencyDexShare;
 
 export type MaybeAccount = string | AccountId | Codec;
 

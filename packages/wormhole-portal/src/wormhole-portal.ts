@@ -193,7 +193,7 @@ export class WormholePortal implements BaseSDK {
   }
 
   private async getEVMCallFromETHTransaction(transaction: TransactionRequest, provider: BaseProvider) {
-    const {usedStorage, gasLimit }= await provider.estimateResources(transaction);
+    const { usedStorage, gasLimit } = await provider.estimateResources(transaction);
 
     transaction.gasLimit = gasLimit;
 
