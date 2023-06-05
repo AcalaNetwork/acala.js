@@ -40,7 +40,7 @@ export class Incentive implements BaseSDK {
 
     this.consts = {
       accumulatePeriod: this.api.consts.incentives.accumulatePeriod.toNumber(),
-      stableCurrencyId: this.api.consts.incentives.stableCurrencyId
+      stableCurrencyId: this.api.consts.cdpEngine.getStableCurrencyId
     };
 
     this.init();
@@ -167,7 +167,7 @@ export class Incentive implements BaseSDK {
   });
 
   private endTimes$ = memoize((): Observable<Record<string, number>> => {
-    return this.storages.scheduler().observable.pipe(map(getDeductionEndtimeConfigs));
+    return this.storages.scheduler().observable.pipe(map((data) => getDeductionEndtimeConfigs(this.api, data)));
   });
 
   private apr$ = memoize((pool: IncentivePool) => {

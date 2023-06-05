@@ -5,7 +5,6 @@ import { firstValueFrom } from 'rxjs';
 import { Wallet, WalletConfigs } from '@acala-network/sdk/wallet';
 import { AggregateDex } from './dex';
 import { AcalaDex } from './dex-providers/acala';
-import { NutsDex } from './dex-providers/nuts';
 import { TradingGraph } from './trading-graph';
 
 describe('dex', () => {
@@ -31,7 +30,7 @@ describe('dex', () => {
     return new AggregateDex({
       api,
       wallet,
-      providers: [new AcalaDex({ api, wallet }), new NutsDex({ api, wallet })]
+      providers: [new AcalaDex({ api, wallet })]
     });
   };
 
