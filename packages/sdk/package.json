@@ -18,19 +18,18 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "peerDependencies": {
-    "@acala-network/api": "^5.0.2",
-    "@acala-network/eth-providers": "~2.5.9",
-    "@polkadot/api": "^9.9.1"
+    "@acala-network/api": "^5",
+    "@acala-network/eth-providers": "~2.7.3",
+    "@polkadot/api": "^10",
+    "ethers": "~5.7.0",
+    "rxjs": "^7"
   },
   "dependencies": {
+    "@acala-network/api": "^5.1.1",
     "@acala-network/sdk-core": "4.1.8-14",
-    "@ethersproject/bignumber": "^5.7.0",
-    "@types/events": "^3.0.0",
+    "@polkadot/api": "^10.7.3",
     "axios": "^0.24.0",
-    "bignumber.js": "^9.0.0",
-    "cross-fetch": "^3.1.4",
-    "ethers": "^5.6.2",
-    "events": "^3.2.0",
+    "ethers": "~5.7.0",
     "graphql": "^16.3.0",
     "graphql-request": "^4.1.0",
     "lodash": "^4.17.20",
@@ -38,10 +37,10 @@
     "rxjs": "^7.5.7"
   },
   "devDependencies": {
-    "@acala-network/eth-providers": "~2.5.9",
     "@typechain/ethers-v5": "^10.1.0",
     "@types/dotenv": "^8.2.0",
     "@types/lodash": "^4.14.161",
+    "@types/lru-cache": "^7.10.10",
     "typechain": "^8.1.0"
   }
 }

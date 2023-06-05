@@ -7,19 +7,6 @@
   "workspaces": [
     "packages/*"
   ],
-  "resolutions": {
-    "@polkadot/api": "^9.9.1",
-    "@polkadot/types": "^9.9.1",
-    "@polkadot/typegen": "^9.9.1",
-    "@polkadot/types-codec": "^9.9.1",
-    "@polkadot/api-derive": "^9.9.1",
-    "@polkadot/api-augment": "^9.9.1",
-    "@polkadot/rpc-augment": "^9.9.1",
-    "@polkadot/util-crypto": "^10.4.2",
-    "typescript": "^5.0.4",
-    "rxjs": "^7.5.7",
-    "@types/bn.js": "^5.1.0"
-  },
   "scripts": {
     "build": "polkadot-dev-build-ts",
     "build:release": "polkadot-ci-ghact-build",
@@ -30,23 +17,19 @@
     "check-deps": "./node_modules/@open-web3/util/scripts/check-deps.js yarn.lock @polkadot/ @open-web3/"
   },
   "devDependencies": {
-    "@acala-network/api": "^5.0.2",
     "@babel/core": "^7.20.5",
     "@babel/register": "^7.13.6",
     "@babel/runtime": "^7.14.0",
     "@open-web3/dev-config": "^0.2.3",
     "@open-web3/util": "^1.1.4",
-    "@polkadot/api": "^9.9.1",
     "@types/jest": "^29.5.1",
+    "dotenv": "^16.0.0",
     "jest": "^29.5.0",
     "jest-config": "^29.3.1",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.0.4"
   },
-  "dependencies": {
-    "dotenv": "^16.0.0"
-  },
   "packageManager": "yarn@3.5.0",
-  "stableVersion": "4.1.8-13"
+  "stableVersion": "4.1.8"
 }
