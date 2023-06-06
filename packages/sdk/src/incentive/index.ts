@@ -1,5 +1,4 @@
 import { AnyApi, FixedPointNumber, forceToCurrencyName, MaybeCurrency, Token } from '@acala-network/sdk-core';
-import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
 import { memoize } from '@polkadot/util';
 import { BehaviorSubject, firstValueFrom, Observable, combineLatest, of } from 'rxjs';
 import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
@@ -27,7 +26,6 @@ export class Incentive implements BaseSDK {
   private wallet: Wallet;
   public isReady$: BehaviorSubject<boolean>;
   public readonly consts: {
-    stableCurrencyId: AcalaPrimitivesCurrencyCurrencyId;
     accumulatePeriod: number;
   };
 
@@ -39,8 +37,7 @@ export class Incentive implements BaseSDK {
     this.wallet = wallet;
 
     this.consts = {
-      accumulatePeriod: this.api.consts.incentives.accumulatePeriod.toNumber(),
-      stableCurrencyId: this.api.consts.cdpEngine.getStableCurrencyId
+      accumulatePeriod: this.api.consts.incentives.accumulatePeriod.toNumber()
     };
 
     this.init();
@@ -59,21 +56,6 @@ export class Incentive implements BaseSDK {
       Array.from(new Set(list.map(forceToCurrencyName))).map((item) => [item, this.wallet.getToken(item)] as const)
     );
   };
-
-  // subscribe all dex saving rewards config
-  private dexSavingRewardRates$ = memoize((): Observable<Record<string, FixedPointNumber>> => {
-    return this.storages.dexSavingRewardRates().observable.pipe(
-      map((data) => {
-        return Object.fromEntries(
-          data.map((item) => {
-            const pool = item[0].args[0];
-
-            return [getPoolId(pool), FixedPointNumber.fromInner(item[1].toString())];
-          })
-        );
-      })
-    );
-  });
 
   // subscribe all deduction rates config
   private deductionRates$ = memoize((): Observable<Record<string, FixedPointNumber>> => {
@@ -171,37 +153,21 @@ export class Incentive implements BaseSDK {
   });
 
   private apr$ = memoize((pool: IncentivePool) => {
-    const savingRate = pool.savingRate ?? FixedPointNumber.ZERO;
     const tokens = Array.from(
       new Set([forceToCurrencyName(pool.collateral), ...pool.rewardTokensConfig.map((item) => item.token.name)])
     );
 
-    const stableCurrencyPosition$ = !savingRate.isZero()
-      ? this.wallet.liquidity.subscribePoolDetails(pool.collateral).pipe(
-          map((data) => {
-            const stableCurrencyPosition = data.info.pair.findIndex(
-              (item) => forceToCurrencyName(item) === forceToCurrencyName(this.consts.stableCurrencyId)
-            );
-
-            return data.amounts[stableCurrencyPosition];
-          })
-        )
-      : of(FixedPointNumber.ZERO);
-
     return combineLatest({
-      prices: combineLatest(Object.fromEntries(tokens.map((item) => [item, this.wallet.subscribePrice(item)]))),
-      stableCurrencyPosition: stableCurrencyPosition$
+      prices: combineLatest(Object.fromEntries(tokens.map((item) => [item, this.wallet.subscribePrice(item)])))
     }).pipe(
-      map(({ prices, stableCurrencyPosition }) => {
+      map(({ prices }) => {
         return getAPR(
           pool.collateral,
           this.consts.accumulatePeriod,
           prices,
           pool.totalShares,
           pool.deductionRate,
-          pool.rewardTokensConfig,
-          savingRate,
-          stableCurrencyPosition
+          pool.rewardTokensConfig
         );
       })
     );
@@ -289,14 +255,12 @@ export class Incentive implements BaseSDK {
       endTimes: this.endTimes$(),
       deductionRates: this.deductionRates$(),
       poolInfos: this.poolInfos$(),
-      rewardTokensConfigs: this.rewardTokensConfigs$(),
-      savingRewardRates: this.dexSavingRewardRates$()
+      rewardTokensConfigs: this.rewardTokensConfigs$()
     }).pipe(
-      map(({ endTimes, deductionRates, poolInfos, rewardTokensConfigs, savingRewardRates }) => {
+      map(({ endTimes, deductionRates, poolInfos, rewardTokensConfigs }) => {
         return poolInfos.map((item) => {
           const deductionRate = deductionRates[item.id] || FixedPointNumber.ZERO;
           const rewardTokensConfig = rewardTokensConfigs[item.id] || [];
-          const savingRewardRate = savingRewardRates[item.id] || FixedPointNumber.ZERO;
           const endBlockNumber = endTimes[item.id] || -1;
 
           const result: IncentivePool = {
@@ -306,10 +270,6 @@ export class Incentive implements BaseSDK {
             deductionRate,
             endBlockNumber
           };
-
-          if (item.type === IncentiveType.DEX) {
-            result.savingRate = savingRewardRate;
-          }
 
           return result;
         });
