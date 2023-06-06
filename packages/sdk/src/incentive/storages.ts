@@ -19,13 +19,6 @@ export const createStorages = (api: AnyApi) => {
         params: []
       });
     },
-    dexSavingRewardRates: () => {
-      return Storage.create<[StorageKey<[ModuleSupportIncentivesPoolId]>, u128][]>({
-        api: api,
-        path: 'query.incentives.dexSavingRewardRates.entries',
-        params: []
-      });
-    },
     incentiveRewardAmounts: () => {
       return Storage.create<
         [StorageKey<[ModuleSupportIncentivesPoolId, AcalaPrimitivesCurrencyCurrencyId]>, Balance][]
