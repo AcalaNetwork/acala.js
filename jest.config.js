@@ -5,12 +5,14 @@ module.exports = Object.assign({}, config, {
     '@acala-network/sdk-core(.*)$': '<rootDir>/packages/sdk-core/src/$1',
     '@acala-network/sdk-swap(.*)$': '<rootDir>/packages/sdk-swap/src/$1',
     '@acala-network/sdk/(.*)$': '<rootDir>/packages/sdk/src/$1',
-    '@acala-network/wormhole-portal(.*)$': '<rootDir>/packages/sdk/wormhole-portal/$1'
+    '@acala-network/wormhole-portal(.*)$': '<rootDir>/packages/wormhole-portal/$1',
+    '@acala-network/sdk-payment(.*)$': '<rootDir>/packages/sdk-payment/$1'
   },
   modulePathIgnorePatterns: [
     '<rootDir>/build',
     '<rootDir>/packages/sdk-core/build',
     '<rootDir>/packages/sdk-swap/build',
+    '<rootDir>/packages/sdk-payment/build',
     '<rootDir>/packages/sdk/build',
     '<rootDir>/packages/sdk-wallet/build',
     '<rootDir>/packages/sdk-homa/build',
