@@ -2,7 +2,7 @@
 
 
 ## Wallet
-//TODO
+wallet sdk support to query info about token list, token balance, token price and token value
 
 ## Dex
 //TODO

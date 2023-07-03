@@ -16,7 +16,6 @@ export interface WalletConsts {
 }
 
 export interface WalletConfigs {
-  evmProvider?: EvmRpcProvider;
   // overview price providers if need
   priceProviders?: PriceProviders;
   // ws provider for evm adapter

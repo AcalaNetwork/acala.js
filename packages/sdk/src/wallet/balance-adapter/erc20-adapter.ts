@@ -1,5 +1,6 @@
-import { EvmRpcProvider, computeDefaultEvmAddress } from '@acala-network/eth-providers';
-import { FixedPointNumber, getERC20TokenAddressFromName, Token } from '@acala-network/sdk-core';
+import { computeDefaultEvmAddress } from '@acala-network/eth-providers';
+import { AnyApi, FixedPointNumber, getERC20TokenAddressFromName, Token } from '@acala-network/sdk-core';
+import { BaseProvider } from '@ethersproject/providers';
 // eslint-disable-next-line camelcase
 import { Erc20__factory } from '../../abis/types/factories/Erc20__factory';
 import { isAddress } from '@ethersproject/address';
@@ -7,15 +8,33 @@ import { from, Observable, Subject } from 'rxjs';
 import { filter, finalize, shareReplay } from 'rxjs/operators';
 import { BalanceData } from '../types';
 import { AnyFunction } from '@polkadot/types/types';
+import { AccountId32 } from '@acala-network/types/interfaces/runtime';
 import { NotERC20TokenName } from '@acala-network/sdk-core/errors';
+import { Storage } from '@acala-network/sdk/utils/storage';
+
+const createStorages = (api: AnyApi) => {
+  return {
+    evmAddress: (address: string) => {
+    return Storage.create<AccountId32>({
+      api: api,
+      query: api.query.evmAccounts.evmAddresses,
+      params: [address]
+    });
+  }
+}
+}
 
 export class ERC20Adapter {
-  private provider: EvmRpcProvider;
+  private api: AnyApi;
+  private provider: BaseProvider;
   private caches: Record<string, Observable<BalanceData>>;
+  private storage: ReturnType<typeof createStorages>;
 
-  constructor(provider: EvmRpcProvider) {
+  constructor(api: AnyApi, provider: BaseProvider) {
+    this.api = api;
     this.provider = provider;
     this.caches = {};
+    this.storage = createStorages(this.api);
   }
 
   private getERC20Contract(address: string) {
@@ -28,9 +47,9 @@ export class ERC20Adapter {
   private async getEVMAddress(address: string) {
     if (address.startsWith('0x') && isAddress(address)) return address;
 
-    if (!this.provider._api) throw new Error(`can't get api from evm providier`);
+    if (!this.api) throw new Error(`can't get api from evm providier`);
 
-    const evmAddress = await this.provider._api.query.evmAccounts.evmAddresses(address);
+    const evmAddress = await  this.storage.evmAddress(address).query();
 
     return evmAddress.isEmpty ? computeDefaultEvmAddress(address) : evmAddress.toString();
   }
@@ -50,8 +69,6 @@ export class ERC20Adapter {
     this.caches[cacheKey] = balance$.pipe(shareReplay(1));
 
     const run = async () => {
-      await this.provider.isReady();
-
       const evmAddress = await this.getEVMAddress(address);
       const balance = await contract.balanceOf(evmAddress);
 
@@ -78,12 +95,12 @@ export class ERC20Adapter {
         });
       };
 
-      const fromListener = this.provider.addEventListener('logs', updateBalance, fromAddressFilter);
-      const toListener = this.provider.addEventListener('logs', updateBalance, toAddressFilter);
+      contract.on(fromAddressFilter, updateBalance);
+      contract.on(toAddressFilter, updateBalance);
 
       return () => {
-        this.provider.removeEventListener(fromListener);
-        this.provider.removeEventListener(toListener);
+        contract.off(fromAddressFilter, updateBalance);
+        contract.off(toAddressFilter, updateBalance);
       };
     };
 

@@ -7,12 +7,12 @@ export class NotSupportETHAddress extends Error {
   }
 }
 
-export class NotSupportEVMBalance extends Error {
+export class NotSupportEVM extends Error {
   constructor() {
     super();
 
     this.message = 'not support evm balance query, please init the sdk with wsProvider';
-    this.name = 'NotSupportEVMBalance';
+    this.name = 'NotSupportEVM';
   }
 }
 

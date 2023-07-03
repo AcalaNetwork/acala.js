@@ -1,5 +1,5 @@
 import { AnyApi, FixedPointNumber, FixedPointNumber as FN, forceToCurrencyName, Token } from '@acala-network/sdk-core';
-import { EvmRpcProvider } from '@acala-network/eth-providers';
+import { BaseProvider } from '@ethersproject/providers';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { utils } from 'ethers';
 import { map } from 'rxjs/operators';
@@ -7,13 +7,13 @@ import { AccountInfo, Balance } from '@polkadot/types/interfaces';
 import { BalanceData } from '../types';
 import { AcalaExpandBalanceAdapter } from './types';
 import { Observable } from 'rxjs';
-import { NotSupportETHAddress, NotSupportEVMBalance } from '../errors';
+import { NotSupportETHAddress, NotSupportEVM} from '../errors';
 import { Storage } from '../../utils/storage';
 import { ERC20Adapter } from './erc20-adapter';
 
 interface AcalaAdapterConfigs {
   api: AnyApi;
-  evmProvider?: EvmRpcProvider;
+  evm?: BaseProvider;
 }
 
 const createStorages = (api: AnyApi) => {
@@ -47,18 +47,16 @@ const createStorages = (api: AnyApi) => {
 export class AcalaBalanceAdapter implements AcalaExpandBalanceAdapter {
   private storages: ReturnType<typeof createStorages>;
   private nativeCurrency: string;
-  private evmProvider!: EvmRpcProvider;
   private erc20Adapter!: ERC20Adapter;
   private api: AnyApi;
 
-  constructor({ api, evmProvider }: AcalaAdapterConfigs) {
+  constructor({ api, evm }: AcalaAdapterConfigs) {
     this.api = api;
     this.storages = createStorages(this.api);
     this.nativeCurrency = api.registry.chainTokens[0];
 
-    if (evmProvider) {
-      this.evmProvider = evmProvider;
-      this.erc20Adapter = new ERC20Adapter(this.evmProvider);
+    if (evm) {
+      this.erc20Adapter = new ERC20Adapter(api, evm);
     }
   }
 
@@ -90,8 +88,8 @@ export class AcalaBalanceAdapter implements AcalaExpandBalanceAdapter {
       throw new NotSupportETHAddress(address);
     }
 
-    if (token.isERC20 && !this.evmProvider) {
-      throw new NotSupportEVMBalance();
+    if (token.isERC20 && !this.erc20Adapter) {
+      throw new NotSupportEVM();
     }
 
     if (token.isERC20) {
@@ -115,8 +113,8 @@ export class AcalaBalanceAdapter implements AcalaExpandBalanceAdapter {
   }
 
   public subscribeIssuance(token: Token): Observable<FixedPointNumber> {
-    if (token.isERC20 && !this.evmProvider) {
-      throw new NotSupportEVMBalance();
+    if (token.isERC20 && !this.erc20Adapter) {
+      throw new NotSupportEVM();
     }
 
     if (token.isERC20) {

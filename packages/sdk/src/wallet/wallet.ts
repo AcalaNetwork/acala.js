@@ -1,7 +1,3 @@
-/**
- * wallet sdk support to query info about token list, token balance, token price and token value
- */
-
 import { memoize } from '@polkadot/util';
 import {
   FixedPointNumber as FN,
@@ -42,8 +38,8 @@ export class Wallet implements BaseSDK {
   private storages!: ReturnType<typeof createStorages>;
   private configs!: WalletConfigs;
 
-  private balanceAdapter!: AcalaExpandBalanceAdapter;
-  private tokenProvider!: TokenProvider;
+  public balanceAdapter!: AcalaExpandBalanceAdapter;
+  public tokenProvider!: TokenProvider;
   public priceProviders!: PriceProviders;
 
   // inject liquidity, homa sdk by default for easy using
@@ -76,10 +72,7 @@ export class Wallet implements BaseSDK {
 
     this.tokenProvider.isReady$.subscribe({
       next: (status) => {
-        this.balanceAdapter = new AcalaBalanceAdapter({
-          api: this.api,
-          evmProvider: this.configs?.evmProvider
-        });
+        this.balanceAdapter = new AcalaBalanceAdapter({ api: this.api });
         this.liquidity = new Liquidity(this.api, this);
         this.homa = new Homa(this.api, this);
         this.web3Name = new DIDWeb3Name();
