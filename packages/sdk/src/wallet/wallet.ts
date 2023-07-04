@@ -72,7 +72,10 @@ export class Wallet implements BaseSDK {
 
     this.tokenProvider.isReady$.subscribe({
       next: (status) => {
-        this.balanceAdapter = new AcalaBalanceAdapter({ api: this.api });
+        this.balanceAdapter = new AcalaBalanceAdapter({
+          api: this.api,
+          evm: this.configs.evm
+        });
         this.liquidity = new Liquidity(this.api, this);
         this.homa = new Homa(this.api, this);
         this.web3Name = new DIDWeb3Name();
