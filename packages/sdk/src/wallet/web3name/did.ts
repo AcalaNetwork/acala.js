@@ -9,23 +9,31 @@ export class DIDWeb3Name {
   private cached: Record<string, string>;
 
   constructor() {
-    const provider = new WsProvider(ENDPOINTS, false);
-    this.api = new ApiPromise({ provider });
     this.cached = {};
   }
 
+  private getProvider () {
+    if (!this.api) {
+      const provider = new WsProvider(ENDPOINTS, false);
+      this.api = new ApiPromise({ provider });
+    }
+
+    return this.api;
+  }
+
   public async getName(address: string) {
+    const api = await this.getProvider();
     if (this.cached[address]) return this.cached[address];
 
     // check is connected first
-    await this.api.isReady;
+    await api.isReady;
 
-    const connectedDid = await this.api.query.didLookup.connectedDids<Option<any>>(address);
+    const connectedDid = await api.query.didLookup.connectedDids<Option<any>>(address);
 
     if (connectedDid.isSome) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       const didAccount = (connectedDid.unwrap() as any)?.did?.toString();
-      const web3name = await this.api.query.web3Names.names<Option<Bytes>>(didAccount);
+      const web3name = await api.query.web3Names.names<Option<Bytes>>(didAccount);
 
       if (web3name.isSome) {
         const name = web3name.unwrap().toUtf8();

@@ -1,8 +1,7 @@
 import { FixedPointNumber as FN, Token } from '@acala-network/sdk-core';
 import { PriceProvider, PriceProviderType } from './price-provider/types';
 import { ChainType } from '../types';
-import { WsProvider } from '@polkadot/api';
-import { EvmRpcProvider } from '@acala-network/eth-providers';
+import { BaseProvider } from '@ethersproject/providers';
 
 export type TokenRecord = Record<string, Token>;
 
@@ -16,10 +15,10 @@ export interface WalletConsts {
 }
 
 export interface WalletConfigs {
-  // overview price providers if need
+  // overwrite price providers when need
   priceProviders?: PriceProviders;
-  // ws provider for evm adapter
-  wsProvider?: WsProvider;
+  // evm provider
+  evm?: BaseProvider;
 }
 
 export interface BalanceData {

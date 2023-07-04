@@ -20,10 +20,7 @@ describe('dex', () => {
 
     await api.isReady;
 
-    const wallet = new Wallet(api, {
-      wsProvider: provider,
-      ...configs
-    });
+    const wallet = new Wallet(api, { ...configs });
 
     await wallet.isReady;
 
@@ -36,8 +33,7 @@ describe('dex', () => {
 
   test.skip('get tradable tokens shoule be ok', async () => {
     const sdk = await initSDK();
-
-    await sdk.isReady;
+await sdk.isReady;
 
     const tokens = await sdk.getTradableTokens();
 
