@@ -74,7 +74,7 @@ export interface AggregateDexSwapParams extends SwapParams {
 export interface BaseSwap {
   get source(): DexSource;
   get tradingPairs$(): Observable<TradingPair[]>;
-  filterPath(path: TradingPathItem): boolean;
+  filterPath(path: TradingPath): boolean;
   swap(params: SwapParamsWithExactPath): Observable<SwapResult>;
   getAggregateTradingPath(result: SwapResult): any;
   getTradingTx(

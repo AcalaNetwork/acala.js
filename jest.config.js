@@ -5,8 +5,8 @@ module.exports = Object.assign({}, config, {
     '@acala-network/sdk-core(.*)$': '<rootDir>/packages/sdk-core/src/$1',
     '@acala-network/sdk-swap(.*)$': '<rootDir>/packages/sdk-swap/src/$1',
     '@acala-network/sdk/(.*)$': '<rootDir>/packages/sdk/src/$1',
-    '@acala-network/wormhole-portal(.*)$': '<rootDir>/packages/wormhole-portal/$1',
-    '@acala-network/sdk-payment(.*)$': '<rootDir>/packages/sdk-payment/$1'
+    '@acala-network/sdk-payment(.*)$': '<rootDir>/packages/sdk-payment/$1',
+    '@acala-network/wormhole-portal(.*)$': '<rootDir>/packages/wormhole-portal/$1'
   },
   modulePathIgnorePatterns: [
     '<rootDir>/build',
