@@ -14,8 +14,8 @@ export type DexSource = 'acala' | 'nuts';
  *    ["acala", ["LDOT", "lcDOT://13"]]
  * ]
  */
-export type TradingPathItem = [DexSource, Token[]];
-export type CompositeTradingPath = TradingPathItem[];
+export type TradingPath= [DexSource, Token[]];
+export type CompositeTradingPath = TradingPath[];
 
 /**
  * define the trading pair struct, tokens in trading pair should sorted
