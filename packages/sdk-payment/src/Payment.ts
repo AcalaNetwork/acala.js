@@ -1,9 +1,9 @@
 import { Wallet } from '@acala-network/sdk';
 import { AggregateDex } from '@acala-network/sdk-swap';
-import { PaymentConfig, PaymentMethod, PaymentMethodTypes } from './types';
+import { PaymentConfig, PaymentMethod, PaymentMethodTypes, Tx } from './types';
 import { AnyApi, Token } from '@acala-network/sdk-core';
 import { isEmpty } from 'lodash';
-import { ensureReady } from './utils';
+import { ensureReady, toPromise } from './utils';
 import { Storages, createStorages } from './storage';
 
 export class Payment {
@@ -98,5 +98,72 @@ export class Payment {
     }
 
     return paymentMethods;
+  }
+
+  private getSurplusByType (type: PaymentMethodTypes) {
+    switch(type) {
+      case PaymentMethodTypes.NATIVE_TOKEN: return 1;
+      case PaymentMethodTypes.DEFAULT_FEE_TOKEN: return 1.2;
+      case PaymentMethodTypes.GLOBAL_SWAP_PATH: return 1.5;
+      case PaymentMethodTypes.SWAP: return 1.5;
+      default: return 1;
+    }
+  }
+
+  @ensureReady
+  public createWrappedTx (tx: Tx, paymentMethod: PaymentMethod) {
+    const { api } = this;
+    const { path, type } = paymentMethod;
+    const surplus = this.getSurplusByType(type);
+
+    let wrapped: Tx;
+
+    switch (type) {
+      case PaymentMethodTypes.NATIVE_TOKEN:
+        wrapped = tx;
+        break;
+      case PaymentMethodTypes.DEFAULT_FEE_TOKEN:
+        wrapped = api.tx.transactionPayment.withFeePath(
+          path.map((i) => i.toChainData()),
+          tx.method.toHex()
+        );
+        break;
+      case PaymentMethodTypes.GLOBAL_SWAP_PATH:
+        wrapped = api.tx.transactionPayment.withFeeCurrency(
+          path[0].toChainData(),
+          tx.method.toHex()
+        );
+        break;
+      case PaymentMethodTypes.SWAP:
+        wrapped = api.tx.transactionPayment.withFeePath(
+          path.map((i) => i.toChainData()),
+          tx.method.toHex(),
+        );
+        break;
+      default: throw new Error('unknown payment method');
+    }
+
+    return { tx: wrapped, surplus };
+  }
+
+  @ensureReady
+  public async estimateTxFee (tx: Tx, account: string, surplus: number) {
+    const { partialFee } = await toPromise(tx.paymentInfo(account));
+
+    return partialFee.muln(surplus);
+  }
+
+  @ensureReady
+  public async estimateTxFeeByCallName (account: string, section: string, method: string) {
+    const { api } = this;
+
+    const call = api.tx[section][method];
+
+    if (!call) throw new Error('unknown call');
+
+    const args = call.meta.args.map((i) => api.createType(i.typeName.toString()));
+    const tx = call(...args);
+
+    return this.estimateTxFee(tx, account, 1);
   }
 }

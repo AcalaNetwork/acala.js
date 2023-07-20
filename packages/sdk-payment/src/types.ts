@@ -1,6 +1,7 @@
 import { Wallet } from "@acala-network/sdk";
 import { AnyApi, Token } from "@acala-network/sdk-core";
 import { AggregateDex } from "@acala-network/sdk-swap";
+import { SubmittableExtrinsic } from "@polkadot/api/types";
 
 export interface PaymentConfig {
   wallet: Wallet;
@@ -28,3 +29,5 @@ export interface PaymentMethod {
   type: PaymentMethodTypes;
   path: Token[];
 }
+
+export type Tx= SubmittableExtrinsic<'promise'> | SubmittableExtrinsic<'rxjs'>;
