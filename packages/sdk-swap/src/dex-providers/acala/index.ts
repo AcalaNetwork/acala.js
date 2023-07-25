@@ -22,7 +22,7 @@ import {
   TradeMode,
   TradingPair,
   CompositeTradingPath,
-  TradingPathItem,
+  TradingPath,
   OverwriteCallParams
 } from '../../types';
 import { ExchangeFee, ExpandPath, ExpandPathWithPositions, MidResult } from './types';
@@ -333,7 +333,7 @@ export class AcalaDex implements BaseSwap {
     };
   }
 
-  public filterPath(path: TradingPathItem) {
+  public filterPath(path: TradingPath) {
     if (path[0] !== this.source) return false;
 
     return path[1].length <= this.configs.tradingPathLimit;
