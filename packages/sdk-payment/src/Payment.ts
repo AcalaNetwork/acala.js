@@ -10,7 +10,7 @@ export class Payment {
   readonly wallet: Wallet;
   readonly dex: AggregateDex;
   readonly api: AnyApi;
-  public isReady: boolean = false;
+  public isReady = false;
   private paymentMethods: PaymentMethod[] = [];
   private storages: Storages;
 
@@ -21,7 +21,7 @@ export class Payment {
     this.storages = createStorages(this.api);
   }
 
-  public async ready () {
+  public async ready() {
     await this.wallet.isReady;
     await this.dex.isReady;
 
@@ -30,7 +30,7 @@ export class Payment {
     return true;
   }
 
-  private get defaultFeeToken (): Token[] {
+  private get defaultFeeToken(): Token[] {
     const defaultFeeTokens = this.api.consts.transactionPayment.defaultFeeTokens;
 
     return defaultFeeTokens.map((i) => this.wallet.getToken(i));
@@ -100,18 +100,23 @@ export class Payment {
     return paymentMethods;
   }
 
-  private getSurplusByType (type: PaymentMethodTypes) {
-    switch(type) {
-      case PaymentMethodTypes.NATIVE_TOKEN: return 1;
-      case PaymentMethodTypes.DEFAULT_FEE_TOKEN: return 1.2;
-      case PaymentMethodTypes.GLOBAL_SWAP_PATH: return 1.5;
-      case PaymentMethodTypes.SWAP: return 1.5;
-      default: return 1;
+  private getSurplusByType(type: PaymentMethodTypes) {
+    switch (type) {
+      case PaymentMethodTypes.NATIVE_TOKEN:
+        return 1;
+      case PaymentMethodTypes.DEFAULT_FEE_TOKEN:
+        return 1.2;
+      case PaymentMethodTypes.GLOBAL_SWAP_PATH:
+        return 1.5;
+      case PaymentMethodTypes.SWAP:
+        return 1.5;
+      default:
+        return 1;
     }
   }
 
   @ensureReady
-  public createWrappedTx (tx: Tx, paymentMethod: PaymentMethod) {
+  public createWrappedTx(tx: Tx, paymentMethod: PaymentMethod) {
     const { api } = this;
     const { path, type } = paymentMethod;
     const surplus = this.getSurplusByType(type);
@@ -129,32 +134,30 @@ export class Payment {
         );
         break;
       case PaymentMethodTypes.GLOBAL_SWAP_PATH:
-        wrapped = api.tx.transactionPayment.withFeeCurrency(
-          path[0].toChainData(),
-          tx.method.toHex()
-        );
+        wrapped = api.tx.transactionPayment.withFeeCurrency(path[0].toChainData(), tx.method.toHex());
         break;
       case PaymentMethodTypes.SWAP:
         wrapped = api.tx.transactionPayment.withFeePath(
           path.map((i) => i.toChainData()),
-          tx.method.toHex(),
+          tx.method.toHex()
         );
         break;
-      default: throw new Error('unknown payment method');
+      default:
+        throw new Error('unknown payment method');
     }
 
     return { tx: wrapped, surplus };
   }
 
   @ensureReady
-  public async estimateTxFee (tx: Tx, account: string, surplus: number) {
+  public async estimateTxFee(tx: Tx, account: string, surplus: number) {
     const { partialFee } = await toPromise(tx.paymentInfo(account));
 
     return partialFee.muln(surplus);
   }
 
   @ensureReady
-  public async estimateTxFeeByCallName (account: string, section: string, method: string) {
+  public async estimateTxFeeByCallName(account: string, section: string, method: string) {
     const { api } = this;
 
     const call = api.tx[section][method];

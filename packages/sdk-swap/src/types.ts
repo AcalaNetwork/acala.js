@@ -14,7 +14,7 @@ export type DexSource = 'acala' | 'nuts';
  *    ["acala", ["LDOT", "lcDOT://13"]]
  * ]
  */
-export type TradingPath= [DexSource, Token[]];
+export type TradingPath = [DexSource, Token[]];
 export type CompositeTradingPath = TradingPath[];
 
 /**

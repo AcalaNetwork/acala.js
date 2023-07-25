@@ -1,11 +1,7 @@
 import { MethodDeclaration } from 'typescript';
 import { NotReady } from '../error';
 
-export function ensureReady (
-  _target: any,
-  _propertyKey: string,
-  descriptor: PropertyDescriptor
-) {
+export function ensureReady(_target: any, _propertyKey: string, descriptor: PropertyDescriptor) {
   const origin = descriptor.value;
 
   descriptor.value = function (...args: any[]) {
@@ -14,7 +10,7 @@ export function ensureReady (
     }
 
     return origin.apply(this, args);
-  }
+  };
 
   return descriptor;
 }

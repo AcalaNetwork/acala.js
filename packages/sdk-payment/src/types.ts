@@ -1,7 +1,7 @@
-import { Wallet } from "@acala-network/sdk";
-import { AnyApi, Token } from "@acala-network/sdk-core";
-import { AggregateDex } from "@acala-network/sdk-swap";
-import { SubmittableExtrinsic } from "@polkadot/api/types";
+import { Wallet } from '@acala-network/sdk';
+import { AnyApi, Token } from '@acala-network/sdk-core';
+import { AggregateDex } from '@acala-network/sdk-swap';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
 
 export interface PaymentConfig {
   wallet: Wallet;
@@ -22,7 +22,7 @@ export enum PaymentMethodTypes {
   NATIVE_TOKEN = 'native_token',
   DEFAULT_FEE_TOKEN = 'default_fee_token',
   GLOBAL_SWAP_PATH = 'global_swap_path',
-  SWAP= 'swap'
+  SWAP = 'swap'
 }
 
 export interface PaymentMethod {
@@ -30,4 +30,4 @@ export interface PaymentMethod {
   path: Token[];
 }
 
-export type Tx= SubmittableExtrinsic<'promise'> | SubmittableExtrinsic<'rxjs'>;
+export type Tx = SubmittableExtrinsic<'promise'> | SubmittableExtrinsic<'rxjs'>;

@@ -5,7 +5,7 @@ export class NoTxFound extends Error {
 }
 
 export class NotReady extends Error {
-  constructor () {
+  constructor() {
     super('SDK is not ready');
   }
 }
