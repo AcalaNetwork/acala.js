@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk",
-  "version": "4.1.9-3",
+  "version": "4.1.9-4",
   "description": "acala network sdk",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
@@ -26,7 +26,7 @@
   "dependencies": {
     "@acala-network/api": "^5.1.1",
     "@acala-network/eth-providers": "~2.7.3",
-    "@acala-network/sdk-core": "4.1.9-3",
+    "@acala-network/sdk-core": "4.1.9-4",
     "@polkadot/api": "^10.7.3",
     "axios": "^0.24.0",
     "ethers": "~5.7.0",
