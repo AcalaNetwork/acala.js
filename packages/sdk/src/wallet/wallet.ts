@@ -355,12 +355,7 @@ export class Wallet implements BaseSDK {
     return firstValueFrom(this.subscribePrice(token, type));
   }
 
-  public async checkTransfer (
-    address: string,
-    currency: MaybeCurrency,
-    amount: FN,
-    direction: 'from' | 'to' = 'to'
-  ) {
+  public async checkTransfer(address: string, currency: MaybeCurrency, amount: FN, direction: 'from' | 'to' = 'to') {
     const { nativeToken } = this.getPresetTokens();
     const token = this.getToken(currency);
     const tokenName = forceToCurrencyName(currency);

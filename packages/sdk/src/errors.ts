@@ -1,4 +1,4 @@
-import { Token } from "@acala-network/sdk-core";
+import { Token } from '@acala-network/sdk-core';
 
 export class MethodNotFound extends Error {
   readonly section: string;
