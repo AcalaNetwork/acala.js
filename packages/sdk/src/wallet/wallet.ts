@@ -17,7 +17,6 @@ import {
 } from '@acala-network/sdk-core';
 import { BehaviorSubject, combineLatest, Observable, of, firstValueFrom } from 'rxjs';
 import { map, switchMap, filter, catchError } from 'rxjs/operators';
-import { FrameSystemAccountInfo } from '@polkadot/types/lookup';
 import { TokenRecord, WalletConsts, BalanceData, PresetTokens, WalletConfigs, PriceProviders } from './types';
 import { BelowExistentialDeposit, ChainType, Homa, Liquidity, SDKNotReady } from '..';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
@@ -36,6 +35,7 @@ import { AcalaTokenProvider } from './token-provider/acala';
 import { DIDWeb3Name } from './web3name/did';
 import { subscribeLiquidCrowdloanTokenPrice } from './utils/get-liquid-crowdloan-token-price';
 import { Vesting } from './vesting';
+import { toPromise } from './utils/to-promise';
 
 export class Wallet implements BaseSDK {
   private api: AnyApi;
@@ -358,9 +358,8 @@ export class Wallet implements BaseSDK {
   public async checkTransfer(address: string, currency: MaybeCurrency, amount: FN, direction: 'from' | 'to' = 'to') {
     const { nativeToken } = this.getPresetTokens();
     const token = this.getToken(currency);
-    const tokenName = forceToCurrencyName(currency);
     const isNativeToken = nativeToken.isEqual(token);
-    const accountInfo = (await this.api.query.system.account(address)) as unknown as FrameSystemAccountInfo;
+    const accountInfo = await toPromise(this.api.query.system.account(address));
     const balance = await this.getBalance(currency, address);
 
     let needCheck = true;
