@@ -87,14 +87,11 @@ export class Payment {
       // remove token when token is exist in globalFeePaths
       if (globalFeePaths.find(([key]) => this.wallet.getToken(key.args[0]).isEqual(token))) continue;
 
-      const path = paths[0][1][1];
+      const xpath = paths?.[0]?.[0]?.[1];
 
-      if (isEmpty(path)) continue;
+      if (isEmpty(xpath)) continue;
 
-      paymentMethods.push({
-        type: PaymentMethodTypes.SWAP,
-        path
-      });
+      paymentMethods.push({ type: PaymentMethodTypes.SWAP, path: xpath });
     }
 
     return paymentMethods;

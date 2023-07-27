@@ -17,8 +17,9 @@ import {
 } from '@acala-network/sdk-core';
 import { BehaviorSubject, combineLatest, Observable, of, firstValueFrom } from 'rxjs';
 import { map, switchMap, filter, catchError } from 'rxjs/operators';
+import { FrameSystemAccountInfo } from '@polkadot/types/lookup';
 import { TokenRecord, WalletConsts, BalanceData, PresetTokens, WalletConfigs, PriceProviders } from './types';
-import { ChainType, Homa, Liquidity, SDKNotReady } from '..';
+import { BelowExistentialDeposit, ChainType, Homa, Liquidity, SDKNotReady } from '..';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 import { MarketPriceProvider } from './price-provider/market-price-provider';
 import { OraclePriceProvider } from './price-provider/oracle-price-provider';
@@ -215,16 +216,12 @@ export class Wallet implements BaseSDK {
               const providers = accountInfo.providers.toBigInt();
               const consumers = accountInfo.consumers.toBigInt();
               const nativeFreeBalance = FN.fromInner(accountInfo.data.free.toString(), nativeToken.decimals);
-              // native locked balance = max(accountInfo.data.miscFrozen, accountInfo.data.feeFrozen)
               const nativeLockedBalance = FN.fromInner(
                 accountInfo.data.miscFrozen.toString(),
                 nativeToken.decimals
               ).max(FN.fromInner(accountInfo.data.feeFrozen.toString(), nativeToken.decimals));
               const isDefaultFee = forceToCurrencyName(feeToken) === nativeToken.name;
               const feeFreeBalance = isDefaultFee ? nativeFreeBalance : feeInfo.free;
-              // const feeLockedBalance =
-              //   forceToCurrencyName(feeToken) === nativeToken.name ? nativeLockedBalance : feeInfo.locked;
-
               const targetFreeBalance: FixedPointNumber = isNativeToken ? nativeFreeBalance : tokenInfo.free;
               const targetLockedBalance: FixedPointNumber = isNativeToken ? nativeLockedBalance : tokenInfo.locked;
               const ed = token.ed;
@@ -356,5 +353,35 @@ export class Wallet implements BaseSDK {
 
   public getPrice(token: MaybeCurrency, type?: PriceProviderType): Promise<FN> {
     return firstValueFrom(this.subscribePrice(token, type));
+  }
+
+  public async checkTransfer(address: string, currency: MaybeCurrency, amount: FN, direction: 'from' | 'to' = 'to') {
+    const { nativeToken } = this.getPresetTokens();
+    const token = this.getToken(currency);
+    const tokenName = forceToCurrencyName(currency);
+    const isNativeToken = nativeToken.isEqual(token);
+    const accountInfo = (await this.api.query.system.account(address)) as unknown as FrameSystemAccountInfo;
+    const balance = await this.getBalance(currency, address);
+
+    let needCheck = true;
+
+    // always check ED if the direction is `to`
+    if (direction === 'to' && balance.free.add(amount).lt(token.ed || FN.ZERO)) {
+      throw new BelowExistentialDeposit(address, token);
+    }
+
+    if (direction === 'from') {
+      if (isNativeToken) {
+        needCheck = !(accountInfo.consumers.toBigInt() === BigInt(0));
+      } else {
+        needCheck = !(accountInfo.providers.toBigInt() > BigInt(0) || accountInfo.consumers.toBigInt() === BigInt(0));
+      }
+
+      if (needCheck && balance.free.minus(amount).lt(token.ed || FN.ZERO)) {
+        throw new BelowExistentialDeposit(address, token);
+      }
+    }
+
+    return true;
   }
 }
