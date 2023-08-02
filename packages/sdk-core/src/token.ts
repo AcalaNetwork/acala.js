@@ -30,7 +30,7 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
   'Acala Mandala TC7': [
     {
       poolId: 0,
-      name: 'taiKSM',
+      name: 'tKSM',
       decimals: 12,
       assets: ['KSM', 'LKSM']
     },
@@ -51,7 +51,7 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
   Karura: [
     {
       poolId: 0,
-      name: 'taiKSM',
+      name: 'tKSM',
       decimals: 12,
       assets: ['KSM', 'LKSM']
     },
@@ -74,7 +74,7 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
   'Mandala Dev': [
     {
       poolId: 0,
-      name: 'taiKSM',
+      name: 'tKSM',
       decimals: 12,
       assets: ['KSM', 'LKSM']
     }
@@ -83,7 +83,7 @@ export const STABLE_ASSET_POOLS: { [chain: string]: StableAsset[] } = {
   'Acala Karura Dev': [
     {
       poolId: 0,
-      name: 'taiKSM',
+      name: 'tKSM',
       decimals: 12,
       assets: ['KSM', 'LKSM']
     }

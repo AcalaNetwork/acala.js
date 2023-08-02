@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk-core",
-  "version": "4.1.8-9",
+  "version": "4.1.9-5",
   "description": "the core of acala network sdk",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
@@ -14,12 +14,14 @@
     "url": "https://github.com/AcalaNetwork/acala.js/issues"
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
+  "peerDependencies": {
+    "@acala-network/types": "^5",
+    "@polkadot/api": "^10"
+  },
   "dependencies": {
-    "@polkadot/api": "^9.9.1",
-    "@polkadot/types": "^9.9.1",
-    "@types/events": "^3.0.0",
+    "@acala-network/types": "^5.1.1",
+    "@polkadot/api": "^10.7.3",
     "bignumber.js": "^9.0.0",
-    "events": "^3.2.0",
     "lodash": "^4.17.20"
   },
   "devDependencies": {

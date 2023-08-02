@@ -193,24 +193,9 @@ export class WormholePortal implements BaseSDK {
   }
 
   private async getEVMCallFromETHTransaction(transaction: TransactionRequest, provider: BaseProvider) {
-    const resources = await provider.estimateResources(transaction);
+    const { usedStorage, gasLimit } = await provider.estimateResources(transaction);
 
-    let gasLimit: BigNumber;
-    let storageLimit: BigNumber;
-    let totalLimit = transaction.gasLimit;
-
-    if (totalLimit === null || totalLimit === undefined) {
-      gasLimit = resources.gas;
-      storageLimit = resources.storage;
-      totalLimit = resources.gas.add(resources.storage);
-    } else {
-      const estimateTotalLimit = resources.gas.add(resources.storage);
-
-      gasLimit = BigNumber.from(totalLimit).mul(resources.gas).div(estimateTotalLimit).add(1);
-      storageLimit = BigNumber.from(totalLimit).mul(resources.storage).div(estimateTotalLimit).add(1);
-    }
-
-    transaction.gasLimit = totalLimit;
+    transaction.gasLimit = gasLimit;
 
     if (!transaction.data) {
       throw new CreateEVMTransactionFailed('Request data not found');
@@ -225,7 +210,7 @@ export class WormholePortal implements BaseSDK {
         transaction.data.toString(),
         toBN(transaction.value).toString(),
         toBN(gasLimit).toString(),
-        toBN(storageLimit.isNegative() ? 0 : storageLimit).toString(),
+        toBN(usedStorage.isNegative() ? 0 : usedStorage.add(BigNumber.from(10))).toString(),
         (transaction.accessList || []) as any
       );
     } else {
@@ -234,7 +219,7 @@ export class WormholePortal implements BaseSDK {
         transaction.data.toString(),
         toBN(transaction.value).toString(),
         toBN(gasLimit).toString(),
-        toBN(storageLimit.isNegative() ? 0 : storageLimit).toString(),
+        toBN(usedStorage.isNegative() ? 0 : usedStorage.add(BigNumber.from(10))).toString(),
         (transaction.accessList || []) as any
       );
     }

@@ -13,6 +13,8 @@ export interface TokenProvider {
   getToken(token: MaybeCurrency): Token;
   // direct get all token
   getAllTokens(): TokenRecord;
+  // get native token
+  getNativeToken(): Token;
 }
 
 export interface TokenProviderConfigs {

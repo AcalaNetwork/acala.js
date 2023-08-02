@@ -1,5 +1,4 @@
 import { AnyApi, FixedPointNumber, forceToCurrencyName, MaybeCurrency, Token } from '@acala-network/sdk-core';
-import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
 import { memoize } from '@polkadot/util';
 import { BehaviorSubject, firstValueFrom, Observable, combineLatest, of } from 'rxjs';
 import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
@@ -27,7 +26,6 @@ export class Incentive implements BaseSDK {
   private wallet: Wallet;
   public isReady$: BehaviorSubject<boolean>;
   public readonly consts: {
-    stableCurrencyId: AcalaPrimitivesCurrencyCurrencyId;
     accumulatePeriod: number;
   };
 
@@ -39,8 +37,7 @@ export class Incentive implements BaseSDK {
     this.wallet = wallet;
 
     this.consts = {
-      accumulatePeriod: this.api.consts.incentives.accumulatePeriod.toNumber(),
-      stableCurrencyId: this.api.consts.incentives.stableCurrencyId
+      accumulatePeriod: this.api.consts.incentives.accumulatePeriod.toNumber()
     };
 
     this.init();
@@ -152,41 +149,25 @@ export class Incentive implements BaseSDK {
   });
 
   private endTimes$ = memoize((): Observable<Record<string, number>> => {
-    return this.storages.scheduler().observable.pipe(map(getDeductionEndtimeConfigs));
+    return this.storages.scheduler().observable.pipe(map((data) => getDeductionEndtimeConfigs(this.api, data)));
   });
 
   private apr$ = memoize((pool: IncentivePool) => {
-    const savingRate = pool.savingRate ?? FixedPointNumber.ZERO;
     const tokens = Array.from(
       new Set([forceToCurrencyName(pool.collateral), ...pool.rewardTokensConfig.map((item) => item.token.name)])
     );
 
-    const stableCurrencyPosition$ = !savingRate.isZero()
-      ? this.wallet.liquidity.subscribePoolDetails(pool.collateral).pipe(
-          map((data) => {
-            const stableCurrencyPosition = data.info.pair.findIndex(
-              (item) => forceToCurrencyName(item) === forceToCurrencyName(this.consts.stableCurrencyId)
-            );
-
-            return data.amounts[stableCurrencyPosition];
-          })
-        )
-      : of(FixedPointNumber.ZERO);
-
     return combineLatest({
-      prices: combineLatest(Object.fromEntries(tokens.map((item) => [item, this.wallet.subscribePrice(item)]))),
-      stableCurrencyPosition: stableCurrencyPosition$
+      prices: combineLatest(Object.fromEntries(tokens.map((item) => [item, this.wallet.subscribePrice(item)])))
     }).pipe(
-      map(({ prices, stableCurrencyPosition }) => {
+      map(({ prices }) => {
         return getAPR(
           pool.collateral,
           this.consts.accumulatePeriod,
           prices,
           pool.totalShares,
           pool.deductionRate,
-          pool.rewardTokensConfig,
-          savingRate,
-          stableCurrencyPosition
+          pool.rewardTokensConfig
         );
       })
     );

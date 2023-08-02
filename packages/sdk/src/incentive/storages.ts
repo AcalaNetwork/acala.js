@@ -6,14 +6,14 @@ import {
   AcalaPrimitivesCurrencyCurrencyId,
   ModuleSupportIncentivesPoolId,
   OrmlRewardsPoolInfo,
-  PalletSchedulerScheduledV3
+  PalletSchedulerScheduled
 } from '@polkadot/types/lookup';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const createStorages = (api: AnyApi) => {
   return {
     scheduler: () => {
-      return Storage.create<[StorageKey<[u32]>, Vec<Option<PalletSchedulerScheduledV3>>][]>({
+      return Storage.create<[StorageKey<[u32]>, Vec<Option<PalletSchedulerScheduled>>][]>({
         api: api,
         path: 'query.scheduler.agenda.entries',
         params: []

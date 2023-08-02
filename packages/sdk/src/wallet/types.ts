@@ -50,3 +50,5 @@ export type TokenPriceFetchSource = {
 export interface BaseWeb3NameProvider {
   getName(address: string): Promise<string | undefined>;
 }
+
+export * from './vesting/types';

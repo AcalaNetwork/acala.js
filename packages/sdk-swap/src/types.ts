@@ -14,8 +14,8 @@ export type DexSource = 'acala' | 'nuts';
  *    ["acala", ["LDOT", "lcDOT://13"]]
  * ]
  */
-export type TradingPathItem = [DexSource, Token[]];
-export type CompositeTradingPath = TradingPathItem[];
+export type TradingPath = [DexSource, Token[]];
+export type CompositeTradingPath = TradingPath[];
 
 /**
  * define the trading pair struct, tokens in trading pair should sorted
@@ -74,7 +74,7 @@ export interface AggregateDexSwapParams extends SwapParams {
 export interface BaseSwap {
   get source(): DexSource;
   get tradingPairs$(): Observable<TradingPair[]>;
-  filterPath(path: TradingPathItem): boolean;
+  filterPath(path: TradingPath): boolean;
   swap(params: SwapParamsWithExactPath): Observable<SwapResult>;
   getAggregateTradingPath(result: SwapResult): any;
   getTradingTx(

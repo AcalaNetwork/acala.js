@@ -1,137 +1,108 @@
-import { Observable, ReplaySubject, Subscription, firstValueFrom, combineLatest } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
-import { PriceProvider } from './types';
-import { TimestampedValue } from '@open-web3/orml-types/interfaces';
-import {
-  AnyApi,
-  FixedPointNumber,
-  FixedPointNumber as FN,
-  forceToCurrencyName,
-  isLiquidCrowdloanName,
-  MaybeCurrency
-} from '@acala-network/sdk-core';
-import { OracleKey } from '@acala-network/types/interfaces';
+import { Observable, firstValueFrom, of } from 'rxjs';
+import { Option } from '@polkadot/types-codec';
+import { map, switchMap } from 'rxjs/operators';
+import { OracleConfig, PriceProvider } from './types';
+import { AnyApi, FixedPointNumber, FixedPointNumber as FN, Token } from '@acala-network/sdk-core';
 import { Storage } from '../../utils/storage';
-import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
-import { SignedBlock } from '@polkadot/types/interfaces';
-import { getAllLiquidCrowdloanTokenPrice } from '../utils/get-liquid-crowdloan-token-price';
+import { AcalaPrimitivesCurrencyCurrencyId, OrmlOracleModuleTimestampedValue } from '@polkadot/types/lookup';
+import { subscribeLiquidCrowdloanTokenPrice } from '../utils/get-liquid-crowdloan-token-price';
+import { TokenProvider } from '../token-provider/type';
+import { StorageKey } from '@polkadot/types';
+
+const DEFAULT_ORACLE_STRATEGIES: OracleConfig['strategies'] = {
+  // taiKSM has renamed to tKSM
+  taiKSM: ['AS', 'KSM'],
+  tKSM: ['AS', 'KSM'],
+  tDOT: ['AS', 'DOT'],
+  lcDOT: ['LIQUID_CROWDLOAN', 13]
+};
 
 export class OraclePriceProvider implements PriceProvider {
   private api: AnyApi;
-  private oracleProvider: string;
-  private subject: ReplaySubject<Record<string, FN>>;
-  private liquidCrowdloanSubject: ReplaySubject<Record<string, FN>>;
-  private processSubscriber: Subscription;
-  private crowdloanPriceProcessSubscriber: Subscription;
-  private consts: {
-    stakingCurrency: AcalaPrimitivesCurrencyCurrencyId;
-    liquidCurrency: AcalaPrimitivesCurrencyCurrencyId;
-  };
+  private stakingToken: Token;
+  private strategies: OracleConfig['strategies'];
+  private tokenProvider: TokenProvider;
 
-  constructor(api: AnyApi, oracleProvider = 'Aggregated') {
+  constructor(api: AnyApi, config: OracleConfig) {
     this.api = api;
-    this.oracleProvider = oracleProvider;
-    this.subject = new ReplaySubject<Record<string, FN>>(1);
-    this.liquidCrowdloanSubject = new ReplaySubject(1);
 
-    this.consts = {
-      stakingCurrency: api.consts.prices.getStakingCurrencyId,
-      liquidCurrency: api.consts.prices.getLiquidCurrencyId
-    };
-
-    this.processSubscriber = this.process();
-    this.crowdloanPriceProcessSubscriber = this.liquidCrowdloanPriceProcess();
+    this.stakingToken = config.stakingToken;
+    this.tokenProvider = config.tokenPrivoder;
+    this.strategies = config?.strategies || DEFAULT_ORACLE_STRATEGIES;
   }
 
-  public unsub(): void {
-    this.processSubscriber.unsubscribe();
-    this.crowdloanPriceProcessSubscriber.unsubscribe();
-  }
-
-  private oraclePrice$(name: string) {
-    return this.subject.pipe(
-      filter((values) => !!values),
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      map((values) => values![name])
-    );
-  }
-
-  private liquidCrowdloanPriceProcess = () => {
-    const storage$ = Storage.create<SignedBlock>({
+  private queryFormOracle(token: Token) {
+    const storage$ = Storage.create<Option<OrmlOracleModuleTimestampedValue>>({
       api: this.api,
-      path: 'rpc.chain.getBlock',
-      params: []
+      path: 'query.acalaOracle.values',
+      params: [token.toChainData()]
     }).observable;
 
-    return combineLatest({
-      signedBlock: storage$,
-      stakingTokenPrice: this.oraclePrice$(forceToCurrencyName(this.consts.stakingCurrency))
-    }).subscribe({
-      next: ({ signedBlock, stakingTokenPrice }) => {
-        if (!stakingTokenPrice) return;
+    return storage$.pipe(
+      map((value) => {
+        const price = value.isEmpty ? '0' : value.value.value.toString();
 
-        const prices = getAllLiquidCrowdloanTokenPrice(this.api, signedBlock, stakingTokenPrice);
-
-        if (prices) {
-          // update all crowdloan token price
-          this.liquidCrowdloanSubject.next(prices);
-        }
-      }
-    });
-  };
-
-  private process = () => {
-    const storage$ = Storage.create<[[OracleKey, TimestampedValue]]>({
-      api: this.api,
-      path: 'rpc.oracle.getAllValues',
-      params: [this.oracleProvider],
-      events: [{ section: '*', method: 'NewFeedData' }]
-    }).observable;
-
-    return storage$.subscribe({
-      next: (result) => {
-        const formated = Object.fromEntries(
-          result.map((item) => {
-            const currency = forceToCurrencyName(item[0]);
-            const price = FN.fromInner(
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-              (item[1]?.value as any)?.value.toString() || '0'
-            );
-
-            return [currency, price];
-          })
-        );
-        this.subject.next(formated);
-      }
-    });
-  };
-
-  public subscribe(currency: MaybeCurrency): Observable<FN> {
-    return combineLatest({
-      oracle: this.subject,
-      liquidCrowdloanPrices: this.liquidCrowdloanSubject
-    }).pipe(
-      filter(({ oracle }) => oracle !== undefined),
-      map(({ oracle, liquidCrowdloanPrices }) => {
-        const name = forceToCurrencyName(currency);
-
-        if (isLiquidCrowdloanName(name)) {
-          return liquidCrowdloanPrices[name] || FixedPointNumber.ZERO;
-        }
-
-        // TODO: should check the token symbol
-        if (name === 'sa://0') {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          return oracle!.KSM || FixedPointNumber.ZERO;
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return oracle![forceToCurrencyName(currency)] || FixedPointNumber.ZERO;
+        return FixedPointNumber.fromInner(price, 18);
       })
     );
   }
 
-  public async query(currency: MaybeCurrency): Promise<FN> {
+  public subscribe(token: Token): Observable<FN> {
+    const strategies = this.strategies;
+
+    if (!strategies) return of(FixedPointNumber.ZERO);
+
+    const symbol = token.symbol;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const [strategy, addon] = strategies[symbol] || ['STORAGE', ''];
+
+    if (strategy === 'AS') {
+      return this.subscribe(this.tokenProvider.getToken(addon as string));
+    }
+
+    if (strategy === 'LIQUID_CROWDLOAN') {
+      return this.subscribe(this.stakingToken).pipe(
+        switchMap((price) => {
+          return subscribeLiquidCrowdloanTokenPrice(this.api, price, addon as number);
+        })
+      );
+    }
+
+    return this.queryFormOracle(token);
+  }
+
+  public async query(currency: Token): Promise<FN> {
     return firstValueFrom(this.subscribe(currency));
+  }
+
+  public queryFeedTokens() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    return (this.api.query.acalaOracle.values.keys as any)().pipe(
+      map((data: StorageKey<[AcalaPrimitivesCurrencyCurrencyId]>[]) => {
+        return data.map((i) => i.args[0]);
+      })
+    ) as Observable<[AcalaPrimitivesCurrencyCurrencyId]>;
+  }
+
+  public queryRawData(token: Token) {
+    const storage$ = Storage.create<Option<OrmlOracleModuleTimestampedValue>>({
+      api: this.api,
+      path: 'query.acalaOracle.values',
+      params: [token.toChainData()]
+    }).observable;
+
+    return storage$.pipe(
+      map((value) => {
+        const price = value.isEmpty ? '0' : value.value.value.toString();
+        const timestamp = value.isEmpty ? '0' : value.value.timestamp.toString();
+
+        return {
+          token,
+          timestamp,
+          price: FixedPointNumber.fromInner(price, 18)
+        };
+      })
+    );
   }
 }

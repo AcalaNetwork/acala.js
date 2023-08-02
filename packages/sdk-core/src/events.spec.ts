@@ -1,4 +1,4 @@
-import { EventRecord } from '@polkadot/types/interfaces';
+import { FrameSystemEventRecord } from '@polkadot/types/lookup';
 import { eventsFilter } from './events';
 
 describe('event', () => {
@@ -10,19 +10,19 @@ describe('event', () => {
 
     const result1 = eventsFilter(eventsFilterConfig)({
       event: { section: 'section1', method: 'method1' }
-    } as EventRecord);
+    } as FrameSystemEventRecord);
 
     const result2 = eventsFilter(eventsFilterConfig)({
       event: { section: 'section2', method: 'method2' }
-    } as EventRecord);
+    } as FrameSystemEventRecord);
 
     const result3 = eventsFilter(eventsFilterConfig)({
       event: { section: 'section3', method: 'method3' }
-    } as EventRecord);
+    } as FrameSystemEventRecord);
 
     const result4 = eventsFilter(eventsFilterConfig)({
       event: { section: 'section1', method: 'method2' }
-    } as EventRecord);
+    } as FrameSystemEventRecord);
 
     expect(result1).toEqual(true);
     expect(result2).toEqual(true);
@@ -36,23 +36,23 @@ describe('event', () => {
 
     const result1 = eventsFilter(eventsFilterConfig1)({
       event: { section: 'section3', method: 'method1' }
-    } as EventRecord);
+    } as FrameSystemEventRecord);
 
     const result2 = eventsFilter(eventsFilterConfig1)({
       event: { section: 'section2', method: 'method2' }
-    } as EventRecord);
+    } as FrameSystemEventRecord);
 
     const result3 = eventsFilter(eventsFilterConfig2)({
       event: { section: 'section1', method: 'a' }
-    } as EventRecord);
+    } as FrameSystemEventRecord);
 
     const result4 = eventsFilter(eventsFilterConfig2)({
       event: { section: 'section1', method: 'b' }
-    } as EventRecord);
+    } as FrameSystemEventRecord);
 
     const result5 = eventsFilter(eventsFilterConfig2)({
       event: { section: 'section2', method: 'b' }
-    } as EventRecord);
+    } as FrameSystemEventRecord);
 
     expect(result1).toEqual(true);
     expect(result2).toEqual(false);

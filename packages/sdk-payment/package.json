@@ -1,0 +1,29 @@
+{
+  "name": "@acala-network/sdk-payment",
+  "version": "4.1.9-5",
+  "description": "the payment acala network sdk",
+  "main": "index.js",
+  "author": "Acala Developers <hello@acala.network>",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "repository": "https://github.com/AcalaNetwork/acala.js.git",
+  "bugs": {
+    "url": "https://github.com/AcalaNetwork/acala.js/issues"
+  },
+  "homepage": "https://github.com/AcalaNetwork/acala.js",
+  "peerDependencies": {
+    "@acala-network/types": "^5",
+    "@polkadot/api": "^10"
+  },
+  "dependencies": {
+    "@acala-network/sdk": "^4.1.9-5",
+    "@acala-network/sdk-core": "^4.1.9-5",
+    "@acala-network/sdk-swap": "^4.1.9-5"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.161"
+  }
+}

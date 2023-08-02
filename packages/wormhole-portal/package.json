@@ -1,7 +1,7 @@
 {
   "name": "@acala-network/wormhole-portal",
-  "version": "4.1.8-9",
-  "description": "the wallet sdk for acala/karura network",
+  "version": "4.1.9-5",
+  "description": "the wormhole wrapper for acala/karura network",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
   "license": "Apache-2.0",
@@ -14,14 +14,26 @@
     "url": "https://github.com/AcalaNetwork/acala.js/issues"
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
+  "peerDependencies": {
+    "@acala-network/api": "^5",
+    "@acala-network/eth-providers": "~2.7.3",
+    "@polkadot/api": "^10",
+    "ethers": "~5.7.0"
+  },
   "dependencies": {
-    "@acala-network/sdk": "^4.1.8-9",
+    "@acala-network/api": "^5.1.1",
+    "@acala-network/eth-providers": "~2.7.3",
+    "@acala-network/sdk": "^4.1.9-5",
     "@certusone/wormhole-sdk": "^0.5.0",
     "@ethersproject/bignumber": "^5.7.0",
     "@grpc/grpc-js": "^1.6.8",
-    "@improbable-eng/grpc-web-node-http-transport": "^0.15.0"
+    "@improbable-eng/grpc-web-node-http-transport": "^0.15.0",
+    "@polkadot/api": "^10.7.3",
+    "bn.js": "^5.2.1",
+    "ethers": "~5.7.0"
   },
   "devDependencies": {
+    "@types/bn.js": "^5.1.1",
     "@types/lodash": "^4.14.161"
   }
 }

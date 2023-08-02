@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk",
-  "version": "4.1.8-9",
+  "version": "4.1.9-5",
   "description": "acala network sdk",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
@@ -17,29 +17,30 @@
     "url": "https://github.com/AcalaNetwork/acala.js/issues"
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
+  "peerDependencies": {
+    "@acala-network/api": "^5",
+    "@acala-network/eth-providers": "~2.7.3",
+    "@polkadot/api": "^10",
+    "ethers": "~5.7.0"
+  },
   "dependencies": {
-    "@acala-network/api": "4.1.8-9",
-    "@acala-network/eth-providers": "^2.5.4",
-    "@acala-network/type-definitions": "4.1.8-9",
-    "@ethersproject/bignumber": "^5.7.0",
-    "@polkadot/api": "^9.9.1",
-    "@polkadot/types": "^9.9.1",
-    "@types/events": "^3.0.0",
+    "@acala-network/api": "^5.1.1",
+    "@acala-network/eth-providers": "~2.7.3",
+    "@acala-network/sdk-core": "4.1.9-5",
+    "@polkadot/api": "^10.7.3",
     "axios": "^0.24.0",
-    "bignumber.js": "^9.0.0",
-    "cross-fetch": "^3.1.4",
-    "ethers": "^5.6.2",
-    "events": "^3.2.0",
+    "ethers": "~5.7.0",
     "graphql": "^16.3.0",
     "graphql-request": "^4.1.0",
     "lodash": "^4.17.20",
     "lru-cache": "^7.14.1",
-    "rxjs": "^7.5.7"
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@typechain/ethers-v5": "^10.1.0",
     "@types/dotenv": "^8.2.0",
     "@types/lodash": "^4.14.161",
+    "@types/lru-cache": "^7.10.10",
     "typechain": "^8.1.0"
   }
 }

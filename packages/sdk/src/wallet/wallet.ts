@@ -18,7 +18,7 @@ import {
 import { BehaviorSubject, combineLatest, Observable, of, firstValueFrom } from 'rxjs';
 import { map, switchMap, filter, catchError } from 'rxjs/operators';
 import { TokenRecord, WalletConsts, BalanceData, PresetTokens, WalletConfigs, PriceProviders } from './types';
-import { ChainType, Homa, Liquidity, SDKNotReady } from '..';
+import { BelowExistentialDeposit, ChainType, Homa, Liquidity, SDKNotReady } from '..';
 import { getMaxAvailableBalance } from './utils/get-max-available-balance';
 import { MarketPriceProvider } from './price-provider/market-price-provider';
 import { OraclePriceProvider } from './price-provider/oracle-price-provider';
@@ -34,6 +34,8 @@ import { TokenProvider } from './token-provider/type';
 import { AcalaTokenProvider } from './token-provider/acala';
 import { DIDWeb3Name } from './web3name/did';
 import { subscribeLiquidCrowdloanTokenPrice } from './utils/get-liquid-crowdloan-token-price';
+import { Vesting } from './vesting';
+import { toPromise } from './utils/to-promise';
 
 export class Wallet implements BaseSDK {
   private api: AnyApi;
@@ -43,7 +45,7 @@ export class Wallet implements BaseSDK {
 
   private balanceAdapter!: AcalaExpandBalanceAdapter;
   private tokenProvider!: TokenProvider;
-  private priceProviders!: PriceProviders;
+  public priceProviders!: PriceProviders;
 
   // inject liquidity, homa sdk by default for easy using
   public liquidity!: Liquidity;
@@ -52,6 +54,7 @@ export class Wallet implements BaseSDK {
 
   public isReady$: BehaviorSubject<boolean>;
   public consts!: WalletConsts;
+  public vesting!: Vesting;
 
   public constructor(api: AnyApi, configs?: WalletConfigs) {
     this.api = api;
@@ -85,7 +88,10 @@ export class Wallet implements BaseSDK {
         const market = new MarketPriceProvider();
         const dex = new DexPriceProvider(this.liquidity);
         const aggregate = new AggregateProvider({ market, dex });
-        const oracle = new OraclePriceProvider(this.api);
+        const oracle = new OraclePriceProvider(this.api, {
+          stakingToken: this.getPresetTokens(true).stableToken,
+          tokenPrivoder: this.tokenProvider
+        });
 
         this.priceProviders = {
           // default price provider
@@ -95,6 +101,7 @@ export class Wallet implements BaseSDK {
           [PriceProviderType.DEX]: dex,
           ...this.configs?.priceProviders
         };
+        this.vesting = new Vesting({ api: this.api, tokenProvider: this.tokenProvider });
         this.storages = createStorages(this.api);
 
         this.isReady$.next(status);
@@ -209,16 +216,12 @@ export class Wallet implements BaseSDK {
               const providers = accountInfo.providers.toBigInt();
               const consumers = accountInfo.consumers.toBigInt();
               const nativeFreeBalance = FN.fromInner(accountInfo.data.free.toString(), nativeToken.decimals);
-              // native locked balance = max(accountInfo.data.miscFrozen, accountInfo.data.feeFrozen)
               const nativeLockedBalance = FN.fromInner(
                 accountInfo.data.miscFrozen.toString(),
                 nativeToken.decimals
               ).max(FN.fromInner(accountInfo.data.feeFrozen.toString(), nativeToken.decimals));
               const isDefaultFee = forceToCurrencyName(feeToken) === nativeToken.name;
               const feeFreeBalance = isDefaultFee ? nativeFreeBalance : feeInfo.free;
-              // const feeLockedBalance =
-              //   forceToCurrencyName(feeToken) === nativeToken.name ? nativeLockedBalance : feeInfo.locked;
-
               const targetFreeBalance: FixedPointNumber = isNativeToken ? nativeFreeBalance : tokenInfo.free;
               const targetLockedBalance: FixedPointNumber = isNativeToken ? nativeLockedBalance : tokenInfo.locked;
               const ed = token.ed;
@@ -254,8 +257,8 @@ export class Wallet implements BaseSDK {
     return firstValueFrom(this.subscribeSuggestInput(token, address, isAllowDeath, fee));
   }
 
-  public getPresetTokens(): PresetTokens {
-    if (this.isReady$.value === false) throw new SDKNotReady('wallet');
+  public getPresetTokens(ignoreCheck = false): PresetTokens {
+    if (!ignoreCheck && this.isReady$.value === false) throw new SDKNotReady('wallet');
 
     const tokens = this.tokenProvider.getAllTokens();
 
@@ -350,5 +353,34 @@ export class Wallet implements BaseSDK {
 
   public getPrice(token: MaybeCurrency, type?: PriceProviderType): Promise<FN> {
     return firstValueFrom(this.subscribePrice(token, type));
+  }
+
+  public async checkTransfer(address: string, currency: MaybeCurrency, amount: FN, direction: 'from' | 'to' = 'to') {
+    const { nativeToken } = this.getPresetTokens();
+    const token = this.getToken(currency);
+    const isNativeToken = nativeToken.isEqual(token);
+    const accountInfo = await toPromise(this.api.query.system.account(address));
+    const balance = await this.getBalance(currency, address);
+
+    let needCheck = true;
+
+    // always check ED if the direction is `to`
+    if (direction === 'to' && balance.free.add(amount).lt(token.ed || FN.ZERO)) {
+      throw new BelowExistentialDeposit(address, token);
+    }
+
+    if (direction === 'from') {
+      if (isNativeToken) {
+        needCheck = !(accountInfo.consumers.toBigInt() === BigInt(0));
+      } else {
+        needCheck = !(accountInfo.providers.toBigInt() > BigInt(0) || accountInfo.consumers.toBigInt() === BigInt(0));
+      }
+
+      if (needCheck && balance.free.minus(amount).lt(token.ed || FN.ZERO)) {
+        throw new BelowExistentialDeposit(address, token);
+      }
+    }
+
+    return true;
   }
 }
