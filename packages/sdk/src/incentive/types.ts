@@ -62,7 +62,7 @@ export interface BaseIncentivePool {
 export interface IncentivePool extends BaseIncentivePool {
   enable: boolean;
   deductionRate: FixedPointNumber;
-  // only set when type is DEX
+  // savingRate has been removed
   savingRate?: FixedPointNumber;
   rewardTokensConfig: { token: Token; amount: FixedPointNumber }[];
   endBlockNumber: number;

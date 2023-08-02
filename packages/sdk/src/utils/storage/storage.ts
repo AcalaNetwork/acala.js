@@ -4,7 +4,7 @@ import { AnyTuple } from '@polkadot/types/types';
 import LRUCache from 'lru-cache';
 import { firstValueFrom, isObservable, Observable, ReplaySubject, tap } from 'rxjs';
 import { ChainListener } from '../chain-listener';
-import { RequiredQueryPathOrQuery } from './error';
+import { NoQueryPath, RequiredQueryPathOrQuery } from './error';
 import { StorageConfig } from './types';
 
 /**
@@ -49,7 +49,11 @@ export class SubStorage<T = unknown> {
 
       return queryPath.reduce((acc, i) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        return (acc as any)[i];
+        const result = (acc as any)[i];
+        if (!result) {
+          throw new NoQueryPath(path);
+        }
+        return result;
       }, api) as any as QueryableStorageEntry<ApiTypes, AnyTuple>;
     }
 
