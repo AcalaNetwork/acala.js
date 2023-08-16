@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/wormhole-portal",
-  "version": "4.1.9-5",
+  "version": "4.1.9-6",
   "description": "the wormhole wrapper for acala/karura network",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
@@ -23,7 +23,7 @@
   "dependencies": {
     "@acala-network/api": "^5.1.1",
     "@acala-network/eth-providers": "~2.7.3",
-    "@acala-network/sdk": "^4.1.9-5",
+    "@acala-network/sdk": "^4.1.9-6",
     "@certusone/wormhole-sdk": "^0.5.0",
     "@ethersproject/bignumber": "^5.7.0",
     "@grpc/grpc-js": "^1.6.8",
