@@ -3,7 +3,8 @@ import { EvmRpcProvider } from '@acala-network/eth-providers';
 import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { utils } from 'ethers';
 import { map } from 'rxjs/operators';
-import { AccountInfo, Balance } from '@polkadot/types/interfaces';
+import { FrameSystemAccountInfo } from '@polkadot/types/lookup';
+import { Balance } from '@polkadot/types/interfaces';
 import { BalanceData } from '../types';
 import { AcalaExpandBalanceAdapter } from './types';
 import { Observable } from 'rxjs';
@@ -19,7 +20,7 @@ interface AcalaAdapterConfigs {
 const createStorages = (api: AnyApi) => {
   return {
     nativeBalance: (address: string) =>
-      Storage.create<AccountInfo>({
+      Storage.create<FrameSystemAccountInfo>({
         api: api,
         query: api.query.system.account,
         params: [address]
@@ -62,12 +63,9 @@ export class AcalaBalanceAdapter implements AcalaExpandBalanceAdapter {
     }
   }
 
-  private transformNative = (data: AccountInfo, token: Token) => {
+  private transformNative = (data: FrameSystemAccountInfo, token: Token) => {
     const free = FN.fromInner(data.data.free.toString(), token.decimals);
-    const locked = FN.fromInner(
-      (data.data as any)?.frozen.toString() || data.data?.miscFrozen.toString(),
-      token.decimals
-    ).max(FN.fromInner(data.data.feeFrozen.toString(), token.decimals));
+    const locked = FN.fromInner((data.data.miscFrozen || data.data.frozen).toString(),token.decimals);
     const reserved = FN.fromInner(data.data.reserved.toString(), token.decimals);
     const available = free.sub(locked).max(FN.ZERO);
 
