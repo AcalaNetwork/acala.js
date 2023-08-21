@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk-payment",
-  "version": "4.1.9-7",
+  "version": "4.1.9-8",
   "description": "the payment acala network sdk",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
@@ -19,9 +19,9 @@
     "@polkadot/api": "^10"
   },
   "dependencies": {
-    "@acala-network/sdk": "^4.1.9-7",
-    "@acala-network/sdk-core": "^4.1.9-7",
-    "@acala-network/sdk-swap": "^4.1.9-7"
+    "@acala-network/sdk": "^4.1.9-8",
+    "@acala-network/sdk-core": "^4.1.9-8",
+    "@acala-network/sdk-swap": "^4.1.9-8"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.161"

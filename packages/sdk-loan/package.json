@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk-loan",
-  "version": "4.1.9-7",
+  "version": "4.1.9-8",
   "description": "the loan sub module in acala network sdk",
   "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
@@ -19,7 +19,7 @@
     "@polkadot/api": "^10"
   },
   "dependencies": {
-    "@acala-network/sdk": "4.1.9-7",
+    "@acala-network/sdk": "4.1.9-8",
     "@acala-network/types": "^6.0.0-34",
     "@polkadot/api": "^10.9.1",
     "lodash": "^4.17.20",
