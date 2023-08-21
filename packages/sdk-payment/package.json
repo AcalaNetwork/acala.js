@@ -15,7 +15,7 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "peerDependencies": {
-    "@acala-network/types": "^5",
+    "@acala-network/types": "^6",
     "@polkadot/api": "^10"
   },
   "dependencies": {
