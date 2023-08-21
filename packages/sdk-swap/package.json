@@ -15,13 +15,13 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "peerDependencies": {
-    "@acala-network/types": "^5",
+    "@acala-network/types": "^6",
     "@polkadot/api": "^10"
   },
   "dependencies": {
     "@acala-network/sdk": "^4.1.9-7",
     "@acala-network/sdk-core": "^4.1.9-7",
-    "@acala-network/types": "^5.1.1",
+    "@acala-network/types": "^6.0.0-34",
     "@polkadot/api": "^10.9.1",
     "rxjs": "^7.8.1"
   },
