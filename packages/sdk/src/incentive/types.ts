@@ -4,7 +4,8 @@ import { Wallet } from '../wallet';
 
 export enum IncentiveType {
   'LOANS',
-  'DEX'
+  'DEX',
+  'Earning'
 }
 
 export interface IncentiveConfigs {
@@ -50,7 +51,7 @@ export interface BaseIncentivePool {
   // pool id
   id: string;
   // raw pool id
-  rawId: ModuleSupportIncentivesPoolId;
+  raw: ModuleSupportIncentivesPoolId;
   // the colateral token required by the pool
   collateral: Token;
   // total shares belone to the pool

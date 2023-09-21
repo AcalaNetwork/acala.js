@@ -122,10 +122,10 @@ export class Incentive implements BaseSDK {
         ]);
 
         return data.map((item) => {
-          const rawId = item[0].args[0];
-          const id = getPoolId(rawId);
-          const type = rawId.isDex ? IncentiveType.DEX : IncentiveType.LOANS;
-          const collateral = tokens[forceToCurrencyName(getPoolToken(rawId))];
+          const raw = item[0].args[0];
+          const id = getPoolId(raw);
+          const type = raw.isDex ? IncentiveType.DEX : raw.isLoans ? IncentiveType.LOANS : IncentiveType.Earning;
+          const collateral = tokens[forceToCurrencyName(getPoolToken(raw))];
           const totalShares = FixedPointNumber.fromInner(item[1].totalShares.toString(), collateral.decimals);
 
           // format rewards infomations
@@ -142,7 +142,7 @@ export class Incentive implements BaseSDK {
             };
           });
 
-          return { collateral, type, id, rawId, totalShares, rewards };
+          return { collateral, type, id, raw, totalShares, rewards };
         });
       })
     );
@@ -180,8 +180,8 @@ export class Incentive implements BaseSDK {
 
         return combineLatest({
           info: of(info),
-          sharesAndWithdrawn: this.storages.userSharesAndWithdrawnRewards(info.rawId, address).observable,
-          pendingRewards: this.storages.pendingRewards(info.rawId, address).observable
+          sharesAndWithdrawn: this.storages.userSharesAndWithdrawnRewards(info.raw, address).observable,
+          pendingRewards: this.storages.pendingRewards(info.raw, address).observable
         });
       }),
       map(({ info, sharesAndWithdrawn, pendingRewards }) => {
@@ -312,7 +312,7 @@ export class Incentive implements BaseSDK {
     return this.subscribeAllIncentivePools().pipe(
       map((data) => {
         return data.find((item) => {
-          return item.type === type && forceToCurrencyName(getPoolToken(item.rawId)) === forceToCurrencyName(currency);
+          return item.type === type && forceToCurrencyName(getPoolToken(item.raw)) === forceToCurrencyName(currency);
         });
       })
     );
