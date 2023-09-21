@@ -30,8 +30,7 @@
       "@acala-network/sdk-payment": ["packages/sdk-payment/src"],
       "@acala-network/sdk-payment/*": ["packages/sdk-payment/src/*"],
       "@acala-network/wormhole-portal": ["packages/wormhole-portal/src"],
-      "@acala-network/wormhole-portal/*": ["packages/wormhole-portal/src/*"],
-      "@polkadot/types/lookup": ["node_modules/@acala-network/types/lookup/types-acala.d.ts"],
+      "@acala-network/wormhole-portal/*": ["packages/wormhole-portal/src/*"]
     },
   },
 }
