@@ -42,9 +42,89 @@ interface FetchResult {
   };
 }
 
+interface EarnFetcherConfigs extends HistoryFetcherConfig {
+  stakingEndpoint?: string;
+}
+
 export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
-  constructor(configs: HistoryFetcherConfig) {
+  private stakingEndpoint?: string;
+
+  constructor(configs: EarnFetcherConfigs) {
     super(configs);
+
+    this.stakingEndpoint = configs.stakingEndpoint;
+  }
+
+  async fetchStaking(params: EarnFetchParams): Promise<HistoryRecord[]> {
+    const variables: Record<string, string> = {
+      account: params.address
+    };
+
+    const paramsSchema = `$account: String`;
+    const filterSchema = `filter: { address: { equalTo: $account } }`;
+
+    const result = await request<FetchResult>(
+      this.stakingEndpoint,
+      gql`
+        query(${paramsSchema}){
+          bondeds(
+            ${filterSchema}
+            first: 20
+            orderBy: TIMESTAMP_DESC
+          ) {
+            nodes {
+              amount
+              address
+              timestamp
+              block
+              extrinsic
+            }
+          }
+          unbondeds(
+            ${filterSchema}
+            first: 20
+            orderBy: TIMESTAMP_DESC
+          ) {
+            nodes {
+              amount
+              address
+              timestamp
+              block
+              extrinsic
+            }
+          }
+          rebondeds(
+            ${filterSchema}
+            first: 20
+            orderBy: TIMESTAMP_DESC
+          ) {
+            nodes {
+              amount
+              address
+              timestamp
+              block
+              extrinsic
+            }
+          }
+          withdrawns(
+            ${filterSchema}
+            first: 20
+            orderBy: TIMESTAMP_DESC
+          ) {
+            nodes {
+              amount
+              address
+              timestamp
+              block
+              extrinsic
+            }
+          }
+        }
+      `,
+      variables
+    );
+
+    return this.transformStaking(result);
   }
 
   async fetch(params: EarnFetchParams): Promise<HistoryRecord[]> {
@@ -129,7 +209,81 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
       variables
     );
 
-    return this.transform(result);
+    const stakingHistory = await this.fetchStaking(params);
+
+    return this.transform(result)
+      .concat(stakingHistory)
+      .sort((a, b) => (new Date(b.data.timestamp) < new Date(a.data.timestamp) ? -1 : 1))
+      .slice(0, 20);
+  }
+
+  private transformStaking(data: any): HistoryRecord[] {
+    const bonded = data.bondeds.nodes.map((item) => {
+      return {
+        data: item,
+        message: this.createMessage('aca-staking-bonded', item),
+        resolveLinks: resolveLinks(
+          getChainType(this.configs.wallet.consts.runtimeChain),
+          item.extrinsic,
+          item.blockNumber
+        ),
+        method: 'earning.Bonded',
+        extrinsicHash: item.extrinsic,
+        blockNumber: item.blockNumber,
+        timestamp: item.timestamp
+      };
+    });
+    const unbonded = data.unbondeds.nodes.map((item) => {
+      return {
+        data: item,
+        message: this.createMessage('aca-staking-unbonded', item),
+        resolveLinks: resolveLinks(
+          getChainType(this.configs.wallet.consts.runtimeChain),
+          item.extrinsic,
+          item.blockNumber
+        ),
+        method: 'earning.Unbonded',
+        extrinsicHash: item.extrinsic,
+        blockNumber: item.blockNumber,
+        timestamp: item.timestamp
+      };
+    });
+    const rebonded = data.rebondeds.nodes.map((item) => {
+      return {
+        data: item,
+        message: this.createMessage('aca-staking-rebonded', item),
+        resolveLinks: resolveLinks(
+          getChainType(this.configs.wallet.consts.runtimeChain),
+          item.extrinsic,
+          item.blockNumber
+        ),
+        method: 'earning.Rebonded',
+        extrinsicHash: item.extrinsic,
+        blockNumber: item.blockNumber,
+        timestamp: item.timestamp
+      };
+    });
+    const withdrawns = data.withdrawns.nodes.map((item) => {
+      return {
+        data: item,
+        message: this.createMessage('aca-staking-withdrawn', item),
+        resolveLinks: resolveLinks(
+          getChainType(this.configs.wallet.consts.runtimeChain),
+          item.extrinsic,
+          item.blockNumber
+        ),
+        method: 'earning.Withdrawn',
+        extrinsicHash: item.extrinsic,
+        blockNumber: item.blockNumber,
+        timestamp: item.timestamp
+      };
+    });
+
+    return bonded
+      .concat(unbonded)
+      .concat(rebonded)
+      .concat(withdrawns)
+      .sort((a, b) => (new Date(b.data.timestamp) < new Date(a.data.timestamp) ? -1 : 1));
   }
 
   private transform(data: FetchResult): HistoryRecord[] {
@@ -144,7 +298,8 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
         ),
         method: 'incentives.ClaimRewards',
         extrinsicHash: item.extrinsic,
-        blockNumber: item.blockNumber
+        blockNumber: item.blockNumber,
+        timestamp: item.timestamp
       };
     });
     const payoutRewards = data.payoutRewards.nodes.map((item) => {
@@ -158,7 +313,8 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
         ),
         method: 'incentives.PayoutRewards',
         extrinsicHash: item.extrinsic,
-        blockNumber: item.blockNumber
+        blockNumber: item.blockNumber,
+        timestamp: item.timestamp
       };
     });
 
@@ -173,7 +329,8 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
         ),
         method: 'incentives.DepositDexShare',
         extrinsicHash: item.extrinsic,
-        blockNumber: item.blockNumber
+        blockNumber: item.blockNumber,
+        timestamp: item.timestamp
       };
     });
 
@@ -188,7 +345,8 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
         ),
         method: 'incentives.WithdrawDexShare',
         extrinsicHash: item.extrinsic,
-        blockNumber: item.blockNumber
+        blockNumber: item.blockNumber,
+        timestamp: item.timestamp
       };
     });
 
@@ -197,7 +355,6 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
       .concat(withdrawDexShares)
       .concat(depositDexShares)
       .sort((a, b) => (new Date(b.data.timestamp) < new Date(a.data.timestamp) ? -1 : 1))
-      .slice(0, 20);
   }
 
   private getPoolId = (pool?: string) => {
@@ -205,7 +362,8 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
   };
 
   private createMessage(type: string, data: Node) {
-    const token = this.configs.wallet.getToken(forceToCurrencyName(data.tokenId));
+    const token = data.tokenId ? this.configs.wallet.getToken(forceToCurrencyName(data.tokenId)) : undefined;
+    const nativeToken = this.configs.wallet.getPresetTokens()?.nativeToken;
 
     if (type === 'claimRewards') {
       const amount = FixedPointNumber.fromInner(data.actualAmount || '0', token?.decimals || 12).toNumber(6);
@@ -221,6 +379,18 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
     } else if (type === 'withdrawDexShares') {
       const amount = FixedPointNumber.fromInner(data.amount || '0', token?.decimals || 12).toNumber(6);
       return `Remove ${amount} shares from ${token?.display} earn pool`;
+    } else if (type === 'aca-staking-bonded') {
+      const amount = FixedPointNumber.fromInner(data.amount || '0', nativeToken?.decimals).toNumber(6);
+      return `Bond ${amount} ${nativeToken?.display} to ${nativeToken?.display} staking pool`;
+    } else if (type === 'aca-staking-unbonded') {
+      const amount = FixedPointNumber.fromInner(data.amount || '0', nativeToken?.decimals).toNumber(6);
+      return `Unbond ${amount} ${nativeToken?.display} from ${nativeToken?.display} staking pool`;
+    } else if (type === 'aca-staking-rebonded') {
+      const amount = FixedPointNumber.fromInner(data.amount || '0', nativeToken?.decimals).toNumber(6);
+      return `Rebond ${amount} ${nativeToken?.display} to ${nativeToken?.display} staking pool`;
+    } else if (type === 'aca-staking-withdrawn') {
+      const amount = FixedPointNumber.fromInner(data.amount || '0', nativeToken?.decimals).toNumber(6);
+      return `Withdraw ${amount} ${nativeToken?.display} from ${nativeToken?.display} staking pool`;
     } else {
       return 'parse history data failed';
     }
