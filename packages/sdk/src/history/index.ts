@@ -31,6 +31,7 @@ export class History {
 
     this.earn = new Earns({
       endpoint: this.configs.fetchEndpoints.earn,
+      stakingEndpoint: this.configs.fetchEndpoints.staking,
       poolInterval: this.configs.poolInterval,
       wallet: this.configs.wallet
     });

@@ -8,7 +8,8 @@ export interface HistoryRecord {
   message: string;
   data: Record<string, any>;
   extrinsicHash?: string;
-  blokcNumber?: number;
+  blockNumber?: string;
+  timestamp?: string;
   resolveLinks: ResolveLinks;
   method: string;
 }
@@ -21,6 +22,7 @@ export interface HistoryConfigs {
     earn: string;
     loan: string;
     homa: string;
+    staking?: string;
   };
   poolInterval: number;
 }
