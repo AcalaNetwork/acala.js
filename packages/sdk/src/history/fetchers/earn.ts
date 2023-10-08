@@ -354,7 +354,7 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
       .concat(payoutRewards)
       .concat(withdrawDexShares)
       .concat(depositDexShares)
-      .sort((a, b) => (new Date(b.data.timestamp) < new Date(a.data.timestamp) ? -1 : 1))
+      .sort((a, b) => (new Date(b.data.timestamp) < new Date(a.data.timestamp) ? -1 : 1));
   }
 
   private getPoolId = (pool?: string) => {
