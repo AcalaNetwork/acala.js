@@ -21,7 +21,7 @@
   "dependencies": {
     "@acala-network/types": "^6.0.0-34",
     "@polkadot/api": "^10.9.1",
-    "bignumber.js": "^9.0.0",
+    "bignumber.js": "^9.1.2",
     "lodash": "^4.17.20"
   },
   "devDependencies": {
