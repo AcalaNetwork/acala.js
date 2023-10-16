@@ -28,7 +28,7 @@
     "@acala-network/eth-providers": "~2.7.3",
     "@acala-network/sdk-core": "4.1.9-10",
     "@polkadot/api": "^10.9.1",
-    "axios": "^0.24.0",
+    "axios": "^1.5.0",
     "ethers": "~5.7.0",
     "graphql": "^16.3.0",
     "graphql-request": "^4.1.0",
