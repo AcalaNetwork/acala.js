@@ -18,7 +18,7 @@
     "@acala-network/api": "^5",
     "@acala-network/eth-providers": "~2.7.3",
     "@polkadot/api": "^10",
-    "ethers": "~5.7.0"
+    "ethers": "~6.7.1"
   },
   "dependencies": {
     "@acala-network/api": "^5.1.1",
@@ -30,7 +30,7 @@
     "@improbable-eng/grpc-web-node-http-transport": "^0.15.0",
     "@polkadot/api": "^10.9.1",
     "bn.js": "^5.2.1",
-    "ethers": "~5.7.0"
+    "ethers": "~6.7.1"
   },
   "devDependencies": {
     "@types/bn.js": "^5.1.1",
