@@ -220,7 +220,7 @@ export class Incentive implements BaseSDK {
           const withdrawnReward = withdrawns.find((withdrawn) => withdrawn.token.isEqual(token));
 
           const claimableReward = ratio
-            .mul(item.claimableReward)
+            .mul(item.totalReward)
             .minus(withdrawnReward?.withdrawnReward || FixedPointNumber.ZERO)
             .add(pendingReward?.reward || FixedPointNumber.ZERO)
             .max(FixedPointNumber.ZERO);
