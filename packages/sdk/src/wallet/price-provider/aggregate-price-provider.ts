@@ -4,12 +4,12 @@ import { PriceProvider } from './types';
 import { FixedPointNumber as FN, Token } from '@acala-network/sdk-core';
 
 interface AggregatedProviderConfigs {
-  market: PriceProvider;
+  market?: PriceProvider;
   dex: PriceProvider;
 }
 
 export class AggregateProvider implements PriceProvider {
-  private marketPriceProvider: PriceProvider;
+  private marketPriceProvider: PriceProvider | undefined;
   private dexPriceProvider: PriceProvider;
 
   constructor({ market, dex }: AggregatedProviderConfigs) {
@@ -21,6 +21,10 @@ export class AggregateProvider implements PriceProvider {
     // query market price first, try to query price from dex when the market price is zero
     const marketPriceProvider = this.marketPriceProvider;
     const dexPriceProvider = this.dexPriceProvider;
+
+    if (!marketPriceProvider) {
+      return dexPriceProvider.subscribe(token);
+    }
 
     const marketPrice$ = marketPriceProvider.subscribe(token);
 

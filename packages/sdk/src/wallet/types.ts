@@ -16,6 +16,7 @@ export interface WalletConsts {
 }
 
 export interface WalletConfigs {
+  disableHTTP?: boolean;
   evmProvider?: EvmRpcProvider;
   // overview price providers if need
   priceProviders?: PriceProviders;
