@@ -84,8 +84,9 @@ export class Wallet implements BaseSDK {
         this.liquidity = new Liquidity(this.api, this);
         this.homa = new Homa(this.api, this);
         this.web3Name = new DIDWeb3Name();
+        const disableHTTP = this.configs.disableHTTP;
 
-        const market = new MarketPriceProvider();
+        const market = !disableHTTP ? new MarketPriceProvider() : undefined;
         const dex = new DexPriceProvider(this.liquidity);
         const aggregate = new AggregateProvider({ market, dex });
         const oracle = new OraclePriceProvider(this.api, {
