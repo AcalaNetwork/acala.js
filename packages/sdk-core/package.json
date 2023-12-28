@@ -19,7 +19,7 @@
     "@polkadot/api": "^10"
   },
   "dependencies": {
-    "@acala-network/types": "^6.0.4",
+    "@acala-network/types": "^6.0.0-34",
     "@polkadot/api": "^10.9.1",
     "bignumber.js": "^9.0.0",
     "lodash": "^4.17.20"

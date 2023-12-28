@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@acala-network/sdk": "4.1.9-12",
-    "@acala-network/types": "^6.0.4",
+    "@acala-network/types": "^6.0.0-34",
     "@polkadot/api": "^10.9.1",
     "lodash": "^4.17.20",
     "rxjs": "^7.8.1"
