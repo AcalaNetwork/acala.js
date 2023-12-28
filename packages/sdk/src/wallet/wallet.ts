@@ -218,7 +218,7 @@ export class Wallet implements BaseSDK {
               const consumers = accountInfo.consumers.toBigInt();
               const nativeFreeBalance = FN.fromInner(accountInfo.data.free.toString(), nativeToken.decimals);
               const nativeLockedBalance = FN.fromInner(
-                (accountInfo.data.miscFrozen || accountInfo.data.frozen).toString(),
+                ((accountInfo.data as any).miscFrozen || accountInfo.data.frozen).toString(),
                 nativeToken.decimals
               );
               const isDefaultFee = forceToCurrencyName(feeToken) === nativeToken.name;
