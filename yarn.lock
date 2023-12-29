@@ -65,7 +65,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@acala-network/sdk-core@4.1.9-12, @acala-network/sdk-core@^4.1.9-12, @acala-network/sdk-core@workspace:packages/sdk-core":
+"@acala-network/sdk-core@4.1.9-13, @acala-network/sdk-core@^4.1.9-13, @acala-network/sdk-core@workspace:packages/sdk-core":
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk-core@workspace:packages/sdk-core"
   dependencies:
@@ -84,7 +84,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk-homa@workspace:packages/sdk-homa"
   dependencies:
-    "@acala-network/sdk-core": 4.1.9-12
+    "@acala-network/sdk-core": 4.1.9-13
     "@acala-network/types": ^6.0.4
     "@polkadot/api": ^10.9.1
     "@types/lodash": ^4.14.161
@@ -100,7 +100,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk-loan@workspace:packages/sdk-loan"
   dependencies:
-    "@acala-network/sdk": 4.1.9-12
+    "@acala-network/sdk": 4.1.9-13
     "@acala-network/types": ^6.0.4
     "@polkadot/api": ^10.9.1
     "@types/lodash": ^4.14.161
@@ -116,9 +116,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk-payment@workspace:packages/sdk-payment"
   dependencies:
-    "@acala-network/sdk": ^4.1.9-12
-    "@acala-network/sdk-core": ^4.1.9-12
-    "@acala-network/sdk-swap": ^4.1.9-12
+    "@acala-network/sdk": ^4.1.9-13
+    "@acala-network/sdk-core": ^4.1.9-13
+    "@acala-network/sdk-swap": ^4.1.9-13
     "@types/lodash": ^4.14.161
   peerDependencies:
     "@acala-network/types": ^6
@@ -126,12 +126,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@acala-network/sdk-swap@^4.1.9-12, @acala-network/sdk-swap@workspace:packages/sdk-swap":
+"@acala-network/sdk-swap@^4.1.9-13, @acala-network/sdk-swap@workspace:packages/sdk-swap":
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk-swap@workspace:packages/sdk-swap"
   dependencies:
-    "@acala-network/sdk": ^4.1.9-12
-    "@acala-network/sdk-core": ^4.1.9-12
+    "@acala-network/sdk": ^4.1.9-13
+    "@acala-network/sdk-core": ^4.1.9-13
     "@acala-network/types": ^6.0.4
     "@polkadot/api": ^10.9.1
     "@types/lodash": ^4.14.161
@@ -142,13 +142,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@acala-network/sdk@4.1.9-12, @acala-network/sdk@^4.1.9-12, @acala-network/sdk@workspace:packages/sdk":
+"@acala-network/sdk@4.1.9-13, @acala-network/sdk@^4.1.9-13, @acala-network/sdk@workspace:packages/sdk":
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk@workspace:packages/sdk"
   dependencies:
     "@acala-network/api": ^5.1.1
     "@acala-network/eth-providers": ~2.7.18
-    "@acala-network/sdk-core": 4.1.9-12
+    "@acala-network/sdk-core": 4.1.9-13
     "@polkadot/api": ^10.9.1
     "@typechain/ethers-v5": ^10.1.0
     "@types/dotenv": ^8.2.0
@@ -206,7 +206,7 @@ __metadata:
   dependencies:
     "@acala-network/api": ^5.1.1
     "@acala-network/eth-providers": ~2.7.18
-    "@acala-network/sdk": ^4.1.9-12
+    "@acala-network/sdk": ^4.1.9-13
     "@certusone/wormhole-sdk": ^0.5.0
     "@ethersproject/bignumber": ^5.7.0
     "@grpc/grpc-js": ^1.6.8
