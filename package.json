@@ -35,5 +35,5 @@
     "typescript": "^5.0.4"
   },
   "packageManager": "yarn@3.5.0",
-  "stableVersion": "4.1.9-11"
+  "stableVersion": "4.1.9-12"
 }

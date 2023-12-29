@@ -19,13 +19,13 @@
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "peerDependencies": {
     "@acala-network/api": "^5",
-    "@acala-network/eth-providers": "~2.7.3",
+    "@acala-network/eth-providers": "~2.7.18",
     "@polkadot/api": "^10",
     "ethers": "~5.7.0"
   },
   "dependencies": {
     "@acala-network/api": "^5.1.1",
-    "@acala-network/eth-providers": "~2.7.3",
+    "@acala-network/eth-providers": "~2.7.18",
     "@acala-network/sdk-core": "4.1.9-12",
     "@polkadot/api": "^10.9.1",
     "axios": "^0.24.0",

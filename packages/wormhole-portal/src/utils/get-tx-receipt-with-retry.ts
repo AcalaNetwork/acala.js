@@ -13,7 +13,7 @@ export async function getTxReceiptWithRetry(
     attempts++;
     await new Promise((resolve) => setTimeout(resolve, retryTimeout));
     try {
-      result = await provider.getReceiptByHash(hash);
+      result = await provider.getReceipt(hash);
     } catch (e) {
       if (retryAttempts !== undefined && attempts > retryAttempts) {
         throw e;
