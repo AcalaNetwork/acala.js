@@ -1,24 +1,23 @@
 {
-  "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "lib": ["es2020"],
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
-    "target": "es2020",
-    "skipLibCheck": true,
-    "strict": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "declaration": true,
-    "resolveJsonModule": true,
-    "baseUrl": ".",
-    "composite": true,
-    "paths": {
+	"compilerOptions": {
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"lib": ["esnext", "dom", "dom.iterable"],
+		"isolatedModules": true,
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noImplicitAny": false,
+		"target": "esnext",
+		"skipLibCheck": true,
+		"strict": true,
+		"declaration": true,
+		"resolveJsonModule": true,
+		"forceConsistentCasingInFileNames": true,
+		"baseUrl": ".",
+		"composite": true,
+		"paths": {
       "@acala-network/sdk": [ "packages/sdk/src"],
       "@acala-network/sdk/*": ["packages/sdk/src/*"],
       "@acala-network/sdk-core": ["packages/sdk-core/src"],
@@ -31,6 +30,6 @@
       "@acala-network/sdk-payment/*": ["packages/sdk-payment/src/*"],
       "@acala-network/wormhole-portal": ["packages/wormhole-portal/src"],
       "@acala-network/wormhole-portal/*": ["packages/wormhole-portal/src/*"]
-    },
-  },
+		}
+	}
 }

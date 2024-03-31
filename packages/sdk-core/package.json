@@ -13,6 +13,10 @@
   "bugs": {
     "url": "https://github.com/AcalaNetwork/acala.js/issues"
   },
+  "scripts": {
+    "build": "yarn run build:cjs",
+    "build:cjs": "swc ./src --config-file ../../.cjsswcrc -d dist/cjs --copy-files && tsc -p tsconfig.json --declarationDir dist/cjs && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json"
+  },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "peerDependencies": {
     "@acala-network/types": "^6",
