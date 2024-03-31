@@ -2,7 +2,7 @@ import { ApiPromise, ApiRx } from '@polkadot/api';
 import { AccountId } from '@polkadot/types/interfaces';
 import { AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyDexShare } from '@polkadot/types/lookup';
 import { Codec, Observable } from '@polkadot/types/types';
-import { Token } from './token';
+import { Token } from './token.js';
 
 export type AnyApi = ApiPromise | ApiRx;
 

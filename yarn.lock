@@ -69,7 +69,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk-core@workspace:packages/sdk-core"
   dependencies:
-    "@acala-network/types": "npm:^6.0.4"
+    "@acala-network/types": "npm:^6.1.1"
     "@polkadot/api": "npm:^10.9.1"
     "@types/lodash": "npm:^4.14.161"
     bignumber.js: "npm:^9.0.0"
@@ -197,6 +197,15 @@ __metadata:
   peerDependencies:
     "@polkadot/api": ^10.9.1
   checksum: 10c0/1436c2fc4b7d50f0180e0cd5b24e727de98653b5c957848fdabfef095cfb1cce90d50273aaaeb55cf8695f246a3adbf2a7c615268ee6207e37f2235e40a25317
+  languageName: node
+  linkType: hard
+
+"@acala-network/types@npm:^6.1.1":
+  version: 6.1.1
+  resolution: "@acala-network/types@npm:6.1.1"
+  peerDependencies:
+    "@polkadot/api": ^10.9.1
+  checksum: 10c0/29d4cd47bac266642541ae37bc5b36f270b85e9b80ecc4e21a5ed0b8c0aa54fc6937d81b4d72783a68dc46c05475756c5a45cb10f4d2acca45f34363f8fc6199
   languageName: node
   linkType: hard
 

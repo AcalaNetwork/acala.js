@@ -1,4 +1,4 @@
-import { MaybeCurrency } from './types';
+import { MaybeCurrency } from './types.js';
 
 export class MethodNotFound extends Error {
   readonly section: string;

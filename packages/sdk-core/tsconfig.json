@@ -4,7 +4,6 @@
     "rootDir": "src",
     "emitDeclarationOnly": true,
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "./node_modules/@acala-network/types/**/*"],
   "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts"],
-  "references": []
 }

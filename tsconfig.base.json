@@ -29,7 +29,7 @@
       "@acala-network/sdk-payment": ["packages/sdk-payment/src"],
       "@acala-network/sdk-payment/*": ["packages/sdk-payment/src/*"],
       "@acala-network/wormhole-portal": ["packages/wormhole-portal/src"],
-      "@acala-network/wormhole-portal/*": ["packages/wormhole-portal/src/*"]
+      "@acala-network/wormhole-portal/*": ["packages/wormhole-portal/src/*"],
 		}
 	}
 }

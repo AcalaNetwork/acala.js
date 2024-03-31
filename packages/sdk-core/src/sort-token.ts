@@ -1,4 +1,4 @@
-import primitivesConfig from '@acala-network/type-definitions/primitives';
+import primitivesConfig from '@acala-network/types/interfaces/primitives/definitions';
 import {
   getCurrencyTypeByName,
   getForeignAssetIdFromName,
@@ -10,8 +10,8 @@ import {
   isLiquidCrowdloanName,
   isStableAssetName,
   unzipDexShareName
-} from './converter';
-import { TokenType } from './types';
+} from './converter.js';
+import { TokenType } from './types.js';
 
 const TOKEN_TYPE_WEIGHTS = {
   [TokenType.BASIC]: 9,
@@ -26,7 +26,7 @@ export function getTokenTypeWeight(name: string): number {
   return 1000 * (TOKEN_TYPE_WEIGHTS[getCurrencyTypeByName(name)] || 0);
 }
 
-const TOKEN_SORT: Record<string, number> = primitivesConfig.types.TokenSymbol._enum;
+const TOKEN_SORT: Record<string, number> = primitivesConfig.default.types.TokenSymbol._enum;
 
 export function sortTokenByName(a: string, b: string): number {
   const weightA = getTokenTypeWeight(a);

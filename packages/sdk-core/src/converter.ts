@@ -8,9 +8,9 @@ import {
   NotForeignAssetName,
   NotLiquidCrowdloanName,
   NotStableAssetPoolName
-} from './errors';
-import { STABLE_ASSET_POOLS, Token } from './token';
-import { AnyApi, CurrencyObject, MaybeCurrency, TokenType } from './types';
+} from './errors.js';
+import { STABLE_ASSET_POOLS, Token } from './token.js';
+import { AnyApi, CurrencyObject, MaybeCurrency, TokenType } from './types.js';
 
 /**
  *  we set a name with a prefix to all types of tokens for easy passing and use.

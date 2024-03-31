@@ -1,6 +1,6 @@
 import { assert } from '@polkadot/util';
 
-import { AnyApi, CurrencyObject, TokenType } from './types';
+import { AnyApi, CurrencyObject, TokenType } from './types.js';
 import {
   createDexShareName,
   createStableAssetName,
@@ -8,9 +8,9 @@ import {
   getCurrencyObject,
   getCurrencyTypeByName,
   unzipDexShareName
-} from './converter';
-import { sortTokenByName } from './sort-token';
-import { FixedPointNumber } from './fixed-point-number';
+} from './converter.js';
+import { sortTokenByName } from './sort-token.js';
+import { FixedPointNumber } from './fixed-point-number.js';
 import {
   AcalaPrimitivesCurrencyCurrencyId,
   AcalaPrimitivesCurrencyDexShare,

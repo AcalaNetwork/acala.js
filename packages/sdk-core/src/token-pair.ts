@@ -1,7 +1,7 @@
-import { Token } from '@acala-network/sdk-core/token';
 import { AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesTradingPair } from '@polkadot/types/lookup';
 import { assert } from '@polkadot/util';
-import { AnyApi } from './types';
+import { Token } from './token.js';
+import { AnyApi } from './types.js';
 
 // class for store token pair
 export class TokenPair {
