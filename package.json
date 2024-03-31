@@ -1,5 +1,5 @@
 {
-  "version": "4.1.9-13",
+  "version": "4.1.10",
   "private": true,
   "engines": {
     "node": ">=16"
@@ -35,5 +35,5 @@
     "typescript": "^5.0.4"
   },
   "packageManager": "yarn@3.5.0",
-  "stableVersion": "4.1.9-12"
+  "stableVersion": "4.1.10"
 }
