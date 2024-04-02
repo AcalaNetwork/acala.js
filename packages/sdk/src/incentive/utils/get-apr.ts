@@ -1,6 +1,6 @@
 import { FixedPointNumber, forceToCurrencyName, Token } from '@acala-network/sdk-core';
-import { EXPECTED_BLOCK_TIME, MILLISECONDS_OF_YEAR } from '../../utils/constants';
-import { IncentivePool, RewardAPR } from '../types';
+import { EXPECTED_BLOCK_TIME, MILLISECONDS_OF_YEAR } from '../../utils/constants.js';
+import { IncentivePool, RewardAPR } from '../types.js';
 
 /**
  * @name getAPR

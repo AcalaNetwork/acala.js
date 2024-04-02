@@ -1,6 +1,6 @@
 import { FixedPointNumber } from '@acala-network/sdk-core';
-import { HomaEnvironment, RedeemRequest, Unbonding, UserLiquidityTokenSummary } from '../types';
-import { getEstimateRedeemResult } from './get-estimate-redeem-result';
+import { HomaEnvironment, RedeemRequest, Unbonding, UserLiquidityTokenSummary } from '../types.js';
+import { getEstimateRedeemResult } from './get-estimate-redeem-result.js';
 
 export function getUserLiquidTokenSummary(
   env: HomaEnvironment,

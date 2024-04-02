@@ -17,7 +17,7 @@ import {
   XcmV3MultiLocation
 } from '@polkadot/types/lookup';
 import { hexToString } from '@polkadot/util';
-import { TokenRecord } from '../types';
+import { TokenRecord } from '../types.js';
 
 function extractLocation(key: number, data: [StorageKey<[u16]>, Option<XcmV3MultiLocation>][]) {
   const location = data.find((item) => item[0].args[0].toNumber() === key)?.[1]?.unwrapOrDefault();

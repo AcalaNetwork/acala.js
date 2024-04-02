@@ -1,9 +1,11 @@
 import { Observable, BehaviorSubject, timer, switchMap, from, lastValueFrom, combineLatest, of } from 'rxjs';
 import { map, debounceTime, filter } from 'rxjs/operators';
-import fetch from 'axios';
-import { PriceProvider } from './types';
+import _axios, { AxiosStatic } from 'axios';
+import { PriceProvider } from './types.js';
 import { FixedPointNumber, FixedPointNumber as FN, Token } from '@acala-network/sdk-core';
 
+// FIXME: the default export type is error
+const axios = _axios as unknown as AxiosStatic;
 const PRICE_API = 'https://api.polkawallet.io/price-server';
 const BACKUP_PRICE_API = 'https://pricesrv.aca-api.network';
 
@@ -32,7 +34,7 @@ export class MarketPriceProvider implements PriceProvider {
         switchMap(() =>
           from(
             (async () => {
-              const groupedCurrencies = [];
+              const groupedCurrencies: string[][] = [];
               const maxGroupSize = 10;
 
               for (let i = 0; i < this.trackedCurrencies.length; i += maxGroupSize) {
@@ -53,7 +55,7 @@ export class MarketPriceProvider implements PriceProvider {
   };
 
   private batchQueryPrice = async (currencies: string[]): Promise<FN[]> => {
-    let result = await fetch.get(`${PRICE_API}?token=${currencies.join(',')}&from=market`).catch((e) => {
+    let result = await axios.get(`${PRICE_API}?token=${currencies.join(',')}&from=market`).catch((e) => {
       // doesn't throw error when try first endpoint
       console.error(e);
 
@@ -70,7 +72,7 @@ export class MarketPriceProvider implements PriceProvider {
     }
 
     // fetch prices from backup price when base prices service failed
-    result = await fetch.get(`${BACKUP_PRICE_API}?token=${currencies.join(',')}&from=market`);
+    result = await axios.get(`${BACKUP_PRICE_API}?token=${currencies.join(',')}&from=market`);
 
     if (result?.status === 200) {
       return (

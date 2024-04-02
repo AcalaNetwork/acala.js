@@ -1,5 +1,5 @@
 import { AnyApi, FixedPointNumber, Token } from '@acala-network/sdk-core';
-import { Wallet } from '../wallet';
+import { Wallet } from '../wallet/index.js';
 
 export interface AuctionManagerConfigs {
   api: AnyApi;

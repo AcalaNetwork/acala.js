@@ -1,4 +1,4 @@
-import { ChainType } from '../../types';
+import { ChainType } from '../../types.js';
 
 const ESTIMATE_BLOCK_TIME: Partial<{ [k in ChainType]: number }> = {
   [ChainType.ACALA]: 6 * 1000,

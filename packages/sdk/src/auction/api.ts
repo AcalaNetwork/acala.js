@@ -1,7 +1,11 @@
 import { FixedPointNumber } from '@acala-network/sdk-core';
-import request, { gql } from 'graphql-request';
-import { Wallet } from '../wallet';
-import { AuctionBid, AuctionListQueryParams, CollateralAuction } from './types';
+// import request, { gql } from 'graphql-request';
+import * as GraphqlRequest from 'graphql-request';
+import { Wallet } from '../wallet/wallet.js';
+import { AuctionBid, AuctionListQueryParams, CollateralAuction } from './types.js';
+
+const request = GraphqlRequest.request;
+const gql = GraphqlRequest.gql;
 
 const DEFAULT_PAGE_SIZE = 20;
 

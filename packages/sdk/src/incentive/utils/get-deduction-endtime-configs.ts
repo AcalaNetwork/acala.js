@@ -1,12 +1,11 @@
-import { Rate } from '@acala-network/types/interfaces';
-import { StorageKey, u32, Vec, Option } from '@polkadot/types';
+import { StorageKey, u32, Vec, Option, U128} from '@polkadot/types';
 import {
   ModuleSupportIncentivesPoolId,
   PalletSchedulerScheduled,
   FrameSupportPreimagesBounded
 } from '@polkadot/types/lookup';
 import { ITuple } from '@polkadot/types/types';
-import { getPoolId } from './get-pool-id';
+import { getPoolId } from './get-pool-id.js';
 import { AnyApi } from '@acala-network/sdk-core';
 
 export function getDeductionEndtimeConfigs(
@@ -31,7 +30,7 @@ export function getDeductionEndtimeConfigs(
 
       if (call.method === 'updateClaimRewardDeductionRates' && call.section === 'incentives') {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-        const args = call.args as any as Vec<Vec<ITuple<[ModuleSupportIncentivesPoolId, Rate]>>>;
+        const args = call.args as any as Vec<Vec<ITuple<[ModuleSupportIncentivesPoolId, U128]>>>;
 
         args.forEach((i) => {
           i.forEach((item) => {

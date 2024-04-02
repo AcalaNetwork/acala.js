@@ -1,13 +1,13 @@
 import { EvmRpcProvider, computeDefaultEvmAddress } from '@acala-network/eth-providers';
 import { FixedPointNumber, getERC20TokenAddressFromName, Token } from '@acala-network/sdk-core';
 // eslint-disable-next-line camelcase
-import { Erc20__factory } from '../../abis/types/factories/Erc20__factory';
+import { Erc20__factory } from '../../abis/types/factories/Erc20__factory.js';
 import { isAddress } from '@ethersproject/address';
 import { from, Observable, Subject } from 'rxjs';
 import { filter, finalize, shareReplay } from 'rxjs/operators';
-import { BalanceData } from '../types';
+import { BalanceData } from '../types.js';
 import { AnyFunction } from '@polkadot/types/types';
-import { NotERC20TokenName } from '@acala-network/sdk-core/errors';
+import { NotERC20TokenName } from '@acala-network/sdk-core/errors.js';
 
 export class ERC20Adapter {
   private provider: EvmRpcProvider;

@@ -1,9 +1,9 @@
 import { AnyApi, Token } from '@acala-network/sdk-core';
-import { AcalaStakingLedge, AccountId, Rate } from '@acala-network/types/interfaces';
+import { AcalaStakingLedge, AccountId, Rate } from '@acala-network/types/interfaces/index';
 import { StorageKey, U16, Option, Bool, u32, u128 } from '@polkadot/types';
 import { ITuple } from '@polkadot/types/types';
 import { Balance, EraIndex } from '@polkadot/types/interfaces';
-import { Storage } from '../utils/storage';
+import { Storage } from '../utils/storage/index.js';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const createStorages = (api: AnyApi) => {

@@ -1,9 +1,9 @@
-import { HistoryConfigs } from './types';
-import { Transfers } from './fetchers/transfers';
-import { Swaps } from './fetchers/swap';
-import { Earns } from './fetchers/earn';
-import { Loans } from './fetchers/loan';
-import { Homas } from './fetchers/homa';
+import { HistoryConfigs } from './types.js';
+import { Transfers } from './fetchers/transfers.js';
+import { Swaps } from './fetchers/swap.js';
+import { Earns } from './fetchers/earn.js';
+import { Loans } from './fetchers/loan.js';
+import { Homas } from './fetchers/homa.js';
 
 export class History {
   readonly configs: HistoryConfigs;
@@ -31,7 +31,7 @@ export class History {
 
     this.earn = new Earns({
       endpoint: this.configs.fetchEndpoints.earn,
-      stakingEndpoint: this.configs.fetchEndpoints.staking,
+      stakingEndpoint: this.configs.fetchEndpoints.staking || '',
       poolInterval: this.configs.poolInterval,
       wallet: this.configs.wallet
     });

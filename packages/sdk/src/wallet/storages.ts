@@ -1,5 +1,5 @@
 import { AnyApi } from '@acala-network/sdk-core';
-import { Storage } from '../utils/storage';
+import { Storage } from '../utils/storage/index.js';
 import { FrameSystemAccountInfo } from '@polkadot/types/lookup';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

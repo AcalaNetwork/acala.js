@@ -5,12 +5,12 @@ import { utils } from 'ethers';
 import { map } from 'rxjs/operators';
 import { FrameSystemAccountInfo } from '@polkadot/types/lookup';
 import { Balance } from '@polkadot/types/interfaces';
-import { BalanceData } from '../types';
-import { AcalaExpandBalanceAdapter } from './types';
+import { BalanceData } from '../types.js';
+import { AcalaExpandBalanceAdapter } from './types.js';
 import { Observable } from 'rxjs';
-import { NotSupportETHAddress, NotSupportEVMBalance } from '../errors';
-import { Storage } from '../../utils/storage';
-import { ERC20Adapter } from './erc20-adapter';
+import { NotSupportETHAddress, NotSupportEVMBalance } from '../errors.js';
+import { Storage } from '../../utils/storage/index.js';
+import { ERC20Adapter } from './erc20-adapter.js';
 
 interface AcalaAdapterConfigs {
   api: AnyApi;

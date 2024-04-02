@@ -1,8 +1,8 @@
 import { FixedPointNumber } from '@acala-network/sdk-core';
-import { PoolPositions } from '../types';
+import { PoolPositions } from '../types.js';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Wallet } from '@acala-network/sdk/wallet';
+import { Wallet } from '../../wallet/index.js';
 
 export const getPoolTVL = (positions: PoolPositions, wallet: Wallet): Observable<FixedPointNumber> => {
   if (!wallet.subscribePrice) return of(FixedPointNumber.ZERO);

@@ -2,10 +2,10 @@ import { AnyApi, FixedPointNumber } from '@acala-network/sdk-core';
 import { ModuleAuctionManagerCollateralAuctionItem } from '@polkadot/types/lookup';
 import { Balance } from '@polkadot/types/interfaces';
 import { BehaviorSubject, combineLatest, filter, map, Observable, Subscription } from 'rxjs';
-import { ChainListener, BlockDetails } from '../utils/chain-listener';
-import { Wallet } from '../wallet';
-import { createAuctionStorages } from './storages';
-import { AuctionBid, AuctionConfigs, AuctionStage, AuctionStatus, CollateralAuction } from './types';
+import { ChainListener, BlockDetails } from '../utils/chain-listener/index.js';
+import { Wallet } from '../wallet/index.js';
+import { createAuctionStorages } from './storages.js';
+import { AuctionBid, AuctionConfigs, AuctionStage, AuctionStatus, CollateralAuction } from './types.js';
 
 export class Auction {
   private api: AnyApi;

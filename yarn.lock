@@ -65,7 +65,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@acala-network/sdk-core@npm:4.1.9-13, @acala-network/sdk-core@npm:^4.1.9-13, @acala-network/sdk-core@workspace:packages/sdk-core":
+"@acala-network/sdk-core@npm:4.1.9-13, @acala-network/sdk-core@npm:^4.1.9-13":
+  version: 4.1.9-13
+  resolution: "@acala-network/sdk-core@npm:4.1.9-13"
+  dependencies:
+    "@acala-network/types": "npm:^6.0.4"
+    "@polkadot/api": "npm:^10.9.1"
+    bignumber.js: "npm:^9.0.0"
+    lodash: "npm:^4.17.20"
+  peerDependencies:
+    "@acala-network/types": ^6
+    "@polkadot/api": ^10
+  checksum: 10c0/6687c6e855e062dbccd693c6331f684b088a62961e35a886079e4ff01c8b46d1875ae83ce32d06c052320224c20f8d267cbfa6e3d76b299aeae161b01fc6ba9c
+  languageName: node
+  linkType: hard
+
+"@acala-network/sdk-core@workspace:*, @acala-network/sdk-core@workspace:packages/sdk-core":
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk-core@workspace:packages/sdk-core"
   dependencies:
@@ -142,13 +157,37 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@acala-network/sdk@npm:4.1.9-13, @acala-network/sdk@npm:^4.1.9-13, @acala-network/sdk@workspace:packages/sdk":
+"@acala-network/sdk@npm:4.1.9-13, @acala-network/sdk@npm:^4.1.9-13":
+  version: 4.1.9-13
+  resolution: "@acala-network/sdk@npm:4.1.9-13"
+  dependencies:
+    "@acala-network/api": "npm:^5.1.1"
+    "@acala-network/eth-providers": "npm:~2.7.18"
+    "@acala-network/sdk-core": "npm:4.1.9-13"
+    "@polkadot/api": "npm:^10.9.1"
+    axios: "npm:^0.24.0"
+    ethers: "npm:~5.7.0"
+    graphql: "npm:^16.3.0"
+    graphql-request: "npm:^4.1.0"
+    lodash: "npm:^4.17.20"
+    lru-cache: "npm:^7.14.1"
+    rxjs: "npm:^7.8.1"
+  peerDependencies:
+    "@acala-network/api": ^5
+    "@acala-network/eth-providers": ~2.7.18
+    "@polkadot/api": ^10
+    ethers: ~5.7.0
+  checksum: 10c0/0802ac986c06bed2621a6bfb681eb04de9e029b36f6d5110cc1ff1aebe1e584519d64153d378b491a640add9ad22334e9a25c3d411f42fd9f3e5ffcaf41f99da
+  languageName: node
+  linkType: hard
+
+"@acala-network/sdk@workspace:packages/sdk":
   version: 0.0.0-use.local
   resolution: "@acala-network/sdk@workspace:packages/sdk"
   dependencies:
     "@acala-network/api": "npm:^5.1.1"
     "@acala-network/eth-providers": "npm:~2.7.18"
-    "@acala-network/sdk-core": "npm:4.1.9-13"
+    "@acala-network/sdk-core": "workspace:*"
     "@polkadot/api": "npm:^10.9.1"
     "@typechain/ethers-v5": "npm:^10.1.0"
     "@types/dotenv": "npm:^8.2.0"

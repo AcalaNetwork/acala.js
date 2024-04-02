@@ -1,5 +1,5 @@
 import { AnyApi, FixedPointNumber } from '@acala-network/sdk-core';
-import { Storage } from '@acala-network/sdk/utils/storage';
+import { Storage } from '../../utils/storage/index.js';
 import { Option, Vec } from '@polkadot/types';
 import {
   OrmlVestingVestingSchedule,
@@ -7,8 +7,8 @@ import {
   PolkadotPrimitivesV5PersistedValidationData
 } from '@polkadot/types/lookup';
 import { combineLatest, firstValueFrom, map, Observable } from 'rxjs';
-import { TokenProvider } from '../token-provider/type';
-import { VestingData } from './types';
+import { TokenProvider } from '../token-provider/type.js';
+import { VestingData } from './types.js';
 
 export interface VestingConfig {
   api: AnyApi;

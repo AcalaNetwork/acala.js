@@ -1,7 +1,7 @@
 import { Observable, firstValueFrom } from 'rxjs';
-import { PriceProvider } from './types';
+import { PriceProvider } from './types.js';
 import { FixedPointNumber as FN, Token } from '@acala-network/sdk-core';
-import { Liquidity } from '@acala-network/sdk';
+import { Liquidity } from '../../liquidity/index.js';
 
 export class DexPriceProvider implements PriceProvider {
   private liquidity: Liquidity;

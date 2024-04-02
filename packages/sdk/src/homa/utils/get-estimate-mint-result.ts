@@ -1,7 +1,7 @@
 import { FixedPointNumber } from '@acala-network/sdk-core';
-import { BelowMintThreshold, ExceededStakingCurrencySoftCap } from '../errors';
-import { EstimateMintResult, HomaEnvironment } from '../types';
-import { convertStakingToLiquid } from './exchange-rate';
+import { BelowMintThreshold, ExceededStakingCurrencySoftCap } from '../errors.js';
+import { EstimateMintResult, HomaEnvironment } from '../types.js';
+import { convertStakingToLiquid } from './exchange-rate.js';
 
 export function getEstimateMintResult(amount: FixedPointNumber, env: HomaEnvironment): EstimateMintResult {
   const { mintThreshold, totalStaking, stakingSoftCap, exchangeRate, estimatedRewardRatePerEra } = env;

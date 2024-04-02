@@ -1,11 +1,11 @@
 import { AnyApi } from '@acala-network/sdk-core';
 import { BehaviorSubject, firstValueFrom, from, Observable } from 'rxjs';
-import { BaseSDK } from '../types';
-import { Wallet } from '../wallet';
-import { AuctionListQueryParams, AuctionManagerConfigs } from './types';
+import { BaseSDK } from '../types.js';
+import { Wallet } from '../wallet/index.js';
+import { AuctionListQueryParams, AuctionManagerConfigs } from './types.js';
 import { filter, map } from 'rxjs/operators';
-import { convertApiResult, fetchAuctionList } from './api';
-import { Auction } from './auction';
+import { convertApiResult, fetchAuctionList } from './api.js';
+import { Auction } from './auction.js';
 
 export class Auctions implements BaseSDK {
   private wallet: Wallet;

@@ -1,9 +1,9 @@
 import { FixedPointNumber, forceToCurrencyName } from '@acala-network/sdk-core';
 import { request, gql } from 'graphql-request';
-import { BaseHistoryFetcher } from '../base-history-fetcher';
-import { BaseFetchParams, HistoryFetcherConfig, HistoryRecord } from '../types';
-import { resolveLinks } from '../utils/resolve-links';
-import { getChainType } from '../../utils/get-chain-type';
+import { BaseHistoryFetcher } from '../base-history-fetcher.js';
+import { BaseFetchParams, HistoryFetcherConfig, HistoryRecord } from '../types.js';
+import { resolveLinks } from '../utils/resolve-links.js';
+import { getChainType } from '../../utils/get-chain-type.js';
 
 export interface EarnFetchParams extends BaseFetchParams {
   address: string;
@@ -43,11 +43,11 @@ interface FetchResult {
 }
 
 interface EarnFetcherConfigs extends HistoryFetcherConfig {
-  stakingEndpoint?: string;
+  stakingEndpoint: string;
 }
 
 export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
-  private stakingEndpoint?: string;
+  private stakingEndpoint!: string;
 
   constructor(configs: EarnFetcherConfigs) {
     super(configs);

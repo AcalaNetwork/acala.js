@@ -1,5 +1,5 @@
 import { FixedPointNumber } from '@acala-network/sdk-core';
-import { EstimateRemoveLiquidityResult, PoolDetail } from '../types';
+import { EstimateRemoveLiquidityResult, PoolDetail } from '../types.js';
 
 export function getEstimateRemoveLiquidityResult(
   poolDetail: PoolDetail,

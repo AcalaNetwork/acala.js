@@ -3,9 +3,9 @@ import { ApiDecoration, ApiTypes, QueryableStorageEntry } from '@polkadot/api/ty
 import { AnyTuple } from '@polkadot/types/types';
 import LRUCache from 'lru-cache';
 import { firstValueFrom, isObservable, Observable, ReplaySubject, tap } from 'rxjs';
-import { ChainListener } from '../chain-listener';
-import { NoQueryPath, RequiredQueryPathOrQuery } from './error';
-import { StorageConfig } from './types';
+import { ChainListener } from '../chain-listener/index.js';
+import { NoQueryPath, RequiredQueryPathOrQuery } from './error.js';
+import { StorageConfig } from './types.js';
 
 /**
  * a tool to create same query interfaces for apiPromise and apiRx

@@ -1,12 +1,12 @@
 import { Observable, firstValueFrom, of } from 'rxjs';
 import { Option } from '@polkadot/types-codec';
 import { map, switchMap } from 'rxjs/operators';
-import { OracleConfig, PriceProvider } from './types';
+import { OracleConfig, PriceProvider } from './types.js';
 import { AnyApi, FixedPointNumber, FixedPointNumber as FN, Token } from '@acala-network/sdk-core';
-import { Storage } from '../../utils/storage';
+import { Storage } from '../../utils/storage/index.js';
 import { AcalaPrimitivesCurrencyCurrencyId, OrmlOracleModuleTimestampedValue } from '@polkadot/types/lookup';
-import { subscribeLiquidCrowdloanTokenPrice } from '../utils/get-liquid-crowdloan-token-price';
-import { TokenProvider } from '../token-provider/type';
+import { subscribeLiquidCrowdloanTokenPrice } from '../utils/get-liquid-crowdloan-token-price.js';
+import { TokenProvider } from '../token-provider/type.js';
 import { StorageKey } from '@polkadot/types';
 
 const DEFAULT_ORACLE_STRATEGIES: OracleConfig['strategies'] = {
