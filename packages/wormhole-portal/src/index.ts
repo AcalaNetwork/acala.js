@@ -1,3 +1,3 @@
-export * from './wormhole-portal';
-export * from './types';
-export * from './errors';
+export * from './wormhole-portal.js';
+export * from './types.js';
+export * from './errors.js';

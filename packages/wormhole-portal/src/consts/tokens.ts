@@ -1,5 +1,5 @@
 import { CONTRACTS } from '@certusone/wormhole-sdk';
-import { WormholeToken } from '../types';
+import { WormholeToken } from '../types.js';
 
 export const AcalaAUSD: WormholeToken = {
   symbol: 'aUSD',

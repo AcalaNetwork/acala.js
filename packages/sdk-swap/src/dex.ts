@@ -11,8 +11,8 @@ import {
   switchMap
 } from 'rxjs';
 import { Wallet, BaseSDK } from '@acala-network/sdk';
-import { NoTradingPathError } from './errors';
-import { TradingGraph } from './trading-graph';
+import { NoTradingPathError } from './errors.js';
+import { TradingGraph } from './trading-graph.js';
 import {
   AggregateDexConfigs,
   AggregateDexSwapParams,
@@ -24,7 +24,7 @@ import {
   AggregateDexSwapResult,
   SwapSource,
   OverwriteCallParams
-} from './types';
+} from './types.js';
 
 export class AggregateDex implements BaseSDK {
   private api: AnyApi;

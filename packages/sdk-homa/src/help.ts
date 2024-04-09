@@ -1,4 +1,4 @@
-import { FixedPointNumber } from '@acala-network/sdk-core/fixed-point-number';
+import { FixedPointNumber } from '@acala-network/sdk-core';
 
 export const FeeRateMatrix: FixedPointNumber[][] = [
   [

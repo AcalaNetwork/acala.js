@@ -1,8 +1,7 @@
 {
   "name": "@acala-network/sdk-swap",
-  "version": "4.1.9-13",
+  "version": "4.1.10-1",
   "description": "the swap sub module in acala network sdk",
-  "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
   "license": "Apache-2.0",
   "publishConfig": {
@@ -14,13 +13,32 @@
     "url": "https://github.com/AcalaNetwork/acala.js/issues"
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
+  "type": "module",
+  "files": [
+    "dist/cjs/**",
+    "dist/esm/**"
+  ],
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "exports": {
+    ".": {
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js",
+      "default": "./dist/esm/index.js"
+    },
+    "./*": {
+      "require": "./dist/cjs/*.js",
+      "import": "./dist/esm/*.js",
+      "default": "./dist/esm/*.js"
+    }
+  },
   "peerDependencies": {
     "@acala-network/types": "^6",
     "@polkadot/api": "^10"
   },
   "dependencies": {
-    "@acala-network/sdk": "^4.1.9-13",
-    "@acala-network/sdk-core": "^4.1.9-13",
+    "@acala-network/sdk": "workspace:*",
+    "@acala-network/sdk-core": "workspace:*",
     "@acala-network/types": "^6.0.4",
     "@polkadot/api": "^10.9.1",
     "rxjs": "^7.8.1"

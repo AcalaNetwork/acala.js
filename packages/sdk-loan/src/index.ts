@@ -1,2 +1,2 @@
-export * from './loan';
-export * from './loan-calculator';
+export * from './loan.js';
+export * from './loan-calculator.js';

@@ -1,5 +1,5 @@
 import { FixedPointNumber, Token } from '@acala-network/sdk-core';
-import { SwapResult } from '../../types';
+import { SwapResult } from '../../types.js';
 
 interface ExpandPathNode {
   dexShareToken: Token;

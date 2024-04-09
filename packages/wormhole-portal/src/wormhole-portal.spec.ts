@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { EvmRpcProvider } from '@acala-network/eth-providers';
-import { WormholePortal } from './wormhole-portal';
+import { WormholePortal } from './wormhole-portal.js';
 import { BigNumber } from 'ethers';
 
 describe.skip('ausd portal', () => {

@@ -17,8 +17,8 @@ import {
 
 import { combineLatest, firstValueFrom, from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BaseSDK } from '@acala-network/sdk';
-import { SupportChain } from './consts';
+import { BaseSDK } from '@acala-network/sdk/types.js';
+import { SupportChain } from './consts/index.js';
 import {
   ConvertAssetsShouldNotEqual,
   CreateEVMTransactionFailed,
@@ -28,7 +28,7 @@ import {
   QueryTxReceiptFailed,
   SubstractAPINotFound,
   TopicMismatch
-} from './errors';
+} from './errors.js';
 import {
   WormholePortalConfigs,
   TransferParams,
@@ -37,16 +37,16 @@ import {
   SupportToken,
   RedeemParams,
   ConvertParams
-} from './types';
+} from './types.js';
 import { TransactionRequest } from '@ethersproject/abstract-provider';
 import { BaseProvider } from '@acala-network/eth-providers';
-import { DEFAULT_ROUTERS } from './consts/routers';
-import { arrayify, getAddress, zeroPad } from 'ethers/lib/utils';
+import { DEFAULT_ROUTERS } from './consts/routers.js';
+import { arrayify, getAddress, zeroPad } from 'ethers/lib/utils.js';
 import { BigNumber } from 'ethers';
 import { ApiPromise } from '@polkadot/api';
-import { wormholeVAAAPIS } from './consts/wormhole-vaa-apis';
-import { DEFAULT_TOKENS } from './consts/tokens';
-import { getTxReceiptWithRetry, toBN } from './utils';
+import { wormholeVAAAPIS } from './consts/wormhole-vaa-apis.js';
+import { DEFAULT_TOKENS } from './consts/tokens.js';
+import { getTxReceiptWithRetry, toBN } from './utils/index.js';
 
 export class WormholePortal implements BaseSDK {
   private apis: {
@@ -193,7 +193,7 @@ export class WormholePortal implements BaseSDK {
   }
 
   private async getEVMCallFromETHTransaction(transaction: TransactionRequest, provider: BaseProvider) {
-    const { usedStorage, gasLimit } = await provider.estimateResources(transaction);
+    const { usedGas, gasLimit } = await provider.estimateResources(transaction);
 
     transaction.gasLimit = gasLimit;
 
@@ -210,7 +210,7 @@ export class WormholePortal implements BaseSDK {
         transaction.data.toString(),
         toBN(transaction.value).toString(),
         toBN(gasLimit).toString(),
-        toBN(usedStorage.isNegative() ? 0 : usedStorage.add(BigNumber.from(10))).toString(),
+        toBN(usedGas.isNegative() ? 0 : usedGas.add(BigNumber.from(10))).toString(),
         (transaction.accessList || []) as any
       );
     } else {
@@ -219,7 +219,7 @@ export class WormholePortal implements BaseSDK {
         transaction.data.toString(),
         toBN(transaction.value).toString(),
         toBN(gasLimit).toString(),
-        toBN(usedStorage.isNegative() ? 0 : usedStorage.add(BigNumber.from(10))).toString(),
+        toBN(usedGas.isNegative() ? 0 : usedGas.add(BigNumber.from(10))).toString(),
         (transaction.accessList || []) as any
       );
     }

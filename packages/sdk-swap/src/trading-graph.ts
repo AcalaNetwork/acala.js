@@ -1,5 +1,5 @@
 import { Token } from '@acala-network/sdk-core';
-import { DexSource, TradingPair, CompositeTradingPath } from './types';
+import { DexSource, TradingPair, CompositeTradingPath } from './types.js';
 
 interface TradeNode {
   source: DexSource;

@@ -1,8 +1,7 @@
 {
   "name": "@acala-network/sdk-homa",
-  "version": "4.1.9-13",
+  "version": "4.1.10-1",
   "description": "the homa sub module in acala network sdk",
-  "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
   "license": "Apache-2.0",
   "publishConfig": {
@@ -14,6 +13,31 @@
     "url": "https://github.com/AcalaNetwork/acala.js/issues"
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
+  "scripts": {
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "build": "yarn clean && yarn build:cjs && yarn build:esm",
+    "build:cjs": "swc ./src --config-file ../../.cjsswcrc -d dist/cjs --copy-files && tsc -p tsconfig.json --declarationDir dist/cjs && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json",
+    "build:esm": "swc ./src --config-file ../../.esmswcrc -d dist/esm --copy-files && tsc -p tsconfig.json --declarationDir dist/esm"
+  },
+  "type": "module",
+  "files": [
+    "dist/cjs/**",
+    "dist/esm/**"
+  ],
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "exports": {
+    ".": {
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js",
+      "default": "./dist/esm/index.js"
+    },
+    "./*": {
+      "require": "./dist/cjs/*.js",
+      "import": "./dist/esm/*.js",
+      "default": "./dist/esm/*.js"
+    }
+  },
   "peerDependencies": {
     "@acala-network/types": "^6",
     "@polkadot/api": "^10"
