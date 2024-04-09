@@ -137,7 +137,7 @@ export class FixedPointNumber {
     this.setMode();
     return this.inner
       .shiftedBy(-this.precision)
-      .dp(isNumber(dp) ? dp : this.precision || 8, rm)
+      .dp(isNumber(dp) ? dp : this.precision || 8 as unknown as number, rm)
       .toNumber();
   }
 
@@ -148,7 +148,7 @@ export class FixedPointNumber {
     this.setMode();
     return this.inner
       .shiftedBy(-this.precision)
-      .dp(isNumber(dp) ? dp : this.precision || 8, rm)
+      .dp(isNumber(dp) ? dp : this.precision || 8 as unknown as number, rm)
       .toString();
   }
 
