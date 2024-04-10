@@ -1,8 +1,7 @@
 import { AnyApi, forceToCurrencyName, Token } from '@acala-network/sdk-core';
 import { Storage } from '../utils/storage/index.js';
 import { StorageKey, U128 } from '@polkadot/types';
-import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
-import { AcalaPrimitivesTradingPair, ModuleDexTradingPairStatus } from '@polkadot/types/lookup';
+import { AcalaPrimitivesTradingPair, ModuleDexTradingPairStatus, OrmlTokensAccountData } from '@polkadot/types/lookup';
 import { getNativeTokenName } from '../utils/get-native-token-name.js';
 import { ITuple } from '@polkadot/types/types';
 import { Balance } from '@acala-network/types/interfaces/runtime/types';
@@ -49,7 +48,7 @@ export const createStorages = (api: AnyApi) => {
       });
     },
     balance: (address: string, token: Token) => {
-      return Storage.create<OrmlAccountData>({
+      return Storage.create<OrmlTokensAccountData>({
         api: api,
         path: 'query.tokens.accounts',
         params: [address, token.toChainData()]

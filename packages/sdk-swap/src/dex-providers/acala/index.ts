@@ -6,7 +6,7 @@ import {
   Token,
   unzipDexShareName
 } from '@acala-network/sdk-core';
-import { Wallet } from '@acala-network/sdk/wallet/types.js';
+import { Wallet } from '@acala-network/sdk/wallet/index.js';
 import { AcalaPrimitivesTradingPair, ModuleDexTradingPairStatus } from '@polkadot/types/lookup';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { StorageKey } from '@polkadot/types';

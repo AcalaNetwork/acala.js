@@ -9,11 +9,11 @@
     "registry": "https://registry.npmjs.org"
   },
   "scripts": {
-    "contract:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
+    "contract:compile:abi": "typechain --node16-modules --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
     "clean": "rm -rf dist tsconfig.tsbuildinfo",
     "build": "yarn clean && yarn build:cjs && yarn build:esm",
-    "build:cjs": "swc ./src --config-file ../../.cjsswcrc -d dist/cjs --copy-files && tsc -p tsconfig.json --declarationDir dist/cjs && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json",
-    "build:esm": "swc ./src --config-file ../../.esmswcrc -d dist/esm --copy-files && tsc -p tsconfig.json --declarationDir dist/esm"
+    "build:cjs": "swc ./src --config-file ../../.cjsswcrc -d dist/cjs --copy-files --strip-leading-paths && tsc -p tsconfig.json --declarationDir dist/cjs && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json",
+    "build:esm": "swc ./src --config-file ../../.esmswcrc -d dist/esm --copy-files --strip-leading-paths && tsc -p tsconfig.json --declarationDir dist/esm"
   },
   "type": "module",
   "files": [
@@ -59,10 +59,10 @@
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
-    "@typechain/ethers-v5": "^10.1.0",
+    "@typechain/ethers-v5": "^11.1.2",
     "@types/dotenv": "^8.2.0",
     "@types/lodash": "^4.14.161",
     "@types/lru-cache": "^7.10.10",
-    "typechain": "^8.1.0"
+    "typechain": "^8.3.2"
   }
 }

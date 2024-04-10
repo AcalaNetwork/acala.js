@@ -6,6 +6,7 @@
 		"isolatedModules": true,
 		"module": "nodenext",
 		"moduleResolution": "nodenext",
+		"resolveJsonModule": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"noImplicitAny": false,

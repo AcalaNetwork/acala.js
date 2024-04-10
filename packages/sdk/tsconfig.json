@@ -3,9 +3,10 @@
   "compilerOptions": {
     "rootDir": "src",
     "emitDeclarationOnly": true,
+    "declarationDir": "dist/esm"
   },
   "include": ["src/**/*", "./node_modules/@acala-network/types/**/*"],
   "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts"],
-  "references": [{ "path": "../sdk-core" }]
+  "references": [{ "path": "../sdk-core/tsconfig.json" }]
 }
 

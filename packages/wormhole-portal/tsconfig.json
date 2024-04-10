@@ -4,9 +4,9 @@
     "rootDir": "src",
     "emitDeclarationOnly": true
   },
+  "include": ["src/**/*", "./node_modules/@acala-network/types/**/*"],
+  "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts"],
   "references": [
     { "path": "../sdk/tsconfig.json" },
   ],
-  "include": ["src/**/*", "./node_modules/@acala-network/types/**/*"],
-  "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts"],
 }

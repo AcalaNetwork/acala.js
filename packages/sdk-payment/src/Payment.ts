@@ -1,10 +1,11 @@
 import { Wallet } from '@acala-network/sdk';
 import { AggregateDex } from '@acala-network/sdk-swap';
-import { PaymentConfig, PaymentMethod, PaymentMethodTypes, Tx } from './types';
+import { PaymentConfig, PaymentMethod, PaymentMethodTypes, Tx } from './types.js';
 import { AnyApi, Token } from '@acala-network/sdk-core';
 import { isEmpty } from 'lodash';
-import { ensureReady, toPromise } from './utils';
-import { Storages, createStorages } from './storage';
+import { toPromise } from './utils/index.js';
+import { Storages, createStorages } from './storage.js';
+import { NotReady } from './error.js';
 
 export class Payment {
   readonly wallet: Wallet;
@@ -36,8 +37,8 @@ export class Payment {
     return defaultFeeTokens.map((i) => this.wallet.getToken(i));
   }
 
-  @ensureReady
   public async getPaymentMethods(): Promise<PaymentMethod[]> {
+    if (!this.isReady) throw new NotReady();
     if (!isEmpty(this.paymentMethods)) return this.paymentMethods;
 
     const { dex } = this;
@@ -112,8 +113,9 @@ export class Payment {
     }
   }
 
-  @ensureReady
   public createWrappedTx(tx: Tx, paymentMethod: PaymentMethod) {
+    if (!this.isReady) throw new NotReady();
+
     const { api } = this;
     const { path, type } = paymentMethod;
     const surplus = this.getSurplusByType(type);
@@ -146,15 +148,17 @@ export class Payment {
     return { tx: wrapped, surplus };
   }
 
-  @ensureReady
   public async estimateTxFee(tx: Tx, account: string, surplus: number) {
+    if (!this.isReady) throw new NotReady();
+
     const { partialFee } = await toPromise(tx.paymentInfo(account));
 
     return partialFee.muln(surplus);
   }
 
-  @ensureReady
   public async estimateTxFeeByCallName(account: string, section: string, method: string) {
+    if (!this.isReady) throw new NotReady();
+
     const { api } = this;
 
     const call = api.tx[section][method];

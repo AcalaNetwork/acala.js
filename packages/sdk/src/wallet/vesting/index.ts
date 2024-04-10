@@ -4,7 +4,7 @@ import { Option, Vec } from '@polkadot/types';
 import {
   OrmlVestingVestingSchedule,
   PalletBalancesBalanceLock,
-  PolkadotPrimitivesV5PersistedValidationData
+  PolkadotPrimitivesV6PersistedValidationData
 } from '@polkadot/types/lookup';
 import { combineLatest, firstValueFrom, map, Observable } from 'rxjs';
 import { TokenProvider } from '../token-provider/type.js';
@@ -36,7 +36,7 @@ export class Vesting {
       params: [address]
     }).observable;
     // get parachain block  api.query.parachainSystem.validationData()
-    const parachain$ = Storage.create<Option<PolkadotPrimitivesV5PersistedValidationData>>({
+    const parachain$ = Storage.create<Option<PolkadotPrimitivesV6PersistedValidationData>>({
       api: this.api,
       path: 'query.parachainSystem.validationData',
       params: []

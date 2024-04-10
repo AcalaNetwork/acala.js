@@ -161,7 +161,7 @@ export function getFee(
   availableAmount: FixedPointNumber,
   requestAmount: FixedPointNumber,
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  baseFeeRate: FixedPointNumber
+  _baseFeeRate: FixedPointNumber
 ): FixedPointNumber | null {
   if (
     remainAvailablePercent.isZero() ||

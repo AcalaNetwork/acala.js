@@ -16,8 +16,8 @@
   "scripts": {
     "clean": "rm -rf dist tsconfig.tsbuildinfo",
     "build": "yarn clean && yarn build:cjs && yarn build:esm",
-    "build:cjs": "swc ./src --config-file ../../.cjsswcrc -d dist/cjs --copy-files && tsc -p tsconfig.json --declarationDir dist/cjs && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json",
-    "build:esm": "swc ./src --config-file ../../.esmswcrc -d dist/esm --copy-files && tsc -p tsconfig.json --declarationDir dist/esm"
+    "build:cjs": "swc ./src --config-file ../../.cjsswcrc -d dist/cjs --copy-files --strip-leading-paths && tsc -p tsconfig.json --declarationDir dist/cjs && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json",
+    "build:esm": "swc ./src --config-file ../../.esmswcrc -d dist/esm --copy-files --strip-leading-paths && tsc -p tsconfig.json --declarationDir dist/esm"
   },
   "type": "module",
   "files": [
@@ -43,7 +43,7 @@
     "@polkadot/api": "^10"
   },
   "dependencies": {
-    "@acala-network/sdk-core": "4.1.9-13",
+    "@acala-network/sdk-core": "workspace:*",
     "@acala-network/types": "^6.0.4",
     "@polkadot/api": "^10.9.1",
     "lodash": "^4.17.20",

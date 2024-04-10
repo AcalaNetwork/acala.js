@@ -5,7 +5,7 @@ import {
   ModuleDexTradingPairStatus,
   AcalaPrimitivesCurrencyAssetIds,
   AcalaPrimitivesCurrencyAssetMetadata,
-  XcmV3MultiLocation
+  StagingXcmV3MultiLocation
 } from '@polkadot/types/lookup';
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable } from 'rxjs';
 import { filter, map, shareReplay, take } from 'rxjs/operators';
@@ -20,7 +20,7 @@ import { CurrencyNotFound } from '../errors.js';
 export const createStorages = (api: AnyApi) => {
   return {
     foreignAssetLocations: () =>
-      Storage.create<[StorageKey<[u16]>, Option<XcmV3MultiLocation>][]>({
+      Storage.create<[StorageKey<[u16]>, Option<StagingXcmV3MultiLocation>][]>({
         api: api,
         path: 'query.assetRegistry.foreignAssetLocations.entries',
         params: []

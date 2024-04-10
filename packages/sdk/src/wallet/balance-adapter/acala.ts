@@ -1,9 +1,8 @@
 import { AnyApi, FixedPointNumber, FixedPointNumber as FN, forceToCurrencyName, Token } from '@acala-network/sdk-core';
 import { EvmRpcProvider } from '@acala-network/eth-providers';
-import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { utils } from 'ethers';
 import { map } from 'rxjs/operators';
-import { FrameSystemAccountInfo } from '@polkadot/types/lookup';
+import { FrameSystemAccountInfo, OrmlTokensAccountData } from '@polkadot/types/lookup';
 import { Balance } from '@polkadot/types/interfaces';
 import { BalanceData } from '../types.js';
 import { AcalaExpandBalanceAdapter } from './types.js';
@@ -26,7 +25,7 @@ const createStorages = (api: AnyApi) => {
         params: [address]
       }),
     nonNativeBalance: (token: Token, address: string) =>
-      Storage.create<OrmlAccountData>({
+      Storage.create<OrmlTokensAccountData>({
         api: api,
         query: api.query.tokens.accounts,
         params: [address, token.toChainData()]
@@ -72,7 +71,7 @@ export class AcalaBalanceAdapter implements AcalaExpandBalanceAdapter {
     return { available, free, locked, reserved };
   };
 
-  private transformNonNative = (data: OrmlAccountData, token: Token) => {
+  private transformNonNative = (data: OrmlTokensAccountData, token: Token) => {
     const free = FN.fromInner(data.free.toString(), token.decimals);
     const locked = FN.fromInner(data.frozen.toString(), token.decimals);
     const reserved = FN.fromInner(data.reserved.toString(), token.decimals);

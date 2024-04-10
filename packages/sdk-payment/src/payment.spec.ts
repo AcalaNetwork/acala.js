@@ -1,7 +1,7 @@
 import { Wallet } from '@acala-network/sdk';
 import { AcalaDex, AggregateDex } from '@acala-network/sdk-swap';
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { Payment } from './Payment';
+import { Payment } from './Payment.js';
 
 describe('payment', () => {
   jest.setTimeout(50000);
