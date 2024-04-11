@@ -1,4 +1,4 @@
-import { Token } from './token';
+import { Token } from './token.js';
 
 describe('token', () => {
   const t1 = new Token('DOT', { decimals: 18 });

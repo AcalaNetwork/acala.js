@@ -46,7 +46,7 @@
     "ethers": "~5.7.0"
   },
   "dependencies": {
-    "@acala-network/api": "^5.1.1",
+    "@acala-network/api": "^6.1.1",
     "@acala-network/eth-providers": "~2.7.18",
     "@acala-network/sdk-core": "workspace:*",
     "@polkadot/api": "^10.9.1",

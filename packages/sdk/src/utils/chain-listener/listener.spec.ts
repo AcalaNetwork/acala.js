@@ -3,7 +3,7 @@
 import { WsProvider } from '@polkadot/rpc-provider';
 import { ApiPromise } from '@polkadot/api';
 import { options } from '@acala-network/api';
-import { ChainListener } from './listener';
+import { ChainListener } from './listener.js';
 
 describe.skip('chain listener', () => {
   let sdk: ChainListener | undefined;
