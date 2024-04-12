@@ -367,11 +367,17 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
     });
 
     return requestedRedeems
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       .concat(redeemRequesteds as any)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       .concat(mints as any)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       .concat(redeemRequestCancelleds as any)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       .concat(redeemeds as any)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       .concat(redeemedByUnbonds as any)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       .concat(redeemedByFastMatches as any)
       .sort((a, b) => (new Date(b.data.timestamp) < new Date(a.data.timestamp) ? -1 : 1))
       .slice(0, 20);

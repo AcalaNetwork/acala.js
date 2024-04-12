@@ -16,7 +16,7 @@ export function transformStakingLedger(
 
     return {
       index: key.args[0].toNumber(),
-      bonded: FixedPointNumber.fromInner(ledge.bonded.unwrap().toString(), stakingToken.decimals),
+      bonded: FixedPointNumber.fromInner(ledge.bonded.toString(), stakingToken.decimals),
       unlocking: ledge.unlocking.map((item) => {
         return {
           value: FixedPointNumber.fromInner(item.value.unwrap().toString(), stakingToken.decimals),

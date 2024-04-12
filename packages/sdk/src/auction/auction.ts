@@ -1,5 +1,4 @@
 import { AnyApi, FixedPointNumber } from '@acala-network/sdk-core';
-import { ModuleAuctionManagerCollateralAuctionItem } from '@polkadot/types/lookup';
 import { Balance } from '@polkadot/types/interfaces';
 import { BehaviorSubject, combineLatest, filter, map, Observable, Subscription } from 'rxjs';
 import { ChainListener, BlockDetails } from '../utils/chain-listener/index.js';
@@ -245,7 +244,7 @@ export class Auction {
         let data = { ...this.inner };
 
         if (auctionDetails && auctionDetails.isSome) {
-          const details = auctionDetails.unwrap() as ModuleAuctionManagerCollateralAuctionItem;
+          const details = auctionDetails.unwrap();
           const collateral = this.wallet.getToken(details.currencyId);
           const stableToken = this.wallet.getPresetTokens().stableToken;
           const startBlock = details.startTime.toBigInt();

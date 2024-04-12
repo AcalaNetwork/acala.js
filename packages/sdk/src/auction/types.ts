@@ -49,7 +49,7 @@ export interface AuctionBid {
   tx: string;
 }
 
-export type AuctionStatus = 'DEX_TAKE' | 'IN_PROGRESS' | 'CANCELL' | 'DEALT' | 'DEX_TAKE' | 'ABORT';
+export type AuctionStatus = 'DEX_TAKE' | 'IN_PROGRESS' | 'CANCELL' | 'DEALT'   | 'ABORT';
 
 export type AuctionStage = 'NORMAL' | 'REVERSE';
 

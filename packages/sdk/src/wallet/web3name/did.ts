@@ -23,8 +23,8 @@ export class DIDWeb3Name {
     const connectedDid = await this.api.query.didLookup.connectedDids<Option<any>>(address);
 
     if (connectedDid.isSome) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-      const didAccount = (connectedDid.unwrap() as any)?.did?.toString();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      const didAccount = (connectedDid.unwrap())?.did?.toString();
       const web3name = await this.api.query.web3Names.names<Option<Bytes>>(didAccount);
 
       if (web3name.isSome) {

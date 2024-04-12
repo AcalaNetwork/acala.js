@@ -1,10 +1,10 @@
-import { StorageKey, u32, Vec, Option, U128} from '@polkadot/types';
+import { StorageKey, u32, Vec, Option, U128 } from '@polkadot/types';
 import {
   ModuleSupportIncentivesPoolId,
   PalletSchedulerScheduled,
   FrameSupportPreimagesBounded
 } from '@polkadot/types/lookup';
-import { ITuple } from '@polkadot/types/types';
+import { ITuple, CallFunction } from '@polkadot/types/types';
 import { getPoolId } from './get-pool-id.js';
 import { AnyApi } from '@acala-network/sdk-core';
 
@@ -18,10 +18,10 @@ export function getDeductionEndtimeConfigs(
     const blockNumber = key.args[0].toNumber();
 
     const inner = (data: FrameSupportPreimagesBounded) => {
-      let call;
+      let call: CallFunction | null = null;
 
       try {
-        call = api.registry.createType('Call', data.asInline.toHex());
+        call = api.registry.createType('Call', data.asInline.toHex()) as unknown as CallFunction;
       } catch (error) {
         console.error(error);
       }

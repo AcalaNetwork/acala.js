@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { FixedPointNumber, forceToCurrencyName } from '@acala-network/sdk-core';
 import { request, gql } from 'graphql-request';
 import { BaseHistoryFetcher } from '../base-history-fetcher.js';
@@ -218,7 +222,8 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
   }
 
   private transformStaking(data: any): HistoryRecord[] {
-    const bonded = data.bondeds.nodes.map((item) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    const bonded = data.bondeds.nodes.map((item: any) => {
       return {
         data: item,
         message: this.createMessage('aca-staking-bonded', item),
@@ -279,6 +284,7 @@ export class Earns extends BaseHistoryFetcher<EarnFetchParams> {
       };
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return bonded
       .concat(unbonded)
       .concat(rebonded)

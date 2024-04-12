@@ -14,6 +14,7 @@ export class TokenPair {
 
     const [currency1, currency2] = currency.asDexShare;
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return new TokenPair(Token.fromCurrencyId(currency1 as any), Token.fromCurrencyId(currency2 as any));
   }
 

@@ -78,7 +78,9 @@ export class ERC20Adapter {
         });
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       const fromListener = this.provider.addEventListener('logs', updateBalance, fromAddressFilter);
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       const toListener = this.provider.addEventListener('logs', updateBalance, toAddressFilter);
 
       return () => {
@@ -89,14 +91,14 @@ export class ERC20Adapter {
 
     let unsubscriber: AnyFunction | undefined;
 
-    run().then((unsub) => (unsubscriber = unsub));
+    void run().then((unsub) => (unsubscriber = unsub));
 
     return this.caches[cacheKey].pipe(
       finalize(() => {
         unsubscriber && unsubscriber();
       }),
       filter((i) => !!i)
-    ) as Observable<BalanceData>;
+    );
   }
 
   public subscribeIssuance(token: Token) {

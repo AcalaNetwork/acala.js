@@ -96,7 +96,7 @@ export class WormholePortal implements BaseSDK {
   }
 
   public getSubstractAPIByChainName(chain: SupportChain): ApiPromise {
-    const result = this.apis?.[chain as 'acala' | 'karura'];
+    const result = this.apis?.[chain];
 
     if (!result) throw new SubstractAPINotFound(chain);
 
@@ -104,7 +104,7 @@ export class WormholePortal implements BaseSDK {
   }
 
   public getEthProviderByChainName(chain: SupportChain) {
-    const temp = this.ethProviders?.[chain as 'acala' | 'karura'];
+    const temp = this.ethProviders?.[chain];
 
     if (!temp) throw new SubstractAPINotFound(chain);
 
@@ -211,7 +211,7 @@ export class WormholePortal implements BaseSDK {
         toBN(transaction.value).toString(),
         toBN(gasLimit).toString(),
         toBN(usedGas.isNegative() ? 0 : usedGas.add(BigNumber.from(10))).toString(),
-        (transaction.accessList || []) as any
+        []
       );
     } else {
       return provider.api.tx.evm.call(
@@ -220,7 +220,7 @@ export class WormholePortal implements BaseSDK {
         toBN(transaction.value).toString(),
         toBN(gasLimit).toString(),
         toBN(usedGas.isNegative() ? 0 : usedGas.add(BigNumber.from(10))).toString(),
-        (transaction.accessList || []) as any
+        []
       );
     }
   }
@@ -233,7 +233,7 @@ export class WormholePortal implements BaseSDK {
 
     if (!(fromEVMAddress && toEVMAddress)) throw new NeedBindEVMAddress(`${fromAddress}/${toAddress}`);
 
-    const fromProvider = this.getEthProviderByChainName(fromChain) as BaseProvider;
+    const fromProvider = this.getEthProviderByChainName(fromChain);
     const tokenContract = this.getTokenContract(fromChain, token);
     const tokenData = this.getToken(fromChain, token);
 
@@ -305,7 +305,7 @@ export class WormholePortal implements BaseSDK {
       wormholeVAAAPIS,
       this.getChainId(fromChain),
       getEmitterAddressEth(tokenData.bridgeAddress),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       logMessagePublished.sequence.toString(),
       {
         transport: NodeHttpTransport()

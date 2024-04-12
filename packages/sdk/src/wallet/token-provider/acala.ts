@@ -158,7 +158,7 @@ export class AcalaTokenProvider implements TokenProvider {
 
         return Object.fromEntries(
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          Object.entries(data!).filter(([, value]) => {
+          Object.entries(data).filter(([, value]) => {
             if (Array.isArray(types)) {
               return types.includes(value.type);
             }

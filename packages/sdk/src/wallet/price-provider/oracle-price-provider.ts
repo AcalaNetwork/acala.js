@@ -4,10 +4,10 @@ import { map, switchMap } from 'rxjs/operators';
 import { OracleConfig, PriceProvider } from './types.js';
 import { AnyApi, FixedPointNumber, FixedPointNumber as FN, Token } from '@acala-network/sdk-core';
 import { Storage } from '../../utils/storage/index.js';
-import { AcalaPrimitivesCurrencyCurrencyId, OrmlOracleModuleTimestampedValue } from '@polkadot/types/lookup';
+import { OrmlOracleModuleTimestampedValue } from '@polkadot/types/lookup';
 import { subscribeLiquidCrowdloanTokenPrice } from '../utils/get-liquid-crowdloan-token-price.js';
 import { TokenProvider } from '../token-provider/type.js';
-import { StorageKey } from '@polkadot/types';
+import { ApiRx } from '@polkadot/api';
 
 const DEFAULT_ORACLE_STRATEGIES: OracleConfig['strategies'] = {
   // taiKSM has renamed to tKSM
@@ -76,13 +76,13 @@ export class OraclePriceProvider implements PriceProvider {
     return firstValueFrom(this.subscribe(currency));
   }
 
+  // FIXME: only support api rx
   public queryFeedTokens() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    return (this.api.query.acalaOracle.values.keys as any)().pipe(
-      map((data: StorageKey<[AcalaPrimitivesCurrencyCurrencyId]>[]) => {
+    return (this.api as ApiRx).query.acalaOracle.values.keys().pipe(
+      map((data) => {
         return data.map((i) => i.args[0]);
       })
-    ) as Observable<[AcalaPrimitivesCurrencyCurrencyId]>;
+    );
   }
 
   public queryRawData(token: Token) {

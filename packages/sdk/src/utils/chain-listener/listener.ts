@@ -76,7 +76,7 @@ export class ChainListener {
 
     return new Observable((subscriber) => {
       return (() => {
-        api.rpc.chain.subscribeNewHeads(async (header) => {
+        void api.rpc.chain.subscribeNewHeads(async (header) => {
           const hash = header.hash.toString();
           const block = await api.rpc.chain.getBlock(hash);
           const apiAt = await api.at(hash);

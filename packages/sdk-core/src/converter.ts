@@ -223,10 +223,8 @@ export function forceToCurrencyName(target: MaybeCurrency): string {
     if ((target as AcalaPrimitivesCurrencyCurrencyId).isForeignAsset)
       return createForeignAssetName((target as AcalaPrimitivesCurrencyCurrencyId).asForeignAsset.toNumber());
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if ((target as any).isLiquidCrowdloan) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      return createLiquidCrowdloanName((target as any).asLiquidCrowdloan.toNumber());
+    if ((target as AcalaPrimitivesCurrencyCurrencyId).isLiquidCrowdloan) {
+      return createLiquidCrowdloanName((target as AcalaPrimitivesCurrencyCurrencyId).asLiquidCrowdloan.toNumber());
     }
 
     return target.toString();

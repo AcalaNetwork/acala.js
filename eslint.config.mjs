@@ -8,6 +8,7 @@ export default tseslint.config(
   {
     ignores: [
       "**/dist/**",
+      "**/*.spec.ts",
       "coverage",
       "**/coverage/",
       "eslint.config.mjs",
@@ -24,7 +25,8 @@ export default tseslint.config(
       }
     },
     rules: {
-      "@typescript-eslint/no-explicit-any": "off"
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-base-to-string": "off"
     }
   }
 );

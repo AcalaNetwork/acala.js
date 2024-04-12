@@ -5,6 +5,6 @@
     "emitDeclarationOnly": true,
     "declarationDir": "dist/esm"
   },
-  "include": ["src/**/*", "./node_modules/@acala-network/types/**/*"],
+  "include": ["src/**/*", "../../node_modules/@acala-network/types/**/*"],
   "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts"],
 }

@@ -122,7 +122,7 @@ export class TradingGraph {
     return paths;
   }
 
-  private mapTradeNodesToCompositeTradePath(nodePath: TradeNode[]): CompositeTradingPath {
+  private mapTradeNodesToCompositeTradePath = (nodePath: TradeNode[]): CompositeTradingPath => {
     const path: CompositeTradingPath = [];
 
     for (let i = 0; i < nodePath.length; i++) {
@@ -142,7 +142,7 @@ export class TradingGraph {
     return path;
   }
 
-  private removeSingleNodePath(data: CompositeTradingPath) {
+  private removeSingleNodePath = (data: CompositeTradingPath) => {
     return data.reduce((acc, cur) => cur[1].length > 1 && acc, true as boolean);
   }
 

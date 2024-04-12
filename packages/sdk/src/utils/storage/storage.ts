@@ -27,11 +27,11 @@ export class SubStorage<T = unknown> {
     const { api } = this.configs;
 
     if (api.type === 'promise') {
-      this.subscribeWithPromiseApi();
+      void this.subscribeWithPromiseApi();
     }
 
     if (api.type === 'rxjs') {
-      this.subscribeWithRxApi();
+      void this.subscribeWithRxApi();
     }
 
     this.triggerByEvents();
@@ -48,11 +48,12 @@ export class SubStorage<T = unknown> {
       const queryPath = path.split('.');
 
       return queryPath.reduce((acc, i) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
         const result = (acc as any)[i];
         if (!result) {
           throw new NoQueryPath(path);
         }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return result;
       }, api) as any as QueryableStorageEntry<ApiTypes, AnyTuple>;
     }
@@ -65,6 +66,7 @@ export class SubStorage<T = unknown> {
 
     if (events) {
       this.chainListener.subscribeByEvents(events).subscribe({
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         next: () => this.queryData()
       });
     }
@@ -73,15 +75,17 @@ export class SubStorage<T = unknown> {
   private async queryData() {
     const { api, params } = this.configs;
 
-    const query = await this.getQuery(api);
+    const query = this.getQuery(api);
 
     if (api.type === 'promise') {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const data = (await query(...params)) as unknown as T;
 
       this.subject.next(data);
     }
 
     if (api.type === 'rxjs') {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const data = await firstValueFrom(query(...params) as unknown as Observable<T>);
 
       this.subject.next(data);
@@ -105,7 +109,8 @@ export class SubStorage<T = unknown> {
 
     if (!func) return;
 
-    func(...params);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    void func(...params);
   }
 
   private async subscribeWithRxApi() {
@@ -122,7 +127,7 @@ export class SubStorage<T = unknown> {
 
       if (!func) return;
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       const storage$ = (func as any)(...params);
 
       if (isObservable(storage$)) {
@@ -135,7 +140,7 @@ export class SubStorage<T = unknown> {
 
       if (!func) return;
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       const storage$ = (func as any).call(api, ...params);
 
       if (isObservable(storage$)) {

@@ -28,21 +28,26 @@ function genFnFromBigNumber<T extends keyof BigNumber, U extends boolean>(
     : (right: FixedPointNumber) => ReturnType<BigNumber[typeof fn]>
   : () => any {
   if (noRight) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return function (): number {
       /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/ban-ts-comment */
       // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
       return this.inner[fn]();
       /* eslint-enable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/ban-ts-comment */
     } as any;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return function (right: FixedPointNumber) {
     const temp = right.clone();
 
     /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/ban-ts-comment */
     // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     this.alignPrecision(temp);
     // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
     return this.inner[fn](temp._getInner());
     /* eslint-enable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/ban-ts-comment */
   } as any;
@@ -125,7 +130,7 @@ export class FixedPointNumber {
   private setMode(dp = 0, rm: ROUND_MODE = 3): void {
     BN.config({
       DECIMAL_PLACES: dp,
-      ROUNDING_MODE: rm as ROUND_MODE,
+      ROUNDING_MODE: rm,
       EXPONENTIAL_AT: [-100, 100]
     });
   }
@@ -379,8 +384,11 @@ export class FixedPointNumber {
   }
 
   // sort name
+  // eslint-disable-next-line @typescript-eslint/unbound-method
   public add = this.plus;
+  // eslint-disable-next-line @typescript-eslint/unbound-method
   public sub = this.minus;
+  // eslint-disable-next-line @typescript-eslint/unbound-method
   public mul = this.times;
   public lt = this.isLessThan;
   public gt = this.isGreaterThan;

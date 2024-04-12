@@ -64,7 +64,7 @@ export class AcalaBalanceAdapter implements AcalaExpandBalanceAdapter {
 
   private transformNative = (data: FrameSystemAccountInfo, token: Token) => {
     const free = FN.fromInner(data.data.free.toString(), token.decimals);
-    const locked = FN.fromInner(((data.data as any).miscFrozen || data.data.frozen).toString(), token.decimals);
+    const locked = FN.fromInner(data.data.frozen.toString(), token.decimals);
     const reserved = FN.fromInner(data.data.reserved.toString(), token.decimals);
     const available = free.sub(locked).max(FN.ZERO);
 

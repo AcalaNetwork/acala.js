@@ -129,7 +129,7 @@ export class AcalaDex implements BaseSwap {
     return path.reduce((acc, cur, i) => {
       if (i > max - 2) return acc;
 
-      const output = path[i + 1] as Token;
+      const output = path[i + 1];
       const sortedTokenNames = Token.sort(cur, output).map((i) => i.name) as [string, string];
       const dexShareToken = this.wallet.getToken(createDexShareName(...sortedTokenNames));
 

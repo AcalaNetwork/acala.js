@@ -196,8 +196,10 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
     });
 
     return updatePositions
-      .concat(liquidUnsaves as any)
-      .concat(closeByDexes as any)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      .concat(liquidUnsaves as unknown as any)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      .concat(closeByDexes as unknown as any)
       .sort((a, b) => (new Date(b.data.timestamp) < new Date(a.data.timestamp) ? -1 : 1))
       .slice(0, 20);
   }

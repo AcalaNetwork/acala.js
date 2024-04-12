@@ -63,8 +63,9 @@ export class MarketPriceProvider implements PriceProvider {
     });
 
     if (result?.status === 200) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return (
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         result?.data?.data?.price?.map((elem: number) => {
           return new FN(elem || 0);
         }) || Array(currencies.length).fill(FN.ZERO)
@@ -75,14 +76,16 @@ export class MarketPriceProvider implements PriceProvider {
     result = await axios.get(`${BACKUP_PRICE_API}?token=${currencies.join(',')}&from=market`);
 
     if (result?.status === 200) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return (
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         result?.data?.data?.price?.map((elem: number) => {
           return new FN(elem || 0);
         }) || Array(currencies.length).fill(FN.ZERO)
       );
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return Array(currencies.length).fill(FN.ZERO);
   };
 
