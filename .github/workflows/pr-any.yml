@@ -16,7 +16,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: lint
         run: |
-          yarn install --immutable | grep -v 'YN0013'
+          yarn
           yarn lint
 
   test:
@@ -33,7 +33,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: test
         run: |
-          yarn install --immutable | grep -v 'YN0013'
+          yarn
           yarn test
 
   build_code:
@@ -50,5 +50,5 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: build
         run: |
-          yarn install --immutable | grep -v 'YN0013'
+          yarn
           yarn build

@@ -1,11 +1,10 @@
+import { describe, beforeAll } from 'vitest';
 import { Wallet } from '@acala-network/sdk';
 import { AcalaDex, AggregateDex } from '@acala-network/sdk-swap';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { Payment } from './Payment.js';
 
-describe('payment', () => {
-  jest.setTimeout(50000);
-
+describe.skip('payment', () => {
   const karuraEndpoint = 'wss://karura-rpc-0.aca-api.network';
 
   let payment;

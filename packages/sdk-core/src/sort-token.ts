@@ -1,4 +1,3 @@
-import primitivesConfig from '@acala-network/types/interfaces/primitives/definitions';
 import {
   getCurrencyTypeByName,
   getForeignAssetIdFromName,
@@ -26,7 +25,23 @@ export function getTokenTypeWeight(name: string): number {
   return 1000 * (TOKEN_TYPE_WEIGHTS[getCurrencyTypeByName(name)] || 0);
 }
 
-const TOKEN_SORT: Record<string, number> = primitivesConfig.default.types.TokenSymbol._enum;
+const TOKEN_SORT: Record<string, number> = {
+  ACA: 0,
+  AUSD: 1,
+  DOT: 2,
+  LDOT: 3,
+  RENBTC: 4,
+  CASH: 5,
+  KAR: 6,
+  KUSD: 7,
+  KSM: 8,
+  LKSM: 9,
+  BNC: 10,
+  VSKSM: 11,
+  PHA: 12,
+  KINT: 13,
+  KBTC: 14,
+};
 
 export function sortTokenByName(a: string, b: string): number {
   const weightA = getTokenTypeWeight(a);

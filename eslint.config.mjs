@@ -12,7 +12,7 @@ export default tseslint.config(
       "coverage",
       "**/coverage/",
       "eslint.config.mjs",
-      "jest.config.js",
+      "vitest.config.mts",
       ".prettierrc.js",
       ".yarn"
     ]
