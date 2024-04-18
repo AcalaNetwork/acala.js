@@ -21,6 +21,5 @@ export function toBN(bigNumberis: BigNumberish = 0): BN {
     return new BN(hex.substring(2), 16);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return new BN(bigNumberis as any);
+  return new BN(bigNumberis.toString());
 }

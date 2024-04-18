@@ -1,7 +1,7 @@
-import { Token } from '@acala-network/sdk-core/token';
 import { AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesTradingPair } from '@polkadot/types/lookup';
 import { assert } from '@polkadot/util';
-import { AnyApi } from './types';
+import { Token } from './token.js';
+import { AnyApi } from './types.js';
 
 // class for store token pair
 export class TokenPair {
@@ -14,6 +14,7 @@ export class TokenPair {
 
     const [currency1, currency2] = currency.asDexShare;
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return new TokenPair(Token.fromCurrencyId(currency1 as any), Token.fromCurrencyId(currency2 as any));
   }
 

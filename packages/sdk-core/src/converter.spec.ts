@@ -1,4 +1,5 @@
-import { createDexShareName, createStableAssetName, getCurrencyObject, unzipDexShareName } from './converter';
+import { describe, test, expect } from 'vitest';
+import { createDexShareName, createStableAssetName, getCurrencyObject, unzipDexShareName } from './converter.js';
 
 describe('converter', () => {
   test('dex share name should work', () => {

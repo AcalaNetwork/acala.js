@@ -1,5 +1,5 @@
 import { FixedPointNumber } from '@acala-network/sdk-core';
-import { ExchangeFee, ExpandPath } from '../types';
+import { ExchangeFee, ExpandPath } from '../types.js';
 
 // get how much target amount will be got fro specific supply amount and price impact
 export function getTargetAmount(

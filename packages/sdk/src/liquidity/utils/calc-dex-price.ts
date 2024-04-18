@@ -1,8 +1,8 @@
 import { FixedPointNumber, Token } from '@acala-network/sdk-core';
-import { Wallet } from '@acala-network/sdk/wallet';
+import { Wallet } from '../../wallet/index.js';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { PoolPositions } from '../types';
+import { PoolPositions } from '../types.js';
 
 export function calcDexPriceAndAmountFormPool(
   target: Token,

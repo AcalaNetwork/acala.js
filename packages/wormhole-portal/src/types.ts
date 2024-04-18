@@ -1,6 +1,6 @@
 import { BigNumber } from 'ethers';
 import { BaseProvider } from '@acala-network/eth-providers';
-import { ChainId, SupportChain } from './consts';
+import { ChainId, SupportChain } from './consts/index.js';
 
 export interface WormholePortalConfigs {
   ethProviders: {

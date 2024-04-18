@@ -6,14 +6,14 @@ import {
   Token,
   unzipDexShareName
 } from '@acala-network/sdk-core';
-import { Wallet } from '@acala-network/sdk/wallet';
+import { Wallet } from '@acala-network/sdk/wallet/index.js';
 import { AcalaPrimitivesTradingPair, ModuleDexTradingPairStatus } from '@polkadot/types/lookup';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { StorageKey } from '@polkadot/types';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Storage } from '@acala-network/sdk/utils/storage';
-import { AmountTooSmall, InsufficientLiquidityError, ParamsNotAcceptableForDexProvider } from '../../errors';
+import { Storage } from '@acala-network/sdk/utils/storage/index.js';
+import { AmountTooSmall, InsufficientLiquidityError, ParamsNotAcceptableForDexProvider } from '../../errors.js';
 import {
   BaseSwap,
   DexSource,
@@ -24,9 +24,9 @@ import {
   CompositeTradingPath,
   TradingPath,
   OverwriteCallParams
-} from '../../types';
-import { ExchangeFee, ExpandPath, ExpandPathWithPositions, MidResult } from './types';
-import { calculateExchangeFeeRate, getSupplyAmount, getTargetAmount } from './utils/calculate-helper';
+} from '../../types.js';
+import { ExchangeFee, ExpandPath, ExpandPathWithPositions, MidResult } from './types.js';
+import { calculateExchangeFeeRate, getSupplyAmount, getTargetAmount } from './utils/calculate-helper.js';
 
 const MINIMUM_AMOUNT = 1;
 
@@ -129,7 +129,7 @@ export class AcalaDex implements BaseSwap {
     return path.reduce((acc, cur, i) => {
       if (i > max - 2) return acc;
 
-      const output = path[i + 1] as Token;
+      const output = path[i + 1];
       const sortedTokenNames = Token.sort(cur, output).map((i) => i.name) as [string, string];
       const dexShareToken = this.wallet.getToken(createDexShareName(...sortedTokenNames));
 

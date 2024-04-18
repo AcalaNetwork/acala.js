@@ -4,7 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type { Erc20, Erc20Interface } from "../Erc20";
+import type { Erc20, Erc20Interface } from "../Erc20.js";
 
 const _abi = [
   {
@@ -227,7 +227,7 @@ const _abi = [
     name: "Transfer",
     type: "event",
   },
-];
+] as const;
 
 export class Erc20__factory {
   static readonly abi = _abi;

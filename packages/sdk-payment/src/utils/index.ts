@@ -1,2 +1,1 @@
-export * from './ensure-ready';
-export * from './to-promise';
+export * from './to-promise.js';

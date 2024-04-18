@@ -1,2 +1,2 @@
-export * from './help';
-export * from './staking-pool';
+export * from './help.js';
+export * from './staking-pool.js';

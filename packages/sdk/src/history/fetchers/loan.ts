@@ -1,9 +1,9 @@
 import { FixedPointNumber } from '@acala-network/sdk-core';
 import { request, gql } from 'graphql-request';
-import { BaseHistoryFetcher } from '../base-history-fetcher';
-import { BaseFetchParams, HistoryFetcherConfig, HistoryRecord } from '../types';
-import { resolveLinks } from '../utils/resolve-links';
-import { getChainType } from '../../utils/get-chain-type';
+import { BaseHistoryFetcher } from '../base-history-fetcher.js';
+import { BaseFetchParams, HistoryFetcherConfig, HistoryRecord } from '../types.js';
+import { resolveLinks } from '../utils/resolve-links.js';
+import { getChainType } from '../../utils/get-chain-type.js';
 
 export interface LoanFetchParams extends BaseFetchParams {
   address: string;
@@ -196,8 +196,10 @@ export class Loans extends BaseHistoryFetcher<LoanFetchParams> {
     });
 
     return updatePositions
-      .concat(liquidUnsaves as any)
-      .concat(closeByDexes as any)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      .concat(liquidUnsaves as unknown as any)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      .concat(closeByDexes as unknown as any)
       .sort((a, b) => (new Date(b.data.timestamp) < new Date(a.data.timestamp) ? -1 : 1))
       .slice(0, 20);
   }

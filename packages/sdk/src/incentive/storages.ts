@@ -1,7 +1,7 @@
 import { AnyApi } from '@acala-network/sdk-core';
-import { Storage } from '../utils/storage';
+import { Storage } from '../utils/storage/index.js';
 import { StorageKey, u32, Vec, Option, u128, BTreeMap } from '@polkadot/types';
-import { Balance } from '@acala-network/types/interfaces';
+import { Balance } from '@acala-network/types/interfaces/runtime/types';
 import {
   AcalaPrimitivesCurrencyCurrencyId,
   ModuleSupportIncentivesPoolId,

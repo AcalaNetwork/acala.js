@@ -11,11 +11,11 @@ import { StorageKey } from '@polkadot/types';
 import { memoize } from '@polkadot/util';
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of } from 'rxjs';
 import { map, switchMap, filter } from 'rxjs/operators';
-import { BaseSDK, ChainType } from '../types';
-import { getChainType } from '../utils/get-chain-type';
-import { Wallet } from '../wallet';
-import { TradingPairNotFound } from './errors';
-import { createStorages } from './storage';
+import { BaseSDK, ChainType } from '../types.js';
+import { getChainType } from '../utils/get-chain-type.js';
+import { Wallet } from '../wallet/index.js';
+import { TradingPairNotFound } from './errors.js';
+import { createStorages } from './storage.js';
 import {
   PoolDetail,
   LiquidityPoolStatus,
@@ -25,11 +25,11 @@ import {
   EstimateRemoveLiquidityResult,
   PoolSizeOfShare,
   PoolPositions
-} from './types';
-import { calcDexPrice } from './utils/calc-dex-price';
-import { getEstimateAddLiquidityResult } from './utils/get-estimate-add-liquidity-result';
-import { getEstimateRemoveLiquidityResult } from './utils/get-estimate-remove-liquidity-result';
-import { getPoolTVL } from './utils/get-pool-tvl';
+} from './types.js';
+import { calcDexPrice } from './utils/calc-dex-price.js';
+import { getEstimateAddLiquidityResult } from './utils/get-estimate-add-liquidity-result.js';
+import { getEstimateRemoveLiquidityResult } from './utils/get-estimate-remove-liquidity-result.js';
+import { getPoolTVL } from './utils/get-pool-tvl.js';
 
 export class Liquidity implements BaseSDK {
   private api: AnyApi;

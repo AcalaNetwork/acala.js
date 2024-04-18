@@ -17,8 +17,8 @@ import {
 
 import { combineLatest, firstValueFrom, from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BaseSDK } from '@acala-network/sdk';
-import { SupportChain } from './consts';
+import { BaseSDK } from '@acala-network/sdk/types.js';
+import { SupportChain } from './consts/index.js';
 import {
   ConvertAssetsShouldNotEqual,
   CreateEVMTransactionFailed,
@@ -28,7 +28,7 @@ import {
   QueryTxReceiptFailed,
   SubstractAPINotFound,
   TopicMismatch
-} from './errors';
+} from './errors.js';
 import {
   WormholePortalConfigs,
   TransferParams,
@@ -37,16 +37,16 @@ import {
   SupportToken,
   RedeemParams,
   ConvertParams
-} from './types';
+} from './types.js';
 import { TransactionRequest } from '@ethersproject/abstract-provider';
 import { BaseProvider } from '@acala-network/eth-providers';
-import { DEFAULT_ROUTERS } from './consts/routers';
-import { arrayify, getAddress, zeroPad } from 'ethers/lib/utils';
+import { DEFAULT_ROUTERS } from './consts/routers.js';
+import { arrayify, getAddress, zeroPad } from 'ethers/lib/utils.js';
 import { BigNumber } from 'ethers';
 import { ApiPromise } from '@polkadot/api';
-import { wormholeVAAAPIS } from './consts/wormhole-vaa-apis';
-import { DEFAULT_TOKENS } from './consts/tokens';
-import { getTxReceiptWithRetry, toBN } from './utils';
+import { wormholeVAAAPIS } from './consts/wormhole-vaa-apis.js';
+import { DEFAULT_TOKENS } from './consts/tokens.js';
+import { getTxReceiptWithRetry, toBN } from './utils/index.js';
 
 export class WormholePortal implements BaseSDK {
   private apis: {
@@ -96,7 +96,7 @@ export class WormholePortal implements BaseSDK {
   }
 
   public getSubstractAPIByChainName(chain: SupportChain): ApiPromise {
-    const result = this.apis?.[chain as 'acala' | 'karura'];
+    const result = this.apis?.[chain];
 
     if (!result) throw new SubstractAPINotFound(chain);
 
@@ -104,7 +104,7 @@ export class WormholePortal implements BaseSDK {
   }
 
   public getEthProviderByChainName(chain: SupportChain) {
-    const temp = this.ethProviders?.[chain as 'acala' | 'karura'];
+    const temp = this.ethProviders?.[chain];
 
     if (!temp) throw new SubstractAPINotFound(chain);
 
@@ -193,7 +193,7 @@ export class WormholePortal implements BaseSDK {
   }
 
   private async getEVMCallFromETHTransaction(transaction: TransactionRequest, provider: BaseProvider) {
-    const { usedStorage, gasLimit } = await provider.estimateResources(transaction);
+    const { usedGas, gasLimit } = await provider.estimateResources(transaction);
 
     transaction.gasLimit = gasLimit;
 
@@ -210,8 +210,8 @@ export class WormholePortal implements BaseSDK {
         transaction.data.toString(),
         toBN(transaction.value).toString(),
         toBN(gasLimit).toString(),
-        toBN(usedStorage.isNegative() ? 0 : usedStorage.add(BigNumber.from(10))).toString(),
-        (transaction.accessList || []) as any
+        toBN(usedGas.isNegative() ? 0 : usedGas.add(BigNumber.from(10))).toString(),
+        []
       );
     } else {
       return provider.api.tx.evm.call(
@@ -219,8 +219,8 @@ export class WormholePortal implements BaseSDK {
         transaction.data.toString(),
         toBN(transaction.value).toString(),
         toBN(gasLimit).toString(),
-        toBN(usedStorage.isNegative() ? 0 : usedStorage.add(BigNumber.from(10))).toString(),
-        (transaction.accessList || []) as any
+        toBN(usedGas.isNegative() ? 0 : usedGas.add(BigNumber.from(10))).toString(),
+        []
       );
     }
   }
@@ -233,7 +233,7 @@ export class WormholePortal implements BaseSDK {
 
     if (!(fromEVMAddress && toEVMAddress)) throw new NeedBindEVMAddress(`${fromAddress}/${toAddress}`);
 
-    const fromProvider = this.getEthProviderByChainName(fromChain) as BaseProvider;
+    const fromProvider = this.getEthProviderByChainName(fromChain);
     const tokenContract = this.getTokenContract(fromChain, token);
     const tokenData = this.getToken(fromChain, token);
 
@@ -305,7 +305,7 @@ export class WormholePortal implements BaseSDK {
       wormholeVAAAPIS,
       this.getChainId(fromChain),
       getEmitterAddressEth(tokenData.bridgeAddress),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       logMessagePublished.sequence.toString(),
       {
         transport: NodeHttpTransport()

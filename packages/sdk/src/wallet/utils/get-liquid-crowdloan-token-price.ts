@@ -2,7 +2,7 @@ import { AnyApi, FixedPointNumber } from '@acala-network/sdk-core';
 import { u128 } from '@polkadot/types-codec';
 import { Extrinsic, SignedBlock } from '@polkadot/types/interfaces';
 import { CumulusPrimitivesParachainInherentParachainInherentData } from '@polkadot/types/lookup';
-import { Storage } from '../../utils/storage';
+import { Storage } from '../../utils/storage/index.js';
 import { map } from 'rxjs/operators';
 
 const LEASE_BLOCK_NUMBERS: Record<number, number> = {

@@ -3,9 +3,9 @@ import { memoize } from '@polkadot/util';
 import { u16 } from '@polkadot/types';
 import { BehaviorSubject, combineLatest, firstValueFrom, map, Observable, shareReplay, switchMap } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { BaseSDK } from '../types';
-import { getChainType } from '../utils/get-chain-type';
-import { createStorages } from './storages';
+import { BaseSDK } from '../types.js';
+import { getChainType } from '../utils/get-chain-type.js';
+import { createStorages } from './storages.js';
 import {
   EstimateMintResult,
   EstimateRedeemResult,
@@ -15,17 +15,17 @@ import {
   StakingLedger,
   Unbonding,
   UserLiquidityTokenSummary
-} from './types';
-import { convertLiquidToStaking, convertStakingToLiquid, getExchangeRate } from './utils/exchange-rate';
-import { getAPY } from './utils/get-apy';
-import { getEstimateMintResult } from './utils/get-estimate-mint-result';
-import { getEstimateRedeemResult } from './utils/get-estimate-redeem-result';
-import { transformStakingLedger } from './utils/transform-staking-ledger';
-import { getUserLiquidTokenSummary } from './utils/get-user-liquid-token-summary';
+} from './types.js';
+import { convertLiquidToStaking, convertStakingToLiquid, getExchangeRate } from './utils/exchange-rate.js';
+import { getAPY } from './utils/get-apy.js';
+import { getEstimateMintResult } from './utils/get-estimate-mint-result.js';
+import { getEstimateRedeemResult } from './utils/get-estimate-redeem-result.js';
+import { transformStakingLedger } from './utils/transform-staking-ledger.js';
+import { getUserLiquidTokenSummary } from './utils/get-user-liquid-token-summary.js';
 import { ApiTypes, SubmittableExtrinsic } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
-import { RequiredAddressInFastReddem } from './errors';
-import { Wallet } from '../wallet';
+import { RequiredAddressInFastReddem } from './errors.js';
+import { Wallet } from '../wallet/index.js';
 
 export class Homa<T extends ApiTypes = 'promise'> implements BaseSDK {
   private api: AnyApi;

@@ -23,10 +23,8 @@ export const eventSectionsFilter = (sections: string[]) => {
 export const eventsFilter = (data: { section: string; method: string }[]) => {
   return (event: FrameSystemEventRecord): boolean => {
     return data.reduce((acc, cur) => {
-      // eslint-disable-next-line prettier/prettier
       const isSectionMatch = cur.section === '*' ? true : cur.section.toUpperCase() === event?.event?.section.toUpperCase();
 
-      // eslint-disable-next-line prettier/prettier
       const isMethodMatch = cur.method === '*' ? true : cur.method.toUpperCase() === event?.event?.method.toUpperCase();
 
       return acc || (isSectionMatch && isMethodMatch);
@@ -61,7 +59,7 @@ export const eventsFilterCallback = (
 ): void => {
   if (immediately) callback();
 
-  api.rpc.chain.subscribeNewHeads(async () => {
+  void api.rpc.chain.subscribeNewHeads(async () => {
     const events = await api.query.system.events();
 
     const filterdEvents = events.filter(eventsFilter(configs));

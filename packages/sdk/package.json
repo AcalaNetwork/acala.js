@@ -1,8 +1,7 @@
 {
   "name": "@acala-network/sdk",
-  "version": "4.1.9-13",
+  "version": "4.1.10-1",
   "description": "acala network sdk",
-  "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
   "license": "Apache-2.0",
   "publishConfig": {
@@ -10,7 +9,30 @@
     "registry": "https://registry.npmjs.org"
   },
   "scripts": {
-    "contract:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\""
+    "contract:compile:abi": "typechain --node16-modules --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "build": "yarn clean && yarn build:cjs && yarn build:esm",
+    "build:cjs": "swc ./src --config-file ../../.cjsswcrc -d dist/cjs --copy-files --strip-leading-paths && tsc -p tsconfig.json --declarationDir dist/cjs && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json",
+    "build:esm": "swc ./src --config-file ../../.esmswcrc -d dist/esm --copy-files --strip-leading-paths && tsc -p tsconfig.json --declarationDir dist/esm"
+  },
+  "type": "module",
+  "files": [
+    "dist/cjs/**",
+    "dist/esm/**"
+  ],
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "exports": {
+    ".": {
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js",
+      "default": "./dist/esm/index.js"
+    },
+    "./*": {
+      "require": "./dist/cjs/*.js",
+      "import": "./dist/esm/*.js",
+      "default": "./dist/esm/*.js"
+    }
   },
   "repository": "https://github.com/AcalaNetwork/acala.js.git",
   "bugs": {
@@ -24,9 +46,9 @@
     "ethers": "~5.7.0"
   },
   "dependencies": {
-    "@acala-network/api": "^5.1.1",
+    "@acala-network/api": "^6.1.1",
     "@acala-network/eth-providers": "~2.7.18",
-    "@acala-network/sdk-core": "4.1.9-13",
+    "@acala-network/sdk-core": "workspace:*",
     "@polkadot/api": "^10.9.1",
     "axios": "^0.24.0",
     "ethers": "~5.7.0",
@@ -37,10 +59,10 @@
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
-    "@typechain/ethers-v5": "^10.1.0",
+    "@typechain/ethers-v5": "^11.1.2",
     "@types/dotenv": "^8.2.0",
     "@types/lodash": "^4.14.161",
     "@types/lru-cache": "^7.10.10",
-    "typechain": "^8.1.0"
+    "typechain": "^8.3.2"
   }
 }

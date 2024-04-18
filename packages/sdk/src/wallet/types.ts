@@ -1,6 +1,6 @@
 import { FixedPointNumber as FN, Token } from '@acala-network/sdk-core';
-import { PriceProvider, PriceProviderType } from './price-provider/types';
-import { ChainType } from '../types';
+import { PriceProvider, PriceProviderType } from './price-provider/types.js';
+import { ChainType } from '../types.js';
 import { WsProvider } from '@polkadot/api';
 import { EvmRpcProvider } from '@acala-network/eth-providers';
 
@@ -52,4 +52,4 @@ export interface BaseWeb3NameProvider {
   getName(address: string): Promise<string | undefined>;
 }
 
-export * from './vesting/types';
+export * from './vesting/types.js';

@@ -11,8 +11,8 @@ import {
   switchMap
 } from 'rxjs';
 import { Wallet, BaseSDK } from '@acala-network/sdk';
-import { NoTradingPathError } from './errors';
-import { TradingGraph } from './trading-graph';
+import { NoTradingPathError } from './errors.js';
+import { TradingGraph } from './trading-graph.js';
 import {
   AggregateDexConfigs,
   AggregateDexSwapParams,
@@ -24,7 +24,7 @@ import {
   AggregateDexSwapResult,
   SwapSource,
   OverwriteCallParams
-} from './types';
+} from './types.js';
 
 export class AggregateDex implements BaseSDK {
   private api: AnyApi;
@@ -58,8 +58,7 @@ export class AggregateDex implements BaseSDK {
     return {
       aggregateLimit:
         configs.overwrite?.aggregateLimit ||
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        ((this.api.consts.aggregatedDex.swapPathLimit as any).toNumber() as unknown as number)
+        (this.api.consts.aggregatedDex.swapPathLimit.toNumber() as unknown as number)
     };
   }
 
@@ -363,10 +362,12 @@ export class AggregateDex implements BaseSDK {
   }
 
   private convertCompositeTradingPathToTxParams(list: SwapResult[]) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return list.map((item) => {
       const source = item.source;
       const provider = this.getProvider(source as DexSource);
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return provider.getAggregateTradingPath(item);
     });
   }

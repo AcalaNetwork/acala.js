@@ -1,5 +1,5 @@
 import { AnyApi } from '@acala-network/sdk-core';
-import { Storage } from '@acala-network/sdk/utils/storage';
+import { Storage } from '@acala-network/sdk/utils/storage/index.js';
 import { AcalaPrimitivesCurrencyCurrencyId } from '@polkadot/types/lookup';
 import { Option, Vec, StorageKey } from '@polkadot/types';
 

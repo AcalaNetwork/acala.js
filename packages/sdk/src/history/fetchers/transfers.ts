@@ -1,10 +1,10 @@
 import { FixedPointNumber, forceToCurrencyName, MaybeCurrency } from '@acala-network/sdk-core';
 import { request, gql } from 'graphql-request';
-import { BaseHistoryFetcher } from '../base-history-fetcher';
-import { BaseFetchParams, HistoryFetcherConfig, HistoryRecord } from '../types';
-import { resolveLinks } from '../utils/resolve-links';
-import { truncateAddress } from '../utils/truncate-address';
-import { getChainType } from '../../utils/get-chain-type';
+import { BaseHistoryFetcher } from '../base-history-fetcher.js';
+import { BaseFetchParams, HistoryFetcherConfig, HistoryRecord } from '../types.js';
+import { resolveLinks } from '../utils/resolve-links.js';
+import { truncateAddress } from '../utils/truncate-address.js';
+import { getChainType } from '../../utils/get-chain-type.js';
 
 export interface TransfersFetchParams extends BaseFetchParams {
   address: string;

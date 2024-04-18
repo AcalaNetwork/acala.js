@@ -1,4 +1,4 @@
-import { WormholeRouter } from '../types';
+import { WormholeRouter } from '../types.js';
 
 export const DEFAULT_ROUTERS: WormholeRouter[] = [
   {

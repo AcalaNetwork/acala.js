@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-
+import { describe, test } from 'vitest';
 import { WsProvider } from '@polkadot/rpc-provider';
 import { ApiPromise } from '@polkadot/api';
 import { options } from '@acala-network/api';
-import { ChainListener } from './listener';
+import { ChainListener } from './listener.js';
 
 describe.skip('chain listener', () => {
   let sdk: ChainListener | undefined;
-
-  jest.setTimeout(50000);
 
   const initSDK = async (endpoint = 'wss://karura.api.onfinality.io/public-ws') => {
     if (sdk) return sdk;

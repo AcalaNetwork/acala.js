@@ -1,4 +1,4 @@
-import { FixedPointNumber } from '@acala-network/sdk-core/fixed-point-number';
+import { FixedPointNumber } from '@acala-network/sdk-core';
 
 export const FeeRateMatrix: FixedPointNumber[][] = [
   [
@@ -161,7 +161,7 @@ export function getFee(
   availableAmount: FixedPointNumber,
   requestAmount: FixedPointNumber,
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  baseFeeRate: FixedPointNumber
+  _baseFeeRate: FixedPointNumber
 ): FixedPointNumber | null {
   if (
     remainAvailablePercent.isZero() ||

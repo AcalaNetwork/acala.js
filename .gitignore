@@ -63,6 +63,7 @@ typings/
 .npmrc
 
 build/
+dist/
 
 /.yarn/cache
 /.yarn/versions

@@ -1,6 +1,6 @@
 import { assert } from '@polkadot/util';
 
-import { AnyApi, CurrencyObject, TokenType } from './types';
+import { AnyApi, CurrencyObject, TokenType } from './types.js';
 import {
   createDexShareName,
   createStableAssetName,
@@ -8,9 +8,9 @@ import {
   getCurrencyObject,
   getCurrencyTypeByName,
   unzipDexShareName
-} from './converter';
-import { sortTokenByName } from './sort-token';
-import { FixedPointNumber } from './fixed-point-number';
+} from './converter.js';
+import { sortTokenByName } from './sort-token.js';
+import { FixedPointNumber } from './fixed-point-number.js';
 import {
   AcalaPrimitivesCurrencyCurrencyId,
   AcalaPrimitivesCurrencyDexShare,
@@ -281,6 +281,7 @@ export class Token {
     try {
       return api.registry.createType('AcalaPrimitivesCurrencyCurrencyId', this.toChainData());
     } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       throw new Error(`can't convert ${this.toChainData()} to Currency Id. ${e}`);
     }
   }
@@ -293,6 +294,7 @@ export class Token {
         ...unzipDexShareName(this.name).map((i) => getCurrencyObject(i))
       ]);
     } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       throw new Error(`can't convert ${this.toChainData()} to Trading Pair`);
     }
   }
@@ -303,6 +305,7 @@ export class Token {
 
       return api.registry.createType('AcalaPrimitivesCurrencyDexShare', this.toChainData());
     } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       throw new Error(`can't convert ${this.toChainData()} to DexShare`);
     }
   }
@@ -313,6 +316,7 @@ export class Token {
 
       return api.registry.createType('AcalaPrimitivesCurrencyTokenSymbol', this.name);
     } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       throw new Error(`can't convert ${this.toChainData()} to Token Symbol`);
     }
   }

@@ -2,9 +2,8 @@ import { AnyApi, FixedPointNumber, forceToCurrencyName, MaybeCurrency, Token } f
 import { memoize } from '@polkadot/util';
 import { BehaviorSubject, firstValueFrom, Observable, combineLatest, of } from 'rxjs';
 import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
-import { BaseSDK, Wallet } from '..';
-import { IncentivePoolNotFound } from '../liquidity/errors';
-import { createStorages } from './storages';
+import { IncentivePoolNotFound } from '../liquidity/errors.js';
+import { createStorages } from './storages.js';
 import {
   BaseIncentivePool,
   IncentiveConfigs,
@@ -14,11 +13,13 @@ import {
   IncentiveType,
   UserIncentivePool,
   UserIncentiveReward
-} from './types';
-import { getAPR } from './utils/get-apr';
-import { getDeductionEndtimeConfigs } from './utils/get-deduction-endtime-configs';
-import { getPoolId } from './utils/get-pool-id';
-import { getPoolToken } from './utils/get-pool-token';
+} from './types.js';
+import { getAPR } from './utils/get-apr.js';
+import { getDeductionEndtimeConfigs } from './utils/get-deduction-endtime-configs.js';
+import { getPoolId } from './utils/get-pool-id.js';
+import { getPoolToken } from './utils/get-pool-token.js';
+import { BaseSDK } from '../types.js';
+import { Wallet } from '../wallet/wallet.js';
 
 export class Incentive implements BaseSDK {
   private api: AnyApi;

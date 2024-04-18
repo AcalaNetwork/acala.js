@@ -1,1 +1,1 @@
-export * from './getSubscribeOrAtQuery';
+export * from './getSubscribeOrAtQuery.js';

@@ -1,9 +1,12 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "lib",
-    "rootDir": "src"
+    "rootDir": "src",
+    "emitDeclarationOnly": true
   },
-  "include": ["src/**/*"],
-  "references": [{ "path": "../sdk" }]
+  "include": ["src/**/*", "../../node_modules/@acala-network/types/**/*"],
+  "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts"],
+  "references": [
+    { "path": "../sdk/tsconfig.json" },
+  ],
 }

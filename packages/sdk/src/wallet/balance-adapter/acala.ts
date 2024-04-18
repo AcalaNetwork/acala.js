@@ -1,16 +1,15 @@
 import { AnyApi, FixedPointNumber, FixedPointNumber as FN, forceToCurrencyName, Token } from '@acala-network/sdk-core';
 import { EvmRpcProvider } from '@acala-network/eth-providers';
-import { OrmlAccountData } from '@open-web3/orml-types/interfaces';
 import { utils } from 'ethers';
 import { map } from 'rxjs/operators';
-import { FrameSystemAccountInfo } from '@polkadot/types/lookup';
+import { FrameSystemAccountInfo, OrmlTokensAccountData } from '@polkadot/types/lookup';
 import { Balance } from '@polkadot/types/interfaces';
-import { BalanceData } from '../types';
-import { AcalaExpandBalanceAdapter } from './types';
+import { BalanceData } from '../types.js';
+import { AcalaExpandBalanceAdapter } from './types.js';
 import { Observable } from 'rxjs';
-import { NotSupportETHAddress, NotSupportEVMBalance } from '../errors';
-import { Storage } from '../../utils/storage';
-import { ERC20Adapter } from './erc20-adapter';
+import { NotSupportETHAddress, NotSupportEVMBalance } from '../errors.js';
+import { Storage } from '../../utils/storage/index.js';
+import { ERC20Adapter } from './erc20-adapter.js';
 
 interface AcalaAdapterConfigs {
   api: AnyApi;
@@ -26,7 +25,7 @@ const createStorages = (api: AnyApi) => {
         params: [address]
       }),
     nonNativeBalance: (token: Token, address: string) =>
-      Storage.create<OrmlAccountData>({
+      Storage.create<OrmlTokensAccountData>({
         api: api,
         query: api.query.tokens.accounts,
         params: [address, token.toChainData()]
@@ -65,14 +64,14 @@ export class AcalaBalanceAdapter implements AcalaExpandBalanceAdapter {
 
   private transformNative = (data: FrameSystemAccountInfo, token: Token) => {
     const free = FN.fromInner(data.data.free.toString(), token.decimals);
-    const locked = FN.fromInner(((data.data as any).miscFrozen || data.data.frozen).toString(), token.decimals);
+    const locked = FN.fromInner(data.data.frozen.toString(), token.decimals);
     const reserved = FN.fromInner(data.data.reserved.toString(), token.decimals);
     const available = free.sub(locked).max(FN.ZERO);
 
     return { available, free, locked, reserved };
   };
 
-  private transformNonNative = (data: OrmlAccountData, token: Token) => {
+  private transformNonNative = (data: OrmlTokensAccountData, token: Token) => {
     const free = FN.fromInner(data.free.toString(), token.decimals);
     const locked = FN.fromInner(data.frozen.toString(), token.decimals);
     const reserved = FN.fromInner(data.reserved.toString(), token.decimals);

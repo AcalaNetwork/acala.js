@@ -1,4 +1,4 @@
-import { Wallet } from '../wallet';
+import { Wallet } from '../wallet/index.js';
 
 export interface ResolveLinks {
   subscan: string;

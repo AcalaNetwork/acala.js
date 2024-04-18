@@ -5,22 +5,22 @@ import {
   ModuleDexTradingPairStatus,
   AcalaPrimitivesCurrencyAssetIds,
   AcalaPrimitivesCurrencyAssetMetadata,
-  XcmV3MultiLocation
+  StagingXcmV3MultiLocation
 } from '@polkadot/types/lookup';
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable } from 'rxjs';
 import { filter, map, shareReplay, take } from 'rxjs/operators';
-import { TokenProvider, TokenProviderConfigs } from './type';
-import { Storage } from '../../utils/storage';
-import { createTokenList } from './create-token-list';
-import { ChainType } from '@acala-network/sdk/types';
-import { getChainType } from '@acala-network/sdk/utils/get-chain-type';
-import { TokenRecord } from '../types';
-import { CurrencyNotFound } from '../errors';
+import { TokenProvider, TokenProviderConfigs } from './type.js';
+import { Storage } from '../../utils/storage/index.js';
+import { createTokenList } from './create-token-list.js';
+import { ChainType } from '@acala-network/sdk/types.js';
+import { getChainType } from '@acala-network/sdk/utils/get-chain-type.js';
+import { TokenRecord } from '../types.js';
+import { CurrencyNotFound } from '../errors.js';
 
 export const createStorages = (api: AnyApi) => {
   return {
     foreignAssetLocations: () =>
-      Storage.create<[StorageKey<[u16]>, Option<XcmV3MultiLocation>][]>({
+      Storage.create<[StorageKey<[u16]>, Option<StagingXcmV3MultiLocation>][]>({
         api: api,
         path: 'query.assetRegistry.foreignAssetLocations.entries',
         params: []
@@ -158,7 +158,7 @@ export class AcalaTokenProvider implements TokenProvider {
 
         return Object.fromEntries(
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          Object.entries(data!).filter(([, value]) => {
+          Object.entries(data).filter(([, value]) => {
             if (Array.isArray(types)) {
               return types.includes(value.type);
             }

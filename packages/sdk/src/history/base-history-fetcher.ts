@@ -1,5 +1,5 @@
 import { BehaviorSubject, combineLatest, filter, firstValueFrom, from, Observable, switchMap, timer } from 'rxjs';
-import { BaseFetchParams, HistoryFetcherConfig, HistoryRecord } from './types';
+import { BaseFetchParams, HistoryFetcherConfig, HistoryRecord } from './types.js';
 
 export abstract class BaseHistoryFetcher<FetchParams extends BaseFetchParams> {
   protected configs: HistoryFetcherConfig;

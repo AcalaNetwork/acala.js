@@ -1,5 +1,6 @@
+import { describe, test, expect } from 'vitest';
 import { FrameSystemEventRecord } from '@polkadot/types/lookup';
-import { eventsFilter } from './events';
+import { eventsFilter } from './events.js';
 
 describe('event', () => {
   test('filter events should work', () => {

@@ -1,7 +1,7 @@
 import { FixedPointNumber } from '@acala-network/sdk-core';
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { GlobalLoan, LoanStatus, LoanType, UserLoan } from './types';
+import { GlobalLoan, LoanStatus, LoanType, UserLoan } from './types.js';
 
 interface LoanCalculatorParams {
   price$: Observable<FixedPointNumber>;

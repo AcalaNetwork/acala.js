@@ -1,6 +1,6 @@
 import { FixedPointNumber } from '@acala-network/sdk-core';
-import { EstimateRedeemResult, HomaEnvironment } from '../types';
-import { convertLiquidToStaking } from './exchange-rate';
+import { EstimateRedeemResult, HomaEnvironment } from '../types.js';
+import { convertLiquidToStaking } from './exchange-rate.js';
 
 export function getEstimateRedeemResult(
   env: HomaEnvironment,

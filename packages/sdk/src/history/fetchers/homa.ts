@@ -1,9 +1,9 @@
 import { FixedPointNumber, Token } from '@acala-network/sdk-core';
 import { request, gql } from 'graphql-request';
-import { BaseHistoryFetcher } from '../base-history-fetcher';
-import { BaseFetchParams, HistoryFetcherConfig, HistoryRecord } from '../types';
-import { resolveLinks } from '../utils/resolve-links';
-import { getChainType } from '../../utils/get-chain-type';
+import { BaseHistoryFetcher } from '../base-history-fetcher.js';
+import { BaseFetchParams, HistoryFetcherConfig, HistoryRecord } from '../types.js';
+import { resolveLinks } from '../utils/resolve-links.js';
+import { getChainType } from '../../utils/get-chain-type.js';
 
 export interface HomaFetchParams extends BaseFetchParams {
   address: string;
@@ -367,11 +367,17 @@ export class Homas extends BaseHistoryFetcher<HomaFetchParams> {
     });
 
     return requestedRedeems
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       .concat(redeemRequesteds as any)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       .concat(mints as any)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       .concat(redeemRequestCancelleds as any)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       .concat(redeemeds as any)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       .concat(redeemedByUnbonds as any)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       .concat(redeemedByFastMatches as any)
       .sort((a, b) => (new Date(b.data.timestamp) < new Date(a.data.timestamp) ? -1 : 1))
       .slice(0, 20);

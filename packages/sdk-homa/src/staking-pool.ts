@@ -1,5 +1,5 @@
-import { FixedPointNumber } from '@acala-network/sdk-core/fixed-point-number';
-import { getFee } from './help';
+import { FixedPointNumber } from '@acala-network/sdk-core';
+import { getFee } from './help.js';
 
 interface StakingPoolLedgerData {
   bonded: FixedPointNumber;

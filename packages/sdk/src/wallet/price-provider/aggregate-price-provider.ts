@@ -1,6 +1,6 @@
 import { Observable, firstValueFrom, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { PriceProvider } from './types';
+import { PriceProvider } from './types.js';
 import { FixedPointNumber as FN, Token } from '@acala-network/sdk-core';
 
 interface AggregatedProviderConfigs {

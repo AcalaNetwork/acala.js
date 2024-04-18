@@ -1,8 +1,7 @@
 {
   "name": "@acala-network/wormhole-portal",
-  "version": "4.1.9-13",
+  "version": "4.1.10-1",
   "description": "the wormhole wrapper for acala/karura network",
-  "main": "index.js",
   "author": "Acala Developers <hello@acala.network>",
   "license": "Apache-2.0",
   "publishConfig": {
@@ -14,6 +13,31 @@
     "url": "https://github.com/AcalaNetwork/acala.js/issues"
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
+  "scripts": {
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "build": "yarn clean && yarn build:cjs && yarn build:esm",
+    "build:cjs": "swc ./src --config-file ../../.cjsswcrc -d dist/cjs --copy-files --strip-leading-paths && tsc -p tsconfig.json --declarationDir dist/cjs && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json",
+    "build:esm": "swc ./src --config-file ../../.esmswcrc -d dist/esm --copy-files --strip-leading-paths && tsc -p tsconfig.json --declarationDir dist/esm"
+  },
+  "type": "module",
+  "files": [
+    "dist/cjs/**",
+    "dist/esm/**"
+  ],
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "exports": {
+    ".": {
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js",
+      "default": "./dist/esm/index.js"
+    },
+    "./*": {
+      "require": "./dist/cjs/*.js",
+      "import": "./dist/esm/*.js",
+      "default": "./dist/esm/*.js"
+    }
+  },
   "peerDependencies": {
     "@acala-network/api": "^5",
     "@acala-network/eth-providers": "~2.7.18",
@@ -21,9 +45,9 @@
     "ethers": "~5.7.0"
   },
   "dependencies": {
-    "@acala-network/api": "^5.1.1",
+    "@acala-network/api": "^6.1.1",
     "@acala-network/eth-providers": "~2.7.18",
-    "@acala-network/sdk": "^4.1.9-13",
+    "@acala-network/sdk": "workspace:*",
     "@certusone/wormhole-sdk": "^0.5.0",
     "@ethersproject/bignumber": "^5.7.0",
     "@grpc/grpc-js": "^1.6.8",

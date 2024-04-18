@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { describe, test, expect } from 'vitest';
 import { EvmRpcProvider } from '@acala-network/eth-providers';
-import { WormholePortal } from './wormhole-portal';
+import { WormholePortal } from './wormhole-portal.js';
 import { BigNumber } from 'ethers';
 
 describe.skip('ausd portal', () => {
   let sdk: WormholePortal | undefined;
-
-  jest.setTimeout(50000);
 
   const initSDK = async () => {
     if (sdk) return sdk;

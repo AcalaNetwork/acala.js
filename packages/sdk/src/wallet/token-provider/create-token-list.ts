@@ -14,12 +14,12 @@ import {
   ModuleDexTradingPairStatus,
   AcalaPrimitivesCurrencyAssetIds,
   AcalaPrimitivesCurrencyAssetMetadata,
-  XcmV3MultiLocation
+  StagingXcmV3MultiLocation
 } from '@polkadot/types/lookup';
 import { hexToString } from '@polkadot/util';
-import { TokenRecord } from '../types';
+import { TokenRecord } from '../types.js';
 
-function extractLocation(key: number, data: [StorageKey<[u16]>, Option<XcmV3MultiLocation>][]) {
+function extractLocation(key: number, data: [StorageKey<[u16]>, Option<StagingXcmV3MultiLocation>][]) {
   const location = data.find((item) => item[0].args[0].toNumber() === key)?.[1]?.unwrapOrDefault();
 
   if (!location) return;
@@ -55,7 +55,7 @@ interface Configs {
 export function createTokenList(
   tradingPairs: [StorageKey<[AcalaPrimitivesTradingPair]>, ModuleDexTradingPairStatus][],
   assetMetadata: [StorageKey<[AcalaPrimitivesCurrencyAssetIds]>, Option<AcalaPrimitivesCurrencyAssetMetadata>][],
-  foreignAssetLocations: [StorageKey<[u16]>, Option<XcmV3MultiLocation>][],
+  foreignAssetLocations: [StorageKey<[u16]>, Option<StagingXcmV3MultiLocation>][],
   configs: Configs
 ): TokenRecord {
   const erc20Tokens = Object.fromEntries(

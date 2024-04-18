@@ -1,9 +1,15 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "lib",
-    "rootDir": "src"
+    "rootDir": "src",
+    "emitDeclarationOnly": true,
+    "declarationDir": "dist/esm"
   },
   "include": ["src/**/*"],
-  "references": [{ "path": "../sdk" }, { "path": "../sdk-core" }]
+  "exclude": ["src/**/*.test.ts", "src/**/*.spec.ts"],
+  "references": [
+    { "path": "../sdk/tsconfig.json" },
+    { "path": "../sdk-core/tsconfig.json" },
+    { "path": "../sdk-swap/tsconfig.json" }
+  ]
 }

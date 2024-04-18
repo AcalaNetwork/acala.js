@@ -1,4 +1,5 @@
-import { FixedPointNumber } from './fixed-point-number';
+import { test, describe, expect } from 'vitest';
+import { FixedPointNumber } from './fixed-point-number.js';
 
 describe('fixed point number constructor should worker', () => {
   test('toString & toNumber', () => {

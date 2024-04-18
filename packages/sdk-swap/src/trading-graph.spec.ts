@@ -1,6 +1,7 @@
+import { describe, test, expect } from 'vitest';
 import { Token } from '@acala-network/sdk-core';
-import { TradingGraph } from './trading-graph';
-import { TradingPair } from './types';
+import { TradingGraph } from './trading-graph.js';
+import { TradingPair } from './types.js';
 
 describe('trading graph', () => {
   test('generate graph should be ok', () => {

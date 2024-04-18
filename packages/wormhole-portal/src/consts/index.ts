@@ -1,8 +1,9 @@
 import { ChainId } from '@certusone/wormhole-sdk';
-import { SUPPORT_CHAINS } from './chains';
+import { SUPPORT_CHAINS } from './chains.js';
 
-export { ChainId };
 
-export { SUPPORT_CHAINS } from './chains';
+export { SUPPORT_CHAINS } from './chains.js';
+
+export type { ChainId };
 
 export type SupportChain = keyof typeof SUPPORT_CHAINS;

@@ -1,5 +1,5 @@
-import { ResolveLinks } from '../types';
-import { ChainType } from '../../types';
+import { ResolveLinks } from '../types.js';
+import { ChainType } from '../../types.js';
 
 const ACALA_SUB_SCAN = 'https://acala.subscan.io';
 const KARURA_SUB_SCAN = 'https://karura.subscan.io';

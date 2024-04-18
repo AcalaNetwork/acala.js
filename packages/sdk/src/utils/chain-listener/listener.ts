@@ -2,7 +2,7 @@ import { AnyApi, eventsFilter } from '@acala-network/sdk-core';
 import { ApiPromise, ApiRx } from '@polkadot/api';
 import { combineLatest, Observable, Subscription, from, ReplaySubject } from 'rxjs';
 import { map, switchMap, filter } from 'rxjs/operators';
-import { ChainListenerConfigs, EventFilterConfigs, BlockDetails } from './types';
+import { ChainListenerConfigs, EventFilterConfigs, BlockDetails } from './types.js';
 
 export class ChainListener {
   private api: AnyApi;
@@ -76,7 +76,7 @@ export class ChainListener {
 
     return new Observable((subscriber) => {
       return (() => {
-        api.rpc.chain.subscribeNewHeads(async (header) => {
+        void api.rpc.chain.subscribeNewHeads(async (header) => {
           const hash = header.hash.toString();
           const block = await api.rpc.chain.getBlock(hash);
           const apiAt = await api.at(hash);

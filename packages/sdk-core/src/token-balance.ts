@@ -1,5 +1,5 @@
-import { FixedPointNumber } from './fixed-point-number';
-import { Token } from './token';
+import { FixedPointNumber } from './fixed-point-number.js';
+import { Token } from './token.js';
 
 export class TokenBalance {
   private _token: Token;

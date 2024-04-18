@@ -1,4 +1,4 @@
-import { ChainType } from '../types';
+import { ChainType } from '../types.js';
 
 export function getChainType(type: string): ChainType {
   const tests = new Map([
