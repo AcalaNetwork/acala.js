@@ -1,6 +1,5 @@
 import { Observable, firstValueFrom } from "rxjs";
 
-export function promisify<T>(result: Promise<T> | Observable<T>): Promise<T> {
-
-  return result instanceof Promise ? result : firstValueFrom(result);
+export function promisify<T>(r: Promise<T> | Observable<T>): Promise<T> {
+  return r instanceof Promise ? r : firstValueFrom(r);
 }

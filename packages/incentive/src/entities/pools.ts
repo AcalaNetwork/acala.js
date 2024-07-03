@@ -1,28 +1,66 @@
 import { ApiPromise, ApiRx } from "@polkadot/api";
-import { IncentivePools } from "./types.js";
+import { IncentivePools, IncentiveType } from "./types.js";
 import invariant, {} from 'tiny-invariant';
 import { promisify } from "../utils/promisify.js";
+import { GenericCall, Option, Bytes, Vec, U128 } from "@polkadot/types";
+import { ITuple } from "@polkadot/types/types";
+import { ModuleSupportIncentivesPoolId } from "@polkadot/types/lookup";
+import { PoolEntity } from "./pool.js";
+import { getPoolType } from "../utils/get-pool-type.js";
 
 export interface PoolsConfig {
   // should be either apiPromise or apiRx
-  apiPromise?: ApiPromise;
-  apiRx?: ApiRx;
+  api?: ApiPromise | ApiRx;
 }
 
 interface DeductionBlocks {
   [key: string]: bigint;
 }
 
-class Pools implements IncentivePools {
-  private readonly apiPromise?: ApiPromise;
-  private readonly apiRx?: ApiRx;
+export class PoolsEntity implements IncentivePools {
+  private readonly api: ApiRx | ApiPromise;
   private deductionBlocks: DeductionBlocks = {};
 
   constructor(config: PoolsConfig) {
-    invariant(config.apiPromise || config.apiRx, "API is required");
+    invariant(config.api, "API is required");
 
-    this.apiPromise = config.apiPromise;
-    this.apiRx = config.apiRx;
+    this.api = config.api;
+  }
+
+  /**
+   * return all the enabled pool ids
+   * @returns string[]
+   */
+  public async poolIds () {
+    const pools = await promisify((this.api as ApiPromise).query.incentives.incentiveRewardAmounts.entries());
+
+    // return the pool ids, remove the duplicated ids
+    return Array.from(new Set(pools.map(([key]) => {
+      return key.args[0].toHex();
+    })));
+  }
+
+  /**
+   * return the `id` pool entity
+   * @param id string
+   * @returns PoolEntity
+   */
+  public pool (id: string) {
+    return new PoolEntity({
+      id,
+      api: this.api,
+      queryDeductionBlock: this.getDeductionBlock.bind(this)
+    });
+  }
+
+  /**
+   * return the pool ids by type
+   * @param type IncentiveType
+   * @returns string[]
+   */
+  public async poolIdsByType(type: IncentiveType) {
+    return this.poolIds()
+      .then((ids) => ids.filter((id) => getPoolType(this.api, id) === type));
   }
 
  /**
@@ -30,77 +68,63 @@ class Pools implements IncentivePools {
  * `incentives.deductionRates` to zero. We assume that the proposals do not
  * frequently update `incentives.deductionRates` to zero, allowing us to cache the deduction block.
  */
-  private async getDeductionBlock() {
-    if (!Object.keys(this.deductionBlocks).length) return this.deductionBlocks;
+  private async getDeductionBlock(id: string): Promise<bigint | null> {
+    if (!Object.keys(this.deductionBlocks).length) return this.deductionBlocks[id] || null;
 
-    const api = this.apiPromise || this.apiRx;
     const result: DeductionBlocks = {};
-    invariant(api, "API not found");
 
-    type TEST = ReturnType<typeof api.query.scheduler.agenda.entries>
 
-    const agendas = await promisify(api.query.scheduler.agenda.entries)();
+    const agendas = await promisify((this.api as ApiPromise).query.scheduler.agenda.entries());
+
+    for (const [key, proposals] of agendas) {
+      const block = key.args[0].toBigInt();
+
+      // walk through all the proposals
+      for (const proposal of proposals) {
+        if (proposal.isEmpty || proposal.isNone) continue;
+
+        let call: GenericCall<any> | null = null;
+        const data = proposal.unwrap();
+
+        if (data.call.isInline) {
+          call = this.api.createType("Call", data.call.asInline);
+        }
+
+        if (data.call.isLookup) {
+          const params = [data.call.asLookup.hash_, data.call.asLookup.len];
+
+          const preimage = await promisify(this.api.query.preimage.preimageFor(...params)) as Option<Bytes>;
+
+          call = this.api.createType("Call", preimage.unwrap().toHex());
+        }
+
+        if (!call) continue;
+
+        const processCallsAndAnalyze = (call: GenericCall<any>) => {
+          if (call.method === 'batch' && call.section === 'utility') {
+            return ((call.args as [GenericCall<any>[]])[0]).forEach((item) => {
+              processCallsAndAnalyze(item);
+            });
+          }
+
+          if (call.method === 'updateClaimRewardDeductionRates' && call.section === 'incentives') {
+            const args = call.args as Vec<Vec<ITuple<[ModuleSupportIncentivesPoolId, U128]>>>
+
+            args.forEach((item) => {
+              item.forEach(([poolId, rate]) => {
+                if (rate.isZero()) {
+                  result[poolId.toHex()] = block;
+                }
+              });
+            });
+          }
+        };
+
+        processCallsAndAnalyze(call);
+      }
+    }
+    this.deductionBlocks = result;
+
+    return result[id] || null;
   }
 }
-
-  // private async getDuductionEndBlock() {
-  //   const api = this.apiPromise || this.apiRx;
-  //   invariant(api, "API not found");
-
-  //   const agendas = await (api.type === "promise"
-  //     ? (api as ApiPromise).query.scheduler.agenda.entries()
-  //     : firstValueFrom((api as ApiRx).query.scheduler.agenda.entries()));
-
-  //   for (const [key, proposals] of agendas) {
-  //     const block = key.args[0].toBigInt();
-
-  //     // walk through all the proposals
-  //     for (const proposal of proposals) {
-  //       if (proposal.isEmpty || proposal.isNone) continue;
-
-  //       let call: GenericCall<any>;
-
-  //       const data = proposal.unwrap();
-
-  //       // if the data.call is inline, directly create the call object
-  //       if (data.call.isInline) {
-  //         call = api.createType("Call", data.call.asInline);
-  //       }
-
-  //       // if the data.call is lookup, query the preimage and create the call object
-  //       if (data.call.isLookup) {
-  //         const params = [data.call.asLookup.hash_, data.call.asLookup.len]
-
-  //         const preimage = await (api.type === "promise"
-  //           ? (api as ApiPromise).query.preimage.preimageFor(...params)
-  //           : firstValueFrom((api as ApiRx).query.preimage.preimageFor(...params))
-  //         ) as Option<Bytes>;
-
-  //         call = api.createType("Call", preimage.unwrap().toHex());
-  //       }
-
-  //       const fn = (call: GenericCall, ) => {
-  //         // check if the call is batch
-  //         if (call.method === 'batch' && call.section === 'unitity') {
-  //           return call.args.forEach((item) => fn(item));
-  //         }
-
-  //         // check if the call is update deduction rate
-  //         if (call.method === 'updateClaimRewardDeductionRates' && call.section === 'incentives') {
-  //           const args = call.args as Vec<Vec<ITuple<[ModuleSupportIncentivesPoolId, U128]>>>
-
-  //           args.forEach((item) => {
-  //             item.forEach(([poolId, rate]) => {
-  //               if (poolId.toHex() === this.id && rate.isZero()) {
-  //                 // return the block number when the deduction rate is set to zero
-  //               }
-  //             })
-  //           });
-  //         }
-  //       }
-
-
-  //     }
-  //   }
-    
-  // }
