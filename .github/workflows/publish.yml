@@ -28,42 +28,42 @@ jobs:
 
     # Writes token to .yarnrc.yml. If written directly in .yarnrc.yml, it will cause an error
     - run: |
-        echo npmAuthToken: "\${NPM_AUTH_TOKEN}" >> ./.yarnrc.yml
+        echo npmAuthToken: "\${NPM_TOKEN}" >> ./.yarnrc.yml
 
     - name: Publish @acala-network/sdk-core
       run: yarn workspace @acala-network/sdk-core npm publish --tolerate-republish --access public ${{ env.NPM_TAG }}
       env:
-        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - name: Publish @acala-network/sdk
       run: yarn workspace @acala-network/sdk npm publish --tolerate-republish --access public ${{ env.NPM_TAG }}
       env:
-        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - name: Publish @acala-network/sdk-homa
       run: yarn workspace @acala-network/sdk-homa npm publish --tolerate-republish --access public ${{ env.NPM_TAG }}
       env:
-        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - name: Publish @acala-network/sdk-loan
       run: yarn workspace @acala-network/sdk-loan npm publish --tolerate-republish --access public ${{ env.NPM_TAG }}
       env:
-        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - name: Publish @acala-network/sdk-payment
       run: yarn workspace @acala-network/chopsticks-testing npm publish --tolerate-republish --access public ${{ env.NPM_TAG }}
       env:
-        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - name: Publish @acala-network/sdk-swap
       run: yarn workspace @acala-network/sdk-swap npm publish --tolerate-republish --access public ${{ env.NPM_TAG }}
       env:
-        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - name: Publish @acala-network/wormhole-protal
       run: yarn workspace @acala-network/wormhole-protal npm publish --tolerate-republish --access public ${{ env.NPM_TAG }}
       env:
-        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - run: |
         git checkout ./.yarnrc.yml
