@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk-payment",
-  "version": "4.1.10-1",
+  "version": "4.1.10",
   "description": "the payment acala network sdk",
   "author": "Acala Developers <hello@acala.network>",
   "license": "Apache-2.0",
@@ -40,7 +40,7 @@
   },
   "peerDependencies": {
     "@acala-network/types": "^6",
-    "@polkadot/api": "^10"
+    "@polkadot/api": "^12"
   },
   "dependencies": {
     "@acala-network/sdk": "workspace:*",
