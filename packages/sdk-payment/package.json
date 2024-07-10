@@ -40,7 +40,7 @@
   },
   "peerDependencies": {
     "@acala-network/types": "^6",
-    "@polkadot/api": "^10"
+    "@polkadot/api": "^12"
   },
   "dependencies": {
     "@acala-network/sdk": "workspace:*",

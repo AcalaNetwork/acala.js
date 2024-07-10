@@ -41,7 +41,7 @@
   "peerDependencies": {
     "@acala-network/api": "^5",
     "@acala-network/eth-providers": "~2.7.18",
-    "@polkadot/api": "^10",
+    "@polkadot/api": "^12",
     "ethers": "~5.7.0"
   },
   "dependencies": {
@@ -52,7 +52,7 @@
     "@ethersproject/bignumber": "^5.7.0",
     "@grpc/grpc-js": "^1.6.8",
     "@improbable-eng/grpc-web-node-http-transport": "^0.15.0",
-    "@polkadot/api": "^10.9.1",
+    "@polkadot/api": "^12.1.1",
     "bn.js": "^5.2.1",
     "ethers": "~5.7.0"
   },

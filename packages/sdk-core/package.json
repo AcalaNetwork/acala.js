@@ -40,11 +40,11 @@
   },
   "peerDependencies": {
     "@acala-network/types": "^6",
-    "@polkadot/api": "^10"
+    "@polkadot/api": "^12"
   },
   "dependencies": {
     "@acala-network/types": "^6.1.1",
-    "@polkadot/api": "^10.9.1",
+    "@polkadot/api": "^12.1.1",
     "bignumber.js": "^9.0.0",
     "lodash": "^4.17.20"
   },
