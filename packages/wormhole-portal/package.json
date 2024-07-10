@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/wormhole-portal",
-  "version": "4.1.10-1",
+  "version": "4.1.10",
   "description": "the wormhole wrapper for acala/karura network",
   "author": "Acala Developers <hello@acala.network>",
   "license": "Apache-2.0",

@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk-core",
-  "version": "4.1.10-1",
+  "version": "4.1.10",
   "description": "the core of acala network sdk",
   "author": "Acala Developers <hello@acala.network>",
   "license": "Apache-2.0",
