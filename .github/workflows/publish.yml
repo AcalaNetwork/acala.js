@@ -51,7 +51,7 @@ jobs:
         NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - name: Publish @acala-network/sdk-payment
-      run: yarn workspace @acala-network/chopsticks-testing npm publish --tolerate-republish --access public ${{ env.NPM_TAG }}
+      run: yarn workspace @acala-network/sdk-payment npm publish --tolerate-republish --access public ${{ env.NPM_TAG }}
       env:
         NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
