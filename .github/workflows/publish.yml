@@ -28,7 +28,7 @@ jobs:
 
     # Writes token to .yarnrc.yml. If written directly in .yarnrc.yml, it will cause an error
     - run: |
-        echo "npmAuthToken: \${{ secrets.NPM_TOKEN }}" >> ./.yarnrc.yml
+        echo npmAuthToken: "\${NPM_AUTH_TOKEN}" >> ./.yarnrc.yml
 
     - name: Publish @acala-network/sdk-core
       run: yarn workspace @acala-network/sdk-core npm publish --tolerate-republish --access public ${{ env.NPM_TAG }}
