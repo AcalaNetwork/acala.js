@@ -60,8 +60,8 @@ jobs:
       env:
         NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-    - name: Publish @acala-network/wormhole-protal
-      run: yarn workspace @acala-network/wormhole-protal npm publish --tolerate-republish --access public ${{ env.NPM_TAG }}
+    - name: Publish @acala-network/wormhole-portal
+      run: yarn workspace @acala-network/wormhole-portal npm publish --tolerate-republish --access public ${{ env.NPM_TAG }}
       env:
         NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
