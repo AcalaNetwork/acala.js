@@ -6,13 +6,13 @@ import {
   Token,
   unzipDexShareName
 } from '@acala-network/sdk-core';
-import { Wallet } from '@acala-network/sdk/wallet/index.js';
+import { Wallet } from '@acala-network/sdk/wallet/index';
 import { AcalaPrimitivesTradingPair, ModuleDexTradingPairStatus } from '@polkadot/types/lookup';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { StorageKey } from '@polkadot/types';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Storage } from '@acala-network/sdk/utils/storage/index.js';
+import { Storage } from '@acala-network/sdk/utils/storage/index';
 import { AmountTooSmall, InsufficientLiquidityError, ParamsNotAcceptableForDexProvider } from '../../errors.js';
 import {
   BaseSwap,

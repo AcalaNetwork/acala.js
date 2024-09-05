@@ -2,7 +2,7 @@ import { Wallet } from '@acala-network/sdk';
 import { AggregateDex } from '@acala-network/sdk-swap';
 import { PaymentConfig, PaymentMethod, PaymentMethodTypes, Tx } from './types.js';
 import { AnyApi, Token } from '@acala-network/sdk-core';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty.js';
 import { toPromise } from './utils/index.js';
 import { Storages, createStorages } from './storage.js';
 import { NotReady } from './error.js';

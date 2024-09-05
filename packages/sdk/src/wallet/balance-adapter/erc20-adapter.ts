@@ -7,7 +7,7 @@ import { from, Observable, Subject } from 'rxjs';
 import { filter, finalize, shareReplay } from 'rxjs/operators';
 import { BalanceData } from '../types.js';
 import { AnyFunction } from '@polkadot/types/types';
-import { NotERC20TokenName } from '@acala-network/sdk-core/errors.js';
+import { NotERC20TokenName } from '@acala-network/sdk-core/errors';
 
 export class ERC20Adapter {
   private provider: EvmRpcProvider;

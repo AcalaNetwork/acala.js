@@ -12,8 +12,8 @@ import { filter, map, shareReplay, take } from 'rxjs/operators';
 import { TokenProvider, TokenProviderConfigs } from './type.js';
 import { Storage } from '../../utils/storage/index.js';
 import { createTokenList } from './create-token-list.js';
-import { ChainType } from '@acala-network/sdk/types.js';
-import { getChainType } from '@acala-network/sdk/utils/get-chain-type.js';
+import { ChainType } from '../../types.js';
+import { getChainType } from '../../utils/get-chain-type.js';
 import { TokenRecord } from '../types.js';
 import { CurrencyNotFound } from '../errors.js';
 
