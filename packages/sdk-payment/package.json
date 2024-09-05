@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk-payment",
-  "version": "4.1.10",
+  "version": "4.1.11",
   "description": "the payment acala network sdk",
   "author": "Acala Developers <hello@acala.network>",
   "license": "Apache-2.0",
