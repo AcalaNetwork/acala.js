@@ -34,15 +34,15 @@
       "default": "./dist/esm/*.js"
     },
     "./utils/storage": {
-			"require": "./dist/cjs/utils/storage/index.js",
-			"import": "./dist/esm/utils/storage/index.js",
-			"default": "./dist/esm/utils/storage/index.js"
-		},
+      "require": "./dist/cjs/utils/storage/index.js",
+      "import": "./dist/esm/utils/storage/index.js",
+      "default": "./dist/esm/utils/storage/index.js"
+    },
     "./wallet/wallet": {
-			"require": "./dist/cjs/wallet/wallet.js",
-			"import": "./dist/esm/wallet/wallet.js",
-			"default": "./dist/esm/wallet/wallet.js"
-		}
+      "require": "./dist/cjs/wallet/wallet.js",
+      "import": "./dist/esm/wallet/wallet.js",
+      "default": "./dist/esm/wallet/wallet.js"
+    }
   },
   "repository": "https://github.com/AcalaNetwork/acala.js.git",
   "bugs": {
