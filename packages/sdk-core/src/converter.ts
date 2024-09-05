@@ -1,5 +1,5 @@
 import { AcalaPrimitivesCurrencyCurrencyId, AcalaPrimitivesCurrencyTokenSymbol } from '@polkadot/types/lookup';
-import { isArray } from 'lodash';
+import isArray from 'lodash/isArray.js';
 import {
   ConvertToCurrencyIdFailed,
   ConvertToCurrencyNameFailed,

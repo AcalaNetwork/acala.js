@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js';
-import { isNumber } from 'lodash';
+import isNumber from 'lodash/isNumber.js';
 
 /**
  * @constant
