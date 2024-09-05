@@ -5,7 +5,7 @@ import { GlobalLoan, LoanSDKParams, LoanTypes, UserLoan } from './types.js';
 import { map } from 'rxjs/operators';
 import { combineLatest, firstValueFrom, Observable } from 'rxjs';
 import { memoize } from '@polkadot/util';
-import { PriceProviderType } from '@acala-network/sdk/wallet/price-provider/types.js';
+import { PriceProviderType } from '@acala-network/sdk/wallet/price-provider/types';
 import { LoanCalculator } from './loan-calculator.js';
 
 const YEAR_SECONDS = 365 * 24 * 60 * 60; // second of one year

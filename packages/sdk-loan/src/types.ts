@@ -1,6 +1,6 @@
 import { Wallet } from '@acala-network/sdk';
 import { AnyApi, FixedPointNumber, Token } from '@acala-network/sdk-core';
-import { PriceProviderType } from '@acala-network/sdk/wallet/price-provider/types.js';
+import { PriceProviderType } from '@acala-network/sdk/wallet/price-provider/types';
 
 export interface LoanSDKParams {
   api: AnyApi;

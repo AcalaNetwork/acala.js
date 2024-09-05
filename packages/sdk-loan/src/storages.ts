@@ -1,4 +1,4 @@
-import { Storage } from '@acala-network/sdk/utils/storage/index.js';
+import { Storage } from '@acala-network/sdk/utils/storage/index';
 import { AnyApi, Token } from '@acala-network/sdk-core';
 import {
   AcalaPrimitivesPosition,
