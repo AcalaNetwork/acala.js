@@ -114,7 +114,8 @@ export class Incentive implements BaseSDK {
     return this.storages.poolInfos().observable.pipe(
       map((data) => {
         // omit NomineesElection
-        return data.filter((item) => !(item[0].args[0] as any).isNomineesElection);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        return data.filter((item) => !(item[0].args[0] as unknown as any).isNomineesElection);
       }),
       map((data) => {
         const allRewardTokens = data.flatMap((item) =>
@@ -133,7 +134,7 @@ export class Incentive implements BaseSDK {
           const collateral = tokens[forceToCurrencyName(getPoolToken(raw))];
           const totalShares = FixedPointNumber.fromInner(item[1].totalShares.toString(), collateral.decimals);
 
-          // format rewards infomations
+          // format rewards information
           const rewards: IncentiveReward[] = Array.from(item[1].rewards.entries()).map(([key, values]) => {
             const token = tokens[forceToCurrencyName(key)];
             const total = FixedPointNumber.fromInner(values[0].toString(), token.decimals);
