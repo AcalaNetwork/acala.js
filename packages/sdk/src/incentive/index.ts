@@ -109,9 +109,13 @@ export class Incentive implements BaseSDK {
     );
   });
 
-  // subscribe all pool infomations
+  // subscribe all pool information
   private poolInfos$ = memoize((): Observable<BaseIncentivePool[]> => {
     return this.storages.poolInfos().observable.pipe(
+      map((data) => {
+        // omit NomineesElection
+        return data.filter((item) => !(item[0].args[0] as any).isNomineesElection);
+      }),
       map((data) => {
         const allRewardTokens = data.flatMap((item) =>
           Array.from(item[1].rewards.entries()).map(([key]) => forceToCurrencyName(key))
