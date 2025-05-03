@@ -24,7 +24,7 @@ function extractLocation(key: number, data: [StorageKey<[u16]>, Option<XcmV3Mult
 
   if (!location) return;
 
-  const paraChainId = location.interior.isX1
+  const paraChainId = (location.interior.isX1 && location.interior.asX1.isParachain)
     ? location.interior.asX1.asParachain.toNumber()
     : location.interior.isX3
     ? location.interior.asX3.find((item) => item.isParachain)?.asParachain.toNumber()
