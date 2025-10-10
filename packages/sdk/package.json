@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk",
-  "version": "4.1.14",
+  "version": "4.1.15",
   "description": "acala network sdk",
   "author": "Acala Developers <hello@acala.network>",
   "license": "Apache-2.0",
@@ -50,16 +50,16 @@
   },
   "homepage": "https://github.com/AcalaNetwork/acala.js",
   "peerDependencies": {
-    "@acala-network/api": "^5",
+    "@acala-network/api": "^6",
     "@acala-network/eth-providers": "~2.7.18",
-    "@polkadot/api": "^12",
+    "@polkadot/api": "^16",
     "ethers": "~5.7.0"
   },
   "dependencies": {
-    "@acala-network/api": "^6.1.1",
+    "@acala-network/api": "^6.3.0",
     "@acala-network/eth-providers": "~2.7.18",
     "@acala-network/sdk-core": "workspace:*",
-    "@polkadot/api": "^12.1.1",
+    "@polkadot/api": "^16.4.8",
     "axios": "^0.24.0",
     "ethers": "~5.7.0",
     "graphql": "^16.3.0",
