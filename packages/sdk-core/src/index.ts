@@ -1,3 +1,5 @@
+import '@acala-network/types';
+
 export * from './fixed-point-number.js';
 export * from './token.js';
 export * from './token-balance.js';

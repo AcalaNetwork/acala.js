@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk-loan",
-  "version": "4.1.14",
+  "version": "4.1.15",
   "description": "the loan sub module in acala network sdk",
   "author": "Acala Developers <hello@acala.network>",
   "license": "Apache-2.0",
@@ -40,13 +40,13 @@
   },
   "peerDependencies": {
     "@acala-network/types": "^6",
-    "@polkadot/api": "^12"
+    "@polkadot/api": "^16"
   },
   "dependencies": {
     "@acala-network/sdk": "workspace:*",
     "@acala-network/sdk-core": "workspace:*",
-    "@acala-network/types": "^6.0.4",
-    "@polkadot/api": "^12.1.1",
+    "@acala-network/types": "^6.3.0",
+    "@polkadot/api": "^16.4.8",
     "lodash": "^4.17.20",
     "rxjs": "^7.8.1"
   },

@@ -1,6 +1,6 @@
 {
   "name": "@acala-network/sdk-core",
-  "version": "4.1.14",
+  "version": "4.1.15",
   "description": "the core of acala network sdk",
   "author": "Acala Developers <hello@acala.network>",
   "license": "Apache-2.0",
@@ -40,11 +40,11 @@
   },
   "peerDependencies": {
     "@acala-network/types": "^6",
-    "@polkadot/api": "^12"
+    "@polkadot/api": "^16"
   },
   "dependencies": {
-    "@acala-network/types": "^6.1.1",
-    "@polkadot/api": "^12.1.1",
+    "@acala-network/types": "^6.3.0",
+    "@polkadot/api": "^16.4.8",
     "bignumber.js": "^9.0.0",
     "lodash": "^4.17.20"
   },

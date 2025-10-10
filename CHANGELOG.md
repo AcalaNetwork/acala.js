@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 4.1.15 - Oct 10, 2025
+Changes:
+  - Update dependencies to latest versions
+
 ## 4.1.6-15 July 7, 2022
 Changes:
   - Changes homa sdk interface name subscribeEnv -> env$
