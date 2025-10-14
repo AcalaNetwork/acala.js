@@ -42,32 +42,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@acala-network/eth-providers@npm:~2.7.18":
-  version: 2.7.23
-  resolution: "@acala-network/eth-providers@npm:2.7.23"
+"@acala-network/eth-providers@npm:~2.10.0":
+  version: 2.10.0
+  resolution: "@acala-network/eth-providers@npm:2.10.0"
   dependencies:
     "@acala-network/contracts": "npm:4.3.4"
-    "@acala-network/eth-transactions": "npm:2.7.23"
-    bn.js: "npm:~5.2.0"
+    "@acala-network/eth-transactions": "npm:2.10.0"
+    bn.js: "npm:~5.2.1"
     ethers: "npm:~5.7.0"
     graphql: "npm:~16.0.1"
     graphql-request: "npm:~3.6.1"
     lru-cache: "npm:~7.8.2"
   peerDependencies:
-    "@acala-network/api": 6.1.0
-    "@polkadot/api": ^10.11.1
-  checksum: 10c0/86a34e816f11976f541d9928d4011abd91d2934e17fe0222cb3ec5819dfa4e1b66587d3ac7167bf20a60b92558e19658dab00b0477829d7c42d2cc6941e46dcd
+    "@acala-network/api": ~6.3.0
+    "@polkadot/api": ^16.4.8
+  checksum: 10c0/e248278e835816f579fd3a8bf17c9a2df3c4b065f636fece48b6068820c18c0cb3afb993a1e2a2da93246690e54d92363b66b294ee56d74bf441b8a2d6efb179
   languageName: node
   linkType: hard
 
-"@acala-network/eth-transactions@npm:2.7.23":
-  version: 2.7.23
-  resolution: "@acala-network/eth-transactions@npm:2.7.23"
+"@acala-network/eth-transactions@npm:2.10.0":
+  version: 2.10.0
+  resolution: "@acala-network/eth-transactions@npm:2.10.0"
   dependencies:
     ethers: "npm:~5.7.0"
   peerDependencies:
-    "@polkadot/util-crypto": ^12.4.2
-  checksum: 10c0/755e15611bc5db19536952fbdba86554e9e7d49e943d015d77ca366e85a13cbbd721743969d8c36e4a989c11d0f9035d0f110cfb91264e84d55dd37b27afeeb5
+    "@polkadot/util-crypto": ^13.0.2
+  checksum: 10c0/85838f352bcd558bdc018bb79025d440bff4432a08f438b5135241668715d6f8cc4acb5959e8192aeb52c2fa4efc178734971c82232fea60ca18fde4376f38a1
   languageName: node
   linkType: hard
 
@@ -154,7 +154,7 @@ __metadata:
   resolution: "@acala-network/sdk@workspace:packages/sdk"
   dependencies:
     "@acala-network/api": "npm:^6.3.0"
-    "@acala-network/eth-providers": "npm:~2.7.18"
+    "@acala-network/eth-providers": "npm:~2.10.0"
     "@acala-network/sdk-core": "workspace:*"
     "@polkadot/api": "npm:^16.4.8"
     "@typechain/ethers-v5": "npm:^11.1.2"
@@ -171,7 +171,7 @@ __metadata:
     typechain: "npm:^8.3.2"
   peerDependencies:
     "@acala-network/api": ^6
-    "@acala-network/eth-providers": ~2.7.18
+    "@acala-network/eth-providers": ^2
     "@polkadot/api": ^16
     ethers: ~5.7.0
   languageName: unknown
@@ -191,7 +191,7 @@ __metadata:
   resolution: "@acala-network/wormhole-portal@workspace:packages/wormhole-portal"
   dependencies:
     "@acala-network/api": "npm:^6.3.0"
-    "@acala-network/eth-providers": "npm:~2.7.18"
+    "@acala-network/eth-providers": "npm:~2.10.0"
     "@acala-network/sdk": "workspace:*"
     "@certusone/wormhole-sdk": "npm:^0.5.0"
     "@ethersproject/bignumber": "npm:^5.7.0"
@@ -204,7 +204,7 @@ __metadata:
     ethers: "npm:~5.7.0"
   peerDependencies:
     "@acala-network/api": ^6
-    "@acala-network/eth-providers": ~2.7.18
+    "@acala-network/eth-providers": ^2
     "@polkadot/api": ^16
     ethers: ~5.7.0
   languageName: unknown
@@ -3061,10 +3061,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bn.js@npm:^5.1.0, bn.js@npm:^5.2.0, bn.js@npm:^5.2.1, bn.js@npm:~5.2.0":
+"bn.js@npm:^5.1.0, bn.js@npm:^5.2.0, bn.js@npm:^5.2.1":
   version: 5.2.1
   resolution: "bn.js@npm:5.2.1"
   checksum: 10c0/bed3d8bd34ec89dbcf9f20f88bd7d4a49c160fda3b561c7bb227501f974d3e435a48fb9b61bc3de304acab9215a3bda0803f7017ffb4d0016a0c3a740a283caa
+  languageName: node
+  linkType: hard
+
+"bn.js@npm:~5.2.1":
+  version: 5.2.2
+  resolution: "bn.js@npm:5.2.2"
+  checksum: 10c0/cb97827d476aab1a0194df33cd84624952480d92da46e6b4a19c32964aa01553a4a613502396712704da2ec8f831cf98d02e74ca03398404bd78a037ba93f2ab
   languageName: node
   linkType: hard
 
