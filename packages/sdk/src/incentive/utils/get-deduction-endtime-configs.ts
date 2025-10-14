@@ -21,7 +21,9 @@ export function getDeductionEndtimeConfigs(
       let call: CallFunction | null = null;
 
       try {
-        call = api.registry.createType('Call', data.asInline.toHex()) as unknown as CallFunction;
+        if (data.isInline) {
+          call = api.registry.createType('Call', data.asInline.toHex()) as unknown as CallFunction;
+        }
       } catch (error) {
         console.error(error);
       }
